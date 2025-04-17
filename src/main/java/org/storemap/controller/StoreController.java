@@ -14,7 +14,7 @@ import lombok.extern.log4j.Log4j;
 @Controller
 public class StoreController {
 	@Autowired
-	private StoreServiceImple storeServic;
+	private StoreServiceImple storeService;
 	@Autowired
 	private MenuServiceImple menuService;
 	@Autowired
