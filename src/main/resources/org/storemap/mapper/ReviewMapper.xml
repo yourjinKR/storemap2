@@ -4,4 +4,38 @@
 
 <mapper namespace="org.storemap.mapper.ReviewMapper">
 	
+	<!-- 1.리뷰 등록  -->
+	<insert id="insert" parameterType="org.storemap.domain.ReviewVO">
+		insert into review values(
+	 		review_seq.nextval,
+	 		#{store_idx},
+	 		#{member_idx},
+	 		#{review_star},
+	 		#{review_title},
+	 		#{review_content},
+	 		#{review_image},
+	 		sysdate
+	 	)
+	</insert>
+	<!-- 2.리뷰 수정  -->
+	<update id="update" parameterType="org.storemap.domain.ReviewVO">
+		update review set 
+	 	review_star = #{review_star},
+	 	review_content = #{review_content},
+	 	review_regdate = sysdate
+	 	where review_idx = #{review_idx}
+	</update>
+	<!-- 3.리뷰 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from review where review_idx = #{review_idx}
+	</delete>
+	<!-- 4.리뷰 전체 보기  -->
+	<select id="getReviewList" resultType="org.storemap.domain.ReviewVO">
+		select * from review where store_idx = #{store_idx}
+	</select>
+	<!-- 5.리뷰 자세히 보기  -->
+	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewVO">
+		select * from review where review_idx = #{review_idx}
+	</select>
+	
 </mapper>
