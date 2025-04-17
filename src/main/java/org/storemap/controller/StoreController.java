@@ -23,10 +23,10 @@ public class StoreController {
 	private ReviewServiceImple reviewService;
 	
 	// 점포 전체 조회
-	@GetMapping("/list")
+	@GetMapping("/storeRegister")
 	public String list() {
 		log.info("list...");
-		storeService.getList();
+		//storeService.getList();
 		return "index";
 	}
 	
