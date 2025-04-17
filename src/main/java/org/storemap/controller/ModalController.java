@@ -2,6 +2,7 @@ package org.storemap.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -33,4 +34,19 @@ public class ModalController {
 	private MemberServiceImple memberService;
 	@Autowired
 	private EnterServiceImple enterService;
+	
+	//점포 리스트 모달
+	@GetMapping("/storeListModal")
+	public String storeListModal() {
+		log.info("storeListModal...");
+		return "index";
+	}
+	
+	//점포 정보 팝업
+	@GetMapping("/storeView")
+	public String storeView() {
+		log.info("storeView...");
+		return "index";
+	}
+	
 }
