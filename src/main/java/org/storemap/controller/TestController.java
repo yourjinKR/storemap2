@@ -21,7 +21,7 @@ public class TestController {
 		log.info("controller page : " + result);
 	}
 
-	@GetMapping("/content/board/eventList")
+	@GetMapping("/content/event/eventList")
 	public String eventList() {
 		return "/index";
 	}
