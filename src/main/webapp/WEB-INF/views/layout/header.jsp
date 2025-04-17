@@ -7,7 +7,13 @@
 	</div>
 	
 	<div class="left-div d_f">
+		<div class="icon">
+			<span>1</span>
+			<i class="fa-regular fa-envelope"></i>
+		</div>
+		
 		<button>로그인</button>
+		<button>로그아웃</button>
 		<div class="profile">
 			<img alt="" src="/resources/img/profile.jpg">			
 		</div>
