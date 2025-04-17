@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script type="text/javascript" src="/resources/js/default.js"></script>
 </head>
 <%
 	request.setAttribute("path", request.getAttribute("javax.servlet.forward.request_uri"));
@@ -16,5 +17,4 @@
 	<jsp:include page="./layout/content.jsp" /><br>
 	<jsp:include page="./layout/footer.jsp" />
 </body>
-<script type="text/javascript" src="/resources/js/default.js"></script>
 </html>
