@@ -7,7 +7,7 @@
 	</div>
 	
 	<div class="left-div d_f">
-		<button>로그인</button>
+		<button onclick="location.href='${pageContext.request.contextPath}/member/login'">로그인</button>
 		<div class="profile">
 			<img alt="" src="/resources/img/profile.jpg">			
 		</div>
