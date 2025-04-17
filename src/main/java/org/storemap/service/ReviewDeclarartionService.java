@@ -1,5 +1,5 @@
 package org.storemap.service;
 
-public interface ReviewDeclrartionService {
+public interface ReviewDeclarartionService {
 
 }
