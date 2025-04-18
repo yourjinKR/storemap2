@@ -14,17 +14,13 @@ document.querySelectorAll('button').forEach(btn => {
 			modify();
 		}else if(type === 'menuBtn'){
 			menu();
-		}else if(type === 'resetBtn'){
-			f.reset();
+		}else if(type === 'removeBtn'){
+			remove();
 		}else if(type === 'indexBtn'){
 			location.href=`/index`;
 		}
 	})
 });
-
-function menu(){
-	location.href='/store/menu';
-}
 
 function modify(){
 	if(!f.store_name.value){
@@ -55,3 +51,16 @@ function modify(){
 	f.action - '/store/storeModify';
 	f.submit();
 };
+
+function menu(){
+	location.href='/store/menu';
+}
+
+function remove(){
+	if(confirm("정말 삭제하시겠습니까?")){
+		f.action = '/store/remove';
+	    f.submit();
+	    alert("삭제 되었습니다");
+	}else{
+	}
+}
