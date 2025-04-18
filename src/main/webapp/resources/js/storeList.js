@@ -1,3 +1,7 @@
-/**
- * 점포 리스트 모달 스크립트
- */
+const f = document.forms[0];
+
+const CSS_PATH = '/resources/css/storeList.css';
+let linkEle = document.createElement('link');
+linkEle.rel = 'stylesheet';
+linkEle.href = CSS_PATH;
+document.head.appendChild(linkEle);

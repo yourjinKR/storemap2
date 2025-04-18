@@ -1,79 +1,72 @@
 @charset "UTF-8";
 
-body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 30px;
-    }
+.storeRegister {
+	font-family: sans-serif;
+	text-align: center;
+	padding: 30px;
+}
 
-    h1 {
-      font-size: 26px;
-      margin-bottom: 30px;
-    }
+h1 {
+	font-size: 26px;
+	margin-bottom: 30px;
+}
 
-    form {
-      max-width: 600px;
-      margin: 0 auto;
-      text-align: left;
-    }
+form {
+	max-width: 600px;
+	margin: 0 auto;
+	text-align: left;
+}
 
-    label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
+label {
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
 
-    input[type="text"],
-    input[type="email"],
-    input[type="date"],
-    select {
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-      background-color: #ddd;
-      border: none;
-      border-radius: 4px;
-    }
+input[type="text"],
+input[type="email"],
+input[type="date"],
+select {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #ddd;
+	border: none;
+	border-radius: 4px;
+}
 
-    .checkbox-group {
-      display: flex;
-      gap: 15px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
+select {
+	width: auto;
+	padding: 8px 12px;
+	margin-top: 5px;
+}
 
-    .row-between {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.btn-sec {
+	display: block;
+	width: 100%;
+	padding: 15px;
+	margin-top: 30px;
+	background-color: #4db8ff;
+	color: black;
+	font-size: 18px;
+	font-weight: bold;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+}
 
-    select {
-      width: auto;
-      padding: 8px 12px;
-      margin-top: 5px;
-    }
+.btn-sec:hover {
+	background-color: #33a6ee;
+}
 
-    button[type="submit"] {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      margin-top: 30px;
-      background-color: #4db8ff;
-      color: black;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    button[type="submit"]:hover {
-      background-color: #33a6ee;
-    }
-
-    .business-link {
-      font-size: 14px;
-      color: black;
-      cursor: pointer;
-    }
+textarea {
+	width: 100%; padding : 10px; box-sizing : border-box; background-color :
+	#ddd; border : none; border-radius : 4px;
+	height: 100px;
+	resize: none;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #ddd;
+	border: none;
+	border-radius: 4px;
+}

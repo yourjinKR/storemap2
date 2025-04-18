@@ -107,6 +107,10 @@
 		<c:when test="${path eq '/store/storeRegister'}">
 			<jsp:include page="../content/store/storeRegister.jsp" />
 		</c:when>
+		<%-- 메뉴관리 --%>
+		<c:when test="${path eq '/store/menu'}">
+			<jsp:include page="../content/store/menu.jsp" />
+		</c:when>
 	
 		<%-- 메인 --%>
 		<c:otherwise>

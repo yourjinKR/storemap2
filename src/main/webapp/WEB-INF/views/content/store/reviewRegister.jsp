@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<link rel="stylesheet" type="text/css" href="/resources/css/reviewRegister.css">
-<div>
+
+<div class="reviewRegister">
 	<h1>리뷰등록</h1>
 
   <form>
@@ -33,3 +33,4 @@
     <button type="submit">리뷰 등록</button>
   </form>
 </div>
+<script type="text/javascript" src="/resources/js/reviewRegister.js"></script>

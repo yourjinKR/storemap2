@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<link rel="stylesheet" type="text/css" href="/resources/css/storeList.css">
+
 <div>
 	<h1>점포리스트 모달창</h1>
 </div>
@@ -26,3 +26,4 @@
       <div class="store-description">점포 설명~점포 설명~<br>점포 설명~</div>
     </div>
   </div>
+<script type="text/javascript" src="/resources/js/storeList.js"></script>
