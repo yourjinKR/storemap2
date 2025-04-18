@@ -3,5 +3,32 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EnterMapper">
-	
+	<!-- 로그인 -->
+	<select id="eLogin" resultType="org.storemap.domain.EnterVO">
+		SELECT * FROM enter
+		WHERE ENTER_ID = #{enter_id} 
+		AND ENTER_PW = #{enter_pw}
+	</select>
+	<!-- 기업/단체 회원가입 -->
+	<insert id="insertEnter" parameterType="org.storemap.domain.EnterVO">
+		INSERT INTO enter (
+			ENTER_IDX,
+			ENTER_IMAGE,
+			ENTER_ID,
+			ENTER_PW,
+			ENTER_NAME,
+			ENTER_RNUM,
+			ENTER_LOC,
+			ENTER_NUM,
+		) VALUES (
+			enter_seq.NEXTVAL,
+			#{enter_image, jdbcType = VARCHAR},
+			#{enter_id},
+			#{enter_pw},
+			#{enter_name},
+			#{enter_rnum},
+			#{enter_loc},
+			#{enter_num}
+		)	
+	</insert>
 </mapper>

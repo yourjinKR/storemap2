@@ -14,7 +14,12 @@ public class MemberServiceImple implements MemberService{
 	private MemberMapper memberMapper;
 	
 	@Override
-	public MemberVO login(String member_id, String member_pw) {
-		return memberMapper.login(member_id, member_pw);
+	public MemberVO mLogin(String member_id, String member_pw) {
+		return memberMapper.mLogin(member_id, member_pw);
+	}
+	@Override
+	public int insertMember(MemberVO member) {
+		int result = memberMapper.insertMember(member);
+		return result;
 	}
 }

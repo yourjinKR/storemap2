@@ -6,5 +6,9 @@ import org.storemap.domain.MemberVO;
 
 @Mapper
 public interface MemberMapper {
-	MemberVO login(@Param("member_id") String member_id, @Param("member_pw") String member_pw);
+	// 로그인
+	public MemberVO mLogin(@Param("member_id") String member_id, @Param("member_pw") String member_pw);
+	// 개인/점주 회원가입
+	public int insertMember(MemberVO member);
+	
 }
