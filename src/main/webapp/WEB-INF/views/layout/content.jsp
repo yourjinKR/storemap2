@@ -7,6 +7,9 @@
 		<c:when test="${path eq '/content/event/eventList'}">
 			<jsp:include page="../content/event/eventList.jsp" />
 		</c:when>
+		<c:when test="${path eq '/member/login'}">
+			<jsp:include page="/WEB-INF/views/content/member/login.jsp" />
+		</c:when>
 	
 		<c:otherwise>
 			<jsp:include page="../content/main.jsp" />

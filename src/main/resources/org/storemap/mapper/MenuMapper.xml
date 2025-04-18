@@ -4,4 +4,35 @@
 
 <mapper namespace="org.storemap.mapper.MenuMapper">
 	
+	<!-- 1.메뉴 등록  -->
+	<insert id="insert" parameterType="org.storemap.domain.MenuVO">
+		insert into menu values(
+	 		menu_seq.nextval,
+	 		#{store_idx},
+	 		#{menu_image},
+	 		#{menu_name},
+	 		#{menu_price}
+	 	)
+	</insert>
+	<!-- 2.메뉴 추가  -->
+	<update id="update" parameterType="org.storemap.domain.MenuVO">
+		update menu set 
+	 	menu_image = #{menu_image},
+	 	menu_name = #{menu_name},
+	 	menu_price = #{menu_price}
+	 	where menu_idx = #{menu_idx}
+	</update>
+	<!-- 3.메뉴 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from menu where menu_idx = #{menu_idx}
+	</delete>
+	<!-- 4.메뉴 전체 보기  -->
+	<select id="getMenuList" resultType="org.storemap.domain.MenuVO">
+		select * from menu where store_idx = #{store_idx}
+	</select>
+	<!-- 5.메뉴 자세히 보기  -->
+	<select id="read" parameterType="int" resultType="org.storemap.domain.MenuVO">
+		select * from menu where menu_idx = #{menu_idx}
+	</select>
+	
 </mapper>

@@ -3,5 +3,87 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.StoreMapper">
+	<!-- 첨부파일 존재하면 이렇게
+	<select id="getList" resultType="org.storemap.domain.StoreVO">
+		select * from store
+	</select>
+	insert 대괄호밑에 + into쿼리문 위에 쓰고 시퀀스수정
+		<selectKey keyProperty="store_idx" resultType="int" order="BEFORE">
+			select store_seq.nextval from dual
+		</selectKey>
+	 -->
+	<!-- 1.점포 등록  -->
+	<insert id="insert" parameterType="org.storemap.domain.StoreVO">
+		insert into store values(
+	 		store_seq.nextval,
+	 		#{member_idx},
+	 		#{store_name},
+	 		#{store_image},
+	 		#{store_num},
+	 		#{store_email},
+	 		#{store_address},
+	 		#{store_area},
+	 		#{store_activity_time},
+	 		#{store_content},
+	 		#{store_rnum}
+	 	)
+	</insert>
+	<!-- 2.점포 관리  -->
+	<update id="update" parameterType="org.storemap.domain.StoreVO">
+		update store set 
+	 	store_name = #{store_name},
+	 	store_image = #{store_image},
+	 	store_num = #{store_num},
+	 	store_email = #{store_email},
+	 	store_address = #{store_address},
+	 	store_area = #{store_area},
+	 	store_activity_time = #{store_activity_time},
+	 	store_content = #{store_content},
+	 	store_rnum = #{store_rnum}
+	 	where store_idx = #{store_idx}
+	</update>
+	<!-- 3.점포 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from store where store_idx = #{store_idx}
+	</delete>
+	<!-- 4.점포 전체 보기  -->
+	<select id="getStoreList" resultType="org.storemap.domain.StoreVO">
+		select * from store
+	</select>
+	<!-- 5.점포 자세히 보기  -->
+	<select id="read" parameterType="int" resultType="org.storemap.domain.StoreVO">
+		select * from store where store_idx = #{store_idx}
+	</select>
+	<!-- 6.점포 이름 검색 -->
+	<select id="getStoreNameList" parameterType="String" resultType="org.storemap.domain.StoreVO">
+		select * from store where store_name = #{store_name}
+	</select>
+	<!-- 7.점포 동적 검색 -->
+	<select id="getStoreDynamicList" parameterType="hashmap" resultType="org.storemap.domain.StoreVO">
+		select * from store
+		<choose>
+			<when test="key==1"> where store_idx=#{value} </when>
+	 		<when test="key==2"> where store_name=#{value}</when>
+	 		<when test="key==3"> where store_area=#{value}</when>
+		</choose>
+		order by store_idx
+	</select>
+	<!-- 8. 점포 페이지 전체 보기
+	<select id="getListWithPage" resultType="org.storemap.domain.StoreVO">
+		<![CDATA[
+	 		select *
+			from (select store_idx, store_name, store_image, ROWNUM rn
+			from (select store_idx, store_name, store_image
+			    from store
+			    order by store_idx desc)
+			where rownum <= #{pageNum} * #{amount})
+			where rn > (#{pageNum}-1) * #{amount}
+	 	]]>
+	</select>
+	
+	<select id="getTotalRecordCountPage" resultType="int">
+		select count(*) from store
+	</select>
+	-->
 	
 </mapper>

@@ -1,5 +1,7 @@
 package org.storemap.service;
 
-public interface MemberService {
+import org.storemap.domain.MemberVO;
 
+public interface MemberService {
+	MemberVO login(String member_id, String member_pw);
 }

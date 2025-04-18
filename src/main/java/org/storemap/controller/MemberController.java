@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.storemap.domain.MemberVO;
+import org.storemap.mapper.MemberMapper;
 import org.storemap.service.CommentLikeServiceImple;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventLikeServiceImple;
@@ -46,10 +48,11 @@ public class MemberController {
 	// 로그인 처리
 	@PostMapping("/login")
 	public String login(
-			@RequestParam("memberId") String memberId,
-			@RequestParam("memberPw") String memberPw,
+			@RequestParam("member_id") String memberId,
+			@RequestParam("member_pw") String memberPw,
 			HttpSession session,
 			Model model) {
+		/* MemberVO loginUser = memberMapper.login(member_id,member_pw); */
 		// 테스트
 		if("admin".equals(memberId) && "1234".equals(memberPw)) {
 			session.setAttribute("loginId", memberId);
