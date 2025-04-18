@@ -3,5 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.StoreRequestMapper">
-	
+	<select id="getDisReqList" resultType="org.storemap.domain.StoreRequestVO">
+		SELECT * FROM store_request WHERE pon = 0
+	</select>
 </mapper>

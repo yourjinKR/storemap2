@@ -1,5 +1,9 @@
 package org.storemap.mapper;
 
-public interface StoreRequestMapper {
+import java.util.List;
 
+import org.storemap.domain.StoreRequestVO;
+
+public interface StoreRequestMapper {
+	public List<StoreRequestVO> getDisReqList();
 }

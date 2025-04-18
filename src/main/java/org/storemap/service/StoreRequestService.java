@@ -1,5 +1,9 @@
 package org.storemap.service;
 
-public interface StoreRequestService {
+import java.util.List;
 
+import org.storemap.domain.StoreRequestVO;
+
+public interface StoreRequestService {
+	public List<StoreRequestVO> getDisReqList();
 }

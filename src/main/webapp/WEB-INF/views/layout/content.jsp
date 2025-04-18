@@ -10,6 +10,19 @@
 		<c:when test="${path eq '/member/login'}">
 			<jsp:include page="/WEB-INF/views/content/member/login.jsp" />
 		</c:when>
+		
+		<c:when test="${path eq '/admin/adminEnterView'}">
+			<jsp:include page="../content/admin/adminEnterView.jsp" />
+		</c:when>
+		<c:when test="${path eq '/admin/adminEventView'}">
+			<jsp:include page="../content/admin/adminEventView.jsp" />
+		</c:when>
+		<c:when test="${path eq '/admin/adminStoreView'}">
+			<jsp:include page="../content/admin/adminStoreView.jsp" />
+		</c:when>
+		<c:when test="${path eq '/admin/adminMemberView'}">
+			<jsp:include page="../content/admin/adminMemberView.jsp" />
+		</c:when>
 	
 		<%-- 이벤트 리스트 --%>
 		<c:when test="${path eq '/event/eventList'}">
