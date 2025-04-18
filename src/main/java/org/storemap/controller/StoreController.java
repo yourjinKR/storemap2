@@ -22,10 +22,26 @@ public class StoreController {
 	@Autowired
 	private ReviewServiceImple reviewService;
 	
-	// 점포 전체 조회
+	// 점포 등록
 	@GetMapping("/storeRegister")
-	public String list() {
-		log.info("list...");
+	public String storeRegister() {
+		log.info("storeRegister...");
+		//storeService.getList();
+		return "index";
+	}
+	
+	// 점포 관리
+	@GetMapping("/storeModify")
+	public String storeModify() {
+		log.info("storeModify...");
+		//storeService.getList();
+		return "index";
+	}
+		
+	// 리뷰 등록
+	@GetMapping("/reviewRegister")
+	public String reviewRegister() {
+		log.info("reviewRegister...");
 		//storeService.getList();
 		return "index";
 	}

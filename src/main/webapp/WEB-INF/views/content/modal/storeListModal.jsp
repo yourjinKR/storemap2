@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link rel="stylesheet" type="text/css" href="/resources/css/storeList.css">
 <div>
 	<h1>점포리스트 모달창</h1>
 </div>
