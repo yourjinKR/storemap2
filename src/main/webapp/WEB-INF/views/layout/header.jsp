@@ -9,7 +9,9 @@
 	<div class="left-div d_f">
 		<div class="icon">
 			<span>1</span>
-			<i class="fa-regular fa-envelope"></i>
+			<i class="material-symbols-outlined">
+				mail
+			</i>
 		</div>
 		
 		<button>로그인</button>

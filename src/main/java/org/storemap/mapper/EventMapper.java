@@ -1,5 +1,9 @@
 package org.storemap.mapper;
 
-public interface EventMapper {
+import java.util.List;
 
+import org.storemap.domain.EventVO;
+
+public interface EventMapper {
+	public List<EventVO> getRanList();
 }

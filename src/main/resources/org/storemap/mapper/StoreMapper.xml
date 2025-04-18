@@ -97,4 +97,15 @@
 	</select>
 	-->
 	
+	<!-- 메인페이지 랜덤 출력 -->
+	<select id="getStoreRanList" resultType="org.storemap.domain.StoreVO">
+		<![CDATA[
+			SELECT * FROM (
+			    SELECT * FROM STORE 
+			    ORDER BY dbms_random.random
+			)
+			WHERE ROWNUM <= 15
+		]]>
+	</select>
+	
 </mapper>

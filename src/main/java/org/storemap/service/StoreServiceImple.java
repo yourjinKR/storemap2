@@ -74,4 +74,10 @@ public class StoreServiceImple implements StoreService{
 		return mapper.getTotalRecordCountPage();
 	}
 	*/
+	
+	@Override
+	public List<StoreVO> getStoreRanList() {
+		log.info("getStoreRanList..." );
+		return mapper.getStoreRanList();
+	}
 }

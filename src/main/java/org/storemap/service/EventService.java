@@ -1,5 +1,9 @@
 package org.storemap.service;
 
-public interface EventService {
+import java.util.List;
 
+import org.storemap.domain.EventVO;
+
+public interface EventService {
+	public List<EventVO> getRanList();
 }

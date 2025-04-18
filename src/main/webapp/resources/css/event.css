@@ -3,11 +3,29 @@
 h3{font-size: 32px}
 
 .board-top{justify-content: space-between;align-items: center}
+.right-con{align-items: center;}
+.finsh-icon{background: #f00; color:#fff; border-radius: 15px;padding:5px 15px;font-size: 14px;}
 
+/* 카드 타입 */
 .board-card{justify-content: space-between;flex-wrap: wrap;}
+.board-card .finsh-icon{position: absolute;top: 5px;left: 10px;}
+.board-card .event-date{position: absolute;bottom: 5px;right: 10px;border:1px solid #222;border-radius:15px;background:#fff;padding:5px 10px;display:inline-block}
 
+/* 리스트 타입 */
 .board-list{width: 100%;font-size: 16px;border-top:1px solid #222;border-right:1px solid #222;}
 .board-list td{border-bottom: 1px solid #222;border-left: 1px solid #222;vertical-align: middle;}
-.board-list a{padding:10px;display:block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width:875px}
+.board-list a{padding:10px;display:block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width:800px}
 .board-list img{width:50px;height:50px;}
-.board-list tr > td:nth-child(n+3) {text-align:center;}
+.board-list tr > td:nth-child(n+2) {text-align:center;}
+.board-list tr > td:nth-child(2) {border-left:none}
+
+.board-type {gap:15px}
+.board-type input[type="radio"]{width: 0;height: 0;z-index: -1; position:absolute; ;left: -9999px}
+.board-type input[type="radio"] + label{display:block; font-size: 0;width: 32px;height: 32px;}
+.board-type input[type="radio"] + label .material-symbols-outlined {font-size:32px;font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32}
+.board-type input[type="radio"]:checked + label .material-symbols-outlined {font-variation-settings:'FILL' 1,'wght' 700,'GRAD' 0,'opsz' 32}
+
+
+input[type="checkbox"]{width: 0;height: 0;z-index: -1; position:absolute; ;left: -9999px}
+input[type="checkbox"] + label {font-size:24px;color:#222;font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32}
+input[type="checkbox"]:checked + label {font-size:24px;color:#f00;font-variation-settings:'FILL' 1,'wght' 100,'GRAD' 0,'opsz' 32}

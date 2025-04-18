@@ -24,4 +24,7 @@ public interface StoreService {
 	//public List<StoreVO> getListWithPageing(Criteria cri);
 	// 점포 페이지 카운트
 	//public int getTotalRecordCount();
+	
+	// 메인페이지 점포 목록 랜덤 출력
+	public List<StoreVO> getStoreRanList();
 }

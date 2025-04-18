@@ -24,4 +24,9 @@ public interface StoreMapper {
 	//public List<StoreVO> getListWithPage(Criteria cri);
 	// 점포 페이지 카운트
 	//public int getTotalRecordCountPage();
+	
+	// 메인페이지 점포 목록 랜덤 출력
+	public List<StoreVO> getStoreRanList();
+	
+	
 }
