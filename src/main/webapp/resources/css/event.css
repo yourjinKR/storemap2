@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+h3{font-size: 32px}
+
+.board-top{justify-content: space-between;align-items: center}
+
+.board-card{justify-content: space-between;flex-wrap: wrap;}
+
+.board-list{width: 100%;font-size: 16px;border-top:1px solid #222;border-right:1px solid #222;}
+.board-list td{border-bottom: 1px solid #222;border-left: 1px solid #222;vertical-align: middle;}
+.board-list a{padding:10px;display:block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width:875px}
+.board-list img{width:50px;height:50px;}
+.board-list tr > td:nth-child(n+3) {text-align:center;}
