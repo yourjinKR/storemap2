@@ -1,2 +1,2 @@
-console.log("load admin.js");
+console.log("admin.js load");
 
