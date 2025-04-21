@@ -6,6 +6,9 @@ document.head.appendChild(linkEle);
 
 console.log("map.js load");
 
+// 장소 테스트
+const store1 = {store_idx: 1, store_name: "상점1"};
+
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
@@ -51,7 +54,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         btn.addEventListener("click", e => {
             e.preventDefault;
             let type = btn.getAttribute("id");
-            console.log(type);
+            console.log(type + "btn click");
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
                 panToLatLng(testMap, latBasic, lngBasic);
@@ -63,11 +66,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
             else if (type === "markersGen") {
                 registerMarker(37.504724, 127.02538, '0');
                 registerMarker(37.5056370385705, 127.025605528158, '1');
+                showMarkers(testMap);
             }
+            // 마커 리스트 비울때는 숨김 처리 후 리스트의 요소를 비워야 정상 작동
             else if (type === "markersClear") {
+                hideMarkers(testMap);
                 clearMarkers();
             }
-            
             // 마커 한번에 등록 및 보기
             else if (type === "markerListView") {
                 showMarkers(testMap);
@@ -76,10 +81,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
             else if (type === "markerListHide") {
                 hideMarkers(testMap);
             }
-            else if (type === "addMarkers") {
-                
+            else if (type === "markersLog") {
+                markerList.forEach(marker => {
+                    console.log(marker);
+                })
             }
-        })
+            // 가게 클릭시 마커 강조 테스트 0
+            else if (type === "markerViewTest0") {
+                viewStoreMarker("0");
+            }
+            // 가게 클릭시 마커 강조 테스트 1
+            else if (type === "markerViewTest1") {
+                viewStoreMarker("1");
+            }
+        });
     });
 
     // ============================ 지도 관련 함수 ============================
@@ -151,14 +166,57 @@ document.addEventListener("DOMContentLoaded", (event) => {
     function addMarkerEvent(marker) {
         kakao.maps.event.addListener(marker, 'click', function() {
             console.log("marker idx : " + marker.getTitle());
-            // 마커 변경
-            if (!selectedMarker || selectedMarker !== marker) {
-                !!selectedMarker && selectedMarker.setImage(testIcon);
-                marker.setImage(clickedIcon);
-            }
-            selectedMarker = marker;
+            console.log(marker);
+            // 마커 선택
+            selectMarker(marker);
         });
     }
+
+    // 마커 강조 효과
+    function selectMarker(marker) {
+        // 선택된 마커가 없거나 선택된 마커가 해당 마커가 아닐 시에 실행 
+        if (!selectedMarker || selectedMarker !== marker) {
+            !!selectedMarker && selectedMarker.setImage(testIcon);
+            marker.setImage(clickedIcon);
+        }
+        selectedMarker = marker;
+    }
     
+    // 가게 클릭 이벤트
+    function viewStoreMarker(idx) {
+        markerList.forEach(marker => {
+            //console.log(marker.getTitle());
+            // idx와 일치시 이동 및 강조
+            if (idx === marker.getTitle()) {
+                console.log(marker.getPosition().getLat());
+                console.log(marker.getPosition().getLng());
+                // 마커 기준으로 지도 이동
+                panToLatLng(testMap, marker.getPosition().getLat(), marker.getPosition().getLng());
+                // 마커 강조
+                selectMarker(marker)
+            }
+    })
+    }
+
+    // 지도 클릭 이벤트 (경도 출력)
+    kakao.maps.event.addListener(testMap, 'click', function(mouseEvent) {        
+    
+        // 클릭한 위도, 경도 정보를 가져옵니다 
+        let latlng = mouseEvent.latLng; 
+        
+        // 마커 위치를 클릭한 위치로 옮깁니다
+        // marker.setPosition(latlng);
+        
+        let message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+        message += '경도는 ' + latlng.getLng() + ' 입니다';
+        
+        let resultDiv = document.getElementById('clickLatlng'); 
+        resultDiv.innerHTML = message;
+
+        // 좌표 => 도로명 주소
+        // let geocoder = new kakao.maps.services.Geocoder();
+        // let adress = geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), logAdress());
+        // console.log(adress);
+    });
 });
 
