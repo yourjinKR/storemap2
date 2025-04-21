@@ -32,6 +32,7 @@ public class MainController {
 	private StoreServiceImple storeService;
 	
 
+	// 메인 이벤트 랜덤 리스트
 	@GetMapping(value = "/getRanList",
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE,
@@ -43,13 +44,26 @@ public class MainController {
 		return new ResponseEntity<List<EventVO>>(eventService.getRanList(), HttpStatus.OK);
 	}
 	
+	// 메인 이벤트 리스트 종료
+	@GetMapping(value = "/getListEndDate/{searchDate}",
+			produces = {MediaType.APPLICATION_JSON_VALUE}
+			)
+	public ResponseEntity<List<EventVO>> getListEndDate(@PathVariable("searchDate") String searchDate){
+		
+		log.info("getListEndDate....");
+		log.info("searchDate...." + searchDate);
+		
+		return new ResponseEntity<List<EventVO>>(eventService.getListEndDate(searchDate), HttpStatus.OK);
+	}
 	
-	@GetMapping(value = "/getStoreRanList",
+	// 메인 점포 랜덤 리스트
+	@GetMapping(value = "/getStoreRanList/{store_address}",
 			produces = {MediaType.APPLICATION_JSON_VALUE}
 	)
-	public ResponseEntity<List<StoreVO>> getStoreRanList(){
+	public ResponseEntity<List<StoreVO>> getStoreRanList(@PathVariable("store_address") String store_address){
 		log.info("getStoreList....");
+		log.info("store_address : " + store_address);
 		
-		return new ResponseEntity<List<StoreVO>>(storeService.getStoreRanList(), HttpStatus.OK);
+		return new ResponseEntity<List<StoreVO>>(storeService.getStoreRanList(store_address), HttpStatus.OK);
 	}
 }

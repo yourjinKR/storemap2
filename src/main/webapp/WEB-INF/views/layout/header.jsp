@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="header d_f">
 	<h1>로고</h1>
 	<div class="search-bar">
 		<input type="text" name="search" placeholder="검색어를 입력해주세요.">
 	</div>
 	
-	<div class="left-div d_f">
+	<div class="right-div d_f">
 		<div class="icon">
 			<span>1</span>
 			<i class="material-symbols-outlined">
@@ -19,6 +21,9 @@
 		<div class="profile">
 			<img alt="" src="/resources/img/profile.jpg">			
 		</div>
-	</div>
-	
+	</div>	
 </div>
+
+<jsp:include page="./sideBar.jsp"/>
+
+

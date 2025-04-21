@@ -3,6 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EventMapper">
+	<!-- 메인페이지 랜덤 -->
 	<select id="getRanList" resultType="org.storemap.domain.EventVO">
 		<![CDATA[
 			SELECT * FROM (
@@ -10,6 +11,20 @@
 			    ORDER BY dbms_random.random
 			)
 			WHERE ROWNUM <= 15
+		]]>
+	</select>
+	<!-- 메인페이지 종료 순 -->
+	<select id="getListEndDate" parameterType="String" resultType="org.storemap.domain.EventVO">
+		<![CDATA[
+			SELECT * FROM (
+			    SELECT * 
+				FROM EVENT 
+				WHERE 
+					TO_CHAR(EVENT_BSTARTDATE,'YYYYMMDD') <= #{searchDate} AND
+				    TO_CHAR(EVENT_BSTOPDATE,'YYYYMMDD') >= #{searchDate}
+				ORDER BY EVENT_BSTOPDATE
+			)
+			WHERE ROWNUM <= 8
 		]]>
 	</select>
 </mapper>

@@ -26,5 +26,6 @@ public interface StoreService {
 	//public int getTotalRecordCount();
 	
 	// 메인페이지 점포 목록 랜덤 출력
-	public List<StoreVO> getStoreRanList();
+	public List<StoreVO> getStoreRanList(String store_address);
+	
 }

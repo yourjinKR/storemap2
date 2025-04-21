@@ -98,10 +98,11 @@
 	-->
 	
 	<!-- 메인페이지 랜덤 출력 -->
-	<select id="getStoreRanList" resultType="org.storemap.domain.StoreVO">
+	<select id="getStoreRanList" parameterType="String" resultType="org.storemap.domain.StoreVO">
 		<![CDATA[
 			SELECT * FROM (
 			    SELECT * FROM STORE 
+			    WHERE STORE_ADDRESS LIKE '%'||#{store_address}||'%'
 			    ORDER BY dbms_random.random
 			)
 			WHERE ROWNUM <= 15

@@ -75,9 +75,14 @@ public class StoreServiceImple implements StoreService{
 	}
 	*/
 	
+	// 메인페이지 점포 목록 랜덤
 	@Override
-	public List<StoreVO> getStoreRanList() {
+	public List<StoreVO> getStoreRanList(String store_address) {
 		log.info("getStoreRanList..." );
-		return mapper.getStoreRanList();
-	}
+		String addr = store_address;
+		if(store_address.equals("전체")) {
+			addr = "";
+		}
+		return mapper.getStoreRanList(addr);
+	}	
 }

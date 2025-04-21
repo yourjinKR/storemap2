@@ -8,6 +8,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=01b044026317f8b7f88dc847a9e857b8"></script>
 <script type="text/javascript" src="/resources/js/default.js"></script>
 </head>
 <%

@@ -6,4 +6,5 @@ import org.storemap.domain.EventVO;
 
 public interface EventMapper {
 	public List<EventVO> getRanList();
+	public List<EventVO> getListEndDate(String searchDate);
 }
