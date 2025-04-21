@@ -53,7 +53,7 @@ function showList(){
 
 	rs.getList(bno, jsonArray => {
 		jsonArray.forEach(json => {	
-			msg += `<li data-review_idx="${json.review_idx}" onclick="modifyModalPage(this)" name="review_idx">`;
+			msg += `<li data-review_idx="${json.review_idx}" onclick="modifyReviewModalPage(this)" name="review_idx">`;
 			msg += `	<img src="/resources/img/profile.jpg" alt="리뷰어">`;
 			msg += `	<div class="review-content">`;
 			msg += `		<div class="stars">별점수정필요</div>`;

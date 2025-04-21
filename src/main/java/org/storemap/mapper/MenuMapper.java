@@ -12,7 +12,7 @@ public interface MenuMapper {
 	// 메뉴 삭제
 	public int delete(int menu_idx);
 	// 메뉴 목록
-	public List<MenuVO> getMenuList();
+	public List<MenuVO> getMenuList(int store_idx);
 	// 메뉴 정보?
 	public MenuVO read(int menu_idx);
 }

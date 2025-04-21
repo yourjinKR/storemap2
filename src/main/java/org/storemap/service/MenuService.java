@@ -12,7 +12,7 @@ public interface MenuService {
 	// 메뉴 삭제
 	public int remove(int menu_idx);
 	// 메뉴 목록
-	public List<MenuVO> getList();
+	public List<MenuVO> getList(int store_idx);
 	// 메뉴 정보?
 	public MenuVO get(int menu_idx);
 }

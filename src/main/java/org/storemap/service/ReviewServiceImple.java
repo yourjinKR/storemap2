@@ -18,34 +18,34 @@ public class ReviewServiceImple implements ReviewService{
 	
 	@Override
 	public int register(ReviewVO vo) {
-		log.info("..."+vo);
+		log.info("register..."+vo);
 		int result = mapper.insert(vo);
 		return result;
 	}
 	
 	@Override
 	public int modify(ReviewVO vo) {
-		log.info("..."+vo);
+		log.info("modify..."+vo);
 		int result = mapper.update(vo);
 		return result;
 	}
 	
 	@Override
 	public int remove(int review_idx) {
-		log.info("..."+review_idx);
+		log.info("remove..."+review_idx);
 		int result = mapper.delete(review_idx);
 		return result;
 	}
 	
 	@Override
 	public List<ReviewVO> getList() {
-		log.info("...");
+		log.info("getList...");
 		return mapper.getReviewList();
 	}
 	
 	@Override
 	public ReviewVO get(int review_idx) {
-		log.info("..."+review_idx);
+		log.info("get..."+review_idx);
 		return mapper.read(review_idx);
 	}
 	

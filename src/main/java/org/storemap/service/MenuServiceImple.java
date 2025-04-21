@@ -18,34 +18,34 @@ public class MenuServiceImple implements MenuService{
 	
 	@Override
 	public int register(MenuVO vo) {
-		log.info("..."+vo);
+		log.info("register..."+vo);
 		int result = mapper.insert(vo);
 		return result;
 	}
 	
 	@Override
 	public int modify(MenuVO vo) {
-		log.info("..."+vo);
+		log.info("modify..."+vo);
 		int result = mapper.update(vo);
 		return result;
 	}
 	
 	@Override
 	public int remove(int menu_idx) {
-		log.info("..."+menu_idx);
+		log.info("remove..."+menu_idx);
 		int result = mapper.delete(menu_idx);
 		return result;
 	}
 	
 	@Override
-	public List<MenuVO> getList() {
-		log.info("...");
-		return mapper.getMenuList();
+	public List<MenuVO> getList(int store_idx) {
+		log.info("getList..."+store_idx);
+		return mapper.getMenuList(store_idx);
 	}
 	
 	@Override
 	public MenuVO get(int menu_idx) {
-		log.info("..."+menu_idx);
+		log.info("get..."+menu_idx);
 		return mapper.read(menu_idx);
 	}
 	
