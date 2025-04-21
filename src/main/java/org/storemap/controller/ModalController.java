@@ -39,8 +39,9 @@ public class ModalController {
 	
 	//점포 리스트 모달
 	@GetMapping("/storeListModal")
-	public String storeListModal() {
+	public String storeListModal(Model model) {
 		log.info("storeListModal...");
+		model.addAttribute("list",storeService.getList());
 		return "index";
 	}
 	

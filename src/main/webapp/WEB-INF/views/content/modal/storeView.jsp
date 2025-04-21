@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="container">
+<div class="storeView">
     <img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">
 
     <div class="store-info">
@@ -46,5 +46,5 @@
       </div>
     </div>
     <!-- 리뷰 수정 모달 -->
-  </div>
+</div>
 <script type="text/javascript" src="/resources/js/storeView.js"></script>

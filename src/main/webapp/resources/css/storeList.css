@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-body {
+.storeListModal {
 	font-family: sans-serif;
 	background-color: #f4f4f4;
 }
@@ -22,13 +22,13 @@ body {
 
 .store-info {
 	padding: 15px;
+	background-color: #e1e1e1;
 }
 
 .store-name {
 	font-size: 1.2em;
 	font-weight: bold;
 	margin-bottom: 10px;
-	background-color: #e1e1e1;
 	padding: 10px;
 }
 
