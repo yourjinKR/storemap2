@@ -20,7 +20,7 @@
 	display: block;
 }
 
-.store-info {
+.store-description {
 	padding: 15px;
 	background-color: #e1e1e1;
 }
@@ -32,8 +32,46 @@
 	padding: 10px;
 }
 
-.store-description {
+.store-content {
 	color: #555;
 	font-size: 0.95em;
 	line-height: 1.4em;
+}
+
+/*모달*/
+
+#modal{
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 640px;
+}
+.store-image {
+	border-radius: 8px;
+}
+
+.store-info {
+	margin-top: 20px;
+}
+
+.store-info h3 {
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
+.info-text {
+	margin: 5px 0;
+	color: #333;
 }
