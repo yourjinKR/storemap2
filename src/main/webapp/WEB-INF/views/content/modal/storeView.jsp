@@ -1,38 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div>
-	<h1>점포정보팝업</h1>
-</div>
 <div class="container">
-    <img src="store.jpg" alt="가게 내부 이미지" class="store-image">
+    <img src="/resources/img/durmy.jpg" alt="가게 이미지" class="store-image">
 
     <div class="store-info">
       <h3>가게정보</h3>
-      <div class="info-text">주소: 서울시 ○○구 ○○로 00 홍</div>
-      <div class="info-text">영업일: 매일 11:00 ~ 22:00</div>
-      <div class="info-text">전화: 010-1234-5678</div>
+      <div class="info-text">주소: ${svo.store_address}</div>
+      <div class="info-text">영업일: ${svo.store_activity_time}</div>
+      <div class="info-text">전화: ${svo.store_num}</div>
     </div>
 
     <div class="menu-section">
       <h3>메뉴</h3>
       <div class="menu-list">
+      	<c:forEach var="mvo" items="${menulist}">
+      	
+      	</c:forEach>
         <div class="menu-item">
-          <img src="kimchi.jpg" alt="김치찌개">
-          <div class="menu-name">김치찌개</div>
-          <div class="menu-price">₩8,000</div>
+          <img src="/resources/img/durmy2.jpg" alt="음식사진">
+          <div class="menu-name">${mvo.menu_name}</div>
+          <div class="menu-price">₩${mvo.menu_price}</div>
         </div>
         <div class="menu-item">
-          <img src="doenjang.jpg" alt="된장찌개">
+          <img src="/resources/img/durmy2.jpg" alt="음식사진">
           <div class="menu-name">된장찌개</div>
           <div class="menu-price">₩8,000</div>
         </div>
         <div class="menu-item">
-          <img src="pork.jpg" alt="제육볶음">
+          <img src="/resources/img/durmy2.jpg" alt="음식사진">
           <div class="menu-name">제육볶음</div>
           <div class="menu-price">₩9,000</div>
         </div>
         <div class="menu-item">
-          <img src="bibimbap.jpg" alt="비빔밥">
+          <img src="/resources/img/durmy2.jpg" alt="음식사진">
           <div class="menu-name">비빔밥</div>
           <div class="menu-price">₩9,000</div>
         </div>
@@ -41,23 +42,18 @@
 
     <div class="review-section">
       <h3>리뷰</h3>
-      <div class="review">
-        <img src="user1.png" alt="리뷰어1">
-        <div class="review-content">
-          <div class="stars">★★★★★</div>
-          <div class="review-meta">김** · 2024.04.20</div>
-          <div>음식도 맛있고 사장님도 친절해요!</div>
-        </div>
-      </div>
-
-      <div class="review">
-        <img src="user2.png" alt="리뷰어2">
-        <div class="review-content">
-          <div class="stars">★★★★★</div>
-          <div class="review-meta">이** · 2024.04.18</div>
-          <div>역시 이 집 김치찌개가 최고예요.</div>
-        </div>
-      </div>
+      <ul class="review">
+      	<li data-review_idx="10">
+	        <img src="/resources/img/profile.jpg" alt="리뷰어">
+	        <div class="review-content">
+	          <div class="stars">별점아직만드는중</div>
+	          <div class="review-meta">
+	          	<strong>작성자</strong> · <small class="">0000.00.00</small></div>
+	          <div>내용</div>
+	        </div>
+        </li>
+      </ul>
     </div>
+    <!-- 리뷰 입력 만들기? -->
   </div>
 <script type="text/javascript" src="/resources/js/storeView.js"></script>

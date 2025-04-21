@@ -9,7 +9,7 @@
 		insert into review values(
 	 		review_seq.nextval,
 	 		#{store_idx},
-	 		#{member_idx},
+	 		#{review_writer},
 	 		#{review_star},
 	 		#{review_title},
 	 		#{review_content},
