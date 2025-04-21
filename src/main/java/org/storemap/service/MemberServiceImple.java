@@ -22,4 +22,10 @@ public class MemberServiceImple implements MemberService{
 		int result = memberMapper.insertMember(member);
 		return result;
 	}
+	// id 중복확인
+	@Override
+	public int checkId(String member_id) {
+		int result = memberMapper.checkId(member_id); 
+		return result; 
+	}
 }

@@ -10,5 +10,6 @@ public interface MemberMapper {
 	public MemberVO mLogin(@Param("member_id") String member_id, @Param("member_pw") String member_pw);
 	// 개인/점주 회원가입
 	public int insertMember(MemberVO member);
-	
+	// id 중복확인
+	public int checkId(String member_id);
 }

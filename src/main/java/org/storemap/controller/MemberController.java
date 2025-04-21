@@ -1,5 +1,8 @@
 package org.storemap.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -8,8 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.EnterVO;
 import org.storemap.domain.MemberVO;
 import org.storemap.mapper.MemberMapper;
@@ -49,31 +54,30 @@ public class MemberController {
 	}
 	// 로그인 처리
 	@PostMapping("/login")
-	public String mLogin(
+	public String Login(
 			@RequestParam String id,
 			@RequestParam String pw,
-			@RequestParam String type,
 			HttpSession session,
 			Model model) {
-		if("member".equals(type)) {
-			MemberVO loginUser = memberService.mLogin(id, pw);
-			// 검증
-			if(loginUser != null) {
-				session.setAttribute("loginUser", loginUser);
-				return "redirect:/";
-			}
-		} else {
-			EnterVO loginUser = enterService.eLogin(id, pw);
-			// 검증
-			if(loginUser != null) {
-				session.setAttribute("loginUser", loginUser);
-				return "redirect:/";
-			}
+		// member 테이블 검증
+		MemberVO member = memberService.mLogin(id, pw);
+		if(member != null) {
+			member.setMember_pw(null);
+			session.setAttribute("loginUser", member);
+			session.setAttribute("userType", member.getMember_type());
+			return "redirect:/";
+		}
+		// enter 테이블 검증
+		EnterVO enter = enterService.eLogin(id, pw);
+		if(enter != null) {
+			enter.setEnter_pw(null);
+			session.setAttribute("loginUser", enter);
+			session.setAttribute("userType", "enter");
+			return "redirect:/";
 		}
 		model.addAttribute("msg","아이디 또는 비밀번호가 틀렸습니다.");
 		model.addAttribute("page","login");
 		return "index";
-		
 	}
 	// 회원가입 화면으로 이동
 	@GetMapping("/register")
@@ -83,15 +87,35 @@ public class MemberController {
 		request.setAttribute("path", "/member/register");
 		return "index";
 	}
-	// 개인/점주 회원가입 처리
-	@PostMapping("/register")
-	public String registerMember(MemberVO member) {
-		memberService.insertMember(member);
-		return "redirect:/member/login";
+	// 아이디 중복 확인
+	@GetMapping("/checkId")
+	@ResponseBody
+	public Map<String, Object> checkId(@RequestParam("member_id") String member_id) {
+		Map<String, Object> result = new HashMap<>();
+		int exists = memberService.checkId(member_id); 
+		result.put("result", exists);
+		return result;
 	}
 	
-	// 기관/단체 회원가입 처리(삭제)
-//	@PostMapping("/register")
+	// 개인/점주 회원가입 처리
+	@PostMapping("/register")
+	@ResponseBody
+	public Map<String, Object> registerMember(@RequestBody MemberVO member) {
+		memberService.insertMember(member);
+		Map<String, Object> result = new HashMap<>();
+		result.put("result", 1);
+		return result;
+	}
+	
+	
+	// 개인/점주 회원가입 처리
+//	@PostMapping("/register/personal")
+//	public String registerMember(MemberVO member) {
+//		memberService.insertMember(member);
+//		return "redirect:/member/login";
+//	}
+	// 기관/단체 회원가입 처리
+//	@PostMapping("/register/group")
 //	public String registerEnter(EnterVO enter) {
 //		enterService.insertEnter(enter);
 //		return "redirect:/member/login";

@@ -12,11 +12,12 @@ import lombok.extern.log4j.Log4j;
 public class EnterServiceImple implements EnterService{
 	@Autowired
 	private EnterMapper enterMappter;
-	
+	// 로그인
 	@Override
 	public EnterVO eLogin(String enter_id, String enter_pw) {
 		return enterMappter.eLogin(enter_id, enter_pw);
 	}
+	// 회원가입
 	@Override
 	public int insertEnter(EnterVO enter) {
 		int result = enterMappter.insertEnter(enter);
