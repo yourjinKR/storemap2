@@ -12,7 +12,7 @@ public interface EventService {
 	public List<EventVO> getListEndDate(String searchDate);
 	
 	// 이벤트 상세보기
-	public List<EventVO> getEventOneView(int eventIdx);
+	public EventVO getEventOneView(int event_idx);
 	// 이벤트 리스트 갯수
 	public int getListCount();
 	// 이벤트 리스트

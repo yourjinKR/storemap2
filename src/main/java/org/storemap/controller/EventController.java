@@ -72,9 +72,9 @@ public class EventController {
 	
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
-	public String eventView(Model model, @RequestParam("eventIdx") int eventIdx ) {
-		model.addAttribute("vo", eventService.getEventOneView(eventIdx));
-		log.info("eventVO..." + eventIdx );
+	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
+		model.addAttribute("vo", eventService.getEventOneView(event_idx));
+		log.info("eventVO..." + event_idx);
 		
 		return "index";
 	}

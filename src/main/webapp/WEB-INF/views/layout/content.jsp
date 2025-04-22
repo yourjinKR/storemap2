@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="wrap">
+
 	<c:choose>
 		<%-- 관리자페이지 --%>
 		<c:when test="${path eq '/admin/adminMain'}">
@@ -37,6 +38,7 @@
 			<jsp:include page="../content/event/eventRegister.jsp" />
 		</c:when>
 		<%-- 이벤트 상세보기 --%>
+		
 		<c:when test="${path eq '/event/eventView'}">
 			<jsp:include page="../content/event/eventView.jsp" />
 		</c:when>

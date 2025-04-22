@@ -46,6 +46,33 @@ function boardChange(chkEl){
 //	})
 //}
 
+function openModal() {
+	  document.getElementById("calendarModal").style.display = "block";
+	}
 
+	function closeModal() {
+	  document.getElementById("calendarModal").style.display = "none";
+	}
+
+	function confirmParticipation() {
+	  const selectedDate = document.getElementById("selectedDate").value;
+	  if (!selectedDate) {
+	    alert("참여할 날짜를 선택해주세요.");
+	    return;
+	  }
+
+	  const currentCountElement = document.getElementById("currentCount");
+	  let number = parseInt(currentCountElement.innerText);
+	  const max = parseInt("${vo.event_max_list}");
+
+	  if (number < max) {
+	    number += 1;
+	    currentCountElement.innerText = number;
+	    closeModal();
+	    alert(`✅ ${selectedDate}에 참여가 등록되었습니다!`);
+	  } else {
+	    alert("최대 인원을 초과할 수 없습니다.");
+	  }
+	}
 
 

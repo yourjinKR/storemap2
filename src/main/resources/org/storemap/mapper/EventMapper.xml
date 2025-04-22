@@ -29,7 +29,7 @@
 	</select>
 	<!-- 이벤트 상세보기 -->
 	<select id="getEventOneView" resultType="org.storemap.domain.EventVO" parameterType="int">
-		SELECT * FROM EVENT WHERE IDX = #{IDX}
+		SELECT * FROM EVENT WHERE EVENT_IDX = #{EVENT_IDX}
 	</select>
 <!--  <insert id="insert" parameterType="EventVO">
     INSERT INTO event (

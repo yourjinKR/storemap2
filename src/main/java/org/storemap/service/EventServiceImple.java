@@ -33,9 +33,9 @@ public class EventServiceImple implements EventService{
 	
 	// 이벤트 상세보기 페이지
 	@Override
-	public List<EventVO> getEventOneView(int eventIdx) {
-		log.info("getEventOneView" + eventIdx);
-		return mapper.getEventOneView(eventIdx);
+	public EventVO getEventOneView(int event_idx) {
+		log.info("getEventOneView" + event_idx);
+		return mapper.getEventOneView(event_idx);
 	}
 	
 	// 이벤트 리스트 갯수
