@@ -4,7 +4,7 @@
 	<h1>점포등록</h1>
 
   <form method="post">
-  	<input type="hidden" name="member_idx" value="${loginidx}"><!-- $안에 옳바른idx세션값넣기 -->
+  	<input type="hidden" name="member_idx" value="${loginUserIdx}"><!-- $안에 옳바른idx세션값넣기 -->
   
     <label for="sname">점포명</label>
     <input type="text" id="sname" name="store_name">

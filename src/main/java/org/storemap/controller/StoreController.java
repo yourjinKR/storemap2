@@ -33,7 +33,7 @@ public class StoreController {
 	public String storeRgister1(StoreVO vo) {
 		log.info("storeRegister1..."+vo);
 		storeService.register(vo);
-		return "redirect:/store/menu";
+		return "redirect:/store/menu?store_idx="+vo.getStore_idx();
 	}
 	@GetMapping("/storeRegister")
 	public String storeRegister2() {
