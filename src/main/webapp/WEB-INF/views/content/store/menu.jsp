@@ -1,31 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="menu">
-	<h1>메뉴관리</h1>
-	
-	<label>메뉴추가</label>
-    <table class="menu-table">
-      <tr>
-        <th>메뉴</th>
-        <th>가격</th>
-        <th>사진</th>
-        <th>대표 메뉴 여부 체크박스</th>
-      </tr>
-      <tr>
-        <td><input type="text" name="menu_name" placeholder="메뉴"></td>
-        <td><input type="text" name="menu_price" placeholder="가격"></td>
-        <td>
-        	<input type="text" name="menu_image" value="menu11.jpg">
-        </td>
-        <td><input type="checkbox"></td>
-      </tr>
-    </table>
-    <div class="input_wrap">
+	<!-- 댓글처럼하기 -->
+	<div class="menu_input">
+    	<h1>메뉴추가</h1>
+    	<label for="mname">메뉴</label>
+    	<input type="text" id="mname" name="menu_name">
+    	<label for="mprice">가격</label>
+    	<input type="text" id="mprice" name="menu_price">
+    	<!-- input_list삭제할지 쓸지 결정 -->
         <div class="input_list">
             <input type="text" name="input_array[]" placeholder="입력해주세요." />
         </div>
     </div>
-    <button class="add_field">메뉴 추가</button>
+    <button class="add_menu">메뉴 추가</button>
+	<!-- 댓글목록처럼하기 -->
+	<div class="menu-list">
+		<h1>메뉴관리</h1>
+		<ul>
+			<c:forEach var="vo" items="${list}">
+				<li data-store_idx="${vo.menu_idx}" onclick="viewModalPage(this)" name="menu_idx">
+					<img src="/resources/img/${vo.menu_image}" alt="${vo.menu_image}" class="menu-image">
+					<div class="menu-description">
+						<div class="menu-name">${vo.menu_name}</div>
+						<div class="menu-price">₩${vo.menu_price}</div>
+					</div>
+					<br>
+				</li>
+			</c:forEach>
+		</ul>
+	</div>
+	<!-- 메뉴 수정 모달 -->
     
 </div>
 <script type="text/javascript" src="/resources/js/menu.js"></script>

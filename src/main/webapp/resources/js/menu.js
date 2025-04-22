@@ -6,8 +6,8 @@ linkEle.rel = 'stylesheet';
 linkEle.href = CSS_PATH;
 document.head.appendChild(linkEle);
 
-const wrapper = $('.input_wrap'); // 입력 필드를 포함하는 컨테이너 선택
-const addButton = $('.add_field'); // 추가 버튼 선택
+const wrapper = $('.menu_input'); // 입력 필드를 포함하는 컨테이너 선택
+const addButton = $('.add_menu'); // 추가 버튼 선택
 const maxFields = 10; // 최대 입력 필드 수 설정
 let fieldCount = 1; // 현재 입력 필드 수
 
@@ -27,7 +27,7 @@ addButton.click(function(e) {
 });
 
 // '삭제' 링크 클릭 시 이벤트
-wrapper.on('click', '.remove_field', function(e) {
+wrapper.on('click', '.remove_menu', function(e) {
     e.preventDefault(); // 페이지 리로드 방지
     $(this).parent('.input_list').remove(); // 필드 제거
     fieldCount--; // 필드 수 감소

@@ -1,15 +1,50 @@
 @charset "UTF-8";
 
+/* 공통 폰트 및 패딩 */
 .menu {
 	font-family: sans-serif;
 	text-align: center;
 	padding: 30px;
+	background-color: #f9f9f9;
 }
 
+/* 제목 스타일 */
+.menu h1 {
+	font-size: 26px;
+	margin-bottom: 30px;
+	color: #333;
+}
 
-.input_wrap {
-	margin-bottom: 20px;
-} 
+/* 입력 영역 스타일 */
+.menu_input {
+	max-width: 600px;
+	margin: 0 auto 30px auto;
+	text-align: left;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.menu_input label {
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	color: #444;
+	font-weight: bold;
+}
+
+.menu_input input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #ddd;
+	border: none;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
+/* 없앨지 말지 봐야함 */
 .input_list {
 	display: flex;
 	align-items: center;
@@ -22,21 +57,43 @@
 	border-radius: 4px;
 	flex-grow: 1;
 } 
-.add_field {
+/* 메뉴 추가 버튼 */
+.add_menu {
 	width: 100%;
-	height: 45px;
-	padding: 0 15px;
-	background-color: #007bff;
+	padding: 12px;
+	background-color: #4db8ff;
+	color: black;
+	font-size: 16px;
+	font-weight: bold;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+
+.add_menu:hover {
+	background-color: #33a6ee;
+}
+/* 삭제 버튼 스타일 예시 (선택적 사용) */
+.remove_menu {
+	display: inline-block;
+	margin-top: 10px;
+	background: #ff4d4d;
+	color: #fff;
 	border: none;
 	border-radius: 4px;
-	color: white;
+	padding: 8px 12px;
 	cursor: pointer;
+	font-weight: bold;
 	transition: background-color 0.3s ease;
-} 
-.add_field:hover {
-	background-color: #0056b3;
-} 
-.remove_field {
+	text-decoration: none;
+}
+
+.remove_menu:hover {
+	background: #ff3333;
+}
+/*
+.remove_menu {
 	display: flex;
 	align-items: center;
 	height: 45px;
@@ -48,6 +105,74 @@
 	cursor: pointer;
 	text-decoration: none;
 } 
-.remove_field:hover {
+.remove_menu:hover {
 	background: #ff3333;
-} 
+}
+*/
+
+/* 메뉴 리스트 전체 박스 */
+.menu-list {
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-list h1 {
+	font-size: 22px;
+	margin-bottom: 20px;
+	text-align: left;
+	color: #333;
+}
+
+/* 개별 메뉴 카드 스타일 */
+.menu-list ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.menu-list li {
+	width: 48%;
+	margin-bottom: 20px;
+	background-color: #f2f2f2;
+	border-radius: 8px;
+	padding: 10px;
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+.menu-list li:hover {
+	transform: scale(1.03);
+}
+
+/* 메뉴 이미지 */
+.menu-list img {
+	width: 100%;
+	height: auto;
+	border-radius: 6px;
+	margin-bottom: 10px;
+}
+
+/* 설명 텍스트 */
+.menu-description {
+	text-align: left;
+}
+
+.menu-name {
+	font-size: 18px;
+	font-weight: bold;
+	color: #222;
+}
+
+.menu-price {
+	color: #666;
+	font-size: 16px;
+	margin-top: 5px;
+}
