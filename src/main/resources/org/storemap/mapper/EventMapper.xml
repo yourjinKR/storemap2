@@ -27,4 +27,41 @@
 			WHERE ROWNUM <= 8
 		]]>
 	</select>
+<!--  <insert id="insert" parameterType="EventVO">
+    INSERT INTO event (
+        EVENT_IDX,
+        STORE_IDX,
+        ENTER_IDX,
+        EVENT_TITLE,
+        EVENT_CATEGORY,
+        EVENT_LOCATION,
+        EVENT_LOCATION_DETAIL,
+        EVENT_CONTENT,
+        EVENT_LIKE_CNT,
+        EVENT_RSTARTDATE,
+        EVENT_RSTOPDATE,
+        EVENT_BSTARTDATE,
+        EVENT_BSTOPDATE,
+        EVENT_HIDDEN,
+        EVENT_FILE,
+        EVENT_LIST_MAX
+    ) VALUES (
+        event_seq.NEXTVAL,
+        #{store_idx},
+        #{enter_idx},
+        #{event_title},
+        #{event_category},
+        #{event_location},
+        #{event_location_detail},
+        #{event_content},
+        #{event_like_cnt},
+        #{event_rstartdate},
+        #{event_rstopdate},
+        #{event_bstartdate},
+        #{event_bstopdate},
+        #{event_hidden},
+        #{event_file},
+        #{event_list_max}
+    )
+</insert>-->
 </mapper>
