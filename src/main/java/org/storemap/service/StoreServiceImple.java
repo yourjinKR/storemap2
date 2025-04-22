@@ -84,5 +84,12 @@ public class StoreServiceImple implements StoreService{
 			addr = "";
 		}
 		return mapper.getStoreRanList(addr);
-	}	
+	}
+	
+	@Override
+	public List<StoreVO> getAreaList(String store_area) {
+		log.info("getAreaList...");
+		return mapper.getStoreAreaList(store_area);
+	}
+	
 }

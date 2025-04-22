@@ -1,5 +1,7 @@
 package org.storemap.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -60,7 +63,7 @@ public class ModalController {
 		return "index";
 	}
 	
-	// 2. 조회
+	// 점포조회
 	@GetMapping(value = "/{store_idx}",
 				produces = {
 						MediaType.APPLICATION_XML_VALUE,
@@ -69,6 +72,17 @@ public class ModalController {
 	public ResponseEntity<StoreVO> get(@PathVariable("store_idx") int store_idx){
 		log.info("get..."+store_idx);
 		return new ResponseEntity<StoreVO>(storeService.get(store_idx), HttpStatus.OK);
+	}
+	
+	//점포 지역별 리스트 비동기 조회
+	@GetMapping(value = "/list/{store_area}",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+		})
+	public ResponseEntity<List<StoreVO>> getList(@PathVariable("store_area") String store_area){
+		log.info("getList..."+store_area);
+		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_area), HttpStatus.OK);
 	}
 	
 }

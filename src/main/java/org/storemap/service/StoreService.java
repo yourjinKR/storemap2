@@ -27,5 +27,7 @@ public interface StoreService {
 	
 	// 메인페이지 점포 목록 랜덤 출력
 	public List<StoreVO> getStoreRanList(String store_address);
+	// 점포 지역별 리스트 불러오기
+	public List<StoreVO> getAreaList(String store_area);
 	
 }

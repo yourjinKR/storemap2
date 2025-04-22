@@ -21,6 +21,7 @@ const storeService = (function(){
         get : get
     };
 })();
+
 const ss = storeService;
 
 const modal = document.querySelector("#modal");

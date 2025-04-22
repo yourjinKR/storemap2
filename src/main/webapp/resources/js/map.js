@@ -240,6 +240,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
         };
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
     }
+    
+    //점포 지역별 리스트 조회 함수
+    const storeAreaService = (function(){       
+        function getList(store_area, callback){
+        	fetch(`/modal/list/${store_area}.json`)
+        	.then(response => response.json())
+        	.then(data => {
+        		callback(data);
+        	})
+        	.catch(err => console.log(err));
+        }
+    	return {
+            getList : getList
+        };
+    })();
+    const sas = storeAreaService;
+    
+    /* 아마 이런식으로?
+    sas.get(store_area, function(data){
+    	openModal();
+    });
+    */
 
     // store 클릭 이벤트
     let storeListModal = document.querySelectorAll(".store-card ul li");
