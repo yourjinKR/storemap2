@@ -63,6 +63,7 @@ public class MemberController {
 		MemberVO member = memberService.mLogin(id, pw);
 		if(member != null) {
 			member.setMember_pw(null);
+			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
 			session.setAttribute("userType", member.getMember_type());
 			return "redirect:/";
@@ -71,7 +72,7 @@ public class MemberController {
 		EnterVO enter = enterService.eLogin(id, pw);
 		if(enter != null) {
 			enter.setEnter_pw(null);
-			session.setAttribute("loginUser", enter);
+			session.setAttribute("loginUser", enter.getEnter_id());
 			session.setAttribute("userType", "enter");
 			return "redirect:/";
 		}
