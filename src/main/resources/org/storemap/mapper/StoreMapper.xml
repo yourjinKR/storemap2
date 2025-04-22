@@ -43,7 +43,6 @@
 	<update id="update" parameterType="org.storemap.domain.StoreVO">
 		update store set 
 	 	store_name = #{store_name},
-	 	store_image = #{store_image},
 	 	store_num = #{store_num},
 	 	store_email = #{store_email},
 	 	store_address = #{store_address},

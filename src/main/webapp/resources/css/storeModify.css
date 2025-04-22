@@ -35,6 +35,12 @@ select {
 	border-radius: 4px;
 }
 
+select {
+	width: auto;
+	padding: 8px 12px;
+	margin-top: 5px;
+}
+
 .checkbox-group {
 	display: flex;
 	gap: 15px;

@@ -15,7 +15,7 @@ document.querySelectorAll('button').forEach(btn => {
 		}else if(type === 'resetBtn'){
 			f.reset();
 		}else if(type === 'indexBtn'){
-			location.href=`/index`;
+			location.href=`/`;
 		}
 	})
 });

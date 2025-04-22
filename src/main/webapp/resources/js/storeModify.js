@@ -17,7 +17,7 @@ document.querySelectorAll('button').forEach(btn => {
 		}else if(type === 'removeBtn'){
 			remove();
 		}else if(type === 'indexBtn'){
-			location.href=`/index`;
+			location.href=`/`;
 		}
 	})
 });

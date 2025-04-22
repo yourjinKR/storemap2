@@ -4,7 +4,6 @@
 	<h1>점포관리</h1>
 
   <form method="post">
-  	<input type="hidden" name="store_idx" value="${vo.store_idx}">
   	<input type="hidden" name="member_idx" value="${vo.member_idx}">
   
     <label for="sname">점포명</label>
@@ -21,7 +20,7 @@
 
     <label for="area">활동 지역</label>
     <select id="area" name="store_area">
-    	<option value="${vo.store_area}" selected disabled hidden>${vo.store_area}</option>
+    	<option value="${vo.store_area}" selected hidden>${vo.store_area}</option>
         <option value="서울">서울</option>
         <option value="경기">경기</option>
         <option value="인천">인천</option>
