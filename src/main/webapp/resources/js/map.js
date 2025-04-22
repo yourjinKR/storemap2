@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 addMarker(testMap, latBasic, lngBasic);
             }
             else if (type === "markersGen") {
-                registerMarker(37.504724, 127.02538, '2');
+                registerMarker(37.504724, 127.02538, '0');
                 registerMarker(37.5056370385705, 127.025605528158, '1');
                 showMarkers(testMap);
             }

@@ -111,6 +111,10 @@
 		<c:when test="${path eq '/store/menu'}">
 			<jsp:include page="../content/store/menu.jsp" />
 		</c:when>
+		<%-- 점포지도 --%>
+		<c:when test="${path eq '/store/map'}">
+			<jsp:include page="../content/store/map.jsp" />
+		</c:when>
 	
 		<%-- 메인 --%>
 		<c:otherwise>

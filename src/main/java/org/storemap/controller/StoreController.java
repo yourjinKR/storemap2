@@ -85,4 +85,11 @@ public class StoreController {
 		return "index";
 	}
 	
+	// map 이동
+	@GetMapping("/map")
+	public String storeMap() {
+		log.info("mapGet...");
+		return "index";
+	}
+	
 }
