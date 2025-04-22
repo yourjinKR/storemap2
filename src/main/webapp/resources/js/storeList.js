@@ -13,7 +13,6 @@ const storeService = (function(){
         .then(response => response.json())
         .then(data => {
             callback(data);
-            
         })
         .catch(err => console.log(err));
     }
@@ -25,10 +24,6 @@ const storeService = (function(){
 const ss = storeService;
 
 const modal = document.querySelector("#modal");
-const storeInfo = document.querySelectorAll(".info-text");
-let address = storeInfo[0].textContent;
-let activity_time = storeInfo[1].textContent;
-let num = storeInfo[2].textContent;
 const image = document.querySelector(".store-image");
 
 function openModal(){
@@ -38,22 +33,31 @@ function closeModal(){
 	modal.style.display = "none";
 }
 
-let idx;
 //점포 리스트 클릭 이벤트
 function viewModalPage(li){
 	// 값 가져와서 바인딩
-	idx = li.getAttribute('data-store_idx');
-	ss.get(idx, function(){
-		//강제삽입해야적용됨
-		//
-		//
-		//
-		//
-		image.src = li.querySelector("img").src;
-		address += li.querySelector("input[name='store_address']").value;
-		activity_time += li.querySelector("input[name='store_activity_time']").value;
-		num += li.querySelector("input[name='store_num']").value;
-	});	
-	// 모달 창 열기
-	openModal();
+	const idx = li.getAttribute('data-store_idx');
+	const img = li.querySelector("img").src;
+	const address = li.querySelector("input[name='store_address']").value;
+	const activity_time = li.querySelector("input[name='store_activity_time']").value;
+	const num = li.querySelector("input[name='store_num']").value;
+	image.src = img;
+	
+	ss.get(idx, function(data){
+		const modalInfo = document.querySelector(".store-info");
+		modalInfo.innerHTML = `
+			<h3>가게정보</h3>
+            <div class="info-text">주소: ${address}</div>
+            <div class="info-text">영업일: ${activity_time}</div>
+            <div class="info-text">전화: ${num}</div>
+		`;
+		// 모달 창 열기
+		openModal();
+	});
 }
+//점포 정보창 닫기 이벤트
+document.querySelector('#modal').addEventListener('click', function(e){
+	if ( e.target == document.querySelector('#modal') ) {
+		closeModal();
+	}
+})
