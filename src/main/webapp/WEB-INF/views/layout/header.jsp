@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-	아이디 : ${ loginUser.member_id }<br>
+	아이디 : ${ loginUser }<br>
 	권&emsp;&emsp;한 : ${ userType }
 <div class="header d_f">
 	<h1>로고</h1>
