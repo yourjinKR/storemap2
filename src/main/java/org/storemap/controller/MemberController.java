@@ -63,7 +63,7 @@ public class MemberController {
 		MemberVO member = memberService.mLogin(id, pw);
 		if(member != null) {
 			member.setMember_pw(null);
-			session.setAttribute("loginUser", member);
+			session.setAttribute("loginUser", member.getMember_id());
 			session.setAttribute("userType", member.getMember_type());
 			return "redirect:/";
 		}
@@ -88,7 +88,7 @@ public class MemberController {
 		return "index";
 	}
 	// 아이디 중복 확인
-	@GetMapping("/checkId")
+	@GetMapping(value = "/checkId", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> checkId(@RequestParam("member_id") String member_id) {
 		Map<String, Object> result = new HashMap<>();
