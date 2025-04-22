@@ -41,9 +41,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 
     // 지도 출력 테스트 ===============================
-	let container1 = document.getElementById('map');
-	let option = {center: new kakao.maps.LatLng(37.5054070438773, 127.026682479708), level: 3};
-	new kakao.maps.Map(container1, option);
+	// let container1 = document.getElementById('map');
+	// let option = {center: new kakao.maps.LatLng(37.5054070438773, 127.026682479708), level: 3};
+	// new kakao.maps.Map(container1, option);
 	
 	// 지도 이동 테스트 ===============================
 	let container2 = document.getElementById('map2');
@@ -233,9 +233,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 // console.log(status); // status : 응답 코드
                 // console.log('지역 명칭 : ' + result[0].address_name);
                 // console.log('행정구역 코드 : ' + result[0].code);
-                let name = result[0].address_name;
-                let code = result[0].code;
-                resultDiv.innerHTML +=  `\n지역 명칭 : ${name} \n행정구역 코드 : ${code}`;
+                let name0 = result[0].address_name;
+                let name1 = result[1].address_name;
+                let code0 = result[0].code;
+                let code1 = result[1].code;
+                resultDiv.innerHTML +=  `<br>지역 명칭0 : ${name0} <br>지역 명칭1 : ${name1} <br>행정구역 코드0 : ${code0} <br>행정구역 코드1 : ${code1}`;
             }
         };
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
@@ -244,24 +246,27 @@ document.addEventListener("DOMContentLoaded", (event) => {
     //점포 지역별 리스트 조회 함수
     const storeAreaService = (function(){       
         function getList(store_area, callback){
-        	fetch(`/modal/list/${store_area}.json`)
-        	.then(response => response.json())
-        	.then(data => {
-        		callback(data);
-        	})
-        	.catch(err => console.log(err));
+            fetch(`/modal/list/${store_area}.json`)
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => console.log(err));
         }
-    	return {
+        return {
             getList : getList
         };
     })();
     const sas = storeAreaService;
     
-    /* 아마 이런식으로?
-    sas.get(store_area, function(data){
-    	openModal();
-    });
-    */
+    // 지역명을 기준으로 출력
+    sas.getList("서울", function(data) {
+        console.log(data);
+        data.forEach(store => {
+            console.log(store.store_idx);
+            // registerMarker(lat, lng, idx); 추가예정
+        })
+    })
 
     // store 클릭 이벤트
     let storeListModal = document.querySelectorAll(".store-card ul li");

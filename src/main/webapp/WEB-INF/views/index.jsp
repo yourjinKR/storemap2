@@ -17,6 +17,11 @@
 <body>
 	<jsp:include page="./layout/header.jsp" /><br>
 	<jsp:include page="./layout/content.jsp" /><br>
-	<jsp:include page="./layout/footer.jsp" />
+	<c:choose>
+		<c:when test="${path eq '/store/map'}"></c:when>
+		<c:otherwise>
+			<jsp:include page="./layout/footer.jsp" />
+		</c:otherwise>
+	</c:choose>
 </body>
 </html>
