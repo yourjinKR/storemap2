@@ -28,6 +28,6 @@
 		)	
 	</insert>
 	<select id="checkId" parameterType="String" resultType="int">
-		SELECT COUNT(*) FROM WHERE MEMBER_ID = #{member_id}
+		SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = #{member_id}
 	</select>
 </mapper>

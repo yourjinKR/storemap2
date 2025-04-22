@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- <p>로그인한 사용자 : ${loginUser.member_id}</p>
-	 <p>사용자 타입 : ${userType}</p> --%>
-<%-- <p>로그인한 사용자 : ${loginUser.enter_id}</p> --%>
+ 	 <p>로그인한 사용자 idx : ${loginUserIdx}</p>
+	 <p>로그인한 사용자 : ${loginUser}</p>
+	 <p>사용자 타입 : ${userType}</p>
 <div>
 	<br>
 	<h1>login</h1>
-	<form action="${pageContext.request.contextPath}/member/login" method="post">
+	<form action="/member/login" method="post">
 		<input type="text" name="id" placeholder="아이디"/>
 		<input type="password" name="pw" placeholder="비밀번호"/>
 		<button type="submit">로그인</button>

@@ -88,23 +88,25 @@ public class MemberController {
 		request.setAttribute("path", "/member/register");
 		return "index";
 	}
-	// 아이디 중복 확인
+	// 개인/점주 아이디 중복 확인
 	@GetMapping(value = "/checkId", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> checkId(@RequestParam("member_id") String member_id) {
 		Map<String, Object> result = new HashMap<>();
-		int exists = memberService.checkId(member_id); 
+		int existsInMember = memberService.checkId(member_id); 
+		int existsInEnter = enterService.checkId(member_id); 
+		int exists = (existsInMember > 0 || existsInEnter > 0) ? 1 : 0;
 		result.put("result", exists);
 		return result;
 	}
 	
 	// 개인/점주 회원가입 처리
-	@PostMapping("/register")
+	@PostMapping(value = "/register", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> registerMember(@RequestBody MemberVO member) {
-		memberService.insertMember(member);
 		Map<String, Object> result = new HashMap<>();
-		result.put("result", 1);
+		int res = memberService.insertMember(member);
+		result.put("result", res);
 		return result;
 	}
 	

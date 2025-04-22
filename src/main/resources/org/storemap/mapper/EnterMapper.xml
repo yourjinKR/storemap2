@@ -9,7 +9,11 @@
 		WHERE ENTER_ID = #{enter_id} 
 		AND ENTER_PW = #{enter_pw}
 	</select>
-	<!-- 회원가입 -->
+	<!-- 회원가입 시 member id 체크 -->
+	<select id="checkId" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM ENTER WHERE ENTER_ID = #{member_id}
+	</select>
+	<!-- 회원가입 정보 등록 -->
 	<insert id="insertEnter" parameterType="org.storemap.domain.EnterVO">
 		INSERT INTO enter (
 			ENTER_IDX,

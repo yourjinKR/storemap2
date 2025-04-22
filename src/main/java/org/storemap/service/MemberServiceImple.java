@@ -12,7 +12,7 @@ import lombok.extern.log4j.Log4j;
 public class MemberServiceImple implements MemberService{
 	@Autowired
 	private MemberMapper memberMapper;
-	
+	// 로그인
 	@Override
 	public MemberVO mLogin(String member_id, String member_pw) {
 		return memberMapper.mLogin(member_id, member_pw);

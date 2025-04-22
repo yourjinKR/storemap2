@@ -11,6 +11,7 @@ let {idCk, pwCk, pwReCk, nameCk} = false; // 검증
 const regExpId = /^[a-z]+[0-9a-z]{3,12}$/;	// 아이디 검증 정규식
 const regExpPw = /^[0-9a-zA-Z]{8,16}$/;		// 비밀번호 검증 정규식
 const regExpName = /^[가-힣a-zA-Z]{2,12}$/;	// 이름 검증 정규식 
+const regExpNickName = /^[가-힣a-zA-Z]{2,12}$/;	// 별명 검증 정규식 
 
 // ---------- 함수 ----------------
 // 버튼들 클릭 이벤트
@@ -78,29 +79,26 @@ function validateId(){
 		idCk = false;
 		return;
 	}else if(!regExpId.exec(target.value)){
-		console.log("ok");
+		console.log("ok2");
 		invalidate(target, mIdValidState, "형식에 맞지 않은 아이디입니다.");
 		idCk = false;
 		return;
 	}
 	
-	const params = {
-		cmd : 'validateId',
-		mId : target.value
-	};
-	
-	const queryString = Object.keys(params)
-			.map(key => encodeURIComponent(key) + '=' +
-			encodeURIComponent(params[key]))
-			.join('&');
+	let member_id = target.value;
 			
 	fetch(`/member/checkId?member_id=${encodeURIComponent(member_id)}`)
-		.then(response => response.json())
+		.then(response => {
+//			console.log("raw response : ", response);
+//			return response.text();
+			return response.json()
+			
+		})
 		.then(data => {
+			console.log("중복 체크 결과 : ", data);
 			if(data.result == 0){
 				validated(target, mIdValidState, '사용 가능한 아이디입니다.');
 				idCk = true;
-				target.setAttribute('disabled', true);
 			}else{
 				invalidate(target, mIdValidState, '중복된 아이디입니다.');
 				idCk = false;
@@ -115,7 +113,7 @@ f.member_pw.addEventListener('keyup', e => {
 	
 	if(target.value === ''){
 		// 값이 비어있을 때
-		Initialization(target, mPwValidState);
+		invalidate(target, mPwValidState, '비밀번호를 입력해주세요.');
 		pwCk = false;
 	}else if(!regExpPw.exec(target.value)){
 		// 데이터 검증 미완료
@@ -123,7 +121,7 @@ f.member_pw.addEventListener('keyup', e => {
 		pwCk = false;
 	}else{
 		// 데이터 검증 완료
-		validated(target, mPwValidState);
+		validated(target, mPwValidState, '사용 가능한 비밀번호입니다.');
 		pwCk = true;
 	}
 });
@@ -133,23 +131,24 @@ f.member_pw_re.addEventListener('keyup', e => {
 	
 	if(target.value === ''){
 		// 값이 비어있을 때 - 초기화
-		Initialization(target, mPwReValidState);
+		invalidate(target, mPwReValidState, '비밀번호를 입력해주세요.');
 		pwReCk = false;
-	}else if(target.value === f.mPw.value){
-		// 값이 같으면 통과
-		validated(target, mPwReValidState);
-		pwReCk = true;
-	}else{
+	}else if(target.value !== f.member_pw.value){
 		// 값이 다르면 - '비밀번호가 일치하지 않습니다.'
 		invalidate(target, mPwReValidState, '비밀번호가 일치하지 않습니다.');
 		pwReCk = false;
+	} else {
+		// 값이 같으면 통과
+		validated(target, mPwReValidState, '확인되었습니다.');
+		pwReCk = true;
 	}
 });
+//이름 확인
 f.member_name.addEventListener('keyup', e=>{
 	let target = e.currentTarget;
 	
 	if(target.value === ''){
-		Initialization(target);
+		Initialization(target, '이름을 입력해주세요.');
 		nameCk = false;
 	}else if(!regExpName.exec(target.value)){
 		invalidate(target);
@@ -169,7 +168,6 @@ function regist(){
 		alert("모든 입력 내용을 확인해주세요");
 		return;
 	}
-	f.member_id.removeAttribute("disabled");
 	let formData = new FormData(f);
 	let jsonData = JSON.stringify(Object.fromEntries(formData.entries()));
 	
@@ -184,7 +182,7 @@ function regist(){
 	.then(data => {
 		if(data.result === 1){
 			alert("회원가입이 완료되었습니다.");
-			location.href=`${contextPath}/member/login`;
+			location.href=`/member/login`;
 		} else {
 			alert("회원가입이 실패했습니다.");
 		}
