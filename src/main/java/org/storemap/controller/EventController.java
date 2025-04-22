@@ -2,8 +2,10 @@ package org.storemap.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.storemap.domain.EventVO;
 import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
@@ -33,13 +35,14 @@ public class EventController {
 	
 	@GetMapping("/eventRegister")
 	public String eventRegister() {
-
 		return "index";
 	}
 	
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
-	public String eventView() {
+	public String eventView(Model model, @RequestParam("eventIdx") int eventIdx ) {
+		model.addAttribute("vo", eventService.getEventOneView(eventIdx));
+		log.info("eventVO..." + eventIdx );
 		
 		return "index";
 	}

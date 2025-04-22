@@ -1,69 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>게시글 상세 보기</title>
-  <link rel="stylesheet" href="css/event.css">
-  <style>
-    .readonly-form {
-      max-width: 600px;
-      margin: 30px auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
+<script type="text/javascript" src="/resources/js/event.js"></script>
 
-    .readonly-form h2 {
-      margin-bottom: 20px;
-    }
-
-    .readonly-form .field {
-      margin-bottom: 15px;
-    }
-
-    .readonly-form .label {
-      font-weight: bold;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .readonly-form .value {
-      padding: 10px;
-      background-color: #f5f5f5;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      white-space: pre-wrap;
-    }
-
-    .photo-preview {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .photo-preview img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background-color: #eee;
-    }
-  </style>
-</head>
-<body>
 
   <div class="readonly-form">
     <h2>🎪 2025 봄꽃 축제</h2>
@@ -121,6 +59,3 @@
 
     <button onclick="history.back()">← 목록으로 돌아가기</button>
   </div>
-
-</body>
-</html>

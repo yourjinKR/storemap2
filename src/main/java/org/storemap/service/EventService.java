@@ -11,4 +11,7 @@ public interface EventService {
 	
 	// 메인페이지 점포 목록 종료 순
 	public List<EventVO> getListEndDate(String searchDate);
+	
+	// 이벤트 상세보기
+	public List<EventVO> getEventOneView(int eventIdx);
 }

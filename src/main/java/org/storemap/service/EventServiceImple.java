@@ -31,4 +31,11 @@ public class EventServiceImple implements EventService{
 		return eMapper.getListEndDate(searchDate);
 	}
 	
+	// 이벤트 상세보기 페이지
+	@Override
+	public List<EventVO> getEventOneView(int eventIdx) {
+		log.info("getEventOneView" + eventIdx);
+		return eMapper.getEventOneView(eventIdx);
+	}
+	
 }
