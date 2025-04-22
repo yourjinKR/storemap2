@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LetterVO {
-	private int letter_idx, member_idx, letter_read;
-	private String letter_content, letter_writer;
+	private int letter_idx, letter_read;
+	private String letter_receiver, letter_content, letter_writer;
 	private Date letter_regdate;
 }
