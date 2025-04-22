@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	calendarInit();		 // 캘린더 렌더
 });
 
+
+// 
 function placeSelect(){
 	document.querySelectorAll("#place-select option").forEach(el => {
 		if(thisPlace == el.value){

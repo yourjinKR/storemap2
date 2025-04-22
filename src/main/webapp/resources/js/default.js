@@ -70,3 +70,19 @@ function getAddr(lat, lng){
 	})
 	.catch(err => console.log(err));
 };
+
+// 페이징
+//if(pageNumData != null || amountData != null){
+//	
+//	let pageNumData = document.querySelector(".page-nation").dataset['pagenum'];
+//	let amountData = document.querySelector(".page-nation").dataset['amount'];
+//	// URL에서 파라미터 값 찾아 스토리지 저장
+//	let pageNum = new URLSearchParams(location.search).get("pageNum");
+//	let amount = new URLSearchParams(location.search).get("amount");
+//	if(!pageNum || !amount){
+//		pageNum = 1;
+//		amount = 5;
+//	}
+//}
+//setStorageData(pageNum, amount);
+

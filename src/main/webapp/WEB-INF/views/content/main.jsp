@@ -71,7 +71,8 @@
 		<h3>점포 리스트</h3>
 		<div class="d_f mt15px">
 			<div class="select-box mb15">
-				<label for="place-select">지역 : </label> <select id="place-select">
+				<label for="place-select">지역 : </label> 
+				<select id="place-select">
 					<option value="전체">전체</option>
 					<option value="서울">서울</option>
 					<option value="경기">경기</option>

@@ -1,12 +1,18 @@
 package org.storemap.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.storemap.domain.Criteria;
 import org.storemap.domain.EventVO;
+import org.storemap.domain.PageDTO;
 import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -29,9 +35,35 @@ public class EventController {
 	
 	//이벤트 등록 화면으로 이동
 	@GetMapping("/eventList")
-	public String eventList() {
+	public String eventList(Model model, Criteria cri) {
+		List<EventVO> list = null;
+		int parsePageNum = cri.getPageNum();
+		int parseAmount = cri.getAmount();
+		
+		if(parsePageNum == 0) {
+			cri.setPageNum(1);
+		}
+		if(parseAmount == 0) {
+			cri.setAmount(15);
+		}
+		
+		int total = eventService.getListCount();
+		PageDTO pdto = new PageDTO(cri, total);
+		list = eventService.getList(cri);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("pageMaker",pdto);
+		
 		return "index";
 	}
+	
+	@ResponseBody
+	@GetMapping("/favorite/{event_idx}") 
+	public int updateFavorite(@PathVariable("event_idx") int event_idx) {
+		eventService.updateFavorite(event_idx);
+		return 1; 
+	}
+	 
 	
 	@GetMapping("/eventRegister")
 	public String eventRegister() {

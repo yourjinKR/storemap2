@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.storemap.domain.Criteria;
 import org.storemap.domain.EventVO;
 import org.storemap.mapper.EventMapper;
 
@@ -14,28 +15,45 @@ import lombok.extern.log4j.Log4j;
 public class EventServiceImple implements EventService{
 	
 	@Autowired
-	private EventMapper eMapper;
+	private EventMapper mapper;
 	
-	// 메인 이벤트 리스트 랜덤
+	// 메인 페이지 랜덤 이벤트
 	@Override
 	public List<EventVO> getRanList() {
 		log.info("getRanList... ");
-		log.info("getRanList... " + eMapper.getRanList());
-		return eMapper.getRanList();
+		return mapper.getRanList();
 	}
 	
-	// 메인 이벤트 리스트 종료 순
+	// 메인페이지 선택 날짜 이벤트
 	@Override
 	public List<EventVO> getListEndDate(String searchDate) {
 		log.info("getListEndDate... ");
-		return eMapper.getListEndDate(searchDate);
+		return mapper.getListEndDate(searchDate);
 	}
 	
 	// 이벤트 상세보기 페이지
 	@Override
 	public List<EventVO> getEventOneView(int eventIdx) {
 		log.info("getEventOneView" + eventIdx);
-		return eMapper.getEventOneView(eventIdx);
+		return mapper.getEventOneView(eventIdx);
 	}
 	
+	// 이벤트 리스트 갯수
+	@Override
+	public int getListCount() {
+		log.info("getListCount... " + mapper.getListCount());
+		return mapper.getListCount();
+	}
+	
+	// 이벤트 리스트
+	@Override
+	public List<EventVO> getList(Criteria cri) {
+		return mapper.getList(cri);
+	}
+	
+	// 이벤트 좋아요
+	@Override
+	public int updateFavorite(int event_idx) {
+		return mapper.updateFavorite(event_idx);
+	}
 }
