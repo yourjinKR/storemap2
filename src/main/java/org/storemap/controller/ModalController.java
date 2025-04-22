@@ -1,6 +1,10 @@
 package org.storemap.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.storemap.domain.LetterVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -83,6 +88,23 @@ public class ModalController {
 	public ResponseEntity<List<StoreVO>> getList(@PathVariable("store_area") String store_area){
 		log.info("getList..."+store_area);
 		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_area), HttpStatus.OK);
+	}
+	
+	//
+	@GetMapping(value = "/getLetterList/{type}",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE
+			})
+	public ResponseEntity<List<LetterVO>> getLetterList(@PathVariable("type") String type, HttpSession session){
+		if(session.getAttribute("userType") == "enter" || session.getAttribute("userType") == "admin" ){
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("letterType", type);
+			map.put("loginUser", (String) session.getAttribute("loginUser"));
+			if(session.getAttribute("loginUser") != null) {
+				log.info("sendLetter : " + letterService.getLetterList(map));
+			}
+		}
+		return null;
 	}
 	
 }

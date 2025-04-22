@@ -57,3 +57,4 @@
 
 *{box-sizing: border-box;line-height: 1.2}
 img{display: block;width:100%;}
+caption{opacity: 0;font-size: 0;}

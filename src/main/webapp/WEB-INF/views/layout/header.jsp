@@ -27,5 +27,6 @@
 </div>
 
 <jsp:include page="./sideBar.jsp"/>
+<jsp:include page="./letter.jsp"/>
 
 

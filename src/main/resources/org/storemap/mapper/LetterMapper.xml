@@ -3,5 +3,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.LetterMapper">
-	
+	<!-- 보낸 쪽지함 -->
+	<!-- <select id="getSendLetter" parameterType="String" resultType="org.storemap.domain.LetterVO"> 
+		SELECT * FROM LETTER WHERE LETTER_WRITER = #{letter_writer} </select> 받은 
+		쪽지함 <select id="getReceivedLetter" parameterType="String" resultType="org.storemap.domain.LetterVO"> 
+		SELECT * FROM LETTER WHERE LETTER_RECEIVER = #{letter_receiver} </select> -->
+
+	<select id="getLetterList"
+		resultType="org.storemap.domain.LetterVO">
+		<choose>
+			<when test="letterType == 'receivedLetter'">
+				SELECT * FROM LETTER
+				WHERE LETTER_WRITER = #{loginUser}
+			</when>
+			<otherwise>
+				SELECT * FROM LETTER
+				WHERE LETTER_RECEIVER = #{loginUser}
+			</otherwise>
+		</choose>
+	</select>
 </mapper>

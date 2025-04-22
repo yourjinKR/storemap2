@@ -41,3 +41,20 @@
 .side-bar .close-btn{position: absolute;right: 10px;top: 10px;text-indent: -9999px;font-size: 0;width: 30px;height: 30px; background:none;border:none;cursor:pointer}
 .side-bar .close-btn::before{content: "";width: 100%; height: 2px;background: #222; display: block; position: absolute; top: 50%; left: 0; transform: rotate(45deg);}
 .side-bar .close-btn::after{content: "";width: 100%; height: 2px;background: #222; display: block; position: absolute; top: 50%; left: 0; transform: rotate(-45deg);}
+
+.bg{position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0,0,0,0.7); z-index: 999;display:none}
+.pop-content{position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);background: #fff; max-width: 750px; width:100%; z-index:1000;max-height:500px;min-height:300px;text-align: center;padding:15px;border:2px solid #222;border-radius: 5px;}
+.pop-content .inner{border-radius: 5px;padding:15px;}
+.pop-content h4{font-size: 24px;font-weight: bold;background: #d9d9d9;padding:10px 0;border-radius:5px}
+.pop-content table{width: 100%;border-top:1px solid #222;border-right:1px solid #222;}
+.pop-content table th,
+.pop-content table td{padding:10px 0;border-left:1px solid #d9d9d9;border-bottom:1px solid #222;border-left:1px solid #222;}
+.pop-content table th{font-size: 18px; font-weight: bold;background: #d9d9d9;}
+
+.letter-tab{display: flex;}
+.letter-tab li{width: 33.3333%;}
+.letter-tab li a{padding: 15px 0;display: block;border:1px solid #222;font-weight:bold;}
+.letter-tab li a.on {background:#1985ff;color:#fff}
+.js-tab-content {display: none;}
+.js-tab-content.on {display: block;}
+
