@@ -49,8 +49,10 @@ public class AdminController {
 	private CommentDeclarationServiceImple commentDeclService;
 	
 	@GetMapping("/adminMain")
-	public String adminMain() {
+	public String adminMain(Model model) {
 		log.info("adminMainGet...");
+		log.info("storeListModal...");
+		model.addAttribute("list",storeService.getList());
 		return "index";
 	}
 	@GetMapping("/adminEnterView")

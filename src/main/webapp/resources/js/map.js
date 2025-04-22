@@ -1,8 +1,8 @@
-const MAIN_CSS_FILE_PATH = '/resources/css/map.css';
-let linkEle = document.createElement('link');
-linkEle.rel = 'stylesheet';
-linkEle.href = MAIN_CSS_FILE_PATH;
-document.head.appendChild(linkEle);
+// const MAIN_CSS_FILE_PATH = '/resources/css/map.css';
+// let linkEle = document.createElement('link');
+// linkEle.rel = 'stylesheet';
+// linkEle.href = MAIN_CSS_FILE_PATH;
+// document.head.appendChild(linkEle);
 
 console.log("map.js load");
 
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 addMarker(testMap, latBasic, lngBasic);
             }
             else if (type === "markersGen") {
-                registerMarker(37.504724, 127.02538, '0');
+                registerMarker(37.504724, 127.02538, '2');
                 registerMarker(37.5056370385705, 127.025605528158, '1');
                 showMarkers(testMap);
             }
@@ -182,12 +182,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
         selectedMarker = marker;
     }
     
-    // 가게 클릭 이벤트
+    // 가게 클릭 이벤트 (화면이동 + 강조효과)
     function viewStoreMarker(idx) {
         markerList.forEach(marker => {
             //console.log(marker.getTitle());
             // idx와 일치시 이동 및 강조
             if (idx === marker.getTitle()) {
+                // 해당 마커의 좌표 출력
                 console.log(marker.getPosition().getLat());
                 console.log(marker.getPosition().getLng());
                 // 마커 기준으로 지도 이동
@@ -198,25 +199,67 @@ document.addEventListener("DOMContentLoaded", (event) => {
     })
     }
 
+    let clickMarker = new kakao.maps.Marker({ 
+        // 지도 중심좌표에 마커를 생성합니다 
+        position: new kakao.maps.LatLng(latBasic, lngBasic)
+    });
+    clickMarker.setMap(testMap);
+
+
+
     // 지도 클릭 이벤트 (경도 출력)
     kakao.maps.event.addListener(testMap, 'click', function(mouseEvent) {        
     
-        // 클릭한 위도, 경도 정보를 가져옵니다 
-        let latlng = mouseEvent.latLng; 
-        
-        // 마커 위치를 클릭한 위치로 옮깁니다
-        // marker.setPosition(latlng);
+        // 클릭한 위도, 경도 정보
+        let latlng = mouseEvent.latLng;
+        clickMarker.setPosition(latlng);
         
         let message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
         message += '경도는 ' + latlng.getLng() + ' 입니다';
         
         let resultDiv = document.getElementById('clickLatlng'); 
         resultDiv.innerHTML = message;
-
-        // 좌표 => 도로명 주소
-        // let geocoder = new kakao.maps.services.Geocoder();
-        // let adress = geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), logAdress());
-        // console.log(adress);
+        
+        // 도로명 주소 함수
+        searchAddrFromCoords(latlng, resultDiv);
     });
+
+    // 좌표 => 도로명 주소 함수
+    function searchAddrFromCoords(latlng, resultDiv) {
+        let geocoder = new kakao.maps.services.Geocoder();
+        let callback = function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                // console.log(result); // result : 결과 내용, [0] : 역삼동 / [1] : 역삼 1동
+                // console.log(status); // status : 응답 코드
+                // console.log('지역 명칭 : ' + result[0].address_name);
+                // console.log('행정구역 코드 : ' + result[0].code);
+                let name = result[0].address_name;
+                let code = result[0].code;
+                resultDiv.innerHTML +=  `\n지역 명칭 : ${name} \n행정구역 코드 : ${code}`;
+            }
+        };
+        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+    }
+
+    // store 클릭 이벤트
+    let storeListModal = document.querySelectorAll(".store-card ul li");
+    if (storeListModal != null ) {
+        storeListModal.forEach(modal => {
+            // idx 추출
+            let idx = modal.getAttribute("data-store_idx");
+            modal.addEventListener('click', e => {
+                console.log(idx);
+                // 리스트 중에서 idx 찾기
+                markerList.forEach(marker => {
+                    if (marker.getTitle() === idx) {
+                        console.log(marker.getTitle());
+                        console.log("idx 일치");
+                        // 가게의 idx와 마커의 title이 일치할때 함수 실행
+                        viewStoreMarker(idx);
+                    }
+                });
+            });
+        });
+    }
 });
 

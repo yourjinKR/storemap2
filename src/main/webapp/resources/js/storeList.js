@@ -1,4 +1,3 @@
-const f = document.forms[0];
 
 const CSS_PATH = '/resources/css/storeList.css';
 let linkEle = document.createElement('link');
@@ -6,6 +5,7 @@ linkEle.rel = 'stylesheet';
 linkEle.href = CSS_PATH;
 document.head.appendChild(linkEle);
 
+const f = document.forms[0];
 const storeService = (function(){
 	//댓글 조회 함수 
     function get(store_idx,callback){
@@ -56,8 +56,12 @@ function viewModalPage(li){
 	});
 }
 //점포 정보창 닫기 이벤트
-document.querySelector('#modal').addEventListener('click', function(e){
-	if ( e.target == document.querySelector('#modal') ) {
-		closeModal();
-	}
-})
+let modals = document.querySelector('#modal');
+if(modals != null){
+	modals.addEventListener('click', function(e){
+		if ( e.target == document.querySelector('#modal') ) {
+			console.log(modals);
+			closeModal();
+		}
+	})
+}

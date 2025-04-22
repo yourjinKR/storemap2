@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript" src="/resources/js/admin.js"></script>
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
@@ -27,8 +28,14 @@
 		<div id="map2" style="width: 1200; height: 800px;"></div>
 		<br>
 		<div id="clickLatlng"></div>
-
-
+		<br>
+		<br>
+		<br>
+		<div id="map3" style="width:500px;height:400px;"></div>
+	</div>
+	
+	<div>
+		<jsp:include page="../modal/storeListModal.jsp" />
 	</div>
 
 
