@@ -88,7 +88,7 @@ public class MemberController {
 		request.setAttribute("path", "/member/register");
 		return "index";
 	}
-	// 개인/점주 아이디 중복 확인
+	// 개인 아이디 중복 확인
 	@GetMapping(value = "/checkId", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> checkId(@RequestParam("member_id") String member_id) {
@@ -99,6 +99,19 @@ public class MemberController {
 		result.put("result", exists);
 		return result;
 	}
+	// 단체 아이디 중복 확인
+	@GetMapping(value = "/echeckId", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> echeckId(@RequestParam("enter_id") String enter_id) {
+		Map<String, Object> result = new HashMap<>();
+		int existsInMember = memberService.checkId(enter_id); 
+		int existsInEnter = enterService.checkId(enter_id); 
+		int exists = (existsInMember > 0 || existsInEnter > 0) ? 1 : 0;
+		result.put("result", exists);
+		return result;
+	}
+	// 첨부파일
+	
 	
 	// 개인/점주 회원가입 처리
 	@PostMapping(value = "/register", produces = "application/json; charset=UTF-8")
@@ -106,6 +119,15 @@ public class MemberController {
 	public Map<String, Object> registerMember(@RequestBody MemberVO member) {
 		Map<String, Object> result = new HashMap<>();
 		int res = memberService.insertMember(member);
+		result.put("result", res);
+		return result;
+	}
+	// 기업/단체 회원가입 처리
+	@PostMapping(value = "/register/group", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> registerEnter(@RequestBody EnterVO enter) {
+		Map<String, Object> result = new HashMap<>();
+		int res = enterService.insertEnter(enter);
 		result.put("result", res);
 		return result;
 	}
