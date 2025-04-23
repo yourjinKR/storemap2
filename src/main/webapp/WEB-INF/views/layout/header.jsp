@@ -11,15 +11,15 @@
 	</div>
 	
 	<div class="right-div d_f">
-		<div class="icon">
+		<div class="icon" onclick="modalShow('letter')">
 			<span>1</span>
 			<i class="material-symbols-outlined">
 				mail
 			</i>
 		</div>
 		
-		<button>로그인</button>
-		<button>로그아웃</button>
+		<a class="btn" href="/member/login">로그인</a>
+		<a class="btn">로그아웃</a>
 		<div class="profile">
 			<img alt="" src="/resources/img/profile.jpg">			
 		</div>

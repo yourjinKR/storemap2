@@ -87,12 +87,28 @@ function getAddr(lat, lng){
 // }
 // setStorageData(pageNum, amount);
 
-getLetter("sendLetter");
+// 팝업 Show
+function modalShow(pop){
+	document.querySelector(".bg").classList.add("on");
+	if(pop == "letter") {
+		document.querySelector("#"+pop).classList.add("on");
+		getLetter("sendLetter");
+	};
+}
+
+function modalClose(){
+	document.querySelector(".bg").classList.remove("on");
+	document.querySelector(".pop-content").classList.remove("on");
+}
+
+
+
+// 쪽지 리스트
 function getLetter(type){
 	fetch(`/modal/getLetterList/${type}`)
 	.then(response => response.json())
 	.then(result => {
-		
+		console.log(result)
 	})
 }
 

@@ -132,7 +132,6 @@ function eventListEndDate(dateStr){
 	fetch(`/main/getListEndDate/`+ dateStr)
 	.then(response => response.json())
 	.then(result =>{
-		console.log(result);
 		let str = "";
 		let eventList = document.querySelector(".event-calendar .event-list");
 		
