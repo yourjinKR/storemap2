@@ -13,10 +13,22 @@
 </head>
 <%
 	request.setAttribute("path", request.getAttribute("javax.servlet.forward.request_uri"));
+
+	String path = (String) request.getAttribute("path");
+    if ("/store/map".equals(path)) {
+        request.setAttribute("type", "full");
+    }
 %>
 <body>
-	<jsp:include page="./layout/header.jsp" /><br>
+	<c:choose>
+		<c:when test="${path eq '/store/map'}"></c:when>
+		<c:otherwise>
+			<jsp:include page="./layout/header.jsp" /><br>
+		</c:otherwise>
+	</c:choose>
+	
 	<jsp:include page="./layout/content.jsp" /><br>
+	
 	<c:choose>
 		<c:when test="${path eq '/store/map'}"></c:when>
 		<c:otherwise>

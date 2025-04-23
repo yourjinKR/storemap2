@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         btn.addEventListener("click", e => {
             e.preventDefault;
             let type = btn.getAttribute("id");
-            console.log(type + "btn click");
+            console.log(type + "click");
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
                 panToLatLng(testMap, latBasic, lngBasic);
@@ -63,9 +63,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
             else if (type === "markerTest") {
                 addMarker(testMap, latBasic, lngBasic);
             }
+            // 마커 여러개 생성
             else if (type === "markersGen") {
-                registerMarker(37.504724, 127.02538, '0');
-                registerMarker(37.5056370385705, 127.025605528158, '1');
+                registerMarker(37.504724, 127.02538, '302');
+                registerMarker(37.5056370385705, 127.025605528158, '303');
+                e.target.disabled = true;
                 showMarkers(testMap);
             }
             // 마커 리스트 비울때는 숨김 처리 후 리스트의 요소를 비워야 정상 작동
@@ -93,6 +95,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
             // 가게 클릭시 마커 강조 테스트 1
             else if (type === "markerViewTest1") {
                 viewStoreMarker("1");
+            }
+            // 사이드바 열기
+            else if (type === "showMapSideBar") {
+                showMapSideBar();
+            }
+            // 사이드바 열기
+            else if (type === "hideMapSideBar") {
+                hideMapSideBar();
             }
         });
     });
@@ -162,13 +172,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
         setMarkers(null);    
     }
 
-    // 마커에 클릭 이벤트 추가 테스트
+    // 마커 클릭 이벤트 추가 함수
     function addMarkerEvent(marker) {
         kakao.maps.event.addListener(marker, 'click', function() {
             console.log("marker idx : " + marker.getTitle());
             console.log(marker);
             // 마커 선택
             selectMarker(marker);
+            showMapSideBar();
+            openModal();
         });
     }
 
@@ -243,9 +255,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
     }
     
-    //점포 지역별 리스트 조회 함수
-    const storeAreaService = (function(){       
-        function getList(store_area, callback){
+    // 점포 검색
+    const storeSearchService = (function(){  
+        
+        // 지역명 기반 검색, 추후에 store_regcode로 진행   
+        function getListByReg(store_area, callback){
             fetch(`/modal/list/${store_area}.json`)
             .then(response => response.json())
             .then(data => {
@@ -253,40 +267,103 @@ document.addEventListener("DOMContentLoaded", (event) => {
             })
             .catch(err => console.log(err));
         }
+        // 현위치 기반 검색
+        function getListByLocNow(locNow, callback) {
+            
+        }
+
+        // 카테고리 기반 검색 (store table에 카테고리가 없으니 menu에서 찾아야 하는가)
+        function getListByCategory(menu_name, callback) {
+            
+        }
+
+        // 점포명 기반 검색
+        function getListByName(store_name, callback) {
+            
+        }
+
+        // 통합 검색?
+        function getList(keyword, callback) {
+            
+        }
+
+        // 함수 객체 리턴
         return {
-            getList : getList
+            getListByReg : getListByReg,
         };
     })();
-    const sas = storeAreaService;
+    const sss = storeSearchService;
     
-    // 지역명을 기준으로 출력
-    sas.getList("서울", function(data) {
-        console.log(data);
-        data.forEach(store => {
-            console.log(store.store_idx);
-            // registerMarker(lat, lng, idx); 추가예정
-        })
-    })
+    // 점포 리스트
+    let voList = [];
+    // 지역명 기반 검색 서비스 함수 실행
+    sss.getListByReg("서울", function(data) {
 
-    // store 클릭 이벤트
-    let storeListModal = document.querySelectorAll(".store-card ul li");
-    if (storeListModal != null ) {
-        storeListModal.forEach(modal => {
-            // idx 추출
-            let idx = modal.getAttribute("data-store_idx");
-            modal.addEventListener('click', e => {
-                console.log(idx);
-                // 리스트 중에서 idx 찾기
-                markerList.forEach(marker => {
-                    if (marker.getTitle() === idx) {
-                        console.log(marker.getTitle());
-                        console.log("idx 일치");
-                        // 가게의 idx와 마커의 title이 일치할때 함수 실행
-                        viewStoreMarker(idx);
-                    }
+        data.forEach(vo => {
+            // registerMarker(store.store_lat, store.store_lng, store.store_idx); // 마커 추가예정
+            voList.push(vo);
+        });
+
+        // 점포 리스트 출력
+        voList.forEach(vo => {
+            // console.log(vo);
+            msg += 
+            `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
+                <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
+				<input type="hidden" name="store_address" value="${vo.store_address}">
+				<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
+				<input type="hidden" name="store_num" value="${vo.store_num}">
+				<div class="store-description">
+					<div class="store-name">${vo.store_name}</div>
+					<div class="store-content">${vo.store_content}</div>
+				</div>
+				<br>
+            </li>`;
+            storeUL.innerHTML = msg;
+        });
+
+        // store 클릭 이벤트
+        let storeLI = document.querySelectorAll(".store-card ul li");
+        // 가게와 마커를 메핑
+        storeMarkerMapping(storeLI);
+    });
+
+    // 출력 위치 확인
+    let storeUL = document.querySelector(".store-card ul");
+    let msg = "";
+
+
+    // 점포 마커 매핑 함수
+    function storeMarkerMapping(ele) {
+        if (ele != null ) {
+            console.log(ele);
+            ele.forEach(modal => {
+                // idx 추출
+                let idx = modal.getAttribute("data-store_idx");
+                modal.addEventListener('click', e => {
+                    console.log(idx);
+                    // 리스트 중에서 idx 찾기
+                    markerList.forEach(marker => {
+                        if (marker.getTitle() === idx) {
+                            console.log(marker.getTitle());
+                            console.log("idx 일치");
+                            // 가게의 idx와 마커의 title이 일치할때 함수 실행
+                            viewStoreMarker(idx);
+                        }
+                    });
                 });
             });
-        });
+        }
+    }
+
+    
+    let mapSideBar = document.querySelector(".side-bar#map");
+    // 맵 사이드바 컨트롤
+    function showMapSideBar() {
+        mapSideBar.classList.add("show");
+    }
+    function hideMapSideBar() {
+        mapSideBar.classList.remove("show");
     }
 });
 
