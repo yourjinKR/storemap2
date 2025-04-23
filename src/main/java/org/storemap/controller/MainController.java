@@ -39,8 +39,6 @@ public class MainController {
 					MediaType.APPLICATION_XML_VALUE
 	})
 	public ResponseEntity<List<EventVO>> getList(){
-		log.info("getList..." + eventService.getRanList());
-		
 		return new ResponseEntity<List<EventVO>>(eventService.getRanList(), HttpStatus.OK);
 	}
 	
@@ -49,10 +47,6 @@ public class MainController {
 			produces = {MediaType.APPLICATION_JSON_VALUE}
 			)
 	public ResponseEntity<List<EventVO>> getListEndDate(@PathVariable("searchDate") String searchDate){
-		
-		log.info("getListEndDate....");
-		log.info("searchDate...." + searchDate);
-		
 		return new ResponseEntity<List<EventVO>>(eventService.getListEndDate(searchDate), HttpStatus.OK);
 	}
 	
@@ -61,9 +55,6 @@ public class MainController {
 			produces = {MediaType.APPLICATION_JSON_VALUE}
 	)
 	public ResponseEntity<List<StoreVO>> getStoreRanList(@PathVariable("store_address") String store_address){
-		log.info("getStoreList....");
-		log.info("store_address : " + store_address);
-		
 		return new ResponseEntity<List<StoreVO>>(storeService.getStoreRanList(store_address), HttpStatus.OK);
 	}
 }

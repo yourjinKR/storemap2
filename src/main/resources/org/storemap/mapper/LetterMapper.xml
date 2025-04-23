@@ -3,23 +3,31 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.LetterMapper">
-	<!-- 보낸 쪽지함 -->
-	<!-- <select id="getSendLetter" parameterType="String" resultType="org.storemap.domain.LetterVO"> 
-		SELECT * FROM LETTER WHERE LETTER_WRITER = #{letter_writer} </select> 받은 
-		쪽지함 <select id="getReceivedLetter" parameterType="String" resultType="org.storemap.domain.LetterVO"> 
-		SELECT * FROM LETTER WHERE LETTER_RECEIVER = #{letter_receiver} </select> -->
 
+	<!-- 송/수신 리스트 -->
 	<select id="getLetterList"
 		resultType="org.storemap.domain.LetterVO">
 		<choose>
-			<when test="letterType == 'receivedLetter'">
+			<when test="letterType == 'received'">
 				SELECT * FROM LETTER
-				WHERE LETTER_WRITER = #{loginUser}
+				WHERE LETTER_RECEIVER = #{loginUser}
 			</when>
 			<otherwise>
 				SELECT * FROM LETTER
-				WHERE LETTER_RECEIVER = #{loginUser}
+				WHERE LETTER_WRITER = #{loginUser}
 			</otherwise>
 		</choose>
 	</select>
+	
+	<!-- 쪽지 정보 -->
+	<select id="getLetterView" parameterType="int" resultType="org.storemap.domain.LetterVO">
+		SELECT * FROM LETTER
+		WHERE LETTER_IDX = #{letter_idx}
+	</select>
+	
+	<update id="updateRead" parameterType="int">
+		UPDATE LETTER 
+		SET LETTER_READ = LETTER_READ + 1 
+		WHERE LETTER_IDX = #{letter_idx}
+	</update>
 </mapper>

@@ -55,6 +55,8 @@
 
 .d_f{display: flex;}
 
-*{box-sizing: border-box;line-height: 1.2}
+*{box-sizing: border-box;}
 img{display: block;width:100%;}
 caption{opacity: 0;font-size: 0;}
+input[type="text"]:read-only:focus,
+textarea:read-only:focus{outline:none}

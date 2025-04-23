@@ -27,12 +27,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	closeBtn.addEventListener("click", function(){
 		sideBar.classList.remove("show");
 	})
-	
+
 	// 위치 정보
 	getCurrentPlace();
 })
 
-// 위치 정보
+// 위치 정보 (위도,경도)
 function getCurrentPlace(){
 	window.navigator.geolocation.getCurrentPosition(function(position){
 			var lat = position.coords.latitude;
@@ -86,31 +86,6 @@ function getAddr(lat, lng){
 // }
 // }
 // setStorageData(pageNum, amount);
-
-// 팝업 Show
-function modalShow(pop){
-	document.querySelector(".bg").classList.add("on");
-	if(pop == "letter") {
-		document.querySelector("#"+pop).classList.add("on");
-		getLetter("sendLetter");
-	};
-}
-
-function modalClose(){
-	document.querySelector(".bg").classList.remove("on");
-	document.querySelector(".pop-content").classList.remove("on");
-}
-
-
-
-// 쪽지 리스트
-function getLetter(type){
-	fetch(`/modal/getLetterList/${type}`)
-	.then(response => response.json())
-	.then(result => {
-		console.log(result)
-	})
-}
 
 //날짜 포멧
 function dateFormate(date){

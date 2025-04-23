@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -90,21 +92,37 @@ public class ModalController {
 		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_area), HttpStatus.OK);
 	}
 	
-	//
+	// 송수신 메시지 리스트
 	@GetMapping(value = "/getLetterList/{type}",
 			produces = {
 				MediaType.APPLICATION_JSON_VALUE
 			})
 	public ResponseEntity<List<LetterVO>> getLetterList(@PathVariable("type") String type, HttpSession session){
-		if(session.getAttribute("userType") == "enter" || session.getAttribute("userType") == "admin" ){
+		ResponseEntity<List<LetterVO>> result = null;
+		if(session.getAttribute("loginUser") != null && (session.getAttribute("userType").equals("enter") || session.getAttribute("userType").equals("admin"))){
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("letterType", type);
 			map.put("loginUser", (String) session.getAttribute("loginUser"));
-			if(session.getAttribute("loginUser") != null) {
-				log.info("sendLetter : " + letterService.getLetterList(map));
-			}
+			
+			result = new ResponseEntity<List<LetterVO>>(letterService.getLetterList(map), HttpStatus.OK);
 		}
-		return null;
+		return result;
 	}
 	
+	// 쪽지 View
+	@GetMapping(value = "/getLetterView/{letter_idx}",
+			produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<LetterVO> getLetterView(@PathVariable("letter_idx") int letter_idx, HttpSession session){
+		ResponseEntity<LetterVO> result = null;
+		if(session.getAttribute("loginUser") != null && 
+				(session.getAttribute("userType").equals("enter") || session.getAttribute("userType").equals("admin"))){
+			LetterVO vo = letterService.getLetterView(letter_idx);
+			if(vo != null) {
+				result = new ResponseEntity<LetterVO>(vo, HttpStatus.OK);
+			}else {
+				result = new ResponseEntity<LetterVO>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		return result;
+	}
 }
