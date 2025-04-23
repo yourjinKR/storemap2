@@ -3,35 +3,60 @@
 
 <div class="menu">
 	<!-- 댓글처럼하기 -->
-	<div class="menu_input">
-    	<h1>메뉴추가</h1>
-    	<label for="mname">메뉴</label>
-    	<input type="text" id="mname" name="menu_name">
-    	<label for="mprice">가격</label>
-    	<input type="text" id="mprice" name="menu_price">
-    	<!-- input_list삭제할지 쓸지 결정 -->
-        <div class="input_list">
-            <input type="text" name="input_array[]" placeholder="입력해주세요." />
-        </div>
-    </div>
-    <button class="add_menu">메뉴 추가</button>
+	<form method="post">
+		<div class="menu_input">
+	    	<h1>메뉴추가</h1>
+	    	<input type="hidden" name="store_idx" value="${store_idx}">
+	    	<label for="mimage">이미지</label>
+	    	<input type="file" id="mimage" name="menu_image">
+	    	<label for="mname">메뉴</label>
+	    	<input type="text" id="mname" name="menu_name">
+	    	<label for="mprice">가격</label>
+	    	<input type="text" id="mprice" name="menu_price">
+	    </div>
+	    <button type="button" class="add_menu" id="addMenuBtn">메뉴 추가</button>
+	    <button type="button" class="add_menu" id="storeBtn">점포 관리</button>
+    </form>
 	<!-- 댓글목록처럼하기 -->
 	<div class="menu-list">
 		<h1>메뉴관리</h1>
-		<ul>
-			<c:forEach var="vo" items="${list}">
-				<li data-store_idx="${vo.menu_idx}" onclick="viewModalPage(this)" name="menu_idx">
-					<img src="/resources/img/${vo.menu_image}" alt="${vo.menu_image}" class="menu-image">
+		<ul class="menu-page">
+				<li data-store_idx="10" class="menu-li">
+					<img class="menu-image">
 					<div class="menu-description">
-						<div class="menu-name">${vo.menu_name}</div>
-						<div class="menu-price">₩${vo.menu_price}</div>
+						<div class="menu-name">메뉴이름</div>
+						<div class="menu-price">가격</div>
+						<a class="remove_menu">삭제</a>
 					</div>
 					<br>
 				</li>
-			</c:forEach>
 		</ul>
 	</div>
+	<!-- 메뉴 추가 모달 만들것 -->
+	<div id="add-modal">
+		<div class="add-modal-content">
+			<div class="menu-add">
+				<h3>메뉴추가</h3>
+			</div>
+		</div>
+	</div>
 	<!-- 메뉴 수정 모달 -->
+	<div id="modify-modal">
+		<div class="modify-modal-content">
+		    <div class="menu-update">
+		    	<h3>메뉴수정</h3>
+		    	<input type="hidden" name="store_idx" value="${store_idx}">
+		    	<label for="modifyImage">이미지</label>
+		    	<input type="file" id="modifyImage" name="modify_image">
+		    	<label for="modifyName">메뉴</label>
+		    	<input type="text" id="modifyName" name="modify_name">
+		    	<label for="modifyPrice">가격</label>
+		    	<input type="text" id="modifyPrice" name="modify_price">
+		    </div>
+		    <button type="button" class="btn-modify" id="modifyMenuBtn">수정</button>
+		    <button type="button" class="btn-remove" id="removeMenuBtn">삭제</button>
+	    </div>
+	</div>
     
 </div>
 <script type="text/javascript" src="/resources/js/menu.js"></script>

@@ -44,19 +44,6 @@
 	margin-bottom: 10px;
 }
 
-/* 없앨지 말지 봐야함 */
-.input_list {
-	display: flex;
-	align-items: center;
-	margin-bottom: 10px;
-} 
-.input_list input[type="text"] {
-	padding:0 10px;
-	height: 45px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	flex-grow: 1;
-} 
 /* 메뉴 추가 버튼 */
 .add_menu {
 	width: 100%;
@@ -74,41 +61,56 @@
 .add_menu:hover {
 	background-color: #33a6ee;
 }
-/* 삭제 버튼 스타일 예시 (선택적 사용) */
+
+.btn-modify{
+	background-color: #f0ad4e;
+    border: 1px solid #eea236;
+    color: #fff;
+}
+.btn-remove{
+	background-color: #ff4d4d;
+    border: 1px solid #ff3333;
+    color: #fff;
+}
+
+/* 삭제 버튼 스타일 */
 .remove_menu {
-	display: inline-block;
-	margin-top: 10px;
+	position: absolute;
+	top: 0;
+	right: 0;
 	background: #ff4d4d;
 	color: #fff;
 	border: none;
 	border-radius: 4px;
-	padding: 8px 12px;
+	padding: 12px 15px;
 	cursor: pointer;
 	font-weight: bold;
 	transition: background-color 0.3s ease;
 	text-decoration: none;
+	font-size: 14px;
 }
-
 .remove_menu:hover {
 	background: #ff3333;
 }
-/*
-.remove_menu {
-	display: flex;
-	align-items: center;
-	height: 45px;
-	margin-left: 6px;
-	padding:0 15px;
-	background: #ff4d4d;
-	border-radius:4px;
+/* 수정 버튼 스타일  */
+.modify_menu {
+	position: absolute;
+	top: 0;
+	right: 60px;
+	background: #f0ad4e;
 	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 12px 15px;
 	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
 	text-decoration: none;
-} 
-.remove_menu:hover {
-	background: #ff3333;
+	font-size: 14px;
 }
-*/
+.modify_menu:hover {
+	background: #eea236;
+}
 
 /* 메뉴 리스트 전체 박스 */
 .menu-list {
@@ -163,6 +165,7 @@
 /* 설명 텍스트 */
 .menu-description {
 	text-align: left;
+	position: relative; /* 버튼 위치 기준 */
 }
 
 .menu-name {
@@ -175,4 +178,72 @@
 	color: #666;
 	font-size: 16px;
 	margin-top: 5px;
+}
+
+/* 메뉴 추가 모달 */
+#add-modal{
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
+}
+.add-modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 640px;
+}
+
+.menu-add {
+	margin-top: 20px;
+	position: relative; /* 버튼 위치 기준 */
+}
+
+.menu-add h3 {
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
+/* 메뉴 수정 모달 */
+#modify-modal{
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
+}
+.modify-modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 640px;
+}
+.menu-image {
+	border-radius: 8px;
+}
+
+.menu-update {
+	margin-top: 20px;
+	position: relative; /* 버튼 위치 기준 */
+}
+
+.menu-update h3 {
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
+.menu-text {
+	margin: 5px 0;
+	color: #333;
 }

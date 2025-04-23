@@ -17,7 +17,6 @@
 	<!-- 2.메뉴 추가  -->
 	<update id="update" parameterType="org.storemap.domain.MenuVO">
 		update menu set 
-	 	menu_image = #{menu_image},
 	 	menu_name = #{menu_name},
 	 	menu_price = #{menu_price}
 	 	where menu_idx = #{menu_idx}

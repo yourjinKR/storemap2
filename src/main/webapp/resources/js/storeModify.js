@@ -52,8 +52,9 @@ function modify(){
 	f.submit();
 };
 
+let store_idx = new URLSearchParams(location.search).get('store_idx');
 function menu(){
-	location.href='/store/menu';
+	location.href=`/store/menu?store_idx=${store_idx}`;
 }
 
 function remove(){

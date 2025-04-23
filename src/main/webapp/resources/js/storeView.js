@@ -58,7 +58,7 @@ function showList(){
 			msg += `	<div class="review-content">`;
 			msg += `		<div class="stars">별점수정필요</div>`;
 			msg += `		<div class="review-meta">`;
-			msg += `			<strong>${json.review_writer}</strong> · <small class="">${myTime(json.review_regdate)}</small>`;
+			msg += `			<strong>${json.review_writer}</strong> · <small class="">${dateFormate(json.review_regdate)}</small>`;
 			msg += `		</div>`;
 			msg += `		<div>${json.review_content}</div>`;
 			msg += `	</div>`;

@@ -8,6 +8,14 @@
   
     <label for="sname">점포명</label>
     <input type="text" id="sname" name="store_name" value="${vo.store_name}">
+    
+    <label for="simage">이미지</label>
+	<input type="file" id="simage" name="store_image">
+	<!-- 파일업로드 -->
+    <div class="file-upload">
+      <button type="button">이미지 업로드 수정 필요</button>
+      <span>attach_file.jpg</span>
+    </div>
 
     <label for="pnum">연락처</label>
     <input type="text" id="pnum" name="store_num" value="${vo.store_num}">
@@ -36,11 +44,6 @@
     
     <label for="rnum">사업자번호</label>
     <input type="text" id="rnum" name="store_rnum" value="${vo.store_rnum}">
-    <!-- 파일수정 -->
-    <div class="file-upload">
-      <button type="button">이미지 추가</button>
-      <span>sample.jpg</span>
-    </div>
 
     <div class="panel-body-btns">
     	<button type="button" class="btn btn-sec" id="menuBtn">메뉴 관리</button>
