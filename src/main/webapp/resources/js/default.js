@@ -112,3 +112,9 @@ function getLetter(type){
 	})
 }
 
+//날짜 포멧
+function dateFormate(date){
+	let newDate = new Date(date);
+	let replydate = newDate.getFullYear()+ "-" + String(newDate.getMonth() + 1).padStart(2, '0')+ "-" + String(newDate.getDate()).padStart(2, '0')
+	return replydate;
+}
