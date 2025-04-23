@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.PageDTO;
@@ -74,6 +75,7 @@ public class EventController {
 	@GetMapping("/eventView")
 	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
 		model.addAttribute("vo", eventService.getEventOneView(event_idx));
+		
 		log.info("eventVO..." + event_idx);
 		
 		return "index";
@@ -84,4 +86,13 @@ public class EventController {
 	public String eventModify() {
 		return "index";
 	}
+	
+	//댓글 리스트 불러오는 비동기 메소드
+	 @GetMapping("/replyList")
+	 @ResponseBody
+	 public List<CommentEventVO> replyList(@RequestParam("comment_idx") int comment_idx){
+		 log.info("replyList..." + comment_idx);
+		 return commentEventService.replyList(comment_idx);
+	 }
+	
 }

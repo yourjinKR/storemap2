@@ -13,6 +13,7 @@
 			WHERE ROWNUM <= 15
 		]]>
 	</select>
+	
 	<!-- 메인페이지 종료 순 -->
 	<select id="getListEndDate" parameterType="String" resultType="org.storemap.domain.EventVO">
 		<![CDATA[
@@ -27,52 +28,17 @@
 			WHERE ROWNUM <= 8
 		]]>
 	</select>
+	
 	<!-- 이벤트 상세보기 -->
 	<select id="getEventOneView" resultType="org.storemap.domain.EventVO" parameterType="int">
 		SELECT * FROM EVENT WHERE EVENT_IDX = #{EVENT_IDX}
 	</select>
-<!--  <insert id="insert" parameterType="EventVO">
-    INSERT INTO event (
-        EVENT_IDX,
-        STORE_IDX,
-        ENTER_IDX,
-        EVENT_TITLE,
-        EVENT_CATEGORY,
-        EVENT_LOCATION,
-        EVENT_LOCATION_DETAIL,
-        EVENT_CONTENT,
-        EVENT_LIKE_CNT,
-        EVENT_RSTARTDATE,
-        EVENT_RSTOPDATE,
-        EVENT_BSTARTDATE,
-        EVENT_BSTOPDATE,
-        EVENT_HIDDEN,
-        EVENT_FILE,
-        EVENT_LIST_MAX
-    ) VALUES (
-        event_seq.NEXTVAL,
-        #{store_idx},
-        #{enter_idx},
-        #{event_title},
-        #{event_category},
-        #{event_location},
-        #{event_location_detail},
-        #{event_content},
-        #{event_like_cnt},
-        #{event_rstartdate},
-        #{event_rstopdate},
-        #{event_bstartdate},
-        #{event_bstopdate},
-        #{event_hidden},
-        #{event_file},
-        #{event_list_max}
-    )
-</insert>-->
 	
 	<!-- 리스트 총 갯수 -->
 	<select id="getListCount" resultType="int">
 		SELECT COUNT(*) FROM EVENT 
 	</select>
+	
 	<!-- 리스트 출력 -->
 	<select id="getList" resultType="org.storemap.domain.EventVO">
 		<![CDATA[ 
@@ -100,4 +66,6 @@
 			WHERE RN > (#{pageNum} - 1) * #{amount}
 		]]> 
 	</select>
+	
+	
 </mapper>

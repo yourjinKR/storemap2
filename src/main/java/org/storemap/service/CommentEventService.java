@@ -1,5 +1,10 @@
 package org.storemap.service;
 
-public interface CommentEventService {
+import java.util.List;
 
+import org.storemap.domain.CommentEventVO;
+
+public interface CommentEventService {
+	
+	public List<CommentEventVO> replyList(int comment_idx);
 }
