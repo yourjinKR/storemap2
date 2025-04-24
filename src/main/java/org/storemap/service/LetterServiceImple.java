@@ -1,5 +1,6 @@
 package org.storemap.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,12 +28,42 @@ public class LetterServiceImple implements LetterService{
 	// 쪽지 view
 	@Transactional
 	@Override
-	public LetterVO getLetterView(int letter_idx) {
-		LetterVO reult = null;
-		if(mapper.updateRead(letter_idx) > 0 && mapper.getLetterView(letter_idx) != null) {
-			reult =  mapper.getLetterView(letter_idx);			
+	public LetterVO getLetterView(Map<String, String> map) {
+		LetterVO vo = mapper.getLetterView(Integer.parseInt(map.get("letter_idx")));
+		if(vo.getLetter_receiver().equals(map.get("loginUser"))) {
+			mapper.updateRead(Integer.parseInt(map.get("letter_idx")));
 		}
-		return reult;
+		return vo;
+	}
+	
+	// 쪽지 전송
+	@Transactional
+	@Override
+	public int insertLetter(LetterVO vo) {
+		int result = 0;
+	
+		String member = null;
+		int enter = 0;
+		
+		// 권한 반환
+		member = mapper.getMemberSearch(vo.getLetter_receiver());
+		
+		if(vo.getAuth().equals("amdin") || vo.getAuth().equals("store")) {
+			enter = mapper.getEnterSearch(vo.getLetter_receiver());
+		}
+		
+		if(vo.getAuth().equals("admin")) {
+			if(member == null && enter == 0) {
+				result = -1;
+			}
+		}else if(vo.getAuth().equals("admin")) {
+		
+		}
+		
+		if(result != -1 && mapper.insertLetter(vo) > 0){
+			result = 1;
+		}
+		return result;
 	}
 	
 }

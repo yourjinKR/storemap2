@@ -5,20 +5,20 @@
 
 <div class="bg" onclick="modalClose()"></div>
 <div class="pop-content" id="letter">
-	<div class="inner">
-		<h4>쪽지함</h4>
-		<ul class="letter-tab mb15 mt15">
-			<li><a id="received" href="received" class="on">받은 쪽지함</a></li>
-			<li><a id="send" href="send">보낸 쪽지함</a></li>
-			<li><a id="write" href="write">쪽지 쓰기</a></li>
-		</ul>
+	<h4>쪽지함</h4>
+	<ul class="letter-tab mb15 mt15">
+		<li><a class="received on" href="received">받은 쪽지함</a></li>
+		<li><a class="send" href="send">보낸 쪽지함</a></li>
+		<li><a class="write" href="write">쪽지 쓰기</a></li>
+	</ul>
 
-		<div class="js-tab-content on" id="list">
-			<jsp:include page="../content/modal/letterListModal.jsp"/>
-		</div>
-		<div class="js-tab-content" id="view">
-			<jsp:include page="../content/modal/letterView.jsp"/>
-		</div>
-		
-	</div>	
+	<div class="js-tab-content on" id="list">
+		<jsp:include page="../content/modal/letterListModal.jsp"/>
+	</div>
+	<div class="js-tab-content" id="view">
+		<jsp:include page="../content/modal/letterView.jsp"/>
+	</div>
+	<div class="js-tab-content" id="write">
+		<jsp:include page="../content/modal/letterWrite.jsp"/>
+	</div>
 </div>

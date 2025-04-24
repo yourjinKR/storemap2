@@ -1,4 +1,10 @@
+let viewWriter, viewContent, writeReceiver, writeContent = null;
 document.addEventListener("DOMContentLoaded", (event) => {
+	viewWriter = document.querySelector("#view .letter-writer");
+	viewContent = document.querySelector("#view .letter-content");
+	writeReceiver = document.querySelector("#write .letter-receiver");
+	writeContent = document.querySelector("#write .letter-content");
+	
 	// 쪽지 버튼
 	let letterBtn = document.querySelectorAll(".pop-content a");
 	let historyBtn = "received";
@@ -6,14 +12,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		btn.addEventListener("click", function(e){
 			e.preventDefault();
 			letterBtn.forEach(btn2 => {
-				if(btn2.classList.contains("on") && btn.getAttribute("href") != "read") 
+				if(btn2.classList.contains("on") && btn.getAttribute("href") != "read" && btn.getAttribute("href") != "post") 
 					historyBtn = btn.getAttribute("href");
-				
 				btn2.classList.remove("on")
 			});
-			
-			
-			document.querySelector("#"+historyBtn).classList.add("on");
+			document.querySelector("."+historyBtn).classList.add("on");
 			switch (btn.getAttribute("href")) {
 			// 받은 쪽지함
 			case "received":
@@ -23,7 +26,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			case "send":
 				getLetter("send"); 
 				break;
+			//쓰기 Form
 			case "write":
+				changeLetterModal("write")
+				break;
+			// 쪽지 전송 
+			case "post":
+				insertLetter();
 				break;
 			case "read":	 // 쪽지 view 확인
 				getLetter(historyBtn);
@@ -45,6 +54,14 @@ function modalShow(pop){
 function modalClose(){
 	document.querySelector(".bg").classList.remove("on");
 	document.querySelector(".pop-content").classList.remove("on");
+}
+// 쪽지 modal 탭변경
+function changeLetterModal(page){
+	let content = document.querySelectorAll(".js-tab-content");
+	if(content.length > 0){
+		content.forEach(con => con.classList.remove("on"));
+		document.querySelector("#"+ page).classList.add("on");
+	}
 }
 
 getLetter("received");
@@ -72,7 +89,9 @@ function getLetter(type){
 			str += `</li>`;
 
 			if(result.length > 7){
-				document.querySelector("#listBody").style.setProperty('width', 'calc(100% + 15px)');
+				document.querySelector("#list .inner").style.setProperty('width', 'calc(100% + 1.5vw)');
+			}else{
+				document.querySelector("#list .inner").style.setProperty('width', '100%');
 			}
 		})
 		document.querySelector("#listBody").innerHTML = str;
@@ -89,11 +108,10 @@ function getLetter(type){
 				})
 			})
 		}
+		
+		changeLetterModal("list");
 	})
 	.catch(err => console.log(err))
-	
-	document.querySelector("#list").classList.add("on");
-	document.querySelector("#view").classList.remove("on");
 }
 
 // 쪽지 view
@@ -104,16 +122,42 @@ function letterView(letter_idx){
 	.then(response => response.json())
 	.then(result => {
 		if(result != undefined || result != null){
-			document.querySelector("#letterWriter").value = result.letter_writer;
-			document.querySelector("#letterReceiver").value = result.letter_receiver;
-			document.querySelector("#letterContent").value = result.letter_content;
+			viewWriter.value = result.letter_writer;
+			viewContent.value = result.letter_content;
 			
-			// document.querySelector("#receivedBtn");
-			document.querySelector("#list").classList.remove("on");
-			document.querySelector("#view").classList.add("on");
+			changeLetterModal("view");
 		}else{
 			alert("잘못된 접근입니다.");
 			return;
+		}
+	})
+	.catch(err => console.log(err))
+}
+
+
+function insertLetter(f){
+	fetch(`/modal/insertLetter`,{
+		method : "post",
+		headers:{
+			'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+			letter_receiver : writeReceiver.value,
+			letter_content : writeContent.value
+        })
+	})
+	.then(response => response.text())
+	.then(result => {
+		if(result == "undefind"){
+			alert("등록되지 않은 사용자입니다");
+			document.querySelector("#write .letter-receiver").focus();
+			return;
+		}else if(result == "fail"){
+			alert("전송에 실패 하였습니다");
+			return;
+		}else{
+			writeReceiver.value = "";
+			writeContent.value = "";
 		}
 	})
 	.catch(err => console.log(err))

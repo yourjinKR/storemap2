@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -126,15 +127,35 @@ public class ModalController {
 			produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<LetterVO> getLetterView(@PathVariable("letter_idx") int letter_idx, HttpSession session){
 		ResponseEntity<LetterVO> result = null;
-		if(session.getAttribute("loginUser") != null && 
-				(session.getAttribute("userType").equals("enter") || session.getAttribute("userType").equals("admin"))){
-			LetterVO vo = letterService.getLetterView(letter_idx);
+		
+		if(session.getAttribute("loginUser") != null && (session.getAttribute("userType").equals("enter") || session.getAttribute("userType").equals("admin"))){
+			
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("letter_idx", Integer.toString(letter_idx));
+			map.put("loginUser", (String) session.getAttribute("loginUser"));
+			LetterVO vo = letterService.getLetterView(map);
+			
 			if(vo != null) {
 				result = new ResponseEntity<LetterVO>(vo, HttpStatus.OK);
 			}else {
-				result = new ResponseEntity<LetterVO>(HttpStatus.INTERNAL_SERVER_ERROR);
+				result = new ResponseEntity<LetterVO>(HttpStatus.BAD_REQUEST);
 			}
 		}
 		return result;
+	}
+	
+	@PostMapping(value="/insertLetter",
+			consumes = {MediaType.APPLICATION_JSON_VALUE}
+	)
+	public ResponseEntity<String> insertLetter(@RequestBody LetterVO vo,HttpSession session) {
+		vo.setAuth((String) session.getAttribute("userType"));
+		int result = letterService.insertLetter(vo);
+		if(result == -1) {
+			return new ResponseEntity<String>("undefind",HttpStatus.NOT_FOUND);
+		}else if(result == 0) {
+			return new ResponseEntity<String>("fail",HttpStatus.BAD_REQUEST);
+		}else {
+			return new ResponseEntity<String>("success",HttpStatus.OK);
+		}
 	}
 }

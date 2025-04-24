@@ -12,4 +12,10 @@ public interface LetterMapper {
 	public LetterVO getLetterView(int letter_idx);
 	// 쪽지 읽음
 	public int updateRead(int letter_idx);
+	// 쪽지 보내기
+	public int insertLetter(LetterVO vo);
+	// 받는 사람 존재 여부 확인 (Enter)
+	public int getEnterSearch(String letter_receiver);
+	// 받는 사람 존재 여부 확인 (Member)
+	public String getMemberSearch(String letter_receiver);
 }

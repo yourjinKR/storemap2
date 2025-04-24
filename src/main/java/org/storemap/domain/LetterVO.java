@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LetterVO {
 	private int letter_idx, letter_read;
-	private String letter_receiver, letter_content, letter_writer;
+	private String letter_receiver, letter_content, letter_writer, auth;
 	private Date letter_regdate;
 }
