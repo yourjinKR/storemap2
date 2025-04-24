@@ -30,6 +30,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	// 위치 정보
 	getCurrentPlace();
+
+	// 헤더 로그아웃
+	headerLogout();
+	
+	// 사이드바 로그아웃
+	sidebarLogout();
 })
 
 // 위치 정보 (위도,경도)
@@ -92,4 +98,38 @@ function dateFormate(date){
 	let newDate = new Date(date);
 	let replydate = newDate.getFullYear()+ "-" + String(newDate.getMonth() + 1).padStart(2, '0')+ "-" + String(newDate.getDate()).padStart(2, '0')
 	return replydate;
+}
+
+// 헤더 로그아웃
+function headerLogout(){
+	document.getElementById('hlogoutLink').addEventListener('click', function(e) {
+		e.preventDefault();
+		console.log("1");
+		fetch('/member/logout', {
+			method : 'POST'
+		})
+		.then(() => {
+			location.href = '/member/login';
+		})
+		.catch(err => {
+			console.log("에러 : ", err);
+		})
+	});
+}
+
+// 사이드바 로그아웃
+function sidebarLogout(){
+	document.getElementById('slogoutLink').addEventListener('click', function(e) {
+		e.preventDefault();
+		console.log("1");
+		fetch('/member/logout', {
+			method : 'POST'
+		})
+		.then(() => {
+			location.href = '/member/login';
+		})
+		.catch(err => {
+			console.log("에러 : ", err);
+		})
+	});
 }

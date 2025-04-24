@@ -17,6 +17,8 @@ public class MemberServiceImple implements MemberService{
 	public MemberVO mLogin(String member_id, String member_pw) {
 		return memberMapper.mLogin(member_id, member_pw);
 	}
+	
+	// 개인/점주 회원가입
 	@Override
 	public int insertMember(MemberVO member) {
 		int result = memberMapper.insertMember(member);
@@ -27,5 +29,12 @@ public class MemberServiceImple implements MemberService{
 	public int checkId(String member_id) {
 		int result = memberMapper.checkId(member_id); 
 		return result; 
+	}
+	
+	// 개인정보 수정
+	@Override
+	public int modifyMember(MemberVO member) {
+		int result = memberMapper.modifyMember(member);
+		return result;
 	}
 }

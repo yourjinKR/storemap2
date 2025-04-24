@@ -3,12 +3,14 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.MemberMapper">
+	
 	<!-- 로그인 -->
 	<select id="mLogin" resultType="org.storemap.domain.MemberVO">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_ID = #{member_id} 
 		AND MEMBER_PW = #{member_pw}
 	</select>
+	
 	<!-- 개인/점주 회원가입 -->
 	<insert id="insertMember" parameterType="org.storemap.domain.MemberVO">
 		INSERT INTO member (
@@ -27,7 +29,36 @@
 			#{member_nickname}
 		)	
 	</insert>
+	
+	<!-- 중복 아이디 확인 -->
 	<select id="checkId" parameterType="String" resultType="int">
 		SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = #{member_id}
 	</select>
+	
+	<!-- 개인정보 수정 -->
+	<update id="modifyMember" parameterType="org.storemap.domain.MemberVO">
+		UPDATE  
+			MEMBER
+		SET 
+			MEMBER_IMAGE = #{member_image, jdbcType = VARCHAR},
+			MEMBER_PW = #{member_pw},
+			MEMBER_NICKNAME = #{member_nickname}
+		WHERE
+			MEMBER_IDX = #{member_idx}
+	</update>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

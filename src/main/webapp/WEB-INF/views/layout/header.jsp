@@ -19,7 +19,7 @@
 		</div>
 		
 		<a class="btn" href="/member/login">로그인</a>
-		<a class="btn">로그아웃</a>
+		<a class="btn" id="hlogoutLink" href="/member/login">로그아웃</a>
 		<div class="profile">
 			<img alt="" src="/resources/img/profile.jpg">			
 		</div>

@@ -8,12 +8,27 @@
 			<img alt="" src="/resources/img/profile.jpg">
 		</div>
 		<div class="right-con">
-			<div class="user-nickname">길동이</div>
-			<div class="user-name">홍길동</div>
+			<c:choose>
+				<c:when test="${userType == 'user'}">
+					<div class="user-nickname">${sessionScope.userNickName}</div>
+					<div class="user-name">${sessionScope.userName}</div>
+				</c:when>
+				<c:when test="${userType == 'owner'}">
+					<div class="user-nickname">${sessionScope.userNickName}</div>
+					<div class="user-name">${sessionScope.userName}</div>
+				</c:when>
+				<c:when test="${userType == 'admin'}">
+					<div class="user-nickname">${sessionScope.userNickName}</div>
+					<div class="user-name">${sessionScope.userName}</div>
+				</c:when>
+				<c:when test="${userType == 'enter'}">
+					<div class="user-name">${sessionScope.userName}</div>
+				</c:when>
+			</c:choose>
 		</div>
 	</div>
 	<ul class="btn-list">
-		<li>계정관리</li>
+		<li><a href="/member/modifyInfo">개인정보 수정</a></li>
 
 		<!-- 일반 회원 -->
 		<li>내 리뷰 확인</li>
@@ -25,7 +40,7 @@
 		<!-- 기업 회원 -->
 		<li>이벤트 관리</li>
 
-		<li>로그아웃</li>
+		<li><a id="slogoutLink" href="/member/login">로그아웃</a></li>
 	</ul>
 	
 	<button type="button" class="close-btn">닫기</button>

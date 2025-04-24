@@ -377,7 +377,7 @@ if(formType === 'personal') {
 			invalidate(target, rnumValidState, '별명을 입력해주세요.');
 			rnumCk = false;
 		}else if(!regExpRnum.exec(target.value)){
-			invalidate(target, rnumValidState, '형식에 맞지 않습니다.');
+			invalidate(target, rnumValidState, '숫자만 입력해주세요.');
 			rnumCk = false;
 		}else{
 			validated(target, rnumValidState, '확인되었습니다.');
@@ -407,7 +407,7 @@ if(formType === 'personal') {
 			invalidate(target, numValidState, '별명을 입력해주세요.');
 			numCk = false;
 		}else if(!regExpNum.exec(target.value)){
-			invalidate(target, numValidState, '형식에 맞지 않습니다.');
+			invalidate(target, numValidState, '숫자만 입력해주세요.');
 			numCk = false;
 		}else{
 			validated(target, numValidState, '확인되었습니다.');

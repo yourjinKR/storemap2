@@ -52,6 +52,7 @@ public class MemberController {
 	public String loginPage() {
 		return "index";
 	}
+	
 	// 로그인 처리
 	@PostMapping("/login")
 	public String Login(
@@ -65,6 +66,8 @@ public class MemberController {
 			member.setMember_pw(null);
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
+			session.setAttribute("userName", member.getMember_name());
+			session.setAttribute("userNickName", member.getMember_nickname());
 			session.setAttribute("userType", member.getMember_type());
 			return "redirect:/";
 		}
@@ -73,6 +76,7 @@ public class MemberController {
 		if(enter != null) {
 			enter.setEnter_pw(null);
 			session.setAttribute("loginUser", enter.getEnter_id());
+			session.setAttribute("userName", enter.getEnter_name());
 			session.setAttribute("userType", "enter");
 			return "redirect:/";
 		}
@@ -80,6 +84,17 @@ public class MemberController {
 		model.addAttribute("page","login");
 		return "index";
 	}
+	
+	// 로그아웃
+		@PostMapping("/logout")
+		@ResponseBody
+		public Map<String, Object> logout(HttpSession session) {
+			Map<String, Object> result = new HashMap<>();
+			session.invalidate();
+			result.put("result", "success");
+			return result; 
+		}
+		
 	// 회원가입 화면으로 이동
 	@GetMapping("/register")
 	public String registerForm(@RequestParam String type, Model model, HttpServletRequest request) {
@@ -88,6 +103,7 @@ public class MemberController {
 		request.setAttribute("path", "/member/register");
 		return "index";
 	}
+	
 	// 개인 아이디 중복 확인
 	@GetMapping(value = "/checkId", produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -99,6 +115,7 @@ public class MemberController {
 		result.put("result", exists);
 		return result;
 	}
+	
 	// 단체 아이디 중복 확인
 	@GetMapping(value = "/echeckId", produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -110,6 +127,7 @@ public class MemberController {
 		result.put("result", exists);
 		return result;
 	}
+	
 	// 첨부파일
 	
 	
@@ -122,6 +140,7 @@ public class MemberController {
 		result.put("result", res);
 		return result;
 	}
+	
 	// 기업/단체 회원가입 처리
 	@PostMapping(value = "/register/group", produces = "application/json; charset=UTF-8")
 	@ResponseBody
@@ -132,22 +151,19 @@ public class MemberController {
 		return result;
 	}
 	
+	// 개인정보 수정 화면으로 이동
+	@GetMapping("/modifyInfo")
+	public String modifyForm(HttpSession session, Model model) {
+		String member_id = (String) session.getAttribute("loginUser");
+		String member_name = (String) session.getAttribute("userName");
+		String member_nickname = (String) session.getAttribute("userNickName");
+		model.addAttribute("member_id", member_id);
+		model.addAttribute("member_name", member_name);
+		model.addAttribute("member_nickname", member_nickname);
+		return "index";
+	}
 	
-	// 개인/점주 회원가입 처리
-//	@PostMapping("/register/personal")
-//	public String registerMember(MemberVO member) {
-//		memberService.insertMember(member);
-//		return "redirect:/member/login";
-//	}
-	// 기관/단체 회원가입 처리
-//	@PostMapping("/register/group")
-//	public String registerEnter(EnterVO enter) {
-//		enterService.insertEnter(enter);
-//		return "redirect:/member/login";
-//	}
-	
-	
-	
+	//@PostMapping(value = "/modifyInfo/personal", produces = "application/json; charset=UTF-8")
 	
 	
 	
