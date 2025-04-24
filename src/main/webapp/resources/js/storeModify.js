@@ -59,7 +59,7 @@ function menu(){
 
 function remove(){
 	if(confirm("정말 삭제하시겠습니까?")){
-		f.action = '/store/remove';
+		f.action = `/store/storeRemove?store_idx=${store_idx}`;
 	    f.submit();
 	    alert("삭제 되었습니다");
 	}else{

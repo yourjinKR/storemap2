@@ -66,19 +66,14 @@ public class StoreController {
 	}
 	
 	// 점포 삭제
-	@GetMapping("/storeRemove")
-	public String storeRemove() {
-		log.info("storeRemove...");
-		return "index";
+	@PostMapping("/storeRemove")
+	public String storeRemove(int store_idx) {
+		log.info("storeRemove..."+store_idx);
+		storeService.remove(store_idx);
+		return "redirect:/modal/storeListModal";
 	}
 	
-	// 메뉴 추가
-	@PostMapping("/menu")
-	public String menu1(MenuVO vo) {
-		log.info("menu1...");
-		menuService.register(vo);
-		return "redirect:/store/menu?store_idx="+vo.getStore_idx();
-	}
+	// 메뉴 페이지 이동
 	@GetMapping("/menu")
 	public String menu2(@RequestParam("store_idx") int store_idx, Model model) {
 		log.info("menu2..."+store_idx);
@@ -106,6 +101,16 @@ public class StoreController {
 	public ResponseEntity<MenuVO> get(@PathVariable("menu_idx") int menu_idx){
 		log.info("get..."+menu_idx);
 		return new ResponseEntity<MenuVO>(menuService.get(menu_idx), HttpStatus.OK);
+	}
+	
+	// 메뉴 추가
+	@PostMapping(value = "/new",
+			consumes = "application/json",
+			produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<String> add(@RequestBody MenuVO vo){
+		log.info("add..."+vo);
+		return menuService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
+			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	// 메뉴 수정

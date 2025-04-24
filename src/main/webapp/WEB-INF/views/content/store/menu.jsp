@@ -2,22 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="menu">
-	<!-- 댓글처럼하기 -->
-	<form method="post">
-		<div class="menu_input">
-	    	<h1>메뉴추가</h1>
-	    	<input type="hidden" name="store_idx" value="${store_idx}">
-	    	<label for="mimage">이미지</label>
-	    	<input type="file" id="mimage" name="menu_image">
-	    	<label for="mname">메뉴</label>
-	    	<input type="text" id="mname" name="menu_name">
-	    	<label for="mprice">가격</label>
-	    	<input type="text" id="mprice" name="menu_price">
-	    </div>
-	    <button type="button" class="add_menu" id="addMenuBtn">메뉴 추가</button>
-	    <button type="button" class="add_menu" id="storeBtn">점포 관리</button>
-    </form>
-	<!-- 댓글목록처럼하기 -->
+    <button type="button" class="add_menu" id="addMenuPageBtn">메뉴 추가</button>
+	<button type="button" class="add_menu" id="storeBtn">점포 관리</button>
+	<!-- 메뉴 목록 -->
 	<div class="menu-list">
 		<h1>메뉴관리</h1>
 		<ul class="menu-page">
@@ -32,12 +19,20 @@
 				</li>
 		</ul>
 	</div>
-	<!-- 메뉴 추가 모달 만들것 -->
+	<!-- 메뉴 추가 모달 -->
 	<div id="add-modal">
 		<div class="add-modal-content">
 			<div class="menu-add">
 				<h3>메뉴추가</h3>
+				<input type="hidden" name="store_idx" value="${store_idx}">
+		    	<label for="mimage">이미지</label>
+		    	<input type="file" id="mimage" name="menu_image">
+		    	<label for="mname">메뉴</label>
+		    	<input type="text" id="mname" name="menu_name">
+		    	<label for="mprice">가격</label>
+		    	<input type="text" id="mprice" name="menu_price">
 			</div>
+			<button type="button" class="add_menu" id="addMenuBtn">메뉴 등록</button>
 		</div>
 	</div>
 	<!-- 메뉴 수정 모달 -->
@@ -47,16 +42,15 @@
 		    	<h3>메뉴수정</h3>
 		    	<input type="hidden" name="store_idx" value="${store_idx}">
 		    	<label for="modifyImage">이미지</label>
-		    	<input type="file" id="modifyImage" name="modify_image">
+		    	<input type="hidden" id="modifyImage" name="modify_image">
 		    	<label for="modifyName">메뉴</label>
 		    	<input type="text" id="modifyName" name="modify_name">
 		    	<label for="modifyPrice">가격</label>
 		    	<input type="text" id="modifyPrice" name="modify_price">
+			    <button type="button" class="btn-modify" id="modifyMenuBtn">수정</button>
+			    <button type="button" class="btn-remove" id="removeMenuBtn">삭제</button>
 		    </div>
-		    <button type="button" class="btn-modify" id="modifyMenuBtn">수정</button>
-		    <button type="button" class="btn-remove" id="removeMenuBtn">삭제</button>
 	    </div>
 	</div>
-    
 </div>
 <script type="text/javascript" src="/resources/js/menu.js"></script>

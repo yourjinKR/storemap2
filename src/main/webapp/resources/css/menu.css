@@ -62,21 +62,10 @@
 	background-color: #33a6ee;
 }
 
-.btn-modify{
-	background-color: #f0ad4e;
-    border: 1px solid #eea236;
-    color: #fff;
-}
-.btn-remove{
-	background-color: #ff4d4d;
-    border: 1px solid #ff3333;
-    color: #fff;
-}
-
 /* 삭제 버튼 스타일 */
-.remove_menu {
+.btn-remove {
 	position: absolute;
-	top: 0;
+	bottom: 0;
 	right: 0;
 	background: #ff4d4d;
 	color: #fff;
@@ -89,13 +78,13 @@
 	text-decoration: none;
 	font-size: 14px;
 }
-.remove_menu:hover {
+.btn-remove:hover {
 	background: #ff3333;
 }
 /* 수정 버튼 스타일  */
-.modify_menu {
+.btn-modify {
 	position: absolute;
-	top: 0;
+	bottom: 0;
 	right: 60px;
 	background: #f0ad4e;
 	color: #fff;
@@ -108,7 +97,7 @@
 	text-decoration: none;
 	font-size: 14px;
 }
-.modify_menu:hover {
+.btn-modify:hover {
 	background: #eea236;
 }
 
@@ -210,6 +199,24 @@
 	font-size: 1.2em;
 }
 
+.menu-add label {
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	color: #444;
+	font-weight: bold;
+}
+
+.menu-add input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #ddd;
+	border: none;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
 /* 메뉴 수정 모달 */
 #modify-modal{
 	position: fixed;
@@ -241,6 +248,24 @@
 .menu-update h3 {
 	margin-bottom: 10px;
 	font-size: 1.2em;
+}
+
+.menu-update label {
+	display: block;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	color: #444;
+	font-weight: bold;
+}
+
+.menu-update input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	background-color: #ddd;
+	border: none;
+	border-radius: 4px;
+	margin-bottom: 10px;
 }
 
 .menu-text {
