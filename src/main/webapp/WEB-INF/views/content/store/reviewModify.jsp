@@ -3,9 +3,7 @@
 <div class="reviewRegister">
 	<h1>리뷰등록</h1>
 
-  <form method="post">
-  	<input type="hidden" name="member_idx" value="${loginUserIdx}">
-  	
+  <form>
     <label for="title">제목</label>
     <input type="text" id="title" name="title">
 
@@ -32,7 +30,8 @@
     <label for="photo">사진첨부</label>
     <input type="file" id="photo" name="photo">
 
-    <button type="submit">리뷰 등록</button>
+    <button type="submit">리뷰 수정</button>
+    <button type="submit">리뷰 삭제</button>
   </form>
 </div>
-<script type="text/javascript" src="/resources/js/reviewRegister.js"></script>
+<script type="text/javascript" src="/resources/js/reviewModify.js"></script>

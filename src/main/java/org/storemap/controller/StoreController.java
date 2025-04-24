@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.storemap.domain.MenuVO;
+import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.MenuServiceImple;
 import org.storemap.service.ReviewServiceImple;
@@ -37,29 +38,31 @@ public class StoreController {
 	@Autowired
 	private ReviewServiceImple reviewService;
 	
-	// 점포 등록
+	// 점포 추가
 	@PostMapping("/storeRegister")
-	public String storeRgister1(StoreVO vo) {
-		log.info("storeRegister1..."+vo);
+	public String storeRgister(StoreVO vo) {
+		log.info("storeRegister..."+vo);
 		storeService.register(vo);
 		return "redirect:/store/menu?store_idx="+vo.getStore_idx();
 	}
+	// 점포 등록 페이지 이동
 	@GetMapping("/storeRegister")
-	public String storeRegister2() {
-		log.info("storeRegister2...");
+	public String storeRegisterPage() {
+		log.info("storeRegisterPage...");
 		return "index";
 	}
 	
-	// 점포 관리
+	// 점포 수정
 	@PostMapping("/storeModify")
-	public String storeModify1(StoreVO vo) {
-		log.info("storeModify1..."+vo);
+	public String storeModify(StoreVO vo) {
+		log.info("storeModify..."+vo);
 		storeService.modify(vo);
 		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}
+	// 점포 관리 페이지 이동
 	@GetMapping("/storeModify")
-	public String storeModify2(@RequestParam("store_idx") int store_idx, Model model) {
-		log.info("storeModify2..."+store_idx);
+	public String storeModifyPage(@RequestParam("store_idx") int store_idx, Model model) {
+		log.info("storeModifyPage..."+store_idx);
 		model.addAttribute("vo", storeService.get(store_idx));
 		storeService.get(store_idx);
 		return "index";
@@ -73,10 +76,12 @@ public class StoreController {
 		return "redirect:/modal/storeListModal";
 	}
 	
+	/*--------------------------------------------------------------------------*/
+	
 	// 메뉴 페이지 이동
 	@GetMapping("/menu")
-	public String menu2(@RequestParam("store_idx") int store_idx, Model model) {
-		log.info("menu2..."+store_idx);
+	public String menuPage(@RequestParam("store_idx") int store_idx, Model model) {
+		log.info("menuPage..."+store_idx);
 		model.addAttribute("list",menuService.getList(store_idx));
 		return "index";
 	}
@@ -87,8 +92,8 @@ public class StoreController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 		})
-	public ResponseEntity<List<MenuVO>> getList(@PathVariable("store_idx") int store_idx){
-		log.info("getList..."+store_idx);
+	public ResponseEntity<List<MenuVO>> menuList(@PathVariable("store_idx") int store_idx){
+		log.info("menuList..."+store_idx);
 		return new ResponseEntity<List<MenuVO>>(menuService.getList(store_idx), HttpStatus.OK);
 	}
 	
@@ -98,7 +103,7 @@ public class StoreController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 			})
-	public ResponseEntity<MenuVO> get(@PathVariable("menu_idx") int menu_idx){
+	public ResponseEntity<MenuVO> menuInfo(@PathVariable("menu_idx") int menu_idx){
 		log.info("get..."+menu_idx);
 		return new ResponseEntity<MenuVO>(menuService.get(menu_idx), HttpStatus.OK);
 	}
@@ -107,7 +112,7 @@ public class StoreController {
 	@PostMapping(value = "/new",
 			consumes = "application/json",
 			produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> add(@RequestBody MenuVO vo){
+	public ResponseEntity<String> menuRegister(@RequestBody MenuVO vo){
 		log.info("add..."+vo);
 		return menuService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -119,7 +124,7 @@ public class StoreController {
 			consumes = "application/json",
 			produces = MediaType.TEXT_PLAIN_VALUE
 			)
-	public ResponseEntity<String> modify(@PathVariable("menu_idx") int menu_idx, @RequestBody MenuVO vo){
+	public ResponseEntity<String> menuModify(@PathVariable("menu_idx") int menu_idx, @RequestBody MenuVO vo){
 		log.info("menu_idx: "+menu_idx);
 		log.info("modify: "+vo);
 		vo.setMenu_idx(menu_idx);
@@ -133,19 +138,52 @@ public class StoreController {
 	
 	// 메뉴 삭제
 	@DeleteMapping(value = "/{menu_idx}", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> remove(@PathVariable("menu_idx") int menu_idx){
+	public ResponseEntity<String> menuRemove(@PathVariable("menu_idx") int menu_idx){
 		log.info("remove..."+menu_idx);
 		return menuService.remove(menu_idx)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	/*--------------------------------------------------------------------------*/
 		
-	// 리뷰 등록
+	// 리뷰 추가
+	@PostMapping("/reviewRegister")
+	public String reviewRegister(ReviewVO vo) {
+		log.info("reviewRegister..."+vo);
+		reviewService.register(vo);
+		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
+	}
+	// 리뷰 등록 페이지 이동
 	@GetMapping("/reviewRegister")
-	public String reviewRegister() {
-		log.info("reviewRegister...");
+	public String reviewRegisterPage() {
+		log.info("reviewRegisterPage...");
 		//storeService.getList();
 		return "index";
 	}
+	
+	// 리뷰 수정
+	@PostMapping("/reviewModify")
+	public String reviewModify(ReviewVO vo) {
+		log.info("reviewModify..."+vo);
+		reviewService.modify(vo);
+		return "index";
+	}
+	// 리뷰 수정 페이지 이동
+	@GetMapping("/reviewModify")
+	public String reviewModifyPage() {
+		log.info("reviewModifyPage...");
+		return "index";
+	}
+	
+	// 리뷰 삭제
+	@PostMapping("/reviewRemove")
+	public String reviewRemove(int review_idx) {
+		log.info("reviewRemove..."+review_idx);
+		reviewService.remove(review_idx);
+		return "index";
+	}
+	
+	/*--------------------------------------------------------------------------*/
 	
 	// map 이동
 	@GetMapping("/map")
