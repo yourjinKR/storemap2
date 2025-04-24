@@ -42,7 +42,7 @@
 		    	<h3>메뉴수정</h3>
 		    	<input type="hidden" name="store_idx" value="${store_idx}">
 		    	<label for="modifyImage">이미지</label>
-		    	<input type="hidden" id="modifyImage" name="modify_image">
+		    	<input type="text" id="modifyImage" name="modify_image" readonly>
 		    	<label for="modifyName">메뉴</label>
 		    	<input type="text" id="modifyName" name="modify_name">
 		    	<label for="modifyPrice">가격</label>

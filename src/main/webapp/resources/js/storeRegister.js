@@ -46,6 +46,6 @@ function register(){
 		return;
 	}
 	
-	f.action - '/store/storeRegister';
+	f.action = '/store/storeRegister';
 	f.submit();
 };

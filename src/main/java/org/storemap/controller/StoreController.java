@@ -155,9 +155,9 @@ public class StoreController {
 	}
 	// 리뷰 등록 페이지 이동
 	@GetMapping("/reviewRegister")
-	public String reviewRegisterPage() {
-		log.info("reviewRegisterPage...");
-		//storeService.getList();
+	public String reviewRegisterPage(@RequestParam("store_idx") int store_idx, Model model) {
+		log.info("reviewRegisterPage..."+store_idx);
+		model.addAttribute("vo",storeService.get(store_idx));
 		return "index";
 	}
 	
@@ -166,12 +166,14 @@ public class StoreController {
 	public String reviewModify(ReviewVO vo) {
 		log.info("reviewModify..."+vo);
 		reviewService.modify(vo);
-		return "index";
+		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}
 	// 리뷰 수정 페이지 이동
 	@GetMapping("/reviewModify")
-	public String reviewModifyPage() {
-		log.info("reviewModifyPage...");
+	public String reviewModifyPage(@RequestParam("review_idx") int review_idx, Model model) {
+		log.info("reviewModifyPage..."+review_idx);
+		model.addAttribute("vo",reviewService.get(review_idx));
+		reviewService.get(review_idx);
 		return "index";
 	}
 	

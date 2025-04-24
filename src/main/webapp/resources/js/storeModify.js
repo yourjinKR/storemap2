@@ -48,7 +48,7 @@ function modify(){
 		return;
 	}
 	
-	f.action - '/store/storeModify';
+	f.action = '/store/storeModify';
 	f.submit();
 };
 

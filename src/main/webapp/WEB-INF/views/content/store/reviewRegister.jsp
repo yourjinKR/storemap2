@@ -4,16 +4,16 @@
 	<h1>리뷰등록</h1>
 
   <form method="post">
-  	<input type="hidden" name="member_idx" value="${loginUserIdx}">
+  	<input type="hidden" name="store_idx" value="${vo.store_idx}">
   	
-    <label for="title">제목</label>
-    <input type="text" id="title" name="title">
+    <label for="rtitle">제목</label>
+    <input type="text" id="rtitle" name="review_title">
 
-    <label for="author">작성자</label>
-    <input type="text" id="author" name="author">
+    <label for="rname">작성자</label>
+    <input type="text" id="rname" name="review_writer" value="${userNickName}" readonly>
 
-    <label for="rating">평점</label>
-    <select id="rating" name="rating">
+    <label for="star">별점</label>
+    <select id="star" name="review_star">
       <option value="5">5.0</option>
       <option value="4.5" selected>4.5</option>
       <option value="4">4.0</option>
@@ -26,13 +26,17 @@
       <option value="0.5">0.5</option>
     </select>
 
-    <label for="review">리뷰 내용</label>
-    <textarea id="review" name="review"></textarea>
+    <label for="content">리뷰 내용</label>
+    <textarea id="content" name="review_content" placeholder="정말 최고에요!"></textarea>
 
-    <label for="photo">사진첨부</label>
-    <input type="file" id="photo" name="photo">
+    <label for="rimage">사진첨부</label>
+    <input type="file" id="rimage" name="review_image">
 
-    <button type="submit">리뷰 등록</button>
+    <div class="panel-body-btns">
+    	<button type="button" class="btn btn-sec" id="registerBtn">리뷰 등록</button>
+    	<button type="button" class="btn btn-sec" id="resetBtn">다시 작성</button>
+    	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
+    </div>
   </form>
 </div>
 <script type="text/javascript" src="/resources/js/reviewRegister.js"></script>
