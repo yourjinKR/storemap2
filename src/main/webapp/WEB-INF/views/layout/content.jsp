@@ -101,6 +101,10 @@
 		<c:when test="${path eq '/store/reviewRegister'}">
 			<jsp:include page="../content/store/reviewRegister.jsp" />
 		</c:when>
+		<%-- 리뷰수정 --%>
+		<c:when test="${path eq '/store/reviewModify'}">
+			<jsp:include page="../content/store/reviewModify.jsp" />
+		</c:when>
 		<%-- 점포관리 --%>
 		<c:when test="${path eq '/store/storeModify'}">
 			<jsp:include page="../content/store/storeModify.jsp" />
