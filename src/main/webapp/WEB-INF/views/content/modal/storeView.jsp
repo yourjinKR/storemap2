@@ -2,7 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="storeView">
-    <img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">
+	<div class="store-image">
+    	<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">	
+	</div>
 
     <div class="store-info">
       <h3>가게정보</h3>

@@ -8,7 +8,7 @@
 <div>
 	<!-- 지도 -->
     <div id="mapLab">
-		<div id="clickLatlng" style="width: 1200; height: 80px;"></div>
+<!--  		<div id="clickLatlng" style="width: 1200; height: 80px;"></div>
 		<button id="panToTest">지도 중심좌표 부드럽게 이동시키기</button>
 		<button id="markerTest">마커 생성</button>
 		<button id="markersGen">마커 리스트에 마커 생성</button>		
@@ -20,16 +20,29 @@
 		<button id="markerViewTest1">idx 1번 가게 보기</button>
 		<button id="showMapSideBar">사이드바 열기</button>	
 		<button id="hideMapSideBar">사이드바 닫기</button>	
-		<br>
-		<div id="map2" style="width: 1200; height: 1200px;">123</div>
-		<!-- 점포 사이드바 -->
-		<div class="side-bar" id="map" style="overflow: auto;">
-		    <form>
-		    	<input type="text">
-		    	<button type="submit">검색</button>
-		    </form>	
-			<jsp:include page="../modal/storeListModal.jsp" />
+		<br> -->
+		<div id="map2" style="width: 1200; height: 1200px;"></div>
+	</div>
+	<!-- 점포 리스트 사이드바 -->
+	<div class="side-bar" id="store-list">
+		<div id="content">
+			<div class="header">
+			    <form>
+			    	<input type="text">
+			    	<button type="submit">검색</button>
+			    </form>		
+			</div>
+			<jsp:include page="../modal/storeListModal.jsp"/>
 		</div>
-		<br>
+		<div class="side-bar" id="store">
+			<!-- 점포 상세보기 사이드바 -->
+			<jsp:include page="../modal/storeView.jsp">
+				<jsp:param value="1" name="store_idx"/>
+			</jsp:include>
+		</div>
+		<!-- 사이드바 리모컨 -->
+		<div id="toggle-box">
+			<button class="btn" id="toggle">토글</button>			
+		</div>
 	</div>
 </div>

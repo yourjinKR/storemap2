@@ -5,11 +5,11 @@ linkEle.rel = 'stylesheet';
 linkEle.href = CSS_PATH;
 document.head.appendChild(linkEle);
 
-const f = document.forms[0];
+// const f = document.forms[0];
 const storeService = (function(){
-	//댓글 조회 함수 
+	//점포 조회 함수 
     function get(store_idx,callback){
-    	fetch(`/modal/${store_idx}.json`)
+    fetch(`/modal/${store_idx}.json`)
         .then(response => response.json())
         .then(data => {
             callback(data);

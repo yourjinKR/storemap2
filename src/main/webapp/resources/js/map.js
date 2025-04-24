@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	var testMap = new kakao.maps.Map(container2, optionBasic);
 
 	
-    document.querySelectorAll("#mapLab button").forEach(btn => {
+    document.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", e => {
             e.preventDefault;
             let type = btn.getAttribute("id");
@@ -65,8 +65,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
             }
             // 마커 여러개 생성
             else if (type === "markersGen") {
-                registerMarker(37.504724, 127.02538, '302');
-                registerMarker(37.5056370385705, 127.025605528158, '303');
+                registerMarker(37.5056370385705, 127.025605528158, '302');
+                registerMarker(37.504724, 127.02538, '303');
                 e.target.disabled = true;
                 showMarkers(testMap);
             }
@@ -90,19 +90,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
             }
             // 가게 클릭시 마커 강조 테스트 0
             else if (type === "markerViewTest0") {
-                viewStoreMarker("0");
+                showStoreMarker("0");
             }
             // 가게 클릭시 마커 강조 테스트 1
             else if (type === "markerViewTest1") {
-                viewStoreMarker("1");
+                showStoreMarker("1");
             }
             // 사이드바 열기
-            else if (type === "showMapSideBar") {
-                showMapSideBar();
+            else if (type === "showStoreListSideBar") {
+                showStoreListSideBar();
             }
             // 사이드바 열기
-            else if (type === "hideMapSideBar") {
-                hideMapSideBar();
+            else if (type === "hideStoreListSideBar") {
+                hideStoreListSideBar();
+            }
+            // 토글 버튼
+            else if (type === "toggle") {
+                hideStoreSideBar();
+                hideStoreListSideBar();
             }
         });
     });
@@ -131,7 +136,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         marker.setMap(map);
     }
 
-    // 마커 리스트에 마커 등록
+    // 마커 등록
     function registerMarker(lat, lng, idx) {
         // 마커 위치 설정
         let markerPosition  = new kakao.maps.LatLng(lat, lng); 
@@ -148,12 +153,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
         // 생성된 마커를 배열에 추가
         markerList.push(marker);
+
+        return marker;
     }
 
     // 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수
     function setMarkers(map) {
-        for (var i = 0; i < markerList.length; i++) {
-            markerList[i].setMap(map);
+        for (var i = 0; i < storeVOList.length; i++) {
+            storeVOList[i].marker.setMap(map);
         }            
     }
 
@@ -176,11 +183,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
     function addMarkerEvent(marker) {
         kakao.maps.event.addListener(marker, 'click', function() {
             console.log("marker idx : " + marker.getTitle());
-            console.log(marker);
             // 마커 선택
             selectMarker(marker);
-            showMapSideBar();
-            openModal();
+            
+            let title = marker.getTitle();
+            let li = searchEleByTitle(title);
+
+            showStoreListSideBar();
+            initStoreSideBar(title);
+            showStoreSideBar();
         });
     }
 
@@ -194,15 +205,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
         selectedMarker = marker;
     }
     
-    // 가게 클릭 이벤트 (화면이동 + 강조효과)
-    function viewStoreMarker(idx) {
+    /** idx를 받으면 일치하는 마커로 이동 및 강조하는 함수 */
+    function showStoreMarker(idx) {
         markerList.forEach(marker => {
             //console.log(marker.getTitle());
             // idx와 일치시 이동 및 강조
             if (idx === marker.getTitle()) {
                 // 해당 마커의 좌표 출력
-                console.log(marker.getPosition().getLat());
-                console.log(marker.getPosition().getLng());
+                // console.log(marker.getPosition().getLat());
+                // console.log(marker.getPosition().getLng());
                 // 마커 기준으로 지도 이동
                 panToLatLng(testMap, marker.getPosition().getLat(), marker.getPosition().getLng());
                 // 마커 강조
@@ -228,12 +239,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
         
         let message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
         message += '경도는 ' + latlng.getLng() + ' 입니다';
+        console.log(message);
         
-        let resultDiv = document.getElementById('clickLatlng'); 
-        resultDiv.innerHTML = message;
+        // let resultDiv = document.getElementById('clickLatlng'); 
+        // resultDiv.innerHTML = message;
         
         // 도로명 주소 함수
-        searchAddrFromCoords(latlng, resultDiv);
+        // searchAddrFromCoords(latlng, resultDiv);
     });
 
     // 좌표 => 도로명 주소 함수
@@ -255,8 +267,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
     }
     
-    // 점포 검색
-    const storeSearchService = (function(){  
+    // 비동기 서비스
+    const asyncService = (function(){  
         
         // 지역명 기반 검색, 추후에 store_regcode로 진행   
         function getListByReg(store_area, callback){
@@ -287,28 +299,52 @@ document.addEventListener("DOMContentLoaded", (event) => {
             
         }
 
+        /** store_idx 입력 시 점포 상세보기 정보 출력 함수 */
+        function getStore(store_idx, callback){
+            fetch(`/modal/${store_idx}.json`)
+                .then(response => response.json())
+                .then(data => {
+                    callback(data);
+                })
+                .catch(err => console.log(err));
+        }
+        
+        /** 메뉴 목록 함수 */
+        function getMenuList(store_idx, callback) {
+            fetch(`/store/list/${store_idx}.json`)
+                .then(response => response.json())
+                .then(data => {
+                    callback(data);
+                })
+                .catch(err => console.log(err));
+        }
+
         // 함수 객체 리턴
         return {
             getListByReg : getListByReg,
+            getStore : getStore,
+            getMenuList : getMenuList
         };
     })();
-    const sss = storeSearchService;
+    const as = asyncService;
     
-    // 점포 리스트
-    let voList = [];
+    // vo 리스트
+    let storeVOList = [];
     // 지역명 기반 검색 서비스 함수 실행
-    sss.getListByReg("서울", function(data) {
+    as.getListByReg("논현", function(data) {
 
         data.forEach(vo => {
-            // registerMarker(store.store_lat, store.store_lng, store.store_idx); // 마커 추가예정
-            voList.push(vo);
+            let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
+            vo.marker = marker;
+            storeVOList.push(vo);
         });
 
         // 점포 리스트 출력
-        voList.forEach(vo => {
+        storeVOList.forEach(vo => {
             // console.log(vo);
             msg += 
-            `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
+            // `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
+            `<li data-store_idx="${vo.store_idx}" name="store_idx">
                 <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
 				<input type="hidden" name="store_address" value="${vo.store_address}">
 				<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
@@ -322,10 +358,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
             storeUL.innerHTML = msg;
         });
 
-        // store 클릭 이벤트
         let storeLI = document.querySelectorAll(".store-card ul li");
         // 가게와 마커를 메핑
         storeMarkerMapping(storeLI);
+
+        console.log(storeVOList);
+        showMarkers(testMap);
     });
 
     // 출력 위치 확인
@@ -333,22 +371,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let msg = "";
 
 
-    // 점포 마커 매핑 함수
+    /** 점포 클릭 이벤트 추가 및 마커 매핑 함수 */ 
     function storeMarkerMapping(ele) {
         if (ele != null ) {
-            console.log(ele);
-            ele.forEach(modal => {
+            ele.forEach(store => {
                 // idx 추출
-                let idx = modal.getAttribute("data-store_idx");
-                modal.addEventListener('click', e => {
-                    console.log(idx);
+                let idx = store.getAttribute("data-store_idx");
+                store.addEventListener('click', e => {
+                    // console.log(idx);
                     // 리스트 중에서 idx 찾기
                     markerList.forEach(marker => {
                         if (marker.getTitle() === idx) {
-                            console.log(marker.getTitle());
-                            console.log("idx 일치");
+                            // console.log(marker.getTitle());
+                            // console.log("idx 일치");
                             // 가게의 idx와 마커의 title이 일치할때 함수 실행
-                            viewStoreMarker(idx);
+                            // showStoreModal(idx);
+                            initStoreSideBar(idx);
+                            showStoreSideBar();
+                            showStoreMarker(idx);
                         }
                     });
                 });
@@ -356,14 +396,84 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
-    
-    let mapSideBar = document.querySelector(".side-bar#map");
-    // 맵 사이드바 컨트롤
-    function showMapSideBar() {
-        mapSideBar.classList.add("show");
+    function searchEleByTitle(title) {
+        let result;
+        let storeLIS = document.querySelectorAll(".store-card ul li");
+        storeLIS.forEach(storeLI => {
+            let idx = storeLI.getAttribute("data-store_idx");
+            if (idx === title) {
+                result = storeLI;
+            }
+        });
+        return result;
     }
-    function hideMapSideBar() {
-        mapSideBar.classList.remove("show");
+
+    
+    // 스토어 리스트 사이드바 컨트롤
+    
+    /** 스토어 리스트 사이드바 여는 함수 */
+    function showStoreListSideBar() {
+        let storeListSideBar = document.querySelector(".side-bar#store-list");
+        storeListSideBar.classList.add("show");
+    }
+    /** 스토어 리스트 사이드바 닫는 함수 */
+    function hideStoreListSideBar() {
+        let storeListSideBar = document.querySelector(".side-bar#store-list");
+        storeListSideBar.classList.remove("show");
+    }
+
+    // 스토어 사이드바 컨트롤
+    
+    /** 스토어 사이드바 여는 함수 */
+    function showStoreSideBar() {
+        let storeSideBar = document.querySelector(".side-bar#store");
+        storeSideBar.classList.add("show");
+    }
+    /** 스토어 사이드바 닫는 함수 */
+    function hideStoreSideBar() {
+        let storeSideBar = document.querySelector(".side-bar#store");
+        storeSideBar.classList.remove("show");
+    }
+    
+    /** 스토어 사이드바 내용 담기 */
+    function initStoreSideBar(idx) {
+        // 가게 이미지 및 정보
+        as.getStore(idx, function (svo) {
+            // 이미지
+            let storeImage = document.querySelector(".storeView .store-image");
+            storeImage.innerHTML = `<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">`;
+            // 정보
+            let storeInfo = document.querySelector(".storeView .store-info");
+            let context =
+                `<div class="store-info">
+                    <h3>${svo.store_name}</h3>
+                    <div class="info-text">주소: ${svo.store_address}</div>
+                    <div class="info-text">영업일: ${svo.store_activity_time}</div>
+                    <div class="info-text">전화: ${svo.store_num}</div>
+                </div>`;
+            storeInfo.innerHTML = context;
+        });
+        // 메뉴 리스트
+        as.getMenuList(idx, function(list) {
+            let menuList = document.querySelector(".storeView .menu-section");
+            console.log(list);
+            
+            let context = '<h3>메뉴</h3>';
+            list.forEach(mvo => {
+                context += 
+                    `<div class="menu-list">
+                        <c:forEach var="mvo" items="${mvo}">
+                            <div class="menu-item">
+                            <img src="/resources/img/${mvo.menu_image}" alt="음식사진">
+                            <div class="menu-name">${mvo.menu_name}</div>
+                            <div class="menu-price">₩${mvo.menu_price}</div>
+                            </div>
+                        </c:forEach>
+                    </div>`;
+            });
+            menuList.innerHTML = context;
+        });
+        // 리뷰
     }
 });
 

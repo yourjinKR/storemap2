@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.LetterVO;
+import org.storemap.domain.MenuVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -68,6 +69,17 @@ public class ModalController {
 		model.addAttribute("list",menuService.getList(store_idx));
 		storeService.get(store_idx);
 		return "index";
+	}
+	
+	// 메뉴 정보 팝업 (비동기)
+	@GetMapping(value = "/menuList/{store_idx}",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+		})
+	public ResponseEntity<List<MenuVO>> menuList(@PathVariable("store_idx") int store_idx) {
+		log.info("MenuListAsync..." + store_idx);
+		return new ResponseEntity<List<MenuVO>>(menuService.getList(store_idx), HttpStatus.OK);
 	}
 	
 	// 점포조회

@@ -35,9 +35,11 @@
 
 /* 사이드바  */
 .side-bar{opacity:0; transition: 0.25s ease;  position: fixed;right: -300px;top: 0;height: 100vh;background: #fff;width: 300px;z-index:11;border-left:1px solid #222;box-shadow: -5px 0 5px rgba(0,0,0,.05);}
-.side-bar#map{left: -300px;}
+.side-bar#store-list{left: -300px; overflow: auto;}
+.side-bar#store{left: -300px; overflow: auto;}
 .side-bar.show{opacity:1; right:0}
-.side-bar.show#map{opacity:1; left:0;}
+.side-bar.show#store-list{opacity:1; left:0; overflow: auto;}
+.side-bar.show#store{opacity:1; left:300px; overflow: auto;}
 .side-bar .info{padding: 30px;align-items: center;gap:25px;border-bottom:1px solid #222;}
 .side-bar .btn-list li{border-bottom:1px solid #222;background:#d9d9d9;padding: 10px 15px;}
 .side-bar .user-nickname{font-size:22px;font-weight:bold;margin-bottom:10px;}

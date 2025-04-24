@@ -35,6 +35,9 @@ document.querySelectorAll('button').forEach(btn => {
 	});
 });
 
+// ----------- 메뉴 관련 스크립트 -----------
+
+
 //------------리뷰 관련 스크립트---------------
 const rs = replyService;
 
