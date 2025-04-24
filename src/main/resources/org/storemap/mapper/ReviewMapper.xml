@@ -30,12 +30,12 @@
 	<!-- 2.리뷰 수정  -->
 	<update id="update" parameterType="org.storemap.domain.ReviewVO">
 		update review set 
-		review_writer = #{review_writer},
-	 	review_star = #{review_star},
-	 	review_title = #{review_title},
-	 	review_content = #{review_content},
-	 	review_image = #{review_image},
-	 	review_regdate = sysdate
+			review_writer = #{review_writer},
+		 	review_star = #{review_star},
+		 	review_title = #{review_title},
+		 	review_content = #{review_content},
+		 	review_image = #{review_image},
+		 	review_regdate = sysdate
 	 	where review_idx = #{review_idx}
 	</update>
 	<!-- 3.리뷰 삭제  -->
