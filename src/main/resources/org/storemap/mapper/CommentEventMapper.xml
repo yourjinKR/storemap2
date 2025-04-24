@@ -3,4 +3,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.CommentEventMapper">
+	
+    <select id="replyList" resultType="org.storemap.domain.CommentEventVO">
+        SELECT * FROM comment_event
+        WHERE event_idx = #{event_idx}
+        ORDER BY comment_regdate DESC
+    </select>
+
+    <insert id="replyInsert">
+        INSERT INTO comment_event (
+            member_idx, event_idx, comment_content, comment_regdate
+        ) VALUES (
+            #{member_idx}, #{event_idx}, #{comment_content}, SYSDATE
+        )
+    </insert>
+
 </mapper>

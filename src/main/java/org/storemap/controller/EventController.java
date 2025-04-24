@@ -1,18 +1,26 @@
 package org.storemap.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventVO;
+import org.storemap.domain.MemberVO;
 import org.storemap.domain.PageDTO;
 import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
@@ -74,25 +82,66 @@ public class EventController {
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
 	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
-		model.addAttribute("vo", eventService.getEventOneView(event_idx));
-		
-		log.info("eventVO..." + event_idx);
-		
-		return "index";
+	    // 1. EventVO 가져오기
+	    EventVO vo = eventService.getEventOneView(event_idx);
+	    model.addAttribute("vo", vo);
+
+	    log.info("eventVO..." + vo);
+
+	    // 2. vo 안에서 필요한 값 추출
+	    int totalMax = 0;
+	    String startDate = "";
+	    String endDate = "";
+
+	    if (vo != null) {
+	        try {
+	            if (vo.getEvent_list_max() != null && !vo.getEvent_list_max().isEmpty()) {
+	                totalMax = Integer.parseInt(vo.getEvent_list_max());
+	            }
+	            if (vo.getEvent_bstartdate() != null) {
+	                startDate = vo.getEvent_bstartdate().toLocalDate().toString();
+	            }
+	            if (vo.getEvent_bstopdate() != null) {
+	                endDate = vo.getEvent_bstopdate().toLocalDate().toString();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        
+	    }
+
+	    // 3. 필요한 데이터 추가로 전달
+	    model.addAttribute("totalMax", totalMax);
+	    model.addAttribute("startDate", startDate);
+	    model.addAttribute("endDate", endDate);
+	    
+	    if (!startDate.isEmpty() && !endDate.isEmpty() && totalMax > 0) {
+	        LocalDate start = LocalDate.parse(startDate);
+	        LocalDate end = LocalDate.parse(endDate);
+	        long days = ChronoUnit.DAYS.between(start, end) + 1;
+
+	        int maxPerDay = (int) Math.floor((double) totalMax / days);
+	        model.addAttribute("maxPerDay", maxPerDay); //  JSP에서 사용할 수 있도록 전달
+	    } else {
+	        model.addAttribute("maxPerDay", 0); // 예외 처리
+	    }
+	    
+	    // 댓글 목록도 같이 담기
+	    List<CommentEventVO> commentList = commentEventService.replyList(event_idx);
+	    model.addAttribute("commentList", commentList);
+	    
+	    return "index"; // 또는 "eventView"
 	}
+
 	
-	//이벤트 수정 화면으로 이동
-	@GetMapping("/eventModify")
-	public String eventModify() {
-		return "index";
-	}
-	
-	//댓글 리스트 불러오는 비동기 메소드
-	 @GetMapping("/replyList")
-	 @ResponseBody
-	 public List<CommentEventVO> replyList(@RequestParam("comment_idx") int comment_idx){
-		 log.info("replyList..." + comment_idx);
-		 return commentEventService.replyList(comment_idx);
-	 }
-	
+	@PostMapping("/insert")
+	public String insert(@ModelAttribute CommentEventVO vo, HttpSession session) {
+	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
+
+	    vo.setMember_idx(loginUser.getMember_idx()); // 로그인 사용자 ID 설정
+	    commentEventService.insert(vo);
+
+	    return "redirect:/event/eventView?event_idx=" + vo.getEvent_idx();
+}
+	   
 }

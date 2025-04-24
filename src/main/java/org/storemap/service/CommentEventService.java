@@ -6,5 +6,7 @@ import org.storemap.domain.CommentEventVO;
 
 public interface CommentEventService {
 	
-	public List<CommentEventVO> replyList(int comment_idx);
+   public boolean insert(CommentEventVO vo);
+   public List<CommentEventVO> replyList(int event_idx);
+	
 }

@@ -3,34 +3,6 @@
 <%@ page import="java.time.LocalDate, java.time.temporal.ChronoUnit" %>
 <%@ page import="org.storemap.domain.EventVO" %>
 
-<%
-    EventVO vo = (EventVO) request.getAttribute("vo");
-
-    int totalMax = 100;
-    String startDate = "2025-05-01";
-    String endDate = "2025-05-05";
-
-    if (vo != null) {
-        try {
-            if (vo.getEvent_list_max() != null && !vo.getEvent_list_max().isEmpty()) {
-                totalMax = Integer.parseInt(vo.getEvent_list_max());
-            }
-            if (vo.getEvent_bstartdate() != null) {
-                startDate = vo.getEvent_bstartdate().toLocalDate().toString();
-            }
-            if (vo.getEvent_bstopdate() != null) {
-                endDate = vo.getEvent_bstopdate().toLocalDate().toString();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    LocalDate start = LocalDate.parse(startDate);
-    LocalDate end = LocalDate.parse(endDate);
-    long days = ChronoUnit.DAYS.between(start, end) + 1;
-    int maxPerDay = (int) Math.floor((double) totalMax / days);
-%>
 
 <style>
   /* 기본 스타일 */
@@ -135,8 +107,115 @@
   #result {
     margin-bottom: 10px;
   }
-</style>
+    .comment-list {
+    margin-top: 10px;
+  }
 
+  .comment {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+
+  .comment-header {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 5px;
+  }
+
+  .comment-writer {
+    font-weight: bold;
+  }
+
+  .comment-date {
+    margin-left: 10px;
+    color: #999;
+  }
+
+  .comment-content {
+    white-space: pre-wrap;
+  }
+
+  .comment-form {
+    margin-top: 15px;
+  }
+
+  .comment-form textarea {
+    width: 100%;
+    resize: none;
+  }
+
+  .comment-form button {
+    margin-top: 5px;
+    float: right;
+  }
+  /* 댓글 전체 영역 */
+.comment-section {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 2px solid #eee;
+}
+
+/* 댓글 1개 박스 */
+.comment-box {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* 댓글 작성자 정보 */
+.comment-box p strong {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* 댓글 내용 */
+.comment-box p {
+  margin: 4px 0;
+  color: #555;
+}
+
+/* 댓글 날짜 */
+.comment-box small {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* 댓글 등록 폼 */
+.comment-form {
+  margin-top: 20px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: none;
+  font-size: 14px;
+}
+
+.comment-form button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background-color: #45a049;
+}
+</style>
 <div class="readonly-form">
   <h2>글번호 ${vo.event_idx}</h2>
   <h2>🎪 ${vo.event_title}</h2>
@@ -176,9 +255,10 @@
 
   <!-- 참여 UI 영역 -->
   <div id="participationSection">
-    <div id="result">
-      <span id="currentCount">0</span> / 일별 최대 <span id="maxPerDay"><%= maxPerDay %></span>
-    </div>
+	<div id="result">
+		<span id="currentCount">0</span>명 / 일별 최대 
+		  <strong><span id="maxPerDay">${maxPerDay}</span>명</strong> 참여 가능
+	</div>
     <input type="button" id="openBtn" value="참여" />
     <input type="button" id="withdrawBtn" value="철회" />
   </div>
@@ -189,14 +269,7 @@
   <div class="modal-content">
     <span class="close-btn" id="closeBtn">&times;</span>
     <h3>참여 날짜 선택</h3>
-
-    <input 
-      type="date" 
-      id="selectedDate"
-      min="<%= startDate %>" 
-      max="<%= endDate %>"
-    />
-
+    <input type="date" id="selectedDate" min="${startDate}" max="${endDate}"/>
     <div class="modal-actions">
       <button id="confirmBtn">확인</button>
     </div>
@@ -205,15 +278,33 @@
 
 <!-- 목록으로 돌아가기 -->
 <div class="back-button">
-  <button onclick="history.back()">← 목록으로 돌아가기</button>
+  <button onclick="location.href='/event/eventList'">← 목록으로 돌아가기</button>
 </div>
 
-<!-- 전달 데이터 + JS 파일 -->
-<script>
-  const config = {
-    maxPerDay: <%= maxPerDay %>,
-    startDate: "<%= startDate %>",
-    endDate: "<%= endDate %>"
-  };
+<!-- 댓글 작성 폼 -->
+<form action="/eventComment/insert" method="post">
+  <input type="hidden" name="event_idx" value="${vo.event_idx}" />
+  <textarea name="comment_content" required></textarea>
+  <button type="submit">댓글 등록</button>
+</form>
+
+<!-- 댓글 리스트 출력 -->
+<c:forEach var="comment" items="${commentList}">
+  <div class="comment-box">
+    <p><strong>작성자:</strong> ${comment.member_idx}</p>
+    <p>${comment.comment_content}</p>
+    <p class="date">${comment.comment_regdate}</p>
+  </div>
+</c:forEach>
+
+
+<!-- JSON 데이터로 JS에 전달 -->
+<script id="event-data" type="application/json">
+  {
+    "totalMax": ${totalMax},
+    "startDate": "${startDate}",
+    "endDate": "${endDate}"
+  }
 </script>
+
 <script src="/resources/js/event.js"></script>

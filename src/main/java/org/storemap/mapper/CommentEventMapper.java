@@ -6,5 +6,6 @@ import org.storemap.domain.CommentEventVO;
 
 public interface CommentEventMapper {
 	
-	public List<CommentEventVO> replyList(int comment_idx);
+    int insert(CommentEventVO vo);
+    List<CommentEventVO> replyList(int event_idx);
 }

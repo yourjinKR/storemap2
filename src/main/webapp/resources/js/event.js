@@ -48,38 +48,43 @@ function boardChange(chkEl){
 
 
 document.addEventListener("DOMContentLoaded", () => {
+	  // 1. 서버에서 전달한 데이터 읽기
+	  const dataTag = document.getElementById("event-data");
+	  if (!dataTag) return;
+
+	  const { totalMax, startDate, endDate } = JSON.parse(dataTag.textContent);
+
+	  const start = new Date(startDate);
+	  const end = new Date(endDate);
+	  const days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+	  const maxPerDay = Math.floor(totalMax / days);
+
+	  // 2. DOM 요소 가져오기
 	  const modal = document.getElementById("calendarModal");
 	  const selectedDateInput = document.getElementById("selectedDate");
 	  const currentCountElement = document.getElementById("currentCount");
 
-	  const maxPerDay = config.maxPerDay;
-	  const startDate = config.startDate;
-	  const endDate = config.endDate;
+	  const participationMap = {}; // 날짜별 참여 수 저장
 
-	  // 날짜별 참여 수 저장
-	  const participationMap = {};
-
-	  // 모달 열기
+	  // 3. 모달 열기/닫기
 	  document.getElementById("openBtn").addEventListener("click", () => {
 	    modal.style.display = "block";
 	  });
 
-	  // 모달 닫기
 	  document.getElementById("closeBtn").addEventListener("click", () => {
 	    modal.style.display = "none";
 	  });
 
-	  // 참여 확정
+	  // 4. 참여 확정
 	  document.getElementById("confirmBtn").addEventListener("click", () => {
 	    const selectedDate = selectedDateInput.value;
-
 	    if (!selectedDate) {
 	      alert("참여할 날짜를 선택해주세요.");
 	      return;
 	    }
 
 	    const selected = new Date(selectedDate);
-	    if (selected < new Date(startDate) || selected > new Date(endDate)) {
+	    if (selected < start || selected > end) {
 	      alert("유효한 날짜를 선택해주세요.");
 	      return;
 	    }
@@ -95,10 +100,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	    }
 	  });
 
-	  // 철회 버튼
+	  // 5. 철회
 	  document.getElementById("withdrawBtn").addEventListener("click", () => {
 	    const selectedDate = selectedDateInput.value;
-
 	    if (!selectedDate) {
 	      alert("철회할 날짜를 선택해주세요.");
 	      return;
@@ -114,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	    }
 	  });
 
-	  // 참여 인원 수 갱신
+	  // 6. 현재 인원 수 표시 갱신
 	  function updateDisplay(date) {
 	    const count = participationMap[date] || 0;
 	    currentCountElement.innerText = count;
