@@ -11,10 +11,12 @@
 			<when test="letterType == 'received'">
 				SELECT * FROM LETTER
 				WHERE LETTER_RECEIVER = #{loginUser}
+				ORDER BY DECODE(LETTER_READ, 0, 1), LETTER_REGDATE DESC
 			</when>
 			<otherwise>
 				SELECT * FROM LETTER
 				WHERE LETTER_WRITER = #{loginUser}
+				ORDER BY LETTER_REGDATE DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -25,6 +27,37 @@
 		WHERE LETTER_IDX = #{letter_idx}
 	</select>
 	
+	<!-- 수신자 존재 여부 -->
+	<select id="getMemberSearch" parameterType="String" resultType="String">
+		SELECT MEMBER_TYPE 
+		FROM MEMBER 
+		WHERE ( 
+		    SELECT COUNT(*) 
+		    FROM MEMBER 
+			WHERE MEMBER_ID = #{receiver}
+		) = 1 
+		AND MEMBER_ID = #{receiver}
+	</select>
+	
+	<select id="getEnterSearch" parameterType="String" resultType="int">
+		SELECT COUNT(*) 
+		FROM ENTER 
+		WHERE ENTER_ID = #{receiver}
+	</select>
+	
+	<insert id="insertLetter" parameterType="org.storemap.domain.LetterVO">
+		INSERT INTO LETTER 
+		VALUES(
+			LETTER_SEQ.nextval, 
+			#{letter_writer}, 
+			#{letter_content},
+			sysdate,
+			#{letter_receiver},
+			0
+		)
+	</insert>
+	
+	<!-- 읽음 표시 -->
 	<update id="updateRead" parameterType="int">
 		UPDATE LETTER 
 		SET LETTER_READ = LETTER_READ + 1 
