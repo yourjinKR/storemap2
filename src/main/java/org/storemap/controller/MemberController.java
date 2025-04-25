@@ -75,8 +75,12 @@ public class MemberController {
 		EnterVO enter = enterService.eLogin(id, pw);
 		if(enter != null) {
 			enter.setEnter_pw(null);
+			session.setAttribute("loginUserIdx", enter.getEnter_idx());
 			session.setAttribute("loginUser", enter.getEnter_id());
 			session.setAttribute("userName", enter.getEnter_name());
+			session.setAttribute("userRnum", enter.getEnter_rnum());
+			session.setAttribute("userLoc", enter.getEnter_loc());
+			session.setAttribute("userNum", enter.getEnter_num());
 			session.setAttribute("userType", "enter");
 			return "redirect:/";
 		}
