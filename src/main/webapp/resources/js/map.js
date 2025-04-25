@@ -464,7 +464,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                     `<div class="menu-list">
                         <c:forEach var="mvo" items="${mvo}">
                             <div class="menu-item">
-                            <img src="/resources/img/${mvo.menu_image}" alt="음식사진">
+                            <img src="/resources/img/${mvo.menu_image}" alt="${mvo.menu_image}">
                             <div class="menu-name">${mvo.menu_name}</div>
                             <div class="menu-price">₩${mvo.menu_price}</div>
                             </div>

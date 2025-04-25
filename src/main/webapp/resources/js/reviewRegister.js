@@ -14,8 +14,8 @@ document.querySelectorAll('button').forEach(btn => {
 			register();
 		}else if(type === 'resetBtn'){
 			f.reset();
-		}else if(type === 'indexBtn'){
-			location.href=`/`;
+		}else if(type === 'storeBtn'){
+			location.href=`/modal/storeView?store_idx=${f.store_idx.value}`;
 		}
 	})
 });
@@ -32,17 +32,3 @@ function register(){
 	f.action = '/store/reviewRegister';
 	f.submit();
 };
-
-let review_idx = new URLSearchParams(location.search).get('review_idx');
-function remove(){
-	if(confirm("정말 삭제하시겠습니까?")){
-		f.action = `/store/reviewRemove?review_idx=${review_idx}`;
-	    f.submit();
-	    alert("삭제 되었습니다");
-	}else{
-	}
-}
-
-function store(){
-	location.href=`/modal/storeView?store_idx=${f.store_idx.value}`;
-}

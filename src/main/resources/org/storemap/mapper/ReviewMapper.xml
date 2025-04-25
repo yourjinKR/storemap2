@@ -14,7 +14,8 @@
 			review_title,
 			review_content,
 			review_image,
-			review_regdate
+			review_regdate,
+			writer_image
 		)
 		values(
 	 		review_seq.nextval,
@@ -24,7 +25,8 @@
 	 		#{review_title},
 	 		#{review_content},
 	 		#{review_image},
-	 		sysdate
+	 		sysdate,
+	 		#{writer_image}
 	 	)
 	</insert>
 	<!-- 2.리뷰 수정  -->
@@ -43,7 +45,7 @@
 		delete from review where review_idx = #{review_idx}
 	</delete>
 	<!-- 4.리뷰 전체 보기  -->
-	<select id="getReviewList" resultType="org.storemap.domain.ReviewVO">
+	<select id="getReviewList" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where store_idx = #{store_idx}
 	</select>
 	<!-- 5.리뷰 자세히 보기  -->

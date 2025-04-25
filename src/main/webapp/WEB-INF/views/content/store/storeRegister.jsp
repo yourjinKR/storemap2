@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<!-- 로그인 안하면 접근못하게 하기 -->
+<!-- url로 접근 못하게 하기? -->
 <div class="storeRegister">
 	<h1>점포등록</h1>
 

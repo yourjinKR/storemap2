@@ -12,7 +12,7 @@ public interface ReviewService {
 	// 리뷰 삭제
 	public int remove(int review_idx);
 	// 리뷰 목록
-	public List<ReviewVO> getList();
+	public List<ReviewVO> getList(int store_idx);
 	// 리뷰 정보
 	public ReviewVO get(int review_idx);
 }

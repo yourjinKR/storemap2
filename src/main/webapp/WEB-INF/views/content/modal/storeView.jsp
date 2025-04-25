@@ -16,9 +16,9 @@
     <div class="menu-section">
       <h3>메뉴</h3>
       <div class="menu-list">
-      	<c:forEach var="mvo" items="${list}">
+      	<c:forEach var="mvo" items="${mlist}">
       		<div class="menu-item">
-	          <img src="/resources/img/${mvo.menu_image}" alt="음식사진">
+	          <img src="/resources/img/${mvo.menu_image}" alt="${mvo.menu_image}">
 	          <div class="menu-name">${mvo.menu_name}</div>
 	          <div class="menu-price">₩${mvo.menu_price}</div>
 	        </div>
@@ -28,25 +28,29 @@
 
     <div class="review-section">
       <h3>리뷰</h3>
-      <!-- 리뷰 입력 -->
-      <div class="review-section-header">
-      	<!-- 리뷰 입력 만들기 -->
-      </div>
-      <!-- 리뷰 목록 -->
-      <div class="review-section-body">
+      <button type="button" class="rbtn" id="reviewBtn">리뷰 쓰기</button><!-- 버튼css필요 -->
+      <div class="review-section-list">
+	      <c:forEach var="rvo" items="${rlist}">
 	      <ul class="review">
-	      	<li data-review_idx="10">
-		        <img src="/resources/img/profile.jpg" alt="리뷰어">
+	      	<li>
+		  	  <img src="/resources/img/${rvo.writer_image}" alt="${rvo.writer_image}">
 		        <div class="review-content">
-		          <div class="stars">별점아직만드는중</div>
+		          <div class="stars">${rvo.review_star}</div>
 		          <div class="review-meta">
-		          	<strong>작성자</strong> · <small class="">0000.00.00</small></div>
-		          <div>내용</div>
+		          	<strong>${rvo.review_writer}</strong> · <small class="">${rvo.review_regdate}</small>
+		          </div>
+		          <div class=""><!-- 제목 css필요 -->
+		          	${rvo.review_title}
+		          </div>
+		          <div class=""><!-- 이미지/내용 css필요 -->
+		          	<img src="/resources/img/${rvo.review_image}" alt="${rvo.review_image}">
+		          	${rvo.review_content}
+		          </div>
 		        </div>
 	        </li>
 	      </ul>
+	      </c:forEach>
       </div>
     </div>
-    <!-- 리뷰 수정 모달 -->
 </div>
 <script type="text/javascript" src="/resources/js/storeView.js"></script>

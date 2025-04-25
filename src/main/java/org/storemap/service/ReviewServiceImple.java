@@ -38,9 +38,9 @@ public class ReviewServiceImple implements ReviewService{
 	}
 	
 	@Override
-	public List<ReviewVO> getList() {
+	public List<ReviewVO> getList(int store_idx) {
 		log.info("getList...");
-		return mapper.getReviewList();
+		return mapper.getReviewList(store_idx);
 	}
 	
 	@Override

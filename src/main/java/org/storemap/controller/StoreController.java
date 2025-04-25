@@ -161,6 +161,14 @@ public class StoreController {
 		return "index";
 	}
 	
+	// 리뷰 삭제
+		@PostMapping("/reviewRemove")
+		public String reviewRemove(int review_idx) {
+			log.info("reviewRemove..."+review_idx);
+			reviewService.remove(review_idx);
+			return "index";
+		}
+	/*
 	// 리뷰 수정
 	@PostMapping("/reviewModify")
 	public String reviewModify(ReviewVO vo) {
@@ -176,14 +184,7 @@ public class StoreController {
 		reviewService.get(review_idx);
 		return "index";
 	}
-	
-	// 리뷰 삭제
-	@PostMapping("/reviewRemove")
-	public String reviewRemove(int review_idx) {
-		log.info("reviewRemove..."+review_idx);
-		reviewService.remove(review_idx);
-		return "index";
-	}
+	*/
 	
 	/*--------------------------------------------------------------------------*/
 	

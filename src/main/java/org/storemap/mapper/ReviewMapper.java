@@ -12,7 +12,7 @@ public interface ReviewMapper {
 	// 리뷰 삭제
 	public int delete(int review_idx);
 	// 리뷰 목록
-	public List<ReviewVO> getReviewList();
+	public List<ReviewVO> getReviewList(int store_idx);
 	// 리뷰 정보
 	public ReviewVO read(int review_idx);
 }

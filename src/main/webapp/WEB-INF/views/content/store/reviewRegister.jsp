@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<!-- 로그인 안하면 접근못하게 하기 -->
+<!-- url로 접근 못하게 하기? -->
 <div class="reviewRegister">
 	<h1>리뷰등록</h1>
 
   <form method="post">
   	<input type="hidden" name="store_idx" value="${vo.store_idx}">
+  	<!--<input type="hidden" name="writer_image" value="${세션에서가져오기}">-->
   	
     <label for="rtitle">제목</label>
     <input type="text" id="rtitle" name="review_title">
@@ -14,16 +16,16 @@
 
     <label for="star">별점</label>
     <select id="star" name="review_star">
-      <option value="5">5.0</option>
-      <option value="4.5" selected>4.5</option>
-      <option value="4">4.0</option>
-      <option value="3.5">3.5</option>
-      <option value="3">3.0</option>
-      <option value="2.5">2.5</option>
-      <option value="2">2.0</option>
-      <option value="1.5">1.5</option>
-      <option value="1">1.0</option>
-      <option value="0.5">0.5</option>
+      <option value="★★★★★">5.0</option>
+      <option value="★★★★☆" selected>4.5</option>
+      <option value="★★★★">4.0</option>
+      <option value="★★★☆">3.5</option>
+      <option value="★★★">3.0</option>
+      <option value="★★☆">2.5</option>
+      <option value="★★">2.0</option>
+      <option value="★☆">1.5</option>
+      <option value="★">1.0</option>
+      <option value="☆">0.5</option>
     </select>
 
     <label for="content">리뷰 내용</label>
@@ -35,7 +37,7 @@
     <div class="panel-body-btns">
     	<button type="button" class="btn btn-sec" id="registerBtn">리뷰 등록</button>
     	<button type="button" class="btn btn-sec" id="resetBtn">다시 작성</button>
-    	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
+    	<button type="button" class="btn btn-sec" id="storeBtn">메인으로 이동</button>
     </div>
   </form>
 </div>

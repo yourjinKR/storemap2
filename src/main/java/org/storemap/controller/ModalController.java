@@ -30,6 +30,7 @@ import org.storemap.service.EventServiceImple;
 import org.storemap.service.LetterServiceImple;
 import org.storemap.service.MemberServiceImple;
 import org.storemap.service.MenuServiceImple;
+import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreLikeServiceImple;
 import org.storemap.service.StoreServiceImple;
 
@@ -43,6 +44,8 @@ public class ModalController {
 	private StoreServiceImple storeService;
 	@Autowired
 	private MenuServiceImple menuService;
+	@Autowired
+	private ReviewServiceImple reviewService;
 	@Autowired
 	private EventServiceImple eventService;
 	@Autowired
@@ -67,7 +70,8 @@ public class ModalController {
 	public String storeView(@RequestParam("store_idx") int store_idx, Model model) {
 		log.info("storeView..."+store_idx);
 		model.addAttribute("svo",storeService.get(store_idx));
-		model.addAttribute("list",menuService.getList(store_idx));
+		model.addAttribute("mlist",menuService.getList(store_idx));
+		model.addAttribute("rlist",reviewService.getList(store_idx));
 		storeService.get(store_idx);
 		return "index";
 	}
