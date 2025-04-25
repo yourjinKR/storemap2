@@ -34,16 +34,11 @@ let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, click
 let selectedMarker = null;
 
 // 페이지 로드 후 script 실행
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", () => {
     // 위도 경도 설정 (솔데스크 강남점)
     let latBasic = 37.5054070438773;
     let lngBasic = 127.026682479708;
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
-
-    // 지도 출력 테스트 ===============================
-	// let container1 = document.getElementById('map');
-	// let option = {center: new kakao.maps.LatLng(37.5054070438773, 127.026682479708), level: 3};
-	// new kakao.maps.Map(container1, option);
 	
 	// 지도 이동 테스트 ===============================
 	let container2 = document.getElementById('map2');
@@ -106,8 +101,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
             }
             // 토글 버튼
             else if (type === "toggle") {
-                hideStoreSideBar();
-                hideStoreListSideBar();
+                toggleStoreListSideBar();
+            }
+            // 점포 사이드바 닫기 버튼
+            else if (type === "close-store") {
+                storeSideBarCheck = false;
+                semiToggleBtn();
+                closeStoreSideBar();
             }
         });
     });
@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             showStoreListSideBar();
             initStoreSideBar(title);
             showStoreSideBar();
+            onToggleBtn();
         });
     }
 
@@ -378,7 +379,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 // idx 추출
                 let idx = store.getAttribute("data-store_idx");
                 store.addEventListener('click', e => {
-                    // console.log(idx);
                     // 리스트 중에서 idx 찾기
                     markerList.forEach(marker => {
                         if (marker.getTitle() === idx) {
@@ -391,6 +391,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
                             showStoreMarker(idx);
                         }
                     });
+                    storeSideBarCheck = true;
+                    onToggleBtn();
                 });
             });
         }
@@ -409,25 +411,27 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     
+    // ========================= 사이드바 관련 =========================
     // 스토어 리스트 사이드바 컨트롤
     
+    let storeListSideBar = document.querySelector(".side-bar#store-list");
     /** 스토어 리스트 사이드바 여는 함수 */
     function showStoreListSideBar() {
-        let storeListSideBar = document.querySelector(".side-bar#store-list");
         storeListSideBar.classList.add("show");
     }
     /** 스토어 리스트 사이드바 닫는 함수 */
     function hideStoreListSideBar() {
-        let storeListSideBar = document.querySelector(".side-bar#store-list");
         storeListSideBar.classList.remove("show");
     }
 
     // 스토어 사이드바 컨트롤
-    
+    let storeSideBarCheck = false;
     /** 스토어 사이드바 여는 함수 */
     function showStoreSideBar() {
         let storeSideBar = document.querySelector(".side-bar#store");
         storeSideBar.classList.add("show");
+        storeSideBarCheck = true;
+        semiToggleBtn();
     }
     /** 스토어 사이드바 닫는 함수 */
     function hideStoreSideBar() {
@@ -441,7 +445,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         as.getStore(idx, function (svo) {
             // 이미지
             let storeImage = document.querySelector(".storeView .store-image");
-            storeImage.innerHTML = `<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">`;
+            storeImage.innerHTML = `<img src="/resources/img/${svo.store_image}" alt="${mvo.menu_image}" class="store-image">`;
             // 정보
             let storeInfo = document.querySelector(".storeView .store-info");
             let context =
@@ -474,6 +478,49 @@ document.addEventListener("DOMContentLoaded", (event) => {
             menuList.innerHTML = context;
         });
         // 리뷰
+    }
+    
+    // 토글 버튼
+    let toggleBtn = document.querySelector(".side-bar#toggle-box");
+    /** 토글 버튼 위치 변경 함수 600px */
+    function onToggleBtn() {
+        toggleBtn.style.left = '600px';
+    }
+    /** 토글 버튼 위치 변경 함수 300px */
+    function semiToggleBtn() {
+        toggleBtn.style.left = '300px';
+    }
+    /** 토글 버튼 위치 변경 함수 0px */
+    function offToggleBtn() {
+        toggleBtn.style.left = '0px';
+    }
+
+    /** 스토어 리스트 사이드바 토글 함수 */
+    function toggleStoreListSideBar() {
+        let storeListSideBar = document.querySelector(".side-bar#store-list");
+        // 토글 OFF
+        if (storeListSideBar.classList[1] == "show") {
+            hideStoreSideBar();
+            hideStoreListSideBar();
+            offToggleBtn();
+        } 
+        // 토글 ON
+        else {
+            showStoreListSideBar();
+            if (storeSideBarCheck) {
+                showStoreSideBar();
+            }
+            if (!storeSideBarCheck) {
+                semiToggleBtn();
+            } else {
+                onToggleBtn();
+            }
+        }
+    }
+
+    /** 점포 사이드바 닫는 함수 */
+    function closeStoreSideBar() {
+        hideStoreSideBar();
     }
 });
 

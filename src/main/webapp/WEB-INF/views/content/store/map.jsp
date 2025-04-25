@@ -27,22 +27,23 @@
 	<div class="side-bar" id="store-list">
 		<div id="content">
 			<div class="header">
-			    <form>
-			    	<input type="text">
-			    	<button type="submit">검색</button>
-			    </form>		
+				<form>
+					<input type="text">
+					<button type="submit">검색</button>
+				</form>		
 			</div>
 			<jsp:include page="../modal/storeListModal.jsp"/>
 		</div>
 		<div class="side-bar" id="store">
 			<!-- 점포 상세보기 사이드바 -->
+			<div><button class="btn" id="close-store">X</button></div>
 			<jsp:include page="../modal/storeView.jsp">
 				<jsp:param value="1" name="store_idx"/>
 			</jsp:include>
 		</div>
-		<!-- 사이드바 리모컨 -->
-		<div id="toggle-box">
-			<button class="btn" id="toggle">토글</button>			
-		</div>
+	</div>
+	<!-- 사이드바 리모컨 -->
+	<div class="side-bar" id="toggle-box">
+		<button id="toggle">토글</button>			
 	</div>
 </div>
