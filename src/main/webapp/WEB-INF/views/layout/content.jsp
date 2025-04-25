@@ -55,6 +55,10 @@
 		<c:when test="${path eq '/member/modifyInfo'}">
 			<jsp:include page="../content/member/modifyInfo.jsp" />
 		</c:when>
+		<%-- 회원탈퇴 --%>
+		<c:when test="${path eq '/member/delete'}">
+			<jsp:include page="../content/member/delete.jsp" />
+		</c:when>
 		<%-- 나의 좋아요 목록 --%>
 		<c:when test="${path eq '/member/myLikeList'}">
 			<jsp:include page="../content/member/myLikeList.jsp" />

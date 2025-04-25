@@ -15,6 +15,6 @@ public interface MemberMapper {
 	// id 중복확인
 	public int checkId(String member_id);
 	
-	// 개인정보 수정
+	// 회원정보 수정
 	public int modifyMember(MemberVO member);
 }

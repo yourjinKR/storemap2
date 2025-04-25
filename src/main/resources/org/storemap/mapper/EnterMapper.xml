@@ -35,4 +35,15 @@
 			#{enter_num}
 		)	
 	</insert>
+	
+	<!-- 회원정보 수정 -->
+	<update id="modifyEnter" parameterType="org.storemap.domain.EnterVO">
+		UPDATE  
+			ENTER
+		SET 
+			ENTER_IMAGE = #{enter_image, jdbcType = VARCHAR},
+			ENTER_PW = #{enter_pw}
+		WHERE
+			ENTER_IDX = #{enter_idx}
+	</update>
 </mapper>

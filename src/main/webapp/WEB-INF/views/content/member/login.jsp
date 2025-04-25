@@ -19,4 +19,9 @@
 	<h1>회원이 아니신가요?</h1>
 		<button onclick="location.href='/member/register?type=personal'">일반/점주 회원가입</button>
 		<button onclick="location.href='/member/register?type=group'">기관/단체 회원가입</button>
+</div><br>
+<p>(사이드바)</p>
+<div>
+	<button onclick="location.href='/member/modifyInfo?type=personal'">일반/점주 정보수정</button>
+	<button onclick="location.href='/member/modifyInfo?type=group'">기관/단체 정보수정</button>
 </div>

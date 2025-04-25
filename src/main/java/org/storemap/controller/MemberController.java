@@ -89,15 +89,67 @@ public class MemberController {
 		return "index";
 	}
 	
-	// 로그아웃
-		@PostMapping("/logout")
-		@ResponseBody
-		public Map<String, Object> logout(HttpSession session) {
-			Map<String, Object> result = new HashMap<>();
-			session.invalidate();
-			result.put("result", "success");
-			return result; 
+	// 회원정보 수정 화면으로 이동
+	@GetMapping("/modifyInfo")
+	public String modifyForm(@RequestParam("type") String type, HttpSession session, Model model) {
+		if("personal".equals(type)) {
+			// 개인
+			String member_id = (String) session.getAttribute("loginUser");
+			String member_name = (String) session.getAttribute("userName");
+			String member_nickname = (String) session.getAttribute("userNickName");
+			model.addAttribute("member_id", member_id);
+			model.addAttribute("member_name", member_name);
+			model.addAttribute("member_nickname", member_nickname);
+		} else if("group".equals(type)) {
+			// 단체
+			String enter_id = (String) session.getAttribute("loginUser");
+			String enter_name = (String) session.getAttribute("userName");
+			int enter_rnum = (Integer)session.getAttribute("userRnum");
+			String enter_loc = (String) session.getAttribute("userLoc");
+			String enter_num = (String) session.getAttribute("userNum");
+			model.addAttribute("enter_id", enter_id);
+			model.addAttribute("enter_name", enter_name);
+			model.addAttribute("enter_rnum", enter_rnum);
+			model.addAttribute("enter_loc", enter_loc);
+			model.addAttribute("enter_num", enter_num);
 		}
+		model.addAttribute("type", type);
+		return "index";
+	}
+	
+	// 개인 회원정보 수정 처리
+	@PostMapping(value = "/modifyInfo/personal", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> modifyMember(@RequestBody MemberVO member, HttpSession session) {
+		Map<String, Object> result = new HashMap<>();
+		int res = memberService.modifyMember(member);
+		if(res > 0) {
+			session.setAttribute("userNickName",member.getMember_nickname());
+		}
+		result.put("result", res);
+		return result;
+	}
+	
+	// 단체 회원정보 수정 처리
+	@PostMapping(value = "/modifyInfo/group", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public Map<String, Object> modifyEnter(@RequestBody EnterVO enter, HttpSession session) {
+		Map<String, Object> result = new HashMap<>();
+		int res = enterService.modifyEnter(enter);
+		result.put("result", res);
+		System.out.println("결과 : " + res);
+		return result;
+	}
+	
+	// 로그아웃
+	@PostMapping("/logout")
+	@ResponseBody
+	public Map<String, Object> logout(HttpSession session) {
+		Map<String, Object> result = new HashMap<>();
+		session.invalidate();
+		result.put("result", "success");
+		return result; 
+	}
 		
 	// 회원가입 화면으로 이동
 	@GetMapping("/register")
@@ -135,7 +187,7 @@ public class MemberController {
 	// 첨부파일
 	
 	
-	// 개인/점주 회원가입 처리
+	// 개인 회원가입 처리
 	@PostMapping(value = "/register", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> registerMember(@RequestBody MemberVO member) {
@@ -145,7 +197,7 @@ public class MemberController {
 		return result;
 	}
 	
-	// 기업/단체 회원가입 처리
+	// 단체 회원가입 처리
 	@PostMapping(value = "/register/group", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public Map<String, Object> registerEnter(@RequestBody EnterVO enter) {
@@ -155,22 +207,12 @@ public class MemberController {
 		return result;
 	}
 	
-	// 개인정보 수정 화면으로 이동
-	@GetMapping("/modifyInfo")
-	public String modifyForm(HttpSession session, Model model) {
-		String member_id = (String) session.getAttribute("loginUser");
-		String member_name = (String) session.getAttribute("userName");
-		String member_nickname = (String) session.getAttribute("userNickName");
-		model.addAttribute("member_id", member_id);
-		model.addAttribute("member_name", member_name);
-		model.addAttribute("member_nickname", member_nickname);
+	// 로그인 화면으로 이동
+	@GetMapping("/delete")
+	public String deletePage() {
+		//model.addAttribute("path", "/member/delete");
 		return "index";
 	}
-	
-	//@PostMapping(value = "/modifyInfo/personal", produces = "application/json; charset=UTF-8")
-	
-	
-	
 	
 	
 	

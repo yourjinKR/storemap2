@@ -29,4 +29,11 @@ public class EnterServiceImple implements EnterService{
 		int result = enterMapper.insertEnter(enter);
 		return result;
 	}
+	
+	// 회원정보 수정
+	@Override
+	public int modifyEnter(EnterVO enter) {
+		int result = enterMapper.modifyEnter(enter);
+		return result;
+	}
 }
