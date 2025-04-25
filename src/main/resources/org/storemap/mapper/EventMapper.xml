@@ -28,7 +28,7 @@
 			WHERE ROWNUM <= 8
 		]]>
 	</select>
-	
+
 	<!-- 이벤트 상세보기 -->
 	<select id="getEventOneView" resultType="org.storemap.domain.EventVO" parameterType="int">
 		SELECT * FROM EVENT WHERE EVENT_IDX = #{EVENT_IDX}

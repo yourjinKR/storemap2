@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
+import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.PageDTO;
@@ -72,22 +76,21 @@ public class EventController {
 		return 1; 
 	}
 	 
-	
+	// 게시글 등록 컨트롤러
 	@GetMapping("/eventRegister")
 	public String eventRegister() {
+		
 		return "index";
 	}
 	
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
 	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
-	    // 1. EventVO 가져오기
 	    EventVO vo = eventService.getEventOneView(event_idx);
 	    model.addAttribute("vo", vo);
 
 	    log.info("eventVO..." + vo);
 
-	    // 2. vo 안에서 필요한 값 추출
 	    int totalMax = 0;
 	    String startDate = "";
 	    String endDate = "";
@@ -132,17 +135,8 @@ public class EventController {
 	    return "index"; // 또는 "eventView"
 	}
 
-	
-	@PostMapping("/insert")
-	public String insert(@ModelAttribute CommentEventVO vo, HttpSession session) {
-	    MemberVO loginUser = (MemberVO) session.getAttribute("loginUser");
 
-	    vo.setMember_idx(loginUser.getMember_idx()); // 로그인 사용자 ID 설정
-	    commentEventService.insert(vo);
 
-	    return "redirect:/event/eventView?event_idx=" + vo.getEvent_idx();
-}
-	// 이벤트 등록화면으로 이동
 	
 
 }

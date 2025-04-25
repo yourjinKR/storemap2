@@ -56,4 +56,5 @@ public class EventServiceImple implements EventService{
 	public int updateFavorite(int event_idx) {
 		return mapper.updateFavorite(event_idx);
 	}
+	
 }

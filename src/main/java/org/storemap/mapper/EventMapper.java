@@ -10,7 +10,7 @@ public interface EventMapper {
 	public List<EventVO> getRanList();
 	// 메인페이지 선택 날짜 이벤트
 	public List<EventVO> getListEndDate(String searchDate);
-	public EventVO getEventOneView(int eventIdx);
+	
 	
 	// 이벤트 리스트 갯수
 	public int getListCount();
@@ -18,4 +18,6 @@ public interface EventMapper {
 	public List<EventVO> getList(Criteria cri);
 	// 이벤트 좋아요
 	public int updateFavorite(int event_idx);
+	// 이벤트 상세보기
+	public EventVO getEventOneView(int eventIdx);
 }
