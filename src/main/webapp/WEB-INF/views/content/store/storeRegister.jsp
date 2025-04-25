@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- 로그인 안하면 접근못하게 하기 -->
 <!-- url로 접근 못하게 하기? -->
-<div class="storeRegister">
+<div class="store">
 	<h1>점포등록</h1>
 
   <form method="post">
@@ -51,5 +51,5 @@
     	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
     </div>
   </form>
-<script type="text/javascript" src="/resources/js/storeRegister.js"></script>
+<script type="text/javascript" src="/resources/js/store.js"></script>
 </div>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- 점포 주인아이디로 로그인 안하면 접근못하게 하기 -->
 <!-- url로 접근 못하게 하기? -->
-<div class="storeModify">
+<div class="store">
 	<h1>점포관리</h1>
 
   <form method="post">
@@ -54,4 +54,4 @@
     </div>
   </form>
 </div>
-<script type="text/javascript" src="/resources/js/storeModify.js"></script>
+<script type="text/javascript" src="/resources/js/store.js"></script>

@@ -147,16 +147,16 @@ public class StoreController {
 	/*--------------------------------------------------------------------------*/
 		
 	// 리뷰 추가
-	@PostMapping("/reviewRegister")
-	public String reviewRegister(ReviewVO vo) {
-		log.info("reviewRegister..."+vo);
+	@PostMapping("/review")
+	public String review(ReviewVO vo) {
+		log.info("review..."+vo);
 		reviewService.register(vo);
 		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}
 	// 리뷰 등록 페이지 이동
-	@GetMapping("/reviewRegister")
-	public String reviewRegisterPage(@RequestParam("store_idx") int store_idx, Model model) {
-		log.info("reviewRegisterPage..."+store_idx);
+	@GetMapping("/review")
+	public String reviewPage(@RequestParam("store_idx") int store_idx, Model model) {
+		log.info("reviewPage..."+store_idx);
 		model.addAttribute("vo",storeService.get(store_idx));
 		return "index";
 	}

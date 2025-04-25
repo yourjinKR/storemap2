@@ -98,8 +98,8 @@
 			<jsp:include page="../content/store/map.jsp" />
 		</c:when>
 		<%-- 리뷰등록 --%>
-		<c:when test="${path eq '/store/reviewRegister'}">
-			<jsp:include page="../content/store/reviewRegister.jsp" />
+		<c:when test="${path eq '/store/review'}">
+			<jsp:include page="../content/store/review.jsp" />
 		</c:when>
 		<%-- 점포관리 --%>
 		<c:when test="${path eq '/store/storeModify'}">

@@ -53,4 +53,4 @@
       </div>
     </div>
 </div>
-<script type="text/javascript" src="/resources/js/storeView.js"></script>
+<script type="text/javascript" src="/resources/js/storeModal.js"></script>

@@ -1,5 +1,4 @@
-
-const CSS_PATH = '/resources/css/storeList.css';
+const CSS_PATH = '/resources/css/storeModal.css';
 let linkEle = document.createElement('link');
 linkEle.rel = 'stylesheet';
 linkEle.href = CSS_PATH;
@@ -21,17 +20,41 @@ const storeService = (function(){
         get : get
     };
 })();
-
 const ss = storeService;
 
 const modal = document.querySelector("#modal");
 const image = document.querySelector(".store-image");
+let store_idx = new URLSearchParams(location.search).get('store_idx');
 
 function openModal(){
 	modal.style.display = "block";
 }
 function closeModal(){
 	modal.style.display = "none";
+}
+
+document.querySelectorAll('button').forEach(btn => {
+	btn.addEventListener('click', ()=> {
+		let type = btn.getAttribute("id");
+		
+		if(type === 'reviewBtn'){
+			location.href=`/store/review?store_idx=${store_idx}`;
+		}else if(type === 'removeReviewBtn'){
+			// 자기 리뷰 삭제 버튼 만들까말까
+			if(confirm("정말 삭제하시겠습니까?")){
+				removeReview();
+			}
+		}
+	});
+});
+//나중에 삭제 만들지 결정(review_idx받아야함)
+function removeReview(){
+	if(confirm("정말 삭제하시겠습니까?")){
+		f.action = `/store/reviewRemove?review_idx=${review_idx}`;
+	    f.submit();
+	    alert("삭제 되었습니다");
+	}else{
+	}
 }
 
 //점포 리스트 클릭 이벤트

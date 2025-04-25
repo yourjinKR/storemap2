@@ -22,7 +22,7 @@
 	<!-- 점포 상세보기 모달 -->
 	<div id="modal">
 		<div class="modal-content">
-			<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">
+			<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-info-image">
 			<div class="store-info">
 				<h3>가게정보</h3>
 				<div class="info-text">주소: </div>
@@ -32,4 +32,4 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript" src="/resources/js/storeList.js"></script>
+<script type="text/javascript" src="/resources/js/storeModal.js"></script>

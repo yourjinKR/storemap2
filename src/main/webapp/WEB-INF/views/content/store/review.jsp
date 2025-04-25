@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- 로그인 안하면 접근못하게 하기 -->
 <!-- url로 접근 못하게 하기? -->
-<div class="reviewRegister">
+<div class="review">
 	<h1>리뷰등록</h1>
 
   <form method="post">
@@ -41,4 +41,4 @@
     </div>
   </form>
 </div>
-<script type="text/javascript" src="/resources/js/reviewRegister.js"></script>
+<script type="text/javascript" src="/resources/js/review.js"></script>
