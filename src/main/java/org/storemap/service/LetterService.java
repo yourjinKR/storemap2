@@ -16,7 +16,7 @@ public interface LetterService {
 	public int insertLetter(LetterVO vo);
 	
 	// 이벤트 신청 리스트
-	public MemberVO getAttendList(int eday_idx);
+	public List<MemberVO> getAttendList(int eday_idx);
 	
 	// 이벤트 일차 리스트
 	public EventVO getEdayList(int event_idx);

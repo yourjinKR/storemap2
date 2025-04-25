@@ -70,7 +70,7 @@ public class LetterServiceImple implements LetterService{
 	
 	// 이벤트 신청리스트 가져오기
 	@Override
-	public MemberVO getAttendList(int eday_idx) {
+	public List<MemberVO> getAttendList(int eday_idx) {
 		return mapper.getAttendList(eday_idx);
 	}
 

@@ -21,7 +21,7 @@ public interface LetterMapper {
 	// 받는 사람 존재 여부 확인 (Member)
 	public String getMemberSearch(String letter_receiver);
 	// 이벤트 신청 리스트
-	public MemberVO getAttendList(int eday_idx);
+	public List<MemberVO> getAttendList(int eday_idx);
 	// 이벤트 신청 리스트
 	public EventVO getEdayList(int event_idx);
 }

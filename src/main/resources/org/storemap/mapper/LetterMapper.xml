@@ -63,10 +63,10 @@
 	<select id="getEdayList" parameterType="int" resultMap="eventVO">
 		SELECT EDAY_IDX,EVENT_TITLE FROM EVENT 
 		JOIN (
-		        SELECT EDAY_IDX, EVENT_IDX
-		        FROM EVENT_DAY 
-		        JOIN EVENT_REQUEST
-		        USING (EDAY_IDX)) 
+	        SELECT EDAY_IDX, EVENT_IDX
+	        FROM EVENT_DAY 
+	        JOIN EVENT_REQUEST
+	        USING (EDAY_IDX)) 
 		USING (EVENT_IDX)
 		WHERE EVENT_IDX = #{event_idx}
 	</select>
@@ -124,8 +124,6 @@
 		WHERE EDAY_IDX = #{eday_idx} 
 		ORDER BY STORE_NAME
 	</select>
-	
-	
 	
 	
 	<!-- 수신자 존재 여부 -->

@@ -191,11 +191,11 @@ public class ModalController {
 	@ResponseBody
 	@GetMapping(value="/getAttendList/{eday}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MemberVO> getAttendList(@PathVariable("eday") int eday,  HttpSession session) {
+	public ResponseEntity<List<MemberVO>> getAttendList(@PathVariable("eday") int eday,  HttpSession session) {
 		log.info(eday);
-		MemberVO result = letterService.getAttendList(eday);
+		List<MemberVO> result = letterService.getAttendList(eday);
 		log.info("result : " + result);
-		return new ResponseEntity<MemberVO>(result,HttpStatus.OK);
+		return new ResponseEntity<List<MemberVO>>(result,HttpStatus.OK);
 	}
 	
 	@ResponseBody
