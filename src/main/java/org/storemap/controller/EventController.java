@@ -42,7 +42,6 @@ public class EventController {
 	@Autowired
 	private CommentEventServiceImple commentEventService;
 	
-	//이벤트 등록 화면으로 이동
 	@GetMapping("/eventList")
 	public String eventList(Model model, Criteria cri) {
 		List<EventVO> list = null;
@@ -93,22 +92,22 @@ public class EventController {
 	    String startDate = "";
 	    String endDate = "";
 
-	    if (vo != null) {
-	        try {
-	            if (vo.getEvent_list_max() != null && !vo.getEvent_list_max().isEmpty()) {
-	                totalMax = Integer.parseInt(vo.getEvent_list_max());
-	            }
-	            if (vo.getEvent_bstartdate() != null) {
-	                startDate = vo.getEvent_bstartdate().toLocalDate().toString();
-	            }
-	            if (vo.getEvent_bstopdate() != null) {
-	                endDate = vo.getEvent_bstopdate().toLocalDate().toString();
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        
-	    }
+//	    if (vo != null) {
+//	        try {
+//	            if (vo.getEvent_list_max() != null && !vo.getEvent_list_max().isEmpty()) {
+//	                totalMax = Integer.parseInt(vo.getEvent_list_max());
+//	            }
+//	            if (vo.getEvent_bstartdate() != null) {
+//	                startDate = vo.getEvent_bstartdate().toLocalDate().toString();
+//	            }
+//	            if (vo.getEvent_bstopdate() != null) {
+//	                endDate = vo.getEvent_bstopdate().toLocalDate().toString();
+//	            }
+//	        } catch (Exception e) {
+//	            e.printStackTrace();
+//	        }
+//	        
+//	    }
 
 	    // 3. 필요한 데이터 추가로 전달
 	    model.addAttribute("totalMax", totalMax);
@@ -143,5 +142,7 @@ public class EventController {
 
 	    return "redirect:/event/eventView?event_idx=" + vo.getEvent_idx();
 }
-	   
+	// 이벤트 등록화면으로 이동
+	
+
 }
