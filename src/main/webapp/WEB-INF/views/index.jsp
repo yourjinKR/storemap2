@@ -23,6 +23,7 @@
 <body>
 	<c:choose>
 		<c:when test="${path eq '/store/map'}"></c:when>
+		<c:when test="${path eq '/modal/storeView'}"></c:when>
 		<c:otherwise>
 			<jsp:include page="./layout/header.jsp" /><br>
 		</c:otherwise>
@@ -32,6 +33,7 @@
 	
 	<c:choose>
 		<c:when test="${path eq '/store/map'}"></c:when>
+		<c:when test="${path eq '/modal/storeView'}"></c:when>
 		<c:otherwise>
 			<jsp:include page="./layout/footer.jsp" />
 		</c:otherwise>
