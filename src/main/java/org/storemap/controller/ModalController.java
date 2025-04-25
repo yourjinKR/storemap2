@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.storemap.domain.EventVO;
 import org.storemap.domain.LetterVO;
+import org.storemap.domain.MemberVO;
 import org.storemap.domain.MenuVO;
 import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreVO;
@@ -169,6 +171,7 @@ public class ModalController {
 		return result;
 	}
 	
+	// 쪽지 작성
 	@PostMapping(value="/insertLetter",
 			consumes = {MediaType.APPLICATION_JSON_VALUE}
 	)
@@ -182,5 +185,27 @@ public class ModalController {
 		}else {
 			return new ResponseEntity<String>("success",HttpStatus.OK);
 		}
+	}
+	
+	// 이벤트 신청 목록
+	@ResponseBody
+	@GetMapping(value="/getAttendList/{eday}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<MemberVO> getAttendList(@PathVariable("eday") int eday,  HttpSession session) {
+		log.info(eday);
+		MemberVO result = letterService.getAttendList(eday);
+		log.info("result : " + result);
+		return new ResponseEntity<MemberVO>(result,HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/getEdayList",
+	produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EventVO> getEdayList(HttpSession session) {
+		int e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
+		EventVO result = letterService.getEdayList(e_idx);
+		
+		log.info("result : " + result);
+		return new ResponseEntity<EventVO>(result,HttpStatus.OK);
 	}
 }

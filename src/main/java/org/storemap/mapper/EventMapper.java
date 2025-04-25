@@ -20,4 +20,7 @@ public interface EventMapper {
 	public int updateFavorite(int event_idx);
 	// 이벤트 상세보기
 	public EventVO getEventOneView(int eventIdx);
+	
+	// 이벤트 정보 호출
+	public int getIdx(int enter_idx);
 }

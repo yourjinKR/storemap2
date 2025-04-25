@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.storemap.domain.EventVO;
 import org.storemap.domain.LetterVO;
+import org.storemap.domain.MemberVO;
 import org.storemap.mapper.LetterMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -64,6 +66,18 @@ public class LetterServiceImple implements LetterService{
 			result = 1;
 		}
 		return result;
+	}
+	
+	// 이벤트 신청리스트 가져오기
+	@Override
+	public MemberVO getAttendList(int eday_idx) {
+		return mapper.getAttendList(eday_idx);
+	}
+
+	// 이벤트 일차 리스트
+	@Override
+	public EventVO getEdayList(int event_idx) {
+		return mapper.getEdayList(event_idx);
 	}
 	
 }

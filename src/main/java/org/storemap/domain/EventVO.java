@@ -18,4 +18,7 @@ public class EventVO {
 	// 게시글 등록 시 필요한 필드
 	private List<EventDayVO> eventDay;
 	private List<AttachFileVO> attachFile;
+
+	// 
+	private List<EventDayVO> join_eday;
 }

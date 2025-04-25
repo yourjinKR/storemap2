@@ -39,6 +39,12 @@
 		SELECT COUNT(*) FROM EVENT 
 	</select>
 	
+	<!-- GET IDX -->
+	<select id="getIdx" parameterType="int" resultType="int">
+		SELECT EVENT_IDX FROM EVENT WHERE ENTER_IDX = #{enter_idx}
+	</select>
+	
+	
 	<!-- 리스트 출력 -->
 	<select id="getList" resultType="org.storemap.domain.EventVO">
 		<![CDATA[ 

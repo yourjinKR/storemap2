@@ -1,5 +1,7 @@
-let viewWriter, viewContent, writeReceiver, writeContent = null;
+let viewWriter, viewContent, writeReceiver, writeContent, eventSelect, listDetail = null;
 document.addEventListener("DOMContentLoaded", (event) => {
+	listDetail = document.querySelector(".list-detail");
+	attendList = document.querySelector(".attend-list");
 	viewWriter = document.querySelector("#view .letter-writer");
 	viewContent = document.querySelector("#view .letter-content");
 	writeReceiver = document.querySelector("#write .letter-receiver");
@@ -39,6 +41,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				break;
 			}
 		})
+	})
+	
+	getEdayList();
+	
+	attendList.addEventListener("change",function(){
+		if(this.value != 0){
+			// n일차 참여 점포 리스트
+			getAttendList(this.value);
+		}
 	})
 })
 
@@ -159,6 +170,57 @@ function insertLetter(f){
 			writeReceiver.value = "";
 			writeContent.value = "";
 		}
+	})
+	.catch(err => console.log(err))
+}
+
+// 이벤트 참석 리스트
+function getEdayList(){
+	let dayList = [];
+	fetch(`/modal/getEdayList`)
+	.then(response => response.json())
+	.then(result => {
+		if(result != null){
+			let str = `<option value="0">이벤트를 선택하세요</option>`;
+			result.join_eday.forEach((eday,idx) => {
+				str += `<option value="${result.join_eday[idx].eday_idx}">(${idx + 1}일차)${result.event_title}</option>`;
+			})
+			attendList.innerHTML = str;
+		}
+	})
+	.catch(err => console.log(err))
+}
+// 이벤트 참석 리스트
+function getAttendList(eday){
+	let dayList = [];
+	fetch(`/modal/getAttendList/${eday}`)
+	.then(response => response.json())
+	.then(result => {
+		console.log(result);
+//		if(result != null){
+//			let str = `<option value="0">이벤트를 선택하세요</option>`;
+//			result.join_eday.forEach((eday,idx) => {
+//				str += `<option value="${idx + 1}">(${idx + 1}일차)${result.event_title}</option>`;
+//
+//				dayList.push(eday.join_event_request.join_store);
+//			})
+//			attendList.innerHTML = str;
+//		}
+//		
+//		// 이벤트 일차 선택
+//		attendList.addEventListener("change",function(){
+//			if(this.value != 0){
+//				let detail = ``;
+//				writeReceiver.value = "";
+//				dayList[this.value - 1].forEach((day,idx) => {
+//					writeReceiver.value += `"${day.store_name}"`;
+//					detail += `<li>${day.store_name}</li>`;
+//					if(dayList[this.value - 1].length - 1 > idx){
+//						writeReceiver.value += `, `;
+//					}
+//				})
+//			}
+//		})
 	})
 	.catch(err => console.log(err))
 }

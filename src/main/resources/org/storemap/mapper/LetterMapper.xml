@@ -27,6 +27,107 @@
 		WHERE LETTER_IDX = #{letter_idx}
 	</select>
 	
+	<!-- 이벤트 승인된 이벤트 IDX -->
+	<select id="getSignList">
+		SELECT EDAY_IDX FROM EVENT_REQUEST WHERE = #{event_idx} AND PON != 0
+	</select>
+	
+	<!-- 일차별 참여 목록 -->
+	<!-- EVENT -->
+	<resultMap type="org.storemap.domain.EventVO" id="eventVO">
+		<result property="event_title" column="event_title"/>
+		<result property="event_category" column="event_category"/>
+		<result property="event_location" column="event_location"/>
+		<result property="event_location_detail" column="event_location_detail"/>
+		<result property="event_content" column="event_content"/>
+		<result property="event_like_cnt" column="event_like_cnt"/>
+		<result property="event_rstartdate" column="event_rstartdate"/>
+		<result property="event_rstopdate" column="event_rstopdate"/>
+		<result property="event_bstartdate" column="event_bstartdate"/>
+		<result property="event_bstopdate" column="event_bstopdate"/>
+		<result property="event_hidden" column="event_hidden"/>
+		<result property="event_file" column="event_file"/>
+		<collection property="join_eday" resultMap="eventDayVO"></collection>
+	</resultMap>
+	
+	<!-- EVENT_DAY -->
+	<resultMap type="org.storemap.domain.EventDayVO" id="eventDayVO">
+		<result property="eday_idx" column="eday_idx"/>
+		<result property="event_idx" column="event_idx"/>
+		<result property="store_list" column="store_list"/>
+		<result property="event_starttime" column="event_starttime"/>
+		<result property="event_stoptime" column="event_stoptime"/>
+	</resultMap>
+	
+	<!-- 이벤트 일자 출력 -->
+	<select id="getEdayList" parameterType="int" resultMap="eventVO">
+		SELECT EDAY_IDX,EVENT_TITLE FROM EVENT 
+		JOIN (
+		        SELECT EDAY_IDX, EVENT_IDX
+		        FROM EVENT_DAY 
+		        JOIN EVENT_REQUEST
+		        USING (EDAY_IDX)) 
+		USING (EVENT_IDX)
+		WHERE EVENT_IDX = #{event_idx}
+	</select>
+	
+	<!-- MEMBER -->
+	<resultMap type="org.storemap.domain.MemberVO" id="memberVO">
+		<result property="member_idx" column="member_idx"/>
+		<result property="member_image" column="member_image"/>
+		<result property="member_id" column="member_id"/>
+		<result property="member_pw" column="member_pw"/>
+		<result property="member_name" column="member_name"/>
+		<result property="member_nickname" column="member_nickname"/>
+		<result property="member_type" column="member_type"/>
+		<collection property="join_request" resultMap="eventRequestVO"></collection>
+	</resultMap>
+	
+	<!-- EVENT_REQUEST -->
+	<resultMap type="org.storemap.domain.EventRequestVO" id="eventRequestVO">
+		<result property="eday_idx" column="eday_idx"/>
+		<result property="pon" column="pon"/>
+		<result property="store_idx" column="store_idx"/>
+		<collection property="join_store" resultMap="storeVO"></collection>
+	</resultMap>
+	
+	<!-- STORE -->
+	<resultMap type="org.storemap.domain.StoreVO" id="storeVO">
+		<result property="store_idx" column="store_idx"/>
+		<result property="member_idx" column="member_idx"/>
+		<result property="store_like_cnt" column="store_like_cnt"/>
+		<result property="store_hidden" column="store_hidden"/>
+		<result property="store_regcode" column="store_regcode"/>
+		<result property="store_name" column="store_name"/>
+		<result property="store_image" column="store_image"/>
+		<result property="store_num" column="store_num"/>
+		<result property="store_email" column="store_email"/>
+		<result property="store_address" column="store_address"/>
+		<result property="store_area" column="store_area"/>
+		<result property="store_activity_time" column="store_activity_time"/>
+		<result property="store_content" column="store_content"/>
+		<result property="store_rnum" column="store_rnum"/>
+		<result property="store_lat" column="store_lat"/>
+		<result property="store_lng" column="store_lng"/>
+	</resultMap>
+	
+	<select id="getAttendList" parameterType="int" resultMap="memberVO">
+		SELECT EDAY_IDX, STORE_NAME, MEMBER_ID
+		FROM MEMBER 
+		JOIN (
+			SELECT STORE_IDX,MEMBER_IDX, STORE_NAME, EDAY_IDX
+			FROM EVENT_REQUEST
+			JOIN STORE
+			USING (STORE_IDX) 
+			WHERE PON > 0 )
+		USING (MEMBER_IDX) 
+		WHERE EDAY_IDX = #{eday_idx} 
+		ORDER BY STORE_NAME
+	</select>
+	
+	
+	
+	
 	<!-- 수신자 존재 여부 -->
 	<select id="getMemberSearch" parameterType="String" resultType="String">
 		SELECT MEMBER_TYPE 
