@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 	
 	// 지도 이동 테스트 ===============================
+    let container1 = document.querySelector('.map#admin');
+    let adminMap = new kakao.maps.Map(container1, optionBasic);
 	let container2 = document.getElementById('map2');
 	var testMap = new kakao.maps.Map(container2, optionBasic);
 
@@ -109,6 +111,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 semiToggleBtn();
                 closeStoreSideBar();
             }
+            // 우편번호 찾기 버튼
+            else if (type === "search-postcode") {
+                sample4_execDaumPostcode();
+            }
         });
     });
 
@@ -116,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 지도에 표시된 마커 객체를 가지고 있을 배열
     let markerList = [];
 
-    // 지도 이동
+    /** 지도, 위도, 경도를 입력하면 지도 이동 */ 
     function panToLatLng(map, lat, lng) {
         // 좌표설정
         let moveLatLon = new kakao.maps.LatLng(lat, lng);	
@@ -523,4 +529,3 @@ document.addEventListener("DOMContentLoaded", () => {
         hideStoreSideBar();
     }
 });
-
