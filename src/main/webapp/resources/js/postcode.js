@@ -1,11 +1,31 @@
 console.log("postcode load");
 
+let postMap; // 우편번호 지도
 document.addEventListener("DOMContentLoaded", () => {
-    
+
+    // 지도 위도 경도 설정 (솔데스크 강남점)
+    let latBasic = 37.5054070438773;
+    let lngBasic = 127.026682479708;
+    // 기본값 설정
+    let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
+
+    let container = document.querySelector('.map#postcode');
+    postMap = new kakao.maps.Map(container, optionBasic);
+
+    document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            let type = btn.getAttribute("id");
+            console.log(type + "click");
+
+            if (type === "search-postcode") {
+                pcodeService(postMap);
+            }
+        });
+    });
 });
 
-/** 우편번호 api  */
-function sample4_execDaumPostcode() {
+/** 우편번호 서비스 api (map을 입력) */
+function pcodeService(map) {
     new daum.Postcode({
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -30,16 +50,15 @@ function sample4_execDaumPostcode() {
             }
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            
-            document.getElementById('sample4_postcode').value = data.zonecode;
-            document.getElementById("sample4_roadAddress").value = roadAddr;
-            document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+            document.getElementById('postcodeInput').value = data.zonecode;
+            document.getElementById("roadAddressInput").value = roadAddr;
+            document.getElementById("jibunAddressInput").value = data.jibunAddress;
             
             // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
             if(roadAddr !== ''){
-                document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+                document.getElementById("extraAddressInput").value = extraRoadAddr;
             } else {
-                document.getElementById("sample4_extraAddress").value = '';
+                document.getElementById("extraAddressInput").value = '';
             }
 
             let guideTextBox = document.getElementById("guide");
@@ -57,33 +76,46 @@ function sample4_execDaumPostcode() {
                 guideTextBox.innerHTML = '';
                 guideTextBox.style.display = 'none';
             }
-
-            // 지도에 적용
-            let resultAddr = data.address;
-            // console.log(resultAddr); // 경기 성남시 중원구 박석로25번길 44-8
-            let geocoder = new daum.maps.services.Geocoder();
-            // 주소로 상세 정보를 검색
-            geocoder.addressSearch(resultAddr, function(results, status) {
-                // 정상적으로 검색이 완료됐으면
-                if (status === daum.maps.services.Status.OK) {
-
-                    let result = results[0]; //첫번째 결과의 값을 활용
-                    console.log(result);
-                    let lat = result.x;
-                    let lng = result.y;
-                    panToLatLng(adminMap, lat, lng);
-                
-                    // // 해당 주소에 대한 좌표를 받아서
-                    // let coords = new daum.maps.LatLng(result.y, result.x);
-                    // // 지도를 보여준다.
-                    // mapContainer.style.display = "block";
-                    // map.relayout();
-                    // // 지도 중심을 변경한다.
-                    // map.setCenter(coords);
-                    // // 마커를 결과값으로 받은 위치로 옮긴다.
-                    // marker.setPosition(coords)
-                }
-            });
+            // 지도에 마킹
+            markByPcode(map, data.address);
         }
     }).open();
+}
+
+/** 우편번호 검색 결과를 입력하면 지도에 마킹하는 함수 */
+function markByPcode(map, result) {
+    let resultAddr = result;
+
+    // console.log(resultAddr); // 예시) 경기 성남시 중원구 박석로25번길 44-8
+    let geocoder = new daum.maps.services.Geocoder();
+
+    // 주소로 상세 정보를 검색
+    geocoder.addressSearch(resultAddr, function(results, status) {
+
+        // 정상적으로 검색이 완료됐으면
+        if (status === daum.maps.services.Status.OK) {
+
+            let result = results[0]; //첫번째 결과의 값을 활용
+            console.log(result);
+            let lat = result.y;
+            let lng = result.x;
+
+            panToLatLng(map, lat, lng);
+        
+            // 해당 주소에 대한 좌표를 받아서
+            let coords = new daum.maps.LatLng(result.y, result.x);
+            // // 지도를 보여준다.
+            // mapContainer.style.display = "block";
+            // map.relayout();
+            // // 지도 중심을 변경한다.
+            // map.setCenter(coords);
+            // // 마커를 결과값으로 받은 위치로 옮긴다.
+            let marker = new daum.maps.Marker({
+                position: new daum.maps.LatLng(37.537187, 127.005476),
+                map: postMap
+            });
+
+            marker.setPosition(coords);
+        }
+    });
 }

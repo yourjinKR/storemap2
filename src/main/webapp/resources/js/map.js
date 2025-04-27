@@ -1,10 +1,4 @@
-// const MAIN_CSS_FILE_PATH = '/resources/css/map.css';
-// let linkEle = document.createElement('link');
-// linkEle.rel = 'stylesheet';
-// linkEle.href = MAIN_CSS_FILE_PATH;
-// document.head.appendChild(linkEle);
-
-console.log("map.js load");
+console.log("map load");
 
 // 장소 테스트
 const store1 = {store_idx: 1, store_name: "상점1"};
@@ -12,8 +6,6 @@ const store1 = {store_idx: 1, store_name: "상점1"};
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
-
-// ================== 마커 size ================== 
 const MARKER_WIDTH = 32, // 기본 마커의 너비
     MARKER_HEIGHT = 35; // 기본 마커의 높이
 const CLICKED_WIDTH = 40, // 클릭 마커의 너비
@@ -33,20 +25,18 @@ let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, click
 // 클릭하여 강조된 마커
 let selectedMarker = null;
 
+// 기본 위도 경도 설정 (솔데스크 강남점)
+let latBasic = 37.5054070438773;
+let lngBasic = 127.026682479708;
+
 // 페이지 로드 후 script 실행
 document.addEventListener("DOMContentLoaded", () => {
-    // 위도 경도 설정 (솔데스크 강남점)
-    let latBasic = 37.5054070438773;
-    let lngBasic = 127.026682479708;
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 	
 	// 지도 이동 테스트 ===============================
-    let container1 = document.querySelector('.map#admin');
-    let adminMap = new kakao.maps.Map(container1, optionBasic);
 	let container2 = document.getElementById('map2');
 	var testMap = new kakao.maps.Map(container2, optionBasic);
 
-	
     document.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", e => {
             e.preventDefault;
@@ -113,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // 우편번호 찾기 버튼
             else if (type === "search-postcode") {
-                sample4_execDaumPostcode();
+                
             }
         });
     });
@@ -122,13 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 지도에 표시된 마커 객체를 가지고 있을 배열
     let markerList = [];
 
-    /** 지도, 위도, 경도를 입력하면 지도 이동 */ 
-    function panToLatLng(map, lat, lng) {
-        // 좌표설정
-        let moveLatLon = new kakao.maps.LatLng(lat, lng);	
-        // 이동
-        map.panTo(moveLatLon);
-    }
+
 
     // // 지도 마커 추가 (구버전)
     function addMarker(map, lat, lng) {
@@ -350,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeVOList.forEach(vo => {
             // console.log(vo);
             msg += 
-            // `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
+            // `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
             `<li data-store_idx="${vo.store_idx}" name="store_idx">
                 <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
 				<input type="hidden" name="store_address" value="${vo.store_address}">
@@ -500,6 +484,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function offToggleBtn() {
         toggleBtn.style.left = '0px';
     }
+    /** 토글 위치 변경 함수 수정버전 (요소, 숫자 입력시 해당 px 위치로 이동) */
+    function setToggle(ele, pixel) {
+        ele.style.left = `${pixel}px`;
+    }
 
     /** 스토어 리스트 사이드바 토글 함수 */
     function toggleStoreListSideBar() {
@@ -529,3 +517,18 @@ document.addEventListener("DOMContentLoaded", () => {
         hideStoreSideBar();
     }
 });
+
+/** 지도, 위도, 경도를 입력하면 지도 이동 */ 
+function panToLatLng(map, lat, lng) {
+    // 좌표설정
+    let moveLatLon = new kakao.maps.LatLng(lat, lng);	
+    // 이동
+    map.panTo(moveLatLon);
+}
+
+/** 업로드할 요소 위치를 입력하여 지도를 업로드 함수 (반환값 : 해당 지도 요소) */
+function uploadMap(path, lat, lng) {
+    let optionBasic = {center: new kakao.maps.LatLng(lat, lng), level: 3};
+    let result = new kakao.maps.Map(path, optionBasic);
+    return result;
+}
