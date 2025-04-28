@@ -3,5 +3,27 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.StoreDeclarationMapper">
+
+	<!-- 1.리뷰 신고 등록  -->
+	<insert id="insert" parameterType="org.storemap.domain.StoreDeclarationVO">
+		insert into store_declaration values(
+	 		#{store_idx},
+	 		#{member_idx},
+	 		#{declaration_category},
+	 		#{declaration_content}
+	 	)
+	</insert>
+	<!-- 2.리뷰 신고 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from store_declaration where store_idx = #{store_idx}, member_idx = #{member_idx}
+	</delete>
+	<!-- 3.리뷰 신고 목록  -->
+	<select id="getStoreDeclarationList" resultType="org.storemap.domain.StoreDeclarationVO">
+		select * from store_declaration
+	</select>
+	<!-- 4.리뷰 신고 보기  -->
+	<select id="read" parameterType="int" resultType="org.storemap.domain.StoreDeclarationVO">
+		select * from store_declaration where store_idx = #{store_idx}, member_idx = #{member_idx}
+	</select>
 	
 </mapper>

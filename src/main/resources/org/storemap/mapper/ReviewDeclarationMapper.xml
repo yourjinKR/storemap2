@@ -4,4 +4,26 @@
 
 <mapper namespace="org.storemap.mapper.ReviewDeclarationMapper">
 	
+	<!-- 1.리뷰 신고 등록  -->
+	<insert id="insert" parameterType="org.storemap.domain.ReviewDeclarationVO">
+		insert into review_declaration values(
+	 		#{review_idx},
+	 		#{member_idx},
+	 		#{declaration_category},
+	 		#{declaration_content}
+	 	)
+	</insert>
+	<!-- 2.리뷰 신고 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from review_declaration where review_idx = #{review_idx}, member_idx = #{member_idx}
+	</delete>
+	<!-- 3.리뷰 신고 목록  -->
+	<select id="getReviewDeclarationList" resultType="org.storemap.domain.ReviewDeclarationVO">
+		select * from review_declaration
+	</select>
+	<!-- 4.리뷰 신고 보기  -->
+	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewDeclarationVO">
+		select * from review_declaration where review_idx = #{review_idx}, member_idx = #{member_idx}
+	</select>
+	
 </mapper>
