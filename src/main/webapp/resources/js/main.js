@@ -73,8 +73,8 @@ function eventList(){
 				spaceBetween: 60,
 				loop: true,
 				navigation: {
-			        nextEl: ".swiper-button-next",
-			        prevEl: ".swiper-button-prev",
+			        nextEl: ".list-event .swiper-button-next",
+			        prevEl: ".list-event .swiper-button-prev",
 				},
 			});
 		}
@@ -110,17 +110,18 @@ function storeList(store_address){
 		
 		storeSlider.innerHTML = str;
 		
-		if(result.length > 8){
-			//슬라이드 생성
-			var storeList = new Swiper(".list-store", {
-				slidesPerView: 1,
-				spaceBetween: 60,
-				loop: true,
-				navigation: {
-					nextEl: ".swiper-button-next",
-					prevEl: ".swiper-button-prev",
-				},
-			});
+		//슬라이드 생성
+		let storeList = new Swiper(".list-store", {
+			slidesPerView: 1,
+			spaceBetween: 60,
+			loop: true,
+			navigation: {
+				nextEl: ".swiper-button-next",
+				prevEl: ".swiper-button-prev",
+			},
+		});
+		if(result.length <= 8){
+			storeList.destroy();
 		}
 	})
 	.catch(err => console.log(err));
