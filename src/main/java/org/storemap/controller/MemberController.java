@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.EnterVO;
 import org.storemap.domain.MemberVO;
+import org.storemap.domain.StoreVO;
 import org.storemap.mapper.MemberMapper;
 import org.storemap.service.CommentLikeServiceImple;
 import org.storemap.service.EnterServiceImple;
@@ -25,6 +26,7 @@ import org.storemap.service.MemberServiceImple;
 import org.storemap.service.ReviewLikeServiceImple;
 import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreLikeServiceImple;
+import org.storemap.service.StoreServiceImple;
 
 import lombok.extern.log4j.Log4j;
 
@@ -36,6 +38,8 @@ public class MemberController {
 	private MemberServiceImple memberService;
 	@Autowired
 	private EnterServiceImple enterService;
+	@Autowired
+	private StoreServiceImple storeService;
 	@Autowired
 	private StoreLikeServiceImple storeLikeService;
 	@Autowired
@@ -62,7 +66,12 @@ public class MemberController {
 			Model model) {
 		// member 테이블 검증
 		MemberVO member = memberService.mLogin(id, pw);
+		StoreVO store;
 		if(member != null) {
+			if(member.getMember_type() == "owner") {
+				store = storeService.getStore(member.getMember_idx());
+				session.setAttribute("storeIdx", store.getStore_idx());
+			}
 			member.setMember_pw(null);
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());

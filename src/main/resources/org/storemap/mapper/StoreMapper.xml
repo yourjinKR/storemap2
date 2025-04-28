@@ -66,11 +66,15 @@
 	<select id="read" parameterType="int" resultType="org.storemap.domain.StoreVO">
 		select * from store where store_idx = #{store_idx}
 	</select>
-	<!-- 6.점포 이름 검색 -->
+	<!-- 6.회원 번호로 점포 정보 가져오기  -->
+	<select id="getStore" parameterType="int" resultType="org.storemap.domain.StoreVO">
+		select * from store where member_idx = #{member_idx}
+	</select>
+	<!-- 7.점포 이름 검색 -->
 	<select id="getStoreNameList" parameterType="String" resultType="org.storemap.domain.StoreVO">
 		select * from store where store_name = #{store_name}
 	</select>
-	<!-- 7.점포 동적 검색 -->
+	<!-- 8.점포 동적 검색 -->
 	<select id="getStoreDynamicList" parameterType="hashmap" resultType="org.storemap.domain.StoreVO">
 		select * from store
 		<choose>
@@ -80,7 +84,7 @@
 		</choose>
 		order by store_idx
 	</select>
-	<!-- 8. 점포 페이지 전체 보기
+	<!-- 9. 점포 페이지 전체 보기
 	<select id="getListWithPage" resultType="org.storemap.domain.StoreVO">
 		<![CDATA[
 	 		select *
@@ -97,13 +101,13 @@
 		select count(*) from store
 	</select>
 	-->
-	<!-- 9.점포 숨기기 등록 -->
+	<!-- 10.점포 숨기기 등록 -->
 	<update id="hideStore" parameterType="int">
 		update store set 
 			store_hidden = 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 10.점포 숨기기 해제 -->
+	<!-- 11.점포 숨기기 해제 -->
 	<update id="unhideStore" parameterType="int">
 		update store set 
 			store_hidden = 0

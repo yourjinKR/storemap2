@@ -16,6 +16,8 @@ public interface StoreMapper {
 	public List<StoreVO> getStoreList();
 	// 점포 정보
 	public StoreVO read(int store_idx);
+	// 회원 번호로 점포 정보 가져오기
+	public StoreVO getStore(int member_idx);
 	// 점포 이름 검색
 	public List<StoreVO> getStoreNameList(String store_name);
 	// 점포 동적 검색

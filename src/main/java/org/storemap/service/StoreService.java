@@ -16,6 +16,8 @@ public interface StoreService {
 	public List<StoreVO> getList();
 	// 점포 정보
 	public StoreVO get(int store_idx);
+	// 회원 번호로 점포 정보 가져오기
+	public StoreVO getStore(int member_idx);
 	// 점포 이름 검색
 	public List<StoreVO> getNameList(String store_name);
 	// 점포 동적 검색
