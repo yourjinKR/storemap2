@@ -1,5 +1,7 @@
 package org.storemap.service;
 
-public interface EventDayService {
+import org.storemap.domain.EventDayVO;
 
+public interface EventDayService {
+	int insertEventDay(EventDayVO eventDayVO);
 }

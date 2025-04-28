@@ -22,7 +22,8 @@ public interface EventService {
 	public int updateFavorite(int event_idx);
 	// 이벤트 상세보기
 	public EventVO getEventOneView(int event_idx);
-
+	// 이벤트 등록
+	public int insertEvent(EventVO eventVO);
 	// 이벤트 정보 호출
 	public int getIdx(int enter_idx);
 }

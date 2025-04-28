@@ -1,5 +1,7 @@
 package org.storemap.mapper;
 
-public interface EventDayMapper {
+import org.storemap.domain.EventDayVO;
 
+public interface EventDayMapper {
+	public int insertEventday(EventDayVO eventDayVO);
 }

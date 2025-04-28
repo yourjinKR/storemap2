@@ -47,7 +47,7 @@ public class EventController {
 	private CommentEventServiceImple commentEventService;
 	
 	@GetMapping("/eventList")
-	public String eventList(Model model, Criteria cri) {
+	public String eventList(Model model, Criteria cri) {	
 		List<EventVO> list = null;
 		int parsePageNum = cri.getPageNum();
 		int parseAmount = cri.getAmount();
@@ -79,13 +79,6 @@ public class EventController {
 	// 게시글 등록 컨트롤러
 	@GetMapping("/eventRegister")
 	public String eventRegister() {
-		
-		return "index";
-	}
-
-	// 게시글 등록 컨트롤러
-	@GetMapping("/eventModify")
-	public String eventModify() {
 		
 		return "index";
 	}

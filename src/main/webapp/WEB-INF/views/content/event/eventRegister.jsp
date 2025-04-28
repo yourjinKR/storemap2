@@ -37,6 +37,13 @@
           </td>
         </tr>
         <tr>
+          <th>모집 날짜</th>
+          <td>
+            <input type="date" name="event_rstartdate" id="startDate" required> ~ 
+            <input type="date" name="event_rstopdate" id="endDate" required>
+          </td>
+        </tr>
+        <tr>
           <th>행사 날짜</th>
           <td>
             <input type="date" name="event_bstartdate" id="startDate" required> ~ 
@@ -66,17 +73,17 @@
         <tr>
           <th>대표 이미지</th>
           <td>
-            <input type="file" name="eventImage" accept="image/*" id="imageInput">
-            <div style="margin-top:10px;">
-              <img id="imagePreview" src="#" alt="미리보기" style="display:none; max-width:200px; border:1px solid #ccc;" />
-            </div>
+		    <input type="file" name="eventImage" accept="image/*" id="imageInput">
+		  <div style="margin-top:10px;">
+		  	<img id="imagePreview" src="#" alt="미리보기" style="display:none; max-width:200px; border:1px solid #ccc;" />
+		  </div>
           </td>
         </tr>
       </tbody>
     </table>
 
     <div class="panel-body-btns">
-     <!--  <button type="submit" class="btn btn-sec">새 게시글 등록</button> --> 
+       <button type="submit" class="btn btn-sec">새 게시글 등록</button> 
       <button type="reset" class="btn btn-fir">다시 작성</button>
       <button type="button" class="btn btn-fir" onclick="location.href='/event/eventList'">목록으로 이동</button>
     </div>

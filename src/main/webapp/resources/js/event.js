@@ -30,13 +30,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	startDateInput.setAttribute("min", today);
 	endDateInput.setAttribute("min", today);
 
-	  // 시작일 선택 시 종료일 제한 (최대 3일)
+	  // 시작일 선택 시 종료일 제한 (최대 5일)
 	  startDateInput.addEventListener("change", () => {
 	    const start = new Date(startDateInput.value);
 	    if (isNaN(start)) return;
 
 	    const maxDate = new Date(start);
-	    maxDate.setDate(maxDate.getDate() + 5); // 총 3일
+	    maxDate.setDate(maxDate.getDate() + 5); // 총 5일
 
 	    const maxDateStr = maxDate.toISOString().split("T")[0];
 	    endDateInput.setAttribute("max", maxDateStr);
@@ -106,6 +106,7 @@ function generateDays() {
       index++;
     }
   }
+
 //function favoriteChk(eventIdx){
 //	fetch(`/event/favorite/${eventIdx}`)
 //	.then(response => response.json())
