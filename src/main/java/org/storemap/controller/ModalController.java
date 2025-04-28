@@ -146,14 +146,17 @@ public class ModalController {
 	)
 	public ResponseEntity<String> insertLetter(@RequestBody LetterVO vo,HttpSession session) {
 		vo.setAuth((String) session.getAttribute("userType"));
-		int result = letterService.insertLetter(vo);
-		if(result == -1) {
-			return new ResponseEntity<String>("undefind",HttpStatus.NOT_FOUND);
-		}else if(result == 0) {
-			return new ResponseEntity<String>("fail",HttpStatus.BAD_REQUEST);
-		}else {
-			return new ResponseEntity<String>("success",HttpStatus.OK);
-		}
+		
+		log.info("vo : " + vo);
+		//int result = letterService.insertLetter(vo);
+//		if(result == -1) {
+//			return new ResponseEntity<String>("undefind",HttpStatus.NOT_FOUND);
+//		}else if(result == 0) {
+//			return new ResponseEntity<String>("fail",HttpStatus.BAD_REQUEST);
+//		}else {
+//			return new ResponseEntity<String>("success",HttpStatus.OK);
+//		}
+		return null;
 	}
 	
 	// 이벤트 신청 목록
