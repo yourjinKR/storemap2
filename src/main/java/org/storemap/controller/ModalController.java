@@ -90,37 +90,6 @@ public class ModalController {
 		return new ResponseEntity<List<MenuVO>>(menuService.getList(store_idx), HttpStatus.OK);
 	}
 	
-	// 점포조회
-	@GetMapping(value = "/{store_idx}",
-				produces = {
-						MediaType.APPLICATION_XML_VALUE,
-						MediaType.APPLICATION_JSON_VALUE
-			})
-	public ResponseEntity<StoreVO> get(@PathVariable("store_idx") int store_idx){
-		log.info("get..."+store_idx);
-		return new ResponseEntity<StoreVO>(storeService.get(store_idx), HttpStatus.OK);
-	}
-	// 메뉴목록조회
-	@GetMapping(value = "/menu/{store_idx}",
-			produces = {
-					MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_VALUE
-		})
-	public ResponseEntity<List<MenuVO>> getMenu(@PathVariable("store_idx") int store_idx){
-		log.info("getMenuList..."+store_idx);
-		return new ResponseEntity<List<MenuVO>>(menuService.getList(store_idx), HttpStatus.OK);
-	}
-	// 리뷰목록조회
-	@GetMapping(value = "/review/{store_idx}",
-			produces = {
-					MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_VALUE
-		})
-	public ResponseEntity<List<ReviewVO>> getReview(@PathVariable("store_idx") int store_idx){
-		log.info("getReviewList..."+store_idx);
-		return new ResponseEntity<List<ReviewVO>>(reviewService.getList(store_idx), HttpStatus.OK);
-	}
-	
 	//점포 지역별 리스트 비동기 조회
 	@GetMapping(value = "/list/{store_area}",
 			produces = {

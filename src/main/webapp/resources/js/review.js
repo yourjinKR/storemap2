@@ -29,6 +29,6 @@ function register(){
 		alert("내용을 입력하세요.");
 		return;
 	}
-	f.action = '/store/reviewRegister';
+	f.action = '/store/review';
 	f.submit();
 };

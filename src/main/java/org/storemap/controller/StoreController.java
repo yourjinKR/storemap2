@@ -162,29 +162,12 @@ public class StoreController {
 	}
 	
 	// 리뷰 삭제
-		@PostMapping("/reviewRemove")
-		public String reviewRemove(int review_idx) {
-			log.info("reviewRemove..."+review_idx);
-			reviewService.remove(review_idx);
-			return "index";
-		}
-	/*
-	// 리뷰 수정
-	@PostMapping("/reviewModify")
-	public String reviewModify(ReviewVO vo) {
-		log.info("reviewModify..."+vo);
-		reviewService.modify(vo);
-		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
-	}
-	// 리뷰 수정 페이지 이동
-	@GetMapping("/reviewModify")
-	public String reviewModifyPage(@RequestParam("review_idx") int review_idx, Model model) {
-		log.info("reviewModifyPage..."+review_idx);
-		model.addAttribute("vo",reviewService.get(review_idx));
-		reviewService.get(review_idx);
+	@PostMapping("/reviewRemove")
+	public String reviewRemove(int review_idx) {
+		log.info("reviewRemove..."+review_idx);
+		reviewService.remove(review_idx);
 		return "index";
 	}
-	*/
 	
 	/*--------------------------------------------------------------------------*/
 	

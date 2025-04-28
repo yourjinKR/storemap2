@@ -69,6 +69,7 @@ public class MemberController {
 			session.setAttribute("userName", member.getMember_name());
 			session.setAttribute("userNickName", member.getMember_nickname());
 			session.setAttribute("userType", member.getMember_type());
+			session.setAttribute("userImage", member.getMember_image());
 			return "redirect:/";
 		}
 		// enter 테이블 검증
@@ -81,6 +82,7 @@ public class MemberController {
 			session.setAttribute("userRnum", enter.getEnter_rnum());
 			session.setAttribute("userLoc", enter.getEnter_loc());
 			session.setAttribute("userNum", enter.getEnter_num());
+			session.setAttribute("userImage", enter.getEnter_image());
 			session.setAttribute("userType", "enter");
 			return "redirect:/";
 		}

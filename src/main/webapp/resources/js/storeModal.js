@@ -48,6 +48,21 @@ function viewModalPage(li){
     .then(response => response.text())
     .then(html => {
       document.querySelector(".modal-content").innerHTML = html;
+      store_idx = new URLSearchParams(location.search).get('store_idx');
+      document.querySelectorAll('button').forEach(btn => {
+    		btn.addEventListener('click', ()=> {
+    			let type = btn.getAttribute("id");
+    			
+    			if(type === 'reviewBtn'){
+    				location.href=`/store/review?store_idx=${sidx}`;
+    			}else if(type === 'removeReviewBtn'){
+    				// 자기 리뷰 삭제 버튼 만들까말까
+    				if(confirm("정말 삭제하시겠습니까?")){
+    					removeReview();
+    				}
+    			}
+    		});
+    	});
       openModal();
     })
     .catch(error =>  console.err(err));

@@ -6,7 +6,7 @@
 
   <form method="post">
   	<input type="hidden" name="store_idx" value="${vo.store_idx}">
-  	<!--<input type="hidden" name="writer_image" value="${세션에서가져오기}">-->
+  	<input type="hidden" name="writer_image" value="${userImage}">
   	
     <label for="rtitle">제목</label>
     <input type="text" id="rtitle" name="review_title">
