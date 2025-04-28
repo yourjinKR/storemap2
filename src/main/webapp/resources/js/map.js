@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 가게와 마커를 메핑
         storeMarkerMapping(storeLI);
 
-        console.log(storeVOList);
+        // console.log(storeVOList);
         showMarkers(testMap);
     });
 
@@ -432,20 +432,30 @@ document.addEventListener("DOMContentLoaded", () => {
     /** 스토어 사이드바 내용 담기 */
     function initStoreSideBar(idx) {
         // 가게 이미지 및 정보
-        as.getStore(idx, function (svo) {
-            // 이미지
-            let storeImage = document.querySelector(".storeView .store-image");
-            storeImage.innerHTML = `<img src="/resources/img/${svo.store_image}" alt="${mvo.menu_image}" class="store-image">`;
-            // 정보
-            let storeInfo = document.querySelector(".storeView .store-info");
-            let context =
-                `<div class="store-info">
-                    <h3>${svo.store_name}</h3>
-                    <div class="info-text">주소: ${svo.store_address}</div>
-                    <div class="info-text">영업일: ${svo.store_activity_time}</div>
-                    <div class="info-text">전화: ${svo.store_num}</div>
-                </div>`;
-            storeInfo.innerHTML = context;
+        as.getListByReg("논현", function(data) {
+            
+            data.forEach(vo => {
+                if (vo.store_idx == idx) {
+                    console.log("테스트");
+                    console.log(vo);
+                    // 이미지
+                    let storeImage = document.querySelector(".store-image");
+                    // storeImage.innerHTML = `<img src="/resources/img/${vo.store_image}" alt="${mvo.menu_image}" class="store-image">`;
+                    // 정보
+                    let storeInfo = document.querySelector(".store-info");
+                    console.log(storeInfo);
+                    
+                    let context =
+                        `<div class="store-info">
+                            <h3>${vo.store_name}</h3>
+                            <div class="info-text">주소: ${vo.store_address}</div>
+                            <div class="info-text">영업일: ${vo.store_activity_time}</div>
+                            <div class="info-text">전화: ${vo.store_num}</div>
+                        </div>`;
+                    storeInfo.innerHTML = context;
+                }
+            });
+            
         });
         // 메뉴 리스트
         as.getMenuList(idx, function(list) {
