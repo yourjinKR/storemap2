@@ -26,20 +26,22 @@ let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, click
 let selectedMarker = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
-let latBasic = 37.5054070438773;
-let lngBasic = 127.026682479708;
+let latBasic = 37.511521092235625;
+let lngBasic = 127.02856630406664;
 
 // 페이지 로드 후 script 실행
 document.addEventListener("DOMContentLoaded", () => {
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 	
 	// 지도 이동 테스트 ===============================
-	let container2 = document.getElementById('map2');
-	var testMap = new kakao.maps.Map(container2, optionBasic);
+	let container = document.querySelector(".map");
+	let testMap = new kakao.maps.Map(container, optionBasic);
+	let container3 = document.querySelector('.map#preview');
+	// let previewMap = new kakao.maps.Map(container3, optionBasic);
 
     document.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", e => {
-            e.preventDefault;
+            e.preventDefault();
             let type = btn.getAttribute("id");
             console.log(type + "click");
             // 지도 중심좌표 부드럽게 이동하기
@@ -104,6 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
             // 우편번호 찾기 버튼
             else if (type === "search-postcode") {
                 
+            }
+            // 영업 위치설정
+            else if (type === "store-loc") {
+            	
             }
         });
     });
@@ -221,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    // 지도 클릭 이벤트 (경도 출력)
+    // 지도 클릭 이벤트 (경도 위도 출력)
     kakao.maps.event.addListener(testMap, 'click', function(mouseEvent) {        
     
         // 클릭한 위도, 경도 정보
@@ -230,29 +236,39 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
         message += '경도는 ' + latlng.getLng() + ' 입니다';
-        console.log(message);
+        // console.log(message);
         
         // let resultDiv = document.getElementById('clickLatlng'); 
         // resultDiv.innerHTML = message;
         
+        searchAddrFromCoords(latlng);
         // 도로명 주소 함수
-        // searchAddrFromCoords(latlng, resultDiv);
+        let f = document.querySelector("#store-modify");
+        if (f) {
+            f.lat.value = latlng.Ma;
+            f.lng.value = latlng.La;
+            initAddrFromCoords(latlng, f);
+        }
     });
 
-    // 좌표 => 도로명 주소 함수
-    function searchAddrFromCoords(latlng, resultDiv) {
+    /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */ 
+    function searchAddrFromCoords(latlng) {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                // console.log(result); // result : 결과 내용, [0] : 역삼동 / [1] : 역삼 1동
-                // console.log(status); // status : 응답 코드
-                // console.log('지역 명칭 : ' + result[0].address_name);
-                // console.log('행정구역 코드 : ' + result[0].code);
-                let name0 = result[0].address_name;
-                let name1 = result[1].address_name;
-                let code0 = result[0].code;
-                let code1 = result[1].code;
-                resultDiv.innerHTML +=  `<br>지역 명칭0 : ${name0} <br>지역 명칭1 : ${name1} <br>행정구역 코드0 : ${code0} <br>행정구역 코드1 : ${code1}`;
+                console.log(result); // result : 결과 내용, [0] : 역삼동 / [1] : 역삼 1동
+            }
+        };
+        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+    }
+
+    /** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
+    function initAddrFromCoords(latlng, form) {
+        let geocoder = new kakao.maps.services.Geocoder();
+        let callback = function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                form.address.value = result[0].address_name; // 서울특별시 강남구 논현동
+                form.area.value = result[0].region_1depth_name; // 서울특별시
             }
         };
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
@@ -541,4 +557,9 @@ function uploadMap(path, lat, lng) {
     let optionBasic = {center: new kakao.maps.LatLng(lat, lng), level: 3};
     let result = new kakao.maps.Map(path, optionBasic);
     return result;
+}
+
+/** 경도위도를 리턴하는 함수 */
+function getLatLng(latlng) {
+    console.log(latlng);
 }

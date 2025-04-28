@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- 점포 주인아이디로 로그인 안하면 접근못하게 하기 -->
 <!-- url로 접근 못하게 하기? -->
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
+<script type="text/javascript" src="/resources/js/map.js"></script>
 <div class="store">
 	<h1>점포관리</h1>
 
-  <form method="post">
+  <form method="post" id="store-modify">
   	<input type="hidden" name="member_idx" value="${vo.member_idx}">
   	<input type="hidden" name="store_idx" value="${vo.store_idx}">
   
@@ -25,18 +28,26 @@
     <label for="email">이메일</label>
     <input type="text" id="email" name="store_email" value="${vo.store_email}">
     
+    <label for="store-loc">위치 설정</label><button id="store-loc">설정</button>
+    <div class="map" style="width:auto; height:400px;"></div>
+    
+    <input type="text" id="lat" name="store_lat" value="${vo.store_lng}">
+    <input type="text" id="lng" name="store_lng" value="${vo.store_lat}">
+    
     <label for="address">주소</label>
     <input type="text" id="address" name="store_address" value="${vo.store_address}">
 
     <label for="area">활동 지역</label>
-    <select id="area" name="store_area">
+    <input type="text" id="area" name="store_area" value="${vo.store_area}">
+    <%--     <select id="area" name="store_area">
     	<option value="${vo.store_area}" selected hidden>${vo.store_area}</option>
         <option value="서울">서울</option>
         <option value="경기">경기</option>
         <option value="인천">인천</option>
         <option value="강원">강원</option>
         <option value="제주">제주</option>
-      </select>
+      </select> --%>
+
 
     <label for="activitytime">점포 운영 시간</label>
     <input type="text" id="activitytime" name="store_activity_time" value="${vo.store_activity_time}">
@@ -55,4 +66,5 @@
     </div>
   </form>
 </div>
+
 <script type="text/javascript" src="/resources/js/store.js"></script>

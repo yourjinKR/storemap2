@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<script type="text/javascript" src="/resources/js/admin.js"></script>
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
 <script type="text/javascript" src="/resources/js/map.js"></script>
@@ -21,7 +20,7 @@
 		<button id="showMapSideBar">사이드바 열기</button>	
 		<button id="hideMapSideBar">사이드바 닫기</button>	
 		<br> -->
-		<div id="map2" style="width: 1200; height: 1200px;"></div>
+		<div class="map" style="width: 1200; height: 1200px;"></div>
 	</div>
 	<!-- 점포 리스트 사이드바 -->
 	<div class="side-bar" id="store-list">
