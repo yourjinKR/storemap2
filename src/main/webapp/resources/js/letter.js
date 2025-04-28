@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		})
 	})
 	
-	getEdayList();
-	getLetter("received");
+	
+	
 	
 	attendList.addEventListener("change",function(){
 		if(this.value != 0){
@@ -84,16 +84,17 @@ function changeLetterModal(page){
 	}
 	let eventSelect = document.querySelector(".event-select");
 	if(eventSelect != null){
-		 if(document.querySelector(".letter-tab > li a.on").getAttribute("href") == "question"){
-			 eventSelect.classList.add("hide");
-			 listDetail.classList.add("hide");
-			 writeReceiver.value = "관리자";
-			 hideReceiver.value = "admin01";
-		 }else{
+		 if(document.querySelector(".letter-tab > li a.on").getAttribute("href") == "write"){
+			 getEdayList();
 			 listDetail.classList.remove("hide");
 			 eventSelect.classList.remove("hide");
 			 writeReceiver.value = "";
 			 hideReceiver.value = "";
+		 }else{
+			 eventSelect.classList.add("hide");
+			 listDetail.classList.add("hide");
+			 writeReceiver.value = "관리자";
+			 hideReceiver.value = "admin01";
 		 }
 	}
 }
@@ -150,6 +151,7 @@ function getLetter(type){
 		}
 		
 		changeLetterModal("list");
+		
 	})
 	.catch(err => console.log(err))
 }
