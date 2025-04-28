@@ -4,7 +4,7 @@
 <script type="text/javascript" src="/resources/js/letter.js"></script>
 
 <div class="bg" onclick="modalClose()"></div>
-<div class="pop-content on" id="letter">
+<div class="pop-content" id="letter">
 	<h4>쪽지함</h4>
 	<ul class="letter-tab mb15 mt15">
 		<li><a class="received on" href="received">받은 쪽지함</a></li>

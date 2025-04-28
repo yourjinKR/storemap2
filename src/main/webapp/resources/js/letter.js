@@ -21,29 +21,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			document.querySelector("."+historyBtn).classList.add("on");
 			switch (btn.getAttribute("href")) {
 			// 받은 쪽지함
-			case "received":
-				getLetter("received"); 
-			break;
+			case "received": getLetter("received"); break;
 			// 보낸 쪽지함
-			case "send":
-				getLetter("send"); 
-				break;
+			case "send": getLetter("send"); break;
 			//쓰기 Form
-			case "write":
-				changeLetterModal("write")
-				break;
+			case "write": changeLetterModal("write"); break;
 			// 쪽지 전송 
-			case "post":
-				insertLetter();
-				break;
-			case "read":	 // 쪽지 view 확인
-				getLetter(historyBtn);
-				break;
+			case "post": insertLetter(); break;
+			// 쪽지 view 확인
+			case "read": getLetter(historyBtn); break;
 			}
 		})
 	})
 	
 	getEdayList();
+	getLetter("received");
 	
 	attendList.addEventListener("change",function(){
 		if(this.value != 0){
@@ -51,6 +43,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			getAttendList(this.value);
 		}
 	})
+	
+	let div2 = document.querySelector(".letter-form td.por");
+	if(div2 != null){
+		div2.addEventListener("mouseenter",function(){
+			listDetail.classList.add("on");
+		})
+		div2.addEventListener("mouseleave",function(){
+			listDetail.classList.remove("on");
+		})
+	}
+
+	
+	
+
 })
 
 // modal Show
@@ -75,7 +81,6 @@ function changeLetterModal(page){
 	}
 }
 
-getLetter("received");
 
 // 쪽지 리스트
 function getLetter(type){
@@ -145,7 +150,7 @@ function letterView(letter_idx){
 	.catch(err => console.log(err))
 }
 
-
+// 쪽지 전송
 function insertLetter(f){
 	fetch(`/modal/insertLetter`,{
 		method : "post",
@@ -196,31 +201,22 @@ function getAttendList(eday){
 	fetch(`/modal/getAttendList/${eday}`)
 	.then(response => response.json())
 	.then(result => {
-		console.log(result);
-//		if(result != null){
-//			let str = `<option value="0">이벤트를 선택하세요</option>`;
-//			result.join_eday.forEach((eday,idx) => {
-//				str += `<option value="${idx + 1}">(${idx + 1}일차)${result.event_title}</option>`;
-//
-//				dayList.push(eday.join_event_request.join_store);
-//			})
-//			attendList.innerHTML = str;
-//		}
-//		
-//		// 이벤트 일차 선택
-//		attendList.addEventListener("change",function(){
-//			if(this.value != 0){
-//				let detail = ``;
-//				writeReceiver.value = "";
-//				dayList[this.value - 1].forEach((day,idx) => {
-//					writeReceiver.value += `"${day.store_name}"`;
-//					detail += `<li>${day.store_name}</li>`;
-//					if(dayList[this.value - 1].length - 1 > idx){
-//						writeReceiver.value += `, `;
-//					}
-//				})
-//			}
-//		})
+		if(result != null || result.length > 0){
+			writeReceiver.value = "";
+			let detail = ``;
+			result.forEach((day,idx) => {
+				let storeName = day.join_request.join_store.store_name;
+				let storeId = day.member_id;
+				
+				writeReceiver.value += `"${storeName} (${storeId})"`;
+				if(result.length - 1 > idx){
+					writeReceiver.value += `, `;
+				}
+				detail += `<li>${storeName} (${storeId})</li>`;
+			})
+			
+			listDetail.innerHTML = detail;
+		}
 	})
 	.catch(err => console.log(err))
 }
