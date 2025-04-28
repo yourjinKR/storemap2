@@ -1,6 +1,5 @@
 package org.storemap.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,29 +42,12 @@ public class LetterServiceImple implements LetterService{
 	@Override
 	public int insertLetter(LetterVO vo) {
 		int result = 0;
-	
-		String member = null;
-		int enter = 0;
-		
-		// 권한 반환
-		member = mapper.getMemberSearch(vo.getLetter_receiver());
-		
-		if(vo.getAuth().equals("amdin") || vo.getAuth().equals("store")) {
-			enter = mapper.getEnterSearch(vo.getLetter_receiver());
+		String[] receviers = vo.getLetter_receiver().split(", ");
+		for (String receiver : receviers) {
+			vo.setLetter_receiver(receiver);
+			result += mapper.insertLetter(vo);
 		}
-		
-		if(vo.getAuth().equals("admin")) {
-			if(member == null && enter == 0) {
-				result = -1;
-			}
-		}else if(vo.getAuth().equals("admin")) {
-		
-		}
-		
-		if(result != -1 && mapper.insertLetter(vo) > 0){
-			result = 1;
-		}
-		return result;
+		return receviers.length == result ? 1 : 0;
 	}
 	
 	// 이벤트 신청리스트 가져오기

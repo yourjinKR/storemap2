@@ -1,5 +1,6 @@
 package org.storemap.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,9 +147,9 @@ public class ModalController {
 	)
 	public ResponseEntity<String> insertLetter(@RequestBody LetterVO vo,HttpSession session) {
 		vo.setAuth((String) session.getAttribute("userType"));
-		
-		log.info("vo : " + vo);
-		//int result = letterService.insertLetter(vo);
+		vo.setLetter_writer((String) session.getAttribute("loginUser"));
+		int result = letterService.insertLetter(vo);
+		log.info("result : " + result);
 //		if(result == -1) {
 //			return new ResponseEntity<String>("undefind",HttpStatus.NOT_FOUND);
 //		}else if(result == 0) {
@@ -166,7 +167,6 @@ public class ModalController {
 	public ResponseEntity<List<MemberVO>> getAttendList(@PathVariable("eday") int eday,  HttpSession session) {
 		log.info(eday);
 		List<MemberVO> result = letterService.getAttendList(eday);
-		log.info("result : " + result);
 		return new ResponseEntity<List<MemberVO>>(result,HttpStatus.OK);
 	}
 	
@@ -177,7 +177,6 @@ public class ModalController {
 		int e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
 		EventVO result = letterService.getEdayList(e_idx);
 		
-		log.info("result : " + result);
 		return new ResponseEntity<EventVO>(result,HttpStatus.OK);
 	}
 }

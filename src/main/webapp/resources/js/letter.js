@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	viewWriter = document.querySelector("#view .letter-writer");
 	viewContent = document.querySelector("#view .letter-content");
 	writeReceiver = document.querySelector("#write .letter-receiver");
+	hideReceiver = document.querySelector(".hidden-receiver");
 	writeContent = document.querySelector("#write .letter-content");
 	
 	// 쪽지 버튼
@@ -158,7 +159,7 @@ function insertLetter(f){
 			'Content-Type' : 'application/json'
         },
         body: JSON.stringify({
-			letter_receiver : writeReceiver.value,
+			letter_receiver : hideReceiver.value,
 			letter_content : writeContent.value
         })
 	})
@@ -188,7 +189,7 @@ function getEdayList(){
 		if(result != null){
 			let str = `<option value="0">이벤트를 선택하세요</option>`;
 			result.join_eday.forEach((eday,idx) => {
-				str += `<option value="${result.join_eday[idx].eday_idx}">(${idx + 1}일차)${result.event_title}</option>`;
+				str += `<option value="${result.join_eday[idx].eday_idx}">(${idx + 1}일차) ${result.event_title}</option>`;
 			})
 			attendList.innerHTML = str;
 		}
@@ -197,7 +198,6 @@ function getEdayList(){
 }
 // 이벤트 참석 리스트
 function getAttendList(eday){
-	let dayList = [];
 	fetch(`/modal/getAttendList/${eday}`)
 	.then(response => response.json())
 	.then(result => {
@@ -207,10 +207,11 @@ function getAttendList(eday){
 			result.forEach((day,idx) => {
 				let storeName = day.join_request.join_store.store_name;
 				let storeId = day.member_id;
-				
+				hideReceiver.value += `${storeId}`;
 				writeReceiver.value += `"${storeName} (${storeId})"`;
 				if(result.length - 1 > idx){
 					writeReceiver.value += `, `;
+					hideReceiver.value += `, `;
 				}
 				detail += `<li>${storeName} (${storeId})</li>`;
 			})
