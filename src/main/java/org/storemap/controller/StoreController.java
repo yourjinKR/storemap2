@@ -69,7 +69,7 @@ public class StoreController {
 	public String storeModifyPage(@RequestParam("store_idx") int store_idx, Model model) {
 		log.info("storeModifyPage..."+store_idx);
 		model.addAttribute("vo", storeService.get(store_idx));
-		storeService.get(store_idx);
+		//storeService.get(store_idx);
 		return "index";
 	}
 	
