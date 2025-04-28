@@ -88,6 +88,11 @@ function getEventList(type){
 
 // 메인 점포 리스트
 function storeList(store_address){
+	let swiper = document.querySelector(".list-store .swiper-wrapper");
+	if(swiper != null){
+		swiper.innerHTML = "";
+	}
+	
 	fetch(`/main/getStoreRanList/`+store_address)
 	.then(response => response.json())
 	.then(result =>{
