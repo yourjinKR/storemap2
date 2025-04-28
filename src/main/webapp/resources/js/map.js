@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log(vo);
                     // 이미지
                     let storeImage = document.querySelector(".store-image");
-                    // storeImage.innerHTML = `<img src="/resources/img/${vo.store_image}" alt="${mvo.menu_image}" class="store-image">`;
+                    storeImage.innerHTML = `<img src="/resources/img/${vo.store_image}" alt="이미지" class="store-image">`;
                     // 정보
                     let storeInfo = document.querySelector(".store-info");
                     console.log(storeInfo);

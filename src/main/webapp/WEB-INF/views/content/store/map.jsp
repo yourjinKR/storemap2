@@ -29,7 +29,8 @@
 			<div class="header">
 				<form>
 					<input type="text">
-					<button type="submit">검색</button>
+					<!-- <button type="submit">검색</button> -->
+					
 				</form>		
 			</div>
 			<jsp:include page="../modal/storeListModal.jsp"/>
