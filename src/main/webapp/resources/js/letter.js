@@ -175,6 +175,7 @@ function insertLetter(f){
 		}else{
 			writeReceiver.value = "";
 			writeContent.value = "";
+			hideReceiver.value = "";
 		}
 	})
 	.catch(err => console.log(err))
