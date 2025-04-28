@@ -4,4 +4,24 @@
 
 <mapper namespace="org.storemap.mapper.StoreLikeMapper">
 	
+	<!-- 1.점포 좋아요 등록  -->
+	<insert id="insert" parameterType="org.storemap.domain.StoreLikeVO">
+		insert into store_like values(
+	 		#{store_idx},
+	 		#{member_idx}
+	 	)
+	</insert>
+	<!-- 2.점포 좋아요 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from store_like where store_idx = #{store_idx}, member_idx = #{member_idx}
+	</delete>
+	<!-- 3.점포 좋아요한 목록 보기  -->
+	<select id="getStoreLikeList" parameterType="int" resultType="org.storemap.domain.StoreLikeVO">
+		select * from store_like where member_idx = #{member_idx}
+	</select>
+	<!-- 4.내가 좋아요한 점포번호 가져오기  -->
+	<select id="getStoreIdx" parameterType="int" resultType="int">
+		select store_idx from store_like where store_idx = #{store_idx}, member_idx = #{member_idx}
+	</select>
+	
 </mapper>
