@@ -58,8 +58,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	
-	
-
+	if(document.querySelector("input[name='sessionId']").value != ""){
+		getLetter("received");
+	}
 })
 
 // modal Show
@@ -67,7 +68,6 @@ function modalShow(pop){
 	document.querySelector(".bg").classList.add("on");
 	if(pop == "letter") {
 		document.querySelector("#"+pop).classList.add("on");
-		getLetter("received");
 	};
 }
 // modal Close
@@ -136,6 +136,7 @@ function getLetter(type){
 			}
 		})
 		document.querySelector("#listBody").innerHTML = str;
+		document.querySelector(".right-div > .icon > span").innerHTML = result.length;
 		
 		
 		// 리스트 클릭 이벤트

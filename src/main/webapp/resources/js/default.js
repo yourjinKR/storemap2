@@ -36,6 +36,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 	// 사이드바 로그아웃
 	sidebarLogout();
+	
+	let search = document.querySelector(".search-bar input[name='search']");
+	search.addEventListener("keydown", function(e){
+		if(e.keyCode == 13){
+			location.href="/store/map";
+		}
+	})
 })
 
 // 위치 정보 (위도,경도)

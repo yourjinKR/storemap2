@@ -9,15 +9,7 @@
 		</div>
 		<div class="right-con">
 			<c:choose>
-				<c:when test="${userType == 'user'}">
-					<div class="user-nickname">${sessionScope.userNickName}</div>
-					<div class="user-name">${sessionScope.userName}</div>
-				</c:when>
-				<c:when test="${userType == 'owner'}">
-					<div class="user-nickname">${sessionScope.userNickName}</div>
-					<div class="user-name">${sessionScope.userName}</div>
-				</c:when>
-				<c:when test="${userType == 'admin'}">
+				<c:when test="${userType == 'user' or userType == 'owner' or userType == 'admin'}">
 					<div class="user-nickname">${sessionScope.userNickName}</div>
 					<div class="user-name">${sessionScope.userName}</div>
 				</c:when>
@@ -30,15 +22,26 @@
 	<ul class="btn-list">
 		<li><a href="/member/modifyInfo">개인정보 수정</a></li>
 
-		<!-- 일반 회원 -->
-		<li>내 리뷰 확인</li>
-		<li>좋아요 목록</li>
+		<c:choose>
+			<%-- 일반 회원 --%>
+			<c:when test="${userType == 'user'}">
+				<li><a href="">내 리뷰 확인</a></li>
+				<li><a href="">좋아요 목록</a></li>
+			</c:when>
+			<%-- 점포 회원 --%>
+			<c:when test="${userType == 'owner'}">
+				<li><a href="/store/storeModify?store_idx=1">점포관리</a></li>
+			</c:when>
+			<%-- 기업 회원 --%>
+			<c:when test="${userType == 'enter'}">
+				<li><a href="">이벤트 관리</a></li>
+			</c:when>
+			<c:otherwise>
+				<li><a href="/admin/adminMain">관리자 페이지</a></li>
+			</c:otherwise>
+		</c:choose>
 
-		<!-- 점포 회원 -->
-		<li>점포관리</li>
 		
-		<!-- 기업 회원 -->
-		<li>이벤트 관리</li>
 
 		<li><a id="slogoutLink" href="/member/login">로그아웃</a></li>
 	</ul>

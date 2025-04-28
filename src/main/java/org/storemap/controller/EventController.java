@@ -82,6 +82,13 @@ public class EventController {
 		
 		return "index";
 	}
+
+	// 게시글 등록 컨트롤러
+	@GetMapping("/eventModify")
+	public String eventModify() {
+		
+		return "index";
+	}
 	
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")

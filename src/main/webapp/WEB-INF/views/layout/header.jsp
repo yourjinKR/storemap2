@@ -13,18 +13,26 @@
 	</div>
 	
 	<div class="right-div d_f">
-		<div class="icon" onclick="modalShow('letter')">
-			<span>1</span>
-			<i class="material-symbols-outlined">
-				mail
-			</i>
-		</div>
+		<c:if test="${loginUser ne '' and loginUser ne null}">
+			<div class="icon" onclick="modalShow('letter')">
+				<span>1</span>
+				<i class="material-symbols-outlined">
+					mail
+				</i>
+			</div>
+		</c:if>
 		
-		<a class="btn" href="/member/login">로그인</a>
-		<a class="btn" id="hlogoutLink" href="/member/login">로그아웃</a>
-		<div class="profile">
-			<img alt="" src="/resources/img/profile.jpg">			
-		</div>
+		<c:choose>
+			<c:when test="${loginUser ne '' and loginUser ne null}">
+				<a class="btn" id="hlogoutLink" href="/member/login">로그아웃</a>
+				<div class="profile">
+					<img alt="" src="/resources/img/profile.jpg">			
+				</div>
+			</c:when>
+			<c:otherwise>
+				<a class="btn" href="/member/login">로그인</a>
+			</c:otherwise>
+		</c:choose>
 	</div>	
 </div>
 
