@@ -76,9 +76,9 @@
     </table>
 
     <div class="panel-body-btns">
-      <button type="submit" class="btn btn-sec">새 게시글 등록</button>
+     <!--  <button type="submit" class="btn btn-sec">새 게시글 등록</button> --> 
       <button type="reset" class="btn btn-fir">다시 작성</button>
-      <button type="button" class="btn btn-fir" onclick="location.href='/event/list'">목록으로 이동</button>
+      <button type="button" class="btn btn-fir" onclick="location.href='/event/eventList'">목록으로 이동</button>
     </div>
   </form>
 </div>
