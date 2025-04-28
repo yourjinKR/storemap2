@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			case "send": getLetter("send"); break;
 			//쓰기 Form
 			case "write": changeLetterModal("write"); break;
+			// 문의 하기 
+			case "question": changeLetterModal("write"); break;
 			// 쪽지 전송 
 			case "post": insertLetter(); break;
 			// 쪽지 view 확인
@@ -79,6 +81,20 @@ function changeLetterModal(page){
 	if(content.length > 0){
 		content.forEach(con => con.classList.remove("on"));
 		document.querySelector("#"+ page).classList.add("on");
+	}
+	let eventSelect = document.querySelector(".event-select");
+	if(eventSelect != null){
+		 if(document.querySelector(".letter-tab > li a.on").getAttribute("href") == "question"){
+			 eventSelect.classList.add("hide");
+			 listDetail.classList.add("hide");
+			 writeReceiver.value = "관리자";
+			 hideReceiver.value = "admin01";
+		 }else{
+			 listDetail.classList.remove("hide");
+			 eventSelect.classList.remove("hide");
+			 writeReceiver.value = "";
+			 hideReceiver.value = "";
+		 }
 	}
 }
 

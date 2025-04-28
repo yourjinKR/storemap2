@@ -19,7 +19,7 @@
 					</ul>				
 				</td>
 			</tr>
-			<tr>
+			<tr class="event-select">
 				<th><label>이벤트 선택 : </label></th>
 				<td>
 					<select class="attend-list">

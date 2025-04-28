@@ -10,6 +10,7 @@
 		<li><a class="received on" href="received">받은 쪽지함</a></li>
 		<li><a class="send" href="send">보낸 쪽지함</a></li>
 		<li><a class="write" href="write">쪽지 쓰기</a></li>
+		<li><a class=question href="question">문의 하기</a></li>
 	</ul>
 
 	<div class="js-tab-content on" id="list">
