@@ -24,7 +24,10 @@ public interface StoreMapper {
 	//public List<StoreVO> getListWithPage(Criteria cri);
 	// 점포 페이지 카운트
 	//public int getTotalRecordCountPage();
-	
+	// 점포 숨기기 등록
+	public int hideStore(int store_idx);
+	// 점포 숨기기 해제
+	public int unhideStore(int store_idx);
 	// 메인페이지 점포 목록 랜덤 출력
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기

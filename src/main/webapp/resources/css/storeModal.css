@@ -44,11 +44,10 @@
 
 .storeView {
 	font-family: sans-serif;
-	margin: 0;
 	background-color: #fff;
-	width: 90%;
+	width: 50%;
 	max-width: 800px;
-	margin: 0 auto;
+	margin: 0;
 	padding: 20px;
 }
 
@@ -158,6 +157,7 @@
 	background-color: rgba(0, 0, 0, 0.4);
 	display: none;
 }
+
 .modal-content {
   background-color: #fefefe;
   margin: 15% auto;

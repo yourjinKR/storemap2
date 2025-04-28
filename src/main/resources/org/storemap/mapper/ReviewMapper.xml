@@ -52,5 +52,17 @@
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where review_idx = #{review_idx}
 	</select>
+	<!-- 6.리뷰 숨기기 등록 -->
+	<update id="hideReview" parameterType="int">
+		update review set 
+			review_hidden = 1
+		where review_idx = #{review_idx}
+	</update>
+	<!-- 7.리뷰 숨기기 해제 -->
+	<update id="unhideReview" parameterType="int">
+		update review set 
+			review_hidden = 0
+		where review_idx = #{review_idx}
+	</update>
 	
 </mapper>

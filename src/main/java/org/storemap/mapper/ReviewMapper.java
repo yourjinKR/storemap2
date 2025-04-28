@@ -15,4 +15,8 @@ public interface ReviewMapper {
 	public List<ReviewVO> getReviewList(int store_idx);
 	// 리뷰 정보
 	public ReviewVO read(int review_idx);
+	// 리뷰 숨기기 등록
+	public int hideReview(int review_idx);
+	// 리뷰 숨기기 해제
+	public int unhideReview(int review_idx);
 }

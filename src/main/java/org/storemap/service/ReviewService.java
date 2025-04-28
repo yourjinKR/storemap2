@@ -15,4 +15,8 @@ public interface ReviewService {
 	public List<ReviewVO> getList(int store_idx);
 	// 리뷰 정보
 	public ReviewVO get(int review_idx);
+	// 리뷰 숨기기 등록
+	public int hide(int review_idx);
+	// 리뷰 숨기기 해제
+	public int unhide(int review_idx);
 }

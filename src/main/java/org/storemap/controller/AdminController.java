@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.storemap.domain.StoreRequestVO;
 import org.storemap.service.CommentDeclarationServiceImple;
 import org.storemap.service.EnterRequestServiceImple;
 import org.storemap.service.EnterServiceImple;
@@ -63,6 +65,12 @@ public class AdminController {
 		log.info("adminEventViewGet...");
 		return "index";
 	}
+	@PostMapping("/adminStoreView")
+	public String storeApproval(int member_idx) {
+		log.info("storeApproval..."+member_idx);
+		storeReqService.modify(member_idx);
+		return "redirect:/admin/adminStoreView";
+	}
 	@GetMapping("/adminStoreView")
 	public String adminStoreView(Model model) {
 		log.info("adminStoreViewGet...");
@@ -75,6 +83,12 @@ public class AdminController {
 		log.info("adminMemberViewGet...");
 		return "index";
 	}
-
+	
+	@PostMapping("/adminStoreRemove")
+	public String adminStoreRemove(int member_idx) {
+		log.info("adminStoreRemove..."+member_idx);
+		storeReqService.remove(member_idx);
+		return "redirect:/admin/adminStoreView";
+	}
 	
 }

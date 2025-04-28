@@ -97,6 +97,18 @@
 		select count(*) from store
 	</select>
 	-->
+	<!-- 9.점포 숨기기 등록 -->
+	<update id="hideStore" parameterType="int">
+		update store set 
+			store_hidden = 1
+		where store_idx = #{store_idx}
+	</update>
+	<!-- 10.점포 숨기기 해제 -->
+	<update id="unhideStore" parameterType="int">
+		update store set 
+			store_hidden = 0
+		where store_idx = #{store_idx}
+	</update>
 	
 	<!-- 메인페이지 랜덤 출력 -->
 	<select id="getStoreRanList" parameterType="String" resultType="org.storemap.domain.StoreVO">

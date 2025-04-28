@@ -16,9 +16,9 @@ public class StoreRequestServiceImple implements StoreRequestService{
 	StoreRequestMapper mapper;
 	
 	@Override
-	public int register(StoreRequestVO vo) {
-		log.info("register..."+vo);
-		int result = mapper.insert(vo);
+	public int register(int member_idx) {
+		log.info("register..."+member_idx);
+		int result = mapper.insert(member_idx);
 		return result;
 	}
 	

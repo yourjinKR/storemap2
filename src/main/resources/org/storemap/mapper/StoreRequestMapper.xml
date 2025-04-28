@@ -5,10 +5,12 @@
 <mapper namespace="org.storemap.mapper.StoreRequestMapper">
 
 	<!-- 1.점주 신청 요청 등록  -->
-	<insert id="insert" parameterType="org.storemap.domain.StoreRequestVO">
-		insert into store_request values(
-	 		#{member_idx},
-	 		#{pon}
+	<insert id="insert" parameterType="int">
+		insert into store_request (
+			member_idx
+		)
+		values(
+	 		#{member_idx}
 	 	)
 	</insert>
 	<!-- 2.점주 신청 요청 수락 -->

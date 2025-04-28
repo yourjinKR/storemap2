@@ -22,6 +22,7 @@ import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.MenuServiceImple;
 import org.storemap.service.ReviewServiceImple;
+import org.storemap.service.StoreRequestServiceImple;
 import org.storemap.service.StoreServiceImple;
 
 import lombok.extern.log4j.Log4j;
@@ -37,12 +38,16 @@ public class StoreController {
 	private MenuServiceImple menuService;
 	@Autowired
 	private ReviewServiceImple reviewService;
+	@Autowired
+	private StoreRequestServiceImple storeRequestService;
 	
 	// 점포 추가
 	@PostMapping("/storeRegister")
 	public String storeRgister(StoreVO vo) {
 		log.info("storeRegister..."+vo);
 		storeService.register(vo);
+		int idx = vo.getStore_idx();
+		storeRequestService.register(idx);
 		return "redirect:/store/menu?store_idx="+vo.getStore_idx();
 	}
 	// 점포 등록 페이지 이동

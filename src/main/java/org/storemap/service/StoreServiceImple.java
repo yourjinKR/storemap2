@@ -61,6 +61,7 @@ public class StoreServiceImple implements StoreService{
 		log.info("getDynamicList..."+map);
 		return mapper.getStoreDynamicList(map);
 	}
+	
 	/*
 	@Override
 	public List<StoreVO> getListWithPaging(Criteria cri) {
@@ -74,6 +75,19 @@ public class StoreServiceImple implements StoreService{
 		return mapper.getTotalRecordCountPage();
 	}
 	*/
+	
+	@Override
+	public int hide(int store_idx) {
+		log.info("hide..."+store_idx);
+		int result = mapper.hideStore(store_idx);
+		return result;
+	}
+	@Override
+	public int unhide(int store_idx) {
+		log.info("unhide..."+store_idx);
+		int result = mapper.unhideStore(store_idx);
+		return result;
+	}
 	
 	// 메인페이지 점포 목록 랜덤
 	@Override

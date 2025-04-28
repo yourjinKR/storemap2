@@ -6,7 +6,7 @@ import org.storemap.domain.StoreRequestVO;
 
 public interface StoreRequestService {
 	// 점주 신청 요청 등록
-	public int register(StoreRequestVO vo);
+	public int register(int member_idx);
 	// 점주 신청 요청 수락
 	public int modify(int member_idx);
 	// 점주 신청 요청 삭제

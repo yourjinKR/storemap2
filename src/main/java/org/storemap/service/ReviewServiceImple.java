@@ -49,4 +49,17 @@ public class ReviewServiceImple implements ReviewService{
 		return mapper.read(review_idx);
 	}
 	
+	@Override
+	public int hide(int review_idx) {
+		log.info("hide..."+review_idx);
+		int result = mapper.hideReview(review_idx);
+		return result;
+	}
+	@Override
+	public int unhide(int review_idx) {
+		log.info("unhide..."+review_idx);
+		int result = mapper.unhideReview(review_idx);
+		return result;
+	}
+	
 }
