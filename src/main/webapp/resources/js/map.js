@@ -24,10 +24,17 @@ let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, click
 
 // 클릭하여 강조된 마커
 let selectedMarker = null;
+// 지도 클릭 이벤트 마커
+let clickMarker = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let latBasic = 37.511521092235625;
 let lngBasic = 127.02856630406664;
+
+// 지도 변수 생성
+let basicMap;
+// 지도 타입
+let mapType;
 
 // 페이지 로드 후 script 실행
 document.addEventListener("DOMContentLoaded", () => {
@@ -35,9 +42,20 @@ document.addEventListener("DOMContentLoaded", () => {
 	
 	// 지도 이동 테스트 ===============================
 	let container = document.querySelector(".map");
-	let testMap = new kakao.maps.Map(container, optionBasic);
-	let container3 = document.querySelector('.map#preview');
-	// let previewMap = new kakao.maps.Map(container3, optionBasic);
+	basicMap = new kakao.maps.Map(container, optionBasic);
+
+    // 맵 id별 분기
+    mapType = container.getAttribute("id");
+    // 영업 위치 설정 지도
+    if (mapType === "store-loc") {
+        let f = document.forms[0];
+        let latlng = new kakao.maps.LatLng(f.lat.value, f.lng.value);
+        // 지도 중심 화면 설정
+        basicMap.setCenter(latlng);
+        // 지도 중심 위치 설정
+        latBasic = f.lat.value;
+        lngBasic = f.lng.value;
+    }
 
     document.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", e => {
@@ -46,31 +64,31 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(type + "click");
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
-                panToLatLng(testMap, latBasic, lngBasic);
+                panToLatLng(basicMap, latBasic, lngBasic);
             } 
             // 마커 생성 및 보기
             else if (type === "markerTest") {
-                addMarker(testMap, latBasic, lngBasic);
+                addMarker(basicMap, latBasic, lngBasic);
             }
             // 마커 여러개 생성
             else if (type === "markersGen") {
                 registerMarker(37.5056370385705, 127.025605528158, '302');
                 registerMarker(37.504724, 127.02538, '303');
                 e.target.disabled = true;
-                showMarkers(testMap);
+                showMarkers(basicMap);
             }
             // 마커 리스트 비울때는 숨김 처리 후 리스트의 요소를 비워야 정상 작동
             else if (type === "markersClear") {
-                hideMarkers(testMap);
+                hideMarkers(basicMap);
                 clearMarkers();
             }
             // 마커 한번에 등록 및 보기
             else if (type === "markerListView") {
-                showMarkers(testMap);
+                showMarkers(basicMap);
             }
             // 마커 한번에 숨기기
             else if (type === "markerListHide") {
-                hideMarkers(testMap);
+                hideMarkers(basicMap);
             }
             else if (type === "markersLog") {
                 markerList.forEach(marker => {
@@ -212,23 +230,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 // console.log(marker.getPosition().getLat());
                 // console.log(marker.getPosition().getLng());
                 // 마커 기준으로 지도 이동
-                panToLatLng(testMap, marker.getPosition().getLat(), marker.getPosition().getLng());
+                panToLatLng(basicMap, marker.getPosition().getLat(), marker.getPosition().getLng());
                 // 마커 강조
                 selectMarker(marker)
             }
     })
     }
 
-    let clickMarker = new kakao.maps.Marker({ 
+    clickMarker = new kakao.maps.Marker({ 
         // 지도 중심좌표에 마커를 생성합니다 
         position: new kakao.maps.LatLng(latBasic, lngBasic)
     });
-    clickMarker.setMap(testMap);
+    clickMarker.setMap(basicMap);
 
 
 
     // 지도 클릭 이벤트 (경도 위도 출력)
-    kakao.maps.event.addListener(testMap, 'click', function(mouseEvent) {        
+    kakao.maps.event.addListener(basicMap, 'click', function(mouseEvent) {        
     
         // 클릭한 위도, 경도 정보
         let latlng = mouseEvent.latLng;
@@ -370,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeMarkerMapping(storeLI);
 
         // console.log(storeVOList);
-        showMarkers(testMap);
+        showMarkers(basicMap);
     });
 
     // 출력 위치 확인

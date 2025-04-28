@@ -29,10 +29,10 @@
     <input type="text" id="email" name="store_email" value="${vo.store_email}">
     
     <label for="store-loc">위치 설정</label><button id="store-loc">설정</button>
-    <div class="map" style="width:auto; height:400px;"></div>
+    <div class="map" id="store-loc" style="width:auto; height:400px;"></div>
     
-    <input type="text" id="lat" name="store_lat" value="${vo.store_lng}">
-    <input type="text" id="lng" name="store_lng" value="${vo.store_lat}">
+    <input type="text" id="lat" name="store_lat" value="${vo.store_lat}">
+    <input type="text" id="lng" name="store_lng" value="${vo.store_lng}">
     
     <label for="address">주소</label>
     <input type="text" id="address" name="store_address" value="${vo.store_address}">
