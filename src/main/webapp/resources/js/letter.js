@@ -89,9 +89,16 @@ function getLetter(type){
 	.then(response => response.json())
 	.then(result => {
 		let str = "";
+		let firstEl = document.querySelector("#list > .letter-list > li").firstElementChild;
 		result.forEach(letter =>{
 			str += `<li>`;
-			str += `<span class="items">${letter.letter_writer}</span>`;
+			if(type == "received"){
+				firstEl.innerHTML = "작성자";
+				str += `<span class="items">${letter.letter_writer}</span>`;				
+			}else{
+				firstEl.innerHTML = "수신자";
+				str += `<span class="items">${letter.letter_receiver}</span>`;								
+			}
 			str += `<a href="${letter.letter_idx}" class="items t-l">${letter.letter_content}</a>`;
 			str += `<span class="items">${dateFormate(letter.letter_regdate)}</span>`;
 			if(type == "sendLetter"){
