@@ -13,7 +13,7 @@ import org.storemap.service.EventLikeServiceImple;
 import org.storemap.service.EventRequestServiceImple;
 import org.storemap.service.EventServiceImple;
 import org.storemap.service.MemberServiceImple;
-import org.storemap.service.ReviewDeclarartionServiceImple;
+import org.storemap.service.ReviewDeclarationServiceImple;
 import org.storemap.service.StoreDeclarationServiceImple;
 import org.storemap.service.StoreLikeServiceImple;
 import org.storemap.service.StoreRequestServiceImple;
@@ -44,7 +44,7 @@ public class AdminController {
 	@Autowired
 	private EventDeclarationServiceImple eventDeclService;
 	@Autowired
-	private ReviewDeclarartionServiceImple reviewDeclService;
+	private ReviewDeclarationServiceImple reviewDeclService;
 	@Autowired
 	private CommentDeclarationServiceImple commentDeclService;
 	
