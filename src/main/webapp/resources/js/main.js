@@ -26,8 +26,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	
 	storeList(selected); // 점   포 랜덤
-	eventList();         // 이벤트 랜덤
 	calendarInit();		 // 캘린더 렌더
+	
+
+	getEventList("Live");
+	getEventList("Soon");
 });
 
 
@@ -41,14 +44,14 @@ function placeSelect(){
 }
 
 // 메인 랜덤 이벤트 리스트	
-function eventList(){
-	fetch(`/main/getRanList`)
+function getEventList(type){
+	fetch(`/main/get${type}Event`)
 	.then(response => response.json())
 	.then(result =>{
 		let str = "";
-		let eventSlier = document.querySelector(".list-event .swiper-wrapper");
+		let eventSlier = document.querySelector(`#event${type} .swiper-wrapper`);
 		result.forEach((event,idx) => {
-			if(idx == 0 || idx == 8){
+			if(idx == 0 || idx == 5){
 				str += `<li class="swiper-slide">`;
 				str += 		`<div class="card-list d_f">`;
 			}
@@ -58,7 +61,7 @@ function eventList(){
 				str += 					`${event.event_content}`;
 				str += 				`</div>`;
 				str += 			`</div>`;
-			if(idx == 7 || idx == 15){
+			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
 				str += `</li>`;
 			}
@@ -66,7 +69,7 @@ function eventList(){
 
 		eventSlier.innerHTML = str;
 		
-		if(result.length > 8){
+		if(result.length > 4){
 			//슬라이드 생성
 			var storeList = new Swiper(".list-event", {
 				slidesPerView: 1,
@@ -92,7 +95,7 @@ function storeList(store_address){
 		let storeSlider = document.querySelector(".list-store .swiper-wrapper");
 		
 		result.forEach((store,idx) => {
-			if(idx == 0 || idx == 8){
+			if(idx == 0 || idx == 5){
 				str += `<li class="swiper-slide">`;
 				str += 		`<div class="card-list d_f">`;
 			}
@@ -102,7 +105,7 @@ function storeList(store_address){
 			str += 					`${store.store_name}`;
 			str += 				`</div>`;
 			str += 			`</div>`;
-			if(idx == 7 || idx == 15){
+			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
 				str += `</li>`;
 			}
@@ -120,7 +123,7 @@ function storeList(store_address){
 				prevEl: ".swiper-button-prev",
 			},
 		});
-		if(result.length <= 8){
+		if(result.length <= 4){
 			storeList.destroy();
 		}
 	})

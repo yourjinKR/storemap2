@@ -6,8 +6,10 @@ import org.storemap.domain.Criteria;
 import org.storemap.domain.EventVO;
 
 public interface EventMapper {
-	// 메인 페이지 랜덤 이벤트
-	public List<EventVO> getRanList();
+	// 메인 페이지 진행중인 이벤트
+	public List<EventVO> getLiveEvent();
+	// 메인 페이지 진행예정 이벤트
+	public List<EventVO> getSoonEvent();
 	// 메인페이지 선택 날짜 이벤트
 	public List<EventVO> getListEndDate(String searchDate);
 	

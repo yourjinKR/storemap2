@@ -27,6 +27,7 @@
 			<c:when test="${userType == 'user'}">
 				<li><a href="">내 리뷰 확인</a></li>
 				<li><a href="">좋아요 목록</a></li>
+				<li><a href="/store/storeRegister">점포신청</a></li>
 			</c:when>
 			<%-- 점포 회원 --%>
 			<c:when test="${userType == 'owner'}">

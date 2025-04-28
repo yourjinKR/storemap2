@@ -25,10 +25,9 @@
 .wrap.full{width:100%; position:relative; margin:0 auto}
 
 /* 리스트 카드형식 */
-.board-card{overflow:hidden;padding: 10px 50px;width:1300px;margin-left:-50px}
-.card-box {width: 250px;border: 1px solid #000;border-radius: 15px;box-shadow: 0 0 10px rgba(0, 0, 0, .2);margin-left:66px;}
-.card-box:nth-child(n + 5){margin-top: 25px;}
-.card-box:nth-child(4n - 3){margin-left: 0;}
+.board-card{overflow:hidden;padding: 10px 50px;width:1300px;margin-left:-50px;}
+.card-box {width: 220px;border: 1px solid #000;border-radius: 15px;box-shadow: 0 0 10px rgba(0, 0, 0, .2);margin-left:25px}
+.card-box:nth-child(5n - 4){margin-left: 0;}
 .card-img {width: 100%; height: 200px;border-bottom: 1px solid #222;}
 .card-text {display: -webkit-box;display: -ms-flexbox;display: box;margin:15px;height:80px;overflow:hidden;vertical-align:top;text-overflow: ellipsis;word-break:break-all;-webkit-box-orient:vertical;-webkit-line-clamp:5;}
 .card-list{flex-wrap: wrap; justify-content: flex-start; }

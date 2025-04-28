@@ -106,7 +106,7 @@
 			    WHERE STORE_ADDRESS LIKE '%'||#{store_address}||'%'
 			    ORDER BY dbms_random.random
 			)
-			WHERE ROWNUM <= 15
+			WHERE ROWNUM <= 10
 		]]>
 	</select>
 	

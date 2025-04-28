@@ -4,7 +4,7 @@
 
 <input type="hidden" name="sessionId" value="${ loginUser }">
 <input type="hidden" name="auth" value="${ userType }">
-사용자 : ${ loginUser }
+사용자 : ${ loginUser }, 권한 : ${ userType }
 
 <div class="header d_f">
 	<h1>로고</h1>

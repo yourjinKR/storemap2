@@ -54,9 +54,20 @@
 </div>
 
 <!-- 진행 /예정 중인 이벤트 -->
-<div class="board-card por mt50 list-event">
+<div class="board-card por mt50 list-event" id="eventLive">
 	<div class="list-top mb30">
-		<h3>진행/예정 이벤트</h3>
+		<h3>진행중인 이벤트</h3>
+	</div>
+	<ul class="swiper-wrapper">
+
+	</ul>
+	<div class="swiper-button-next"></div>
+	<div class="swiper-button-prev"></div>
+</div>
+
+<div class="board-card por mt50 list-event" id="eventSoon">
+	<div class="list-top mb30">
+		<h3>진행예정 이벤트</h3>
 	</div>
 	<ul class="swiper-wrapper">
 

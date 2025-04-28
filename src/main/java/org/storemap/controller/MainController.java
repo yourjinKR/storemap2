@@ -32,14 +32,24 @@ public class MainController {
 	private StoreServiceImple storeService;
 	
 
-	// 메인 이벤트 랜덤 리스트
-	@GetMapping(value = "/getRanList",
+	// 메인 이벤트 진행중인 리스트
+	@GetMapping(value = "/getLiveEvent",
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE
 	})
-	public ResponseEntity<List<EventVO>> getList(){
-		return new ResponseEntity<List<EventVO>>(eventService.getRanList(), HttpStatus.OK);
+	public ResponseEntity<List<EventVO>> getLiveEvent(){
+		return new ResponseEntity<List<EventVO>>(eventService.getLiveEvent(), HttpStatus.OK);
+	}
+	
+	// 메인 이벤트 진행예정 리스트
+	@GetMapping(value = "/getSoonEvent",
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE
+	})
+	public ResponseEntity<List<EventVO>> getSoonEvent(){
+		return new ResponseEntity<List<EventVO>>(eventService.getSoonEvent(), HttpStatus.OK);
 	}
 	
 	// 메인 이벤트 리스트 종료

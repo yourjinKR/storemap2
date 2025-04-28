@@ -17,17 +17,20 @@ public class EventServiceImple implements EventService{
 	@Autowired
 	private EventMapper mapper;
 	
-	// 메인 페이지 랜덤 이벤트
+	// 메인 페이지 진행중인 이벤트
 	@Override
-	public List<EventVO> getRanList() {
-		log.info("getRanList... ");
-		return mapper.getRanList();
+	public List<EventVO> getLiveEvent() {
+		return mapper.getLiveEvent();
+	}
+	// 메인 페이지 진행예정 이벤트
+	@Override
+	public List<EventVO> getSoonEvent() {
+		return mapper.getSoonEvent();
 	}
 	
 	// 메인페이지 선택 날짜 이벤트
 	@Override
 	public List<EventVO> getListEndDate(String searchDate) {
-		log.info("getListEndDate... ");
 		return mapper.getListEndDate(searchDate);
 	}
 	

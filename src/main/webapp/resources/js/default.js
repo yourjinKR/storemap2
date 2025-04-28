@@ -19,14 +19,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// 사이드바
 	let mypage = document.querySelector(".right-div .profile");
 	let sideBar = document.querySelector(".side-bar");
-	mypage.addEventListener("click", function(){
-		sideBar.classList.add("show");
-	})
+	if(mypage != null){
+		mypage.addEventListener("click", function(){
+			sideBar.classList.add("show");
+		})
+	}
 	
 	let closeBtn = document.querySelector(".close-btn");
-	closeBtn.addEventListener("click", function(){
-		sideBar.classList.remove("show");
-	})
+	if(closeBtn != null){
+		closeBtn.addEventListener("click", function(){
+			sideBar.classList.remove("show");
+		})
+	}
 
 	// 위치 정보
 	getCurrentPlace();
@@ -109,19 +113,22 @@ function dateFormate(date){
 
 // 헤더 로그아웃
 function headerLogout(){
-	document.getElementById('hlogoutLink').addEventListener('click', function(e) {
-		e.preventDefault();
-		console.log("1");
-		fetch('/member/logout', {
-			method : 'POST'
-		})
-		.then(() => {
-			location.href = '/member/login';
-		})
-		.catch(err => {
-			console.log("에러 : ", err);
-		})
-	});
+	let logOut = document.getElementById('hlogoutLink');
+	if(logOut != null){
+		logOut.addEventListener('click', function(e) {
+			e.preventDefault();
+			console.log("1");
+			fetch('/member/logout', {
+				method : 'POST'
+			})
+			.then(() => {
+				location.href = '/member/login';
+			})
+			.catch(err => {
+				console.log("에러 : ", err);
+			})
+		});
+	}
 }
 
 // 사이드바 로그아웃

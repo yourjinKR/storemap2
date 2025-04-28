@@ -78,7 +78,7 @@
 					</td>
 					<td class="t-l">
 						<span>입점 신청 : ${vo.event_rstartdate} ~ ${vo.event_rstopdate}</span>
-						<%-- <span>이벤트 : ${vo.event_bstartdate} ~ ${vo.event_bstopdate}</span> --%>
+						<span>이벤트 : ${vo.event_bstartdate} ~ ${vo.event_bstopdate}</span>
 					</td>
 					<td>
 						<input type="checkbox" name="like" id="like-icon${vo.event_idx}">

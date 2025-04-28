@@ -4,13 +4,25 @@
 
 <mapper namespace="org.storemap.mapper.EventMapper">
 	<!-- 메인페이지 랜덤 -->
-	<select id="getRanList" resultType="org.storemap.domain.EventVO">
+	<select id="getLiveEvent" resultType="org.storemap.domain.EventVO">
 		<![CDATA[
 			SELECT * FROM (
 			    SELECT * FROM EVENT 
-			    ORDER BY dbms_random.random
+			    WHERE EVENT_BSTOPDATE >= SYSDATE AND EVENT_BSTARTDATE <= SYSDATE
+			    ORDER BY DBMS_RANDOM.RANDOM
 			)
-			WHERE ROWNUM <= 15
+			WHERE ROWNUM <= 10
+		]]>
+	</select>
+	
+	<select id="getSoonEvent" resultType="org.storemap.domain.EventVO">
+		<![CDATA[
+			SELECT * FROM (
+			    SELECT * FROM EVENT 
+			    WHERE EVENT_BSTARTDATE > SYSDATE
+			    ORDER BY DBMS_RANDOM.RANDOM
+			)
+			WHERE ROWNUM <= 10
 		]]>
 	</select>
 	
