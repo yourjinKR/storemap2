@@ -149,6 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 clickMarker.setMap(basicMap);
             }
+            // 검색
+            else if (type === "search") {
+                let f = document.querySelector(".form#map");
+                console.log(f);
+                
+            }
         });
     });
 
@@ -411,9 +417,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /** 점포 클릭 이벤트 추가 및 마커 매핑 함수 */ 
-    function storeMarkerMapping(ele) {
-        if (ele != null ) {
-            ele.forEach(store => {
+    function storeMarkerMapping(stores) {
+        if (stores != null ) {
+            stores.forEach(store => {
                 // idx 추출
                 let idx = store.getAttribute("data-store_idx");
                 store.addEventListener('click', e => {
@@ -594,4 +600,28 @@ function uploadMap(path, lat, lng) {
 /** 경도위도를 리턴하는 함수 */
 function getLatLng(latlng) {
     console.log(latlng);
+}
+
+/** 두 지점 간 간격 구하는 공식 */
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    const R = 6371; // 지구 반지름 (단위: km)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const distance = R * c;
+
+    return distance;
+}
+
+/** 마커 사이의 거리를 구하는 공식 */
+function getDistanceMarkers(marker1, marker2) {
+    let latlng1 = marker1.getPosition();
+    let latlng2 = marker2.getPosition();
+    return getDistanceFromLatLonInKm(latlng1.getLat(), latlng1.getLng(), latlng2.getLat(), latlng2.getLng());
 }

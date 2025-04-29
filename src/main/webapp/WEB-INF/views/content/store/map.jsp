@@ -30,8 +30,8 @@
 					로고
 				</div>
 				<form class="form" id="map">
-					<input type="text">
-					<button>검색</button>
+					<input type="text" id="keyword">
+					<button class="mapBtn" id="search">검색</button>
 				</form>		
 			</div>
 			<div id="body">
