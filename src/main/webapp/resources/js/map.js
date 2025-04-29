@@ -38,6 +38,12 @@ let mapType;
 
 // 페이지 로드 후 script 실행
 document.addEventListener("DOMContentLoaded", () => {
+	const CSS_PATH = '/resources/css/map.css';
+	let linkEle = document.createElement('link');
+	linkEle.rel = 'stylesheet';
+	linkEle.href = CSS_PATH;
+	document.head.appendChild(linkEle);
+	
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 	
 	// 지도 이동 테스트 ===============================
@@ -59,12 +65,14 @@ document.addEventListener("DOMContentLoaded", () => {
             lngBasic = f.lng.value;
         }
     }
+    // 
 
-    document.querySelectorAll("button").forEach(btn => {
+    // 버튼 서비스
+    document.querySelectorAll("button.mapBtn").forEach(btn => {
         btn.addEventListener("click", e => {
             e.preventDefault();
             let type = btn.getAttribute("id");
-            console.log(type + "click");
+            console.log(type + " click");
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
                 panToLatLng(basicMap, latBasic, lngBasic);
@@ -126,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // 우편번호 찾기 버튼
             else if (type === "search-postcode") {
-                
+                pcodeService(postMap);
             }
             // 영업 위치설정
             else if (type === "store-loc") {
@@ -369,8 +377,8 @@ document.addEventListener("DOMContentLoaded", () => {
         storeVOList.forEach(vo => {
             // console.log(vo);
             msg += 
-            // `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
-            `<li data-store_idx="${vo.store_idx}" name="store_idx">
+            //`<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
+            	`<li data-store_idx="${vo.store_idx}" name="store_idx">
                 <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
 				<input type="hidden" name="store_address" value="${vo.store_address}">
 				<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">

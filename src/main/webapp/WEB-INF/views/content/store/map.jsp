@@ -20,23 +20,29 @@
 		<button id="showMapSideBar">사이드바 열기</button>	
 		<button id="hideMapSideBar">사이드바 닫기</button>	
 		<br> -->
-		<div class="map" style="width: 1200; height: 1200px;"></div>
+		<div class="map" id="full" style="width: 1200; height: 1200px;"></div>
 	</div>
 	<!-- 점포 리스트 사이드바 -->
 	<div class="side-bar" id="store-list">
 		<div id="content">
-			<div class="header">
-				<form>
+			<div class="header" id="store-list">
+				<div class="logo">
+					로고
+				</div>
+				<form class="form" id="map">
 					<input type="text">
-					<!-- <button type="submit">검색</button> -->
-					
+					<button>검색</button>
 				</form>		
 			</div>
-			<jsp:include page="../modal/storeListModal.jsp"/>
+			<div id="body">
+				<jsp:include page="../modal/storeListModal.jsp"/>		
+			</div>
 		</div>
-		<div class="side-bar" id="store">
-			<!-- 점포 상세보기 사이드바 -->
-			<div><button class="btn" id="close-store">X</button></div>
+	</div>
+	<!-- 점포 상세보기 사이드바 -->
+	<div class="side-bar" id="store">
+		<div><button class="mapBtn" id="close-store">X</button></div>
+		<div>
 			<jsp:include page="../modal/storeView.jsp">
 				<jsp:param value="1" name="store_idx"/>
 			</jsp:include>
@@ -44,6 +50,6 @@
 	</div>
 	<!-- 사이드바 리모컨 -->
 	<div class="side-bar" id="toggle-box">
-		<button id="toggle">토글</button>			
+		<button class="mapBtn" id="toggle">토글</button>			
 	</div>
 </div>

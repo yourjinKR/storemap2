@@ -11,17 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let container = document.querySelector('.map#postcode');
     postMap = new kakao.maps.Map(container, optionBasic);
-
-    document.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            let type = btn.getAttribute("id");
-            console.log(type + "click");
-
-            if (type === "search-postcode") {
-                pcodeService(postMap);
-            }
-        });
-    });
 });
 
 /** 우편번호 서비스 api (map을 입력) */
