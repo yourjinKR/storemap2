@@ -41,12 +41,15 @@
 }
 
 /*storeView*/
-
+.wrap{
+	width:640px;
+	
+}
 .storeView {
 	font-family: sans-serif;
 	background-color: #fff;
-	width: 50%;
-	max-width: 800px;
+	width: 100%;
+	max-width: 638px;
 	margin: 0;
 	padding: 20px;
 }
@@ -71,6 +74,11 @@
 
 .info-text {
 	margin: 5px 0;
+	color: #333;
+}
+.favorite {
+	margin-right: 10px;
+
 	color: #333;
 }
 
@@ -161,7 +169,6 @@
 .modal-content {
   background-color: #fefefe;
   margin: 15% auto;
-  padding: 20px;
   border: 1px solid #888;
   width: 640px;
 }
