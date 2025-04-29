@@ -179,4 +179,11 @@ public class ModalController {
 		
 		return new ResponseEntity<EventVO>(result,HttpStatus.OK);
 	}
+	
+	// 우편번호 입력 form
+	@GetMapping("/postcodeForm")
+	public String postcodeForm(Model model) {
+		log.info("postcodeForm...");
+		return "index";
+	}
 }

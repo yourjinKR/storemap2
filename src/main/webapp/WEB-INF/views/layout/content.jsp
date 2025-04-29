@@ -96,6 +96,10 @@
 		<c:when test="${path eq '/modal/storeView'}">
 			<jsp:include page="../content/modal/storeView.jsp" />
 		</c:when>
+		<%-- 우편번호 form --%>
+		<c:when test="${path eq '/modal/postcodeForm'}">
+			<jsp:include page="../content/modal/postcodeForm.jsp" />
+		</c:when>
 
 		<%-- 지도 --%>
 		<c:when test="${path eq '/store/map'}">
