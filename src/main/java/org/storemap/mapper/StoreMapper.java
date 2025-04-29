@@ -36,5 +36,9 @@ public interface StoreMapper {
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기
 	public List<StoreVO> getStoreAreaList(String store_area);
+	// 점포 좋아요
+	public int updateFavorite(int store_idx);
+	// 점포 좋아요 취소
+	public int deleteFavorite(int store_idx);
 	
 }

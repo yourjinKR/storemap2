@@ -5,12 +5,25 @@
 	<div class="store-image">
     	<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">	
 	</div>
+	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 
     <div class="store-info">
       <h3>가게정보</h3>
       <div class="info-text">주소: ${svo.store_address}</div>
       <div class="info-text">영업일: ${svo.store_activity_time}</div>
       <div class="info-text">전화: ${svo.store_num}</div>
+      <div class="favorite">
+      	<input type="checkbox" name="like" id="like-icon${svo.store_idx}" ${isLiked ? 'checked' : ''}>
+      	<label class="material-symbols-outlined" for="like-icon${svo.store_idx}">
+      		favorite
+      	</label>
+      </div>
+      <div class="report">
+      	<input type="button" name="declaration" id="reportBtn">
+      	<label class="material-symbols-outlined" for="reportBtn">
+      		notifications
+      	</label>
+      </div>
     </div>
 
     <div class="menu-section">

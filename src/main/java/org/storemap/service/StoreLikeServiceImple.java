@@ -17,9 +17,9 @@ public class StoreLikeServiceImple implements StoreLikeService{
 	private StoreLikeMapper mapper;
 	
 	@Override
-	public int register(StoreLikeVO vo) {
-		log.info("register..."+vo);
-		int result = mapper.insert(vo);
+	public int register(int store_idx, int member_idx) {
+		log.info("getIdx..."+store_idx+", "+member_idx);
+		int result = mapper.insert(store_idx, member_idx);
 		return result;
 	}
 	

@@ -6,7 +6,7 @@ import org.storemap.domain.StoreLikeVO;
 
 public interface StoreLikeMapper {
 	// 점포 좋아요 등록
-	public int insert(StoreLikeVO vo);
+	public int insert(int store_idx, int member_idx);
 	// 점포 좋아요 취소
 	public int delete(int store_idx, int member_idx);
 	// 점포 좋아요한 목록 보기

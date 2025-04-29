@@ -26,6 +26,7 @@ import org.storemap.domain.LetterVO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.MenuVO;
 import org.storemap.domain.ReviewVO;
+import org.storemap.domain.StoreLikeVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -46,6 +47,8 @@ import lombok.extern.log4j.Log4j;
 public class ModalController {
 	@Autowired
 	private StoreServiceImple storeService;
+	@Autowired
+	private StoreLikeServiceImple storeLikeService;
 	@Autowired
 	private MenuServiceImple menuService;
 	@Autowired
@@ -71,14 +74,61 @@ public class ModalController {
 	
 	//점포 정보 팝업
 	@GetMapping("/storeView")
-	public String storeView(@RequestParam("store_idx") int store_idx, Model model) {
+	public String storeView(@RequestParam("store_idx") int store_idx, Model model, HttpSession session) {
 		log.info("storeView..."+store_idx);
 		model.addAttribute("svo",storeService.get(store_idx));
 		model.addAttribute("mlist",menuService.getList(store_idx));
 		model.addAttribute("rlist",reviewService.getList(store_idx));
-		storeService.get(store_idx);
+		
+		// 사용자가 로그인되어 있다면 좋아요 상태 확인
+		if(session.getAttribute("loginUserIdx") != null) {
+			int member_idx = (int) session.getAttribute("loginUserIdx");
+			StoreLikeVO likeVO = storeLikeService.getIdx(store_idx, member_idx);
+			model.addAttribute("isLiked", likeVO != null);
+		} else {
+			model.addAttribute("isLiked", false);
+		}
+		
 		return "index";
 	}
+	
+	//점포좋아요 (토글)
+	@GetMapping("/favorite/toggle")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> toggleFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
+		log.info("toggleFavorite..."+store_idx+", "+member_idx);
+		
+		Map<String, Object> result = new HashMap<>();
+		StoreLikeVO likeVO = storeLikeService.getIdx(store_idx, member_idx);
+		
+		if(likeVO == null) {
+			// 좋아요 추가
+			storeLikeService.register(store_idx, member_idx);
+			storeService.favorite(store_idx); // 좋아요 카운트 증가
+			result.put("liked", true);
+		} else {
+			// 좋아요 제거
+			storeLikeService.remove(store_idx, member_idx);
+			storeService.unfavorite(store_idx); // 좋아요 카운트 감소
+			result.put("liked", false);
+		}
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	//점포좋아요 상태 확인
+	@GetMapping("/favorite/check")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> checkFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
+		log.info("checkFavorite..."+store_idx+", "+member_idx);
+		
+		Map<String, Object> result = new HashMap<>();
+		StoreLikeVO likeVO = storeLikeService.getIdx(store_idx, member_idx);
+		result.put("liked", likeVO != null);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	/*--------------------------------------------------------------------------*/
 	
 	// 메뉴 정보 팝업 (비동기)
 	@GetMapping(value = "/menuList/{store_idx}",
@@ -101,6 +151,8 @@ public class ModalController {
 		log.info("getList..."+store_area);
 		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_area), HttpStatus.OK);
 	}
+	
+	/*--------------------------------------------------------------------------*/
 	
 	// 송수신 메시지 리스트
 	@GetMapping(value = "/getLetterList/{type}",

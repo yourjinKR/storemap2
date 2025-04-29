@@ -138,4 +138,17 @@
 		select * from store where store_area = #{store_area}
 	</select>
 	
+	<!-- 점포 좋아요 업 -->
+	<update id="updateFavorite" parameterType="int">
+		update store set
+			store_like_cnt = store_like_cnt + 1
+		where store_idx = #{store_idx}
+	</update>
+	<!-- 점포 좋아요 다운 -->
+	<update id="deleteFavorite" parameterType="int">
+	    update store set
+	        store_like_cnt = GREATEST(store_like_cnt - 1, 0)
+	    where store_idx = #{store_idx}
+	</update>
+	
 </mapper>

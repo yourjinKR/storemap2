@@ -118,4 +118,15 @@ public class StoreServiceImple implements StoreService{
 		return mapper.getStoreAreaList(store_area);
 	}
 	
+	@Override
+	public int favorite(int store_idx) {
+		log.info("favorite..."+store_idx);
+		return mapper.updateFavorite(store_idx);
+	}
+	@Override
+	public int unfavorite(int store_idx) {
+		log.info("unfavorite..."+store_idx);
+	    return mapper.deleteFavorite(store_idx);
+	}
+	
 }

@@ -36,5 +36,9 @@ public interface StoreService {
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기
 	public List<StoreVO> getAreaList(String store_area);
+	// 점포 좋아요
+	public int favorite(int store_idx);
+	// 점포 좋아요 취소
+	public int unfavorite(int store_idx);
 	
 }
