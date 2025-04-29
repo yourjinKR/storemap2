@@ -15,10 +15,7 @@
 <%
 	request.setAttribute("path", request.getAttribute("javax.servlet.forward.request_uri"));
 
-	String path = (String) request.getAttribute("path");
-    if ("/store/map".equals(path)) {
-        request.setAttribute("type", "full");
-    }
+	
 %>
 <body>
 	<c:choose>

@@ -182,8 +182,9 @@ public class StoreController {
 	
 	// map 이동
 	@GetMapping("/map")
-	public String storeMap() {
+	public String storeMap(Model model) {
 		log.info("mapGet...");
+		model.addAttribute("type", "full");
 		return "index";
 	}
 	

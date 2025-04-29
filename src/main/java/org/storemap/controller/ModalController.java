@@ -184,6 +184,7 @@ public class ModalController {
 	@GetMapping("/postcodeForm")
 	public String postcodeForm(Model model) {
 		log.info("postcodeForm...");
+		model.addAttribute("type", "full");
 		return "index";
 	}
 }

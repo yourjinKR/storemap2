@@ -143,6 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
             // 현위치 이동 (임시 함수, 추후 수정)
             else if (type === "panToCurrent") {
                 panToLatLng(basicMap, currentLat, currentLng);
+                clickMarker = new kakao.maps.Marker({ 
+                    // 지도 중심좌표에 마커를 생성합니다 
+                    position: new kakao.maps.LatLng(currentLat, currentLng)
+                });
+                clickMarker.setMap(basicMap);
             }
         });
     });

@@ -29,8 +29,7 @@
     <input type="text" id="email" name="store_email" value="${vo.store_email}">
     
     <label for="store-loc">위치 설정</label>
-    <button id="store-loc">설정</button>
-    <button id="panToCurrent">내 위치</button>
+    <button class="mapBtn" id="panToCurrent">내 위치</button>
     <div class="map" id="store-loc" style="width:auto; height:400px;"></div>
     
     <input type="text" id="lat" name="store_lat" value="${vo.store_lat}">

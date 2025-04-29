@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<div class="wrap${not empty type ? ' ' += type : ''}">
+<div class="wrap<c:if test='${not empty type}'> ${type}</c:if>">
 
 	<c:choose>
 		<%-- 관리자페이지 --%>
