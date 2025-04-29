@@ -3,5 +3,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EventDayMapper">
-	
+	<insert id="insertEventday" parameterType="org.storemap.domain.EventDayVO">
+		INSERT INTO event_day (
+            eday_idx,
+            event_idx,
+            store_max,
+            event_starttime,
+            event_stoptime
+        ) VALUES (
+            eday_seq.nextval,
+            #{event_idx},
+            #{store_max},
+            #{event_starttime},
+            #{event_stoptime}
+        )
+	</insert>
 </mapper>

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	    	boardChange(checkedType);
 	    });
 	});
-
+	
 	// 이벤트 등록 시 일정 추가 버튼 클릭 이벤트
 	const today = new Date().toISOString().split("T")[0];
 	const startDateInput = document.getElementById("startDate");
@@ -85,47 +85,62 @@ function boardChange(chkEl){
 
 //generateDays 함수 정의
 function generateDays() {
-    const container = document.getElementById("eventDaysContainer");
-    container.innerHTML = "";
+  const container = document.getElementById("eventDaysContainer");
+  container.innerHTML = "";
 
-    const startInput = document.getElementById("startDate");
-    const endInput = document.getElementById("endDate");
+  const startInput = document.getElementById("startDate");
+  const endInput = document.getElementById("endDate");
 
-    const startDate = new Date(startInput.value);
-    const endDate = new Date(endInput.value);
+  const startDate = new Date(startInput.value);
+  const endDate = new Date(endInput.value);
 
-    if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
-      alert("올바른 날짜를 선택하세요.");
-      return;
-    }
+  if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
+    alert("올바른 날짜를 선택하세요.");
+    return;
+  }
 
-    let current = new Date(startDate);
-    let index = 0;
+  // 일괄 입력 폼 추가
+  const bulkDiv = document.createElement("div");
+  bulkDiv.style.marginBottom = "15px";
+  bulkDiv.innerHTML = `
+    <fieldset style="border:1px solid #aaa; padding:10px;">
+      <legend><strong> 일괄 입력</strong></legend>
+      최대 입점 수: <input type="number" id="bulkStoreMax" style="width: 80px;">
+      시작 시간: <input type="time" id="bulkStartTime">
+      종료 시간: <input type="time" id="bulkStopTime">
+      <button type="button" onclick="bulkFill()">일괄 등록</button>
+    </fieldset>
+  `;
+  container.appendChild(bulkDiv);
+
+  // 날짜별 일정 생성
+  let current = new Date(startDate);
+  let index = 0;
 
     while (current <= endDate) {
       const yyyyMMdd = current.toISOString().split("T")[0];
       const dayIndex = index + 1;
 
-      const div = document.createElement("div");
-      div.style.marginBottom = "15px";
-      div.innerHTML = `
-        <fieldset style="border:1px solid #ccc; padding:10px;">
-          <legend><strong>${dayIndex}일차 (${yyyyMMdd})</strong></legend>
-          <input type="hidden" name="days[${index}].eday_date" value="${yyyyMMdd}">
-          최대 입점 수:
-          <input type="number" name="days[${index}].store_max" required style="width: 80px;">
-          시작 시간:
-          <input type="time" name="days[${index}].event_starttime" required>
-          종료 시간:
-          <input type="time" name="days[${index}].event_stoptime" required>
-        </fieldset>
-      `;
-      container.appendChild(div);
+    const div = document.createElement("div");
+    div.style.marginBottom = "15px";
+    div.innerHTML = `
+      <fieldset style="border:1px solid #ccc; padding:10px;">
+        <legend><strong>${dayIndex}일차 (${yyyyMMdd})</strong></legend>
+        <input type="hidden" name="days[${index}].eday_date" value="${yyyyMMdd}">
+        최대 입점 수:
+        <input type="number" name="days[${index}].store_max" class="storeMax" required style="width: 80px;">
+        시작 시간:
+        <input type="time" name="days[${index}].event_starttime" class="startTime" required>
+        종료 시간:
+        <input type="time" name="days[${index}].event_stoptime" class="stopTime" required>
+      </fieldset>
+    `;
+    container.appendChild(div);
 
-      current.setDate(current.getDate() + 1);
-      index++;
-    }
+    current.setDate(current.getDate() + 1);
+    index++;
   }
+}
 
 function eventFilter(pageNum){
 	let pageNumData = pageNum != null ? pageNum : 1;
@@ -210,6 +225,34 @@ function eventFilter(pageNum){
 	.catch(err => console.log(err))
 }
 
+// 일괄 등록 함수
+function bulkFill() {
+  const storeMaxInput = document.getElementById("bulkStoreMax");
+  const startTimeInput = document.getElementById("bulkStartTime");
+  const stopTimeInput = document.getElementById("bulkStopTime");
 
+  if (!storeMaxInput || !startTimeInput || !stopTimeInput) {
+    alert("일괄 입력 값을 모두 입력하세요.");
+    return;
+  }
 
+  const storeMaxValue = storeMaxInput.value;
+  const startTimeValue = startTimeInput.value;
+  const stopTimeValue = stopTimeInput.value;
 
+  if (!storeMaxValue || !startTimeValue || !stopTimeValue) {
+    alert("모든 필드를 입력해야 합니다.");
+    return;
+  }
+
+  // 각각 클래스명으로 찾기
+  const storeMaxInputs = document.querySelectorAll(".storeMax");
+  const startTimeInputs = document.querySelectorAll(".startTime");
+  const stopTimeInputs = document.querySelectorAll(".stopTime");
+
+  storeMaxInputs.forEach(input => input.value = storeMaxValue);
+  startTimeInputs.forEach(input => input.value = startTimeValue);
+  stopTimeInputs.forEach(input => input.value = stopTimeValue);
+
+  alert("일괄 입력 완료!");
+}

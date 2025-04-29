@@ -3,5 +3,17 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.AttachMapper">
-	
+	<insert id="insertAttachfile" parameterType="org.storemap.domain.AttachFileVO">
+		INSERT INTO attachfile (
+            attach_idx,
+            event_idx,
+            enter_idx,
+            filename
+        ) VALUES (
+            attach_seq.nextval
+            #{event_idx},
+            #{enter_idx},
+            #{filename}
+        )
+	</insert>
 </mapper>

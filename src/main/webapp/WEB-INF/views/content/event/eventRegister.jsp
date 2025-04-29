@@ -18,7 +18,7 @@
 </div>
 
 <div class="panel-body">
-  <form method="POST" enctype="multipart/form-data" action="/event/create">
+  <form method="POST" enctype="multipart/form-data" action="/event/eventRegister">
     <table>
       <tbody>
         <tr>
@@ -39,8 +39,8 @@
         <tr>
           <th>모집 날짜</th>
           <td>
-            <input type="date" name="event_rstartdate" id="startDate" required> ~ 
-            <input type="date" name="event_rstopdate" id="endDate" required>
+            <input type="date" name="event_rstartdate" id="rstartDate" required> ~ 
+            <input type="date" name="event_rstopdate" id="rendDate" required>
           </td>
         </tr>
         <tr>
@@ -60,14 +60,13 @@
         <tr>
           <th>행사 장소</th>
           <td>
-            <input type="text" name="event_location" placeholder="우편번호" style="width: 300px;"><br>
-            <input type="text" name="event_location_detail" placeholder="주소 (예: xx시 xx구 xx동)" style="width: 300px; margin-top: 5px;">
+          	<jsp:include page="../../content/modal/postcodeForm.jsp"/>
           </td>
         </tr>
         <tr>
           <th>내용</th>
           <td>
-            <textarea name="event_content" rows="10" cols="76" required></textarea>
+            <textarea name="event_content" rows="10" cols="76" style="resize: none;"></textarea>
           </td>
         </tr>
         <tr>

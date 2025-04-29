@@ -1,5 +1,7 @@
 package org.storemap.service;
 
-public interface AttachFileService {
+import org.storemap.domain.AttachFileVO;
 
+public interface AttachFileService {
+	public int insertAttachfile(AttachFileVO attachVO);
 }

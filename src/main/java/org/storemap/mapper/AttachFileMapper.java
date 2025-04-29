@@ -1,5 +1,7 @@
 package org.storemap.mapper;
 
-public interface AttachFileMapper {
+import org.storemap.domain.AttachFileVO;
 
+public interface AttachFileMapper {
+	public int insertAttachfile(AttachFileVO attachVO);
 }

@@ -1,8 +1,11 @@
 package org.storemap.controller;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +20,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
+import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.PageDTO;
+import org.storemap.service.AttachFileService;
 import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayServiceImple;
@@ -77,14 +85,68 @@ public class EventController {
 		eventService.updateFavorite(event_idx);
 		return 1; 
 	}
-	 
-	// 게시글 등록 컨트롤러
-	@GetMapping("/eventRegister")
-	public String eventRegister() {
-		
-		return "index";
+	
+	// 게시글 등록
+	@PostMapping("/eventRegister")
+	public String createEvent(EventVO eventVO,
+	                          @RequestParam("eventDays") List<EventDayVO> eventDays,
+	                          @RequestParam("eventImage") MultipartFile eventImage,
+	                          HttpServletRequest request,
+	                          Model model) {
+	    try {
+	        int result = eventService.insertEvent(eventVO);
+
+	        if (result == 1) {
+	            // 파일 저장
+	            if (!eventImage.isEmpty()) {
+	                // 실제 물리적 경로 얻기
+	                String uploadFolder = "resources/img/";
+	                String realPath = request.getServletContext().getRealPath("/") + uploadFolder;
+
+	                // 디렉토리가 존재하지 않으면 생성
+	                File dir = new File(realPath);
+	                if (!dir.exists()) {
+	                    dir.mkdirs();
+	                }
+
+	                String filename = eventImage.getOriginalFilename();
+	                File saveFile = new File(realPath, filename);
+	                eventImage.transferTo(saveFile);
+
+	                // DB에 저장할 파일 정보
+	                AttachFileVO attachVO = new AttachFileVO();
+	                attachVO.setEvent_idx(eventVO.getEvent_idx());
+	                attachVO.setEnter_idx(eventVO.getEnter_idx());
+	                attachVO.setFilename(filename); // 저장된 파일명만 DB에 저장
+
+	                attachFileService.insertAttachfile(attachVO);
+	            }
+
+	            // 날짜별 예약 저장
+	            for (EventDayVO day : eventDays) {
+	                day.setEvent_idx(eventVO.getEvent_idx());
+	                eventDayService.insertEventDay(day);
+	            }
+
+	            return "redirect:/event/eventList";
+
+	        } else {
+	            model.addAttribute("errorMessage", "이벤트 저장에 실패했습니다.");
+	            return "errorPage";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("errorMessage", "이벤트 등록 중 오류가 발생했습니다.");
+	        return "errorPage";
+	    }
 	}
 	
+	//이벤트 등록 화면 보여주는 컨트롤러
+	@GetMapping("/eventRegister")
+	public String showEventRegister() {
+		log.info("eventRegister...");
+		return "index";
+	}
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
 	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
