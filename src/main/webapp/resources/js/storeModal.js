@@ -6,7 +6,7 @@ document.head.appendChild(linkEle);
 
 const modal = document.querySelector("#modal");
 const image = document.querySelector(".store-info-image");
-let store_idx = new URLSearchParams(location.search).get('store_idx');
+let store_idx;
 
 function openModal(){
 	modal.style.display = "block";
@@ -108,7 +108,7 @@ function viewModalPage(li){
     .then(response => response.text())
     .then(html => {
       document.querySelector(".modal-content").innerHTML = html;
-      store_idx = new URLSearchParams(location.search).get('store_idx');
+      store_idx = document.querySelector('input[name="store_idx"]').value;
       initializeEvents();
       openModal();
     })
