@@ -11,7 +11,7 @@ const MARKER_WIDTH = 32, // 기본 마커의 너비
 const CLICKED_WIDTH = 40, // 클릭 마커의 너비
     CLICKED_HEIGHT = 47; // 클릭 마커의 높이
 // 마커 크기
-const markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT), // 기본, 클릭 마커의 크기
+const markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT), // 기본, 클릭 마커의 크기 
     clickedMarkerSize = new kakao.maps.Size(CLICKED_WIDTH, CLICKED_HEIGHT); // 오버 마커의 크기
 
 // ================== 마커 option ================== 
@@ -49,12 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // 영업 위치 설정 지도
     if (mapType === "store-loc") {
         let f = document.forms[0];
-        let latlng = new kakao.maps.LatLng(f.lat.value, f.lng.value);
-        // 지도 중심 화면 설정
-        basicMap.setCenter(latlng);
-        // 지도 중심 위치 설정
-        latBasic = f.lat.value;
-        lngBasic = f.lng.value;
+        // 위치가 설정되지 않았을 경우
+        if (f.lat.value != 0 && f.lng.value != 0) {
+            let latlng = new kakao.maps.LatLng(f.lat.value, f.lng.value);
+            // 지도 중심 화면 설정
+            basicMap.setCenter(latlng);
+            // 지도 중심 위치 설정
+            latBasic = f.lat.value;
+            lngBasic = f.lng.value;
+        }
     }
 
     document.querySelectorAll("button").forEach(btn => {
@@ -127,7 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // 영업 위치설정
             else if (type === "store-loc") {
-            	
+                
+            }
+            // 현위치 이동 (임시 함수, 추후 수정)
+            else if (type === "panToCurrent") {
+                panToLatLng(basicMap, currentLat, currentLng);
             }
         });
     });
@@ -251,20 +258,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // 클릭한 위도, 경도 정보
         let latlng = mouseEvent.latLng;
         clickMarker.setPosition(latlng);
-        
-        let message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-        message += '경도는 ' + latlng.getLng() + ' 입니다';
-        // console.log(message);
-        
-        // let resultDiv = document.getElementById('clickLatlng'); 
-        // resultDiv.innerHTML = message;
-        
+
         searchAddrFromCoords(latlng);
-        // 도로명 주소 함수
+
         let f = document.querySelector("#store-modify");
         if (f) {
-            f.lat.value = latlng.Ma;
-            f.lng.value = latlng.La;
+            f.lat.value = latlng.getLat();
+            f.lng.value = latlng.getLng();
             initAddrFromCoords(latlng, f);
         }
     });
@@ -287,6 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (status === kakao.maps.services.Status.OK) {
                 form.address.value = result[0].address_name; // 서울특별시 강남구 논현동
                 form.area.value = result[0].region_1depth_name; // 서울특별시
+                form.regcode.value = result[0].code; // 행정코드
             }
         };
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
@@ -356,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // vo 리스트
     let storeVOList = [];
     // 지역명 기반 검색 서비스 함수 실행
-    as.getListByReg("논현", function(data) {
+    as.getListByReg("서울특별시", function(data) {
 
         data.forEach(vo => {
             let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
@@ -466,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /** 스토어 사이드바 내용 담기 */
     function initStoreSideBar(idx) {
         // 가게 이미지 및 정보
-        as.getListByReg("논현", function(data) {
+        as.getListByReg("서울특별시", function(data) {
             
             data.forEach(vo => {
                 if (vo.store_idx == idx) {

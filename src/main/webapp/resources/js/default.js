@@ -13,6 +13,9 @@ for (let hrefs of CSS_FILE_PATH) {
 };
 let thisPlace = "";
 
+// 현위치 변수 선언
+let currentLat;
+let currentLng;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	
@@ -52,16 +55,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 // 위치 정보 (위도,경도)
 function getCurrentPlace(){
 	window.navigator.geolocation.getCurrentPosition(function(position){
-			var lat = position.coords.latitude;
-			var lng = position.coords.longitude;
+			currentLat = position.coords.latitude;
+			currentLng = position.coords.longitude;
 
-			getAddr(lat, lng);
+			getAddr(currentLat, currentLng);
 			
 		},function(error){
 			switch(error.code){
 			case error.PERMISSION_DENIED: str="사용자 거부"; break;
 			case error.POSITION_UNAVAILABLE: str="지리정보 없음"; break;
-	        case error.TIMEOUT: str="시간 초과"; break;
+			case error.TIMEOUT: str="시간 초과"; break;
 		}
 	});
 }

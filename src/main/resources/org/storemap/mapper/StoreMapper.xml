@@ -53,7 +53,8 @@
 	 	store_content = #{store_content},
 	 	store_rnum = #{store_rnum},
 	 	store_lat = ${store_lat},
-	 	store_lng = ${store_lng}
+	 	store_lng = ${store_lng},
+	 	store_regcode = ${store_regcode}
 	 	where store_idx = #{store_idx}
 	</update>
 	<!-- 3.점포 삭제  -->

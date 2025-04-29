@@ -28,7 +28,9 @@
     <label for="email">이메일</label>
     <input type="text" id="email" name="store_email" value="${vo.store_email}">
     
-    <label for="store-loc">위치 설정</label><button id="store-loc">설정</button>
+    <label for="store-loc">위치 설정</label>
+    <button id="store-loc">설정</button>
+    <button id="panToCurrent">내 위치</button>
     <div class="map" id="store-loc" style="width:auto; height:400px;"></div>
     
     <input type="text" id="lat" name="store_lat" value="${vo.store_lat}">
@@ -36,8 +38,11 @@
     
     <label for="address">주소</label>
     <input type="text" id="address" name="store_address" value="${vo.store_address}">
-
-    <label for="area">활동 지역</label>
+	
+	<label for="address">행정코드</label>
+    <input type="text" id="regcode" name="store_regcode" value="${vo.store_regcode}">
+	
+    <label for="area">주요 활동 지역</label>
     <input type="text" id="area" name="store_area" value="${vo.store_area}">
     <%--     <select id="area" name="store_area">
     	<option value="${vo.store_area}" selected hidden>${vo.store_area}</option>
