@@ -31,7 +31,7 @@
 			</c:when>
 			<%-- 점포 회원 --%>
 			<c:when test="${userType == 'owner'}">
-				<li><a href="/store/storeModify?store_idx=${sessionScope.storeIdx}">점포관리</a></li>
+				<li><a href="/store/storeModify?store_idx=${storeIdx}">점포관리</a></li>
 			</c:when>
 			<%-- 기업 회원 --%>
 			<c:when test="${userType == 'enter'}">

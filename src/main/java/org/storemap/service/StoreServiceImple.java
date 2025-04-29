@@ -57,6 +57,12 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public StoreVO getMember(int member_idx) {
+		log.info("getMember..."+member_idx);
+		return mapper.getMember(member_idx);
+	}
+	
+	@Override
 	public List<StoreVO> getNameList(String store_name) {
 		log.info("getNameList..."+store_name);
 		return mapper.getStoreNameList(store_name);

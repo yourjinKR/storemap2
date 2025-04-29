@@ -43,12 +43,16 @@ public class StoreController {
 	
 	// 점포 추가
 	@PostMapping("/storeRegister")
-	public String storeRgister(StoreVO vo) {
+	public String storeRgister(@RequestParam("member_idx") int member_idx, StoreVO vo) {
 		log.info("storeRegister..."+vo);
-		storeService.register(vo);
-		int idx = vo.getStore_idx();
-		storeRequestService.register(idx);
-		return "redirect:/store/menu?store_idx="+vo.getStore_idx();
+		if(storeService.getMember(member_idx) != null) {
+			System.out.println("이미 점포 신청중 입니다!!");
+			return "redirect:/";
+		}else {
+			storeService.register(vo);
+			storeRequestService.register(member_idx);
+			return "redirect:/store/menu?store_idx="+vo.getStore_idx();
+		}
 	}
 	// 점포 등록 페이지 이동
 	@GetMapping("/storeRegister")

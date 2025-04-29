@@ -66,13 +66,13 @@ public class MemberController {
 			Model model) {
 		// member 테이블 검증
 		MemberVO member = memberService.mLogin(id, pw);
-		StoreVO store;
 		if(member != null) {
-			if(member.getMember_type() == "owner") {
-				store = storeService.getStore(member.getMember_idx());
+			member.setMember_pw(null);
+			//store 세션생성
+			if(member.getMember_type().equals("owner")) {
+				StoreVO store = storeService.getStore(member.getMember_idx());
 				session.setAttribute("storeIdx", store.getStore_idx());
 			}
-			member.setMember_pw(null);
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
 			session.setAttribute("userName", member.getMember_name());
