@@ -1,10 +1,14 @@
 package org.storemap.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.storemap.domain.Criteria;
+import org.storemap.domain.EventDTO;
+import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.mapper.EventMapper;
 
@@ -49,11 +53,22 @@ public class EventServiceImple implements EventService{
 	}
 	
 	// 이벤트 리스트
+	@Transactional
 	@Override
-	public List<EventVO> getList(Criteria cri) {
-		return mapper.getList(cri);
+	public List<EventVO> getFilterList(EventDTO edto){
+		if(edto.getEventFilter().getSort_type().equals("eventEndDate")) {
+			edto.getEventFilter().setSort_type("event_bstopdate");
+		}else {
+			edto.getEventFilter().setSort_type("event_rstopdate");
+		}
+		List<EventVO> list = null;
+		list = mapper.getFilterList(edto);
+		list.forEach(event -> {
+			event.setMax_store(mapper.endMaxCount(event.getEvent_idx()));
+		});
+		return list;
 	}
-	
+
 	// 이벤트 좋아요
 	@Override
 	public int updateFavorite(int event_idx) {

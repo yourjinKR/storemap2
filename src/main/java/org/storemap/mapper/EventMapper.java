@@ -1,8 +1,11 @@
 package org.storemap.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.storemap.domain.Criteria;
+import org.storemap.domain.EventDTO;
+import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 
 public interface EventMapper {
@@ -14,10 +17,12 @@ public interface EventMapper {
 	public List<EventVO> getListEndDate(String searchDate);
 	
 	
+	// 이벤트 신청 최대 값
+	public int endMaxCount(int event_idx);
 	// 이벤트 리스트 갯수
 	public int getListCount();
 	// 이벤트 리스트
-	public List<EventVO> getList(Criteria cri);
+	public List<EventVO> getFilterList(EventDTO edto);
 	// 이벤트 좋아요
 	public int updateFavorite(int event_idx);
 	// 이벤트 상세보기

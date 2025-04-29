@@ -1,8 +1,5 @@
 package org.storemap.domain;
 
-import java.sql.Date;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventDayVO {
-	private int eday_idx, event_idx, store_max;
-	private Date event_starttime, event_stoptime;
+public class EventDTO {
+	private EventFilterVO eventFilter;
+    private Criteria criteria;
 }

@@ -16,8 +16,18 @@ let thisPlace = "";
 // 현위치 변수 선언
 let currentLat;
 let currentLng;
-
+let pageNum = null;
+let amount = null;
 document.addEventListener("DOMContentLoaded", (event) => {
+	pageNum = new URLSearchParams(location.search).get("pageNum");
+	amount = new URLSearchParams(location.search).get("amount");
+	
+	if(!pageNum || !amount){
+		pageNum = 1;
+		amount = 20;
+	}
+	
+	setStorageData(pageNum, amount);
 	
 	// 사이드바
 	let mypage = document.querySelector(".right-div .profile");
@@ -44,13 +54,37 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// 사이드바 로그아웃
 	sidebarLogout();
 	
+	// 헤더 검색창
 	let search = document.querySelector(".search-bar input[name='search']");
 	search.addEventListener("keydown", function(e){
 		if(e.keyCode == 13){
 			location.href="/store/map";
 		}
 	})
+	
+	
+	
 })
+
+
+function pager(){
+	// 페이징 처리
+	let aEles= document.querySelectorAll(".page-nation li a");
+	if(aEles != null && pageNum != null && amount != null){
+	
+		aEles.forEach(aEles => {
+			aEles.addEventListener("click", function(e){
+				e.preventDefault();
+				
+				let pageNum = this.getAttribute("href");
+				if(window.location.pathname == "/event/eventList"){
+					eventFilter(pageNum, amount);
+				}
+			})
+		})
+	}
+}
+
 
 // 위치 정보 (위도,경도)
 function getCurrentPlace(){
@@ -66,7 +100,25 @@ function getCurrentPlace(){
 			case error.POSITION_UNAVAILABLE: str="지리정보 없음"; break;
 			case error.TIMEOUT: str="시간 초과"; break;
 		}
-	});
+	},{
+        enableHighAccuracy: true,  // 고정밀도 위치 요청
+        timeout: 5000,             // 5초 이내에 위치 정보를 가져오지 않으면 오류 처리
+        maximumAge: 0              // 캐시된 위치 정보 사용 안 함
+    });
+}
+
+//로컬 스토리지 저장
+function setStorageData(pageNum, amount){
+	let pageData = {
+			pageNum : pageNum,
+			amount : amount
+	};
+	localStorage.setItem("page_data", JSON.stringify(pageData));
+}
+
+//로컬 스토리지 출력
+function getStorageData(){
+	return JSON.parse(localStorage.getItem("page_data"));
 }
 
 // 위치 정보 주소 변환
@@ -92,20 +144,6 @@ function getAddr(lat, lng){
 	.catch(err => console.log(err));
 };
 
-// 페이징
-// if(pageNumData != null || amountData != null){
-//	
-// let pageNumData = document.querySelector(".page-nation").dataset['pagenum'];
-// let amountData = document.querySelector(".page-nation").dataset['amount'];
-// // URL에서 파라미터 값 찾아 스토리지 저장
-// let pageNum = new URLSearchParams(location.search).get("pageNum");
-// let amount = new URLSearchParams(location.search).get("amount");
-// if(!pageNum || !amount){
-// pageNum = 1;
-// amount = 5;
-// }
-// }
-// setStorageData(pageNum, amount);
 
 //날짜 포멧
 function dateFormate(date){

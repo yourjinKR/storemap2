@@ -12,26 +12,35 @@ h3{font-size: 32px}
 .board-card .event-date{position: absolute;bottom: 5px;right: 10px;border:1px solid #222;border-radius:15px;background:#fff;padding:5px 10px;display:inline-block}
 
 /* 리스트 타입 */
-#list td{padding:10px;font-size:16px;}
+#eventList td{padding:10px;font-size:16px;}
 .board-list{width: 100%;font-size: 16px;border-top:1px solid #222;border-right:1px solid #222;}
-.board-list a{display:block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width:750px}
+.board-list a{display:block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width:100%}
 .board-list span{font-size:14px;display:inline-block}
 
 
 .board-list tr > td{border-bottom: 1px solid #222;border-left: 1px solid #222;vertical-align: middle;}
 .board-list tr > td:nth-child(n+2) {text-align:center;}
-.board-list tr > td:nth-child(2) {border-left:none}
 
 .board-type {gap:5px;}
+.board-type input[type="checkbox"],
 .board-type input[type="radio"]{width: 0;height: 0;z-index: -1; position:absolute; ;left: -9999px}
-.board-type input[type="radio"] + label{display:block; font-size: 0;width: 32px;height: 32px;}
-.board-type input[type="radio"] + label .material-symbols-outlined {font-size:32px;font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 32}
-.board-type input[type="radio"]:checked + label .material-symbols-outlined {font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 32}
+.board-type input[type="checkbox"] + label,
+.board-type input[type="radio"] + label{display:flex; justify-content: center; align-items:center; min-width: 35px;height: 35px;border:1px solid #222; border-radius:5px;padding:5px;cursor:pointer}
+.board-type input[type="checkbox"] + label .material-symbols-outlined,
+.board-type input[type="radio"] + label .material-symbols-outlined {font-size:32px;font-variation-settings:'FILL' 0,'wght' 200,'GRAD' 0,'opsz' 48}
+.board-type input[type="checkbox"]:checked + label .material-symbols-outlined,
+.board-type input[type="radio"]:checked + label .material-symbols-outlined {font-variation-settings:'FILL' 1,'wght' 200,'GRAD' 0,'opsz' 48}
 
-/* 좋아요 아이콘 */
-input[type="checkbox"]{width: 0;height: 0;z-index: -1; position:absolute; ;left: -9999px}
-input[type="checkbox"] + label {font-size:24px;color:#222;font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32}
-input[type="checkbox"]:checked + label {font-size:24px;color:#f00;font-variation-settings:'FILL' 1,'wght' 100,'GRAD' 0,'opsz' 32}
-.board-list tr > td:nth-child(n+3) {text-align:center;}
+
+.filter{position: absolute;top: 105px;right: 27%;height:0; opacity: 0; transition:0.1s ease; border: 1px solid #ccc;background: #fff;padding:10px;border-radius:5px;z-index:3;box-shadow: 5px 5px 5px rgba(0,0,0,0.1);}
+.filter.on{height:auto;opacity: 1}
+.filter li{border-bottom: 1px solid #d9d9d9;padding:10px 0;}
+.filter li:last-child{border-bottom:none;text-align:right}
+.filter li label{border:1px solid #ccc;background:#fff;color:#222;display:inline-block;padding:5px 10px;border-radius:15px;font-size:18px;}
+.filter li input[type="checkbox"]:checked + label,
+.filter li input[type="radio"]:checked + label{border:1px solid #ccc;background:#1985ff;color:#fff;}
+.filter h4{padding-bottom: 5px;margin-bottom: 5px;display:flex;align-items: center;gap:5px;}
+.filter h4 .material-symbols-outlined {font-size:18px;font-variation-settings:'FILL' 0,'wght' 200,'GRAD' 0,'opsz' 48}
+.filter button{background:#1985ff;color:#fff;border:none;padding:5px 20px; border-radius:5px;font-size:18px;}
 
 

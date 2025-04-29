@@ -84,6 +84,38 @@
 			WHERE RN > (#{pageNum} - 1) * #{amount}
 		]]> 
 	</select>
+	<select id="getFilterList" resultType="org.storemap.domain.EventVO">
+		<![CDATA[ 
+			SELECT * FROM (
+			    SELECT
+			    	EVENT_IDX, 
+			    	ENTER_IDX,
+			    	EVENT_TITLE, 
+			    	EVENT_RSTARTDATE, 
+			    	EVENT_RSTOPDATE,
+			    	EVENT_BSTARTDATE,
+			    	EVENT_BSTOPDATE, 
+			    	ROWNUM RN FROM (
+						SELECT 
+							EVENT_IDX, 
+							ENTER_IDX, 
+							EVENT_TITLE, 
+							EVENT_RSTARTDATE, 
+							EVENT_RSTOPDATE,
+							EVENT_BSTARTDATE,
+							EVENT_BSTOPDATE
+	 				FROM EVENT
+		   			ORDER BY ${eventFilter.sort_type} ASC)
+				WHERE ROWNUM <= #{criteria.pageNum} * #{criteria.amount})
+			WHERE RN > (#{criteria.pageNum} - 1) * #{criteria.amount}
+		]]> 
+	</select>
+	
+	<select id="endMaxCount" parameterType="int" resultType="int">
+		SELECT SUM(STORE_MAX) 
+		FROM EVENT_DAY 
+		WHERE EVENT_IDX = #{event_idx}
+	</select>
 	
 	
 </mapper>

@@ -4,27 +4,25 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
-import org.storemap.domain.EventDayVO;
+import org.storemap.domain.EventDTO;
+import org.storemap.domain.EventFilterVO;
+import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
-import org.storemap.domain.MemberVO;
 import org.storemap.domain.PageDTO;
 import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
@@ -46,28 +44,32 @@ public class EventController {
 	@Autowired
 	private CommentEventServiceImple commentEventService;
 	
+	
 	@GetMapping("/eventList")
-	public String eventList(Model model, Criteria cri) {	
+	public String eventList() {	
+		return "index";
+	}
+	
+	@PostMapping(value = "/eventFilter",
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE,
+			},
+			consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<EventResponseDTO> eventFilter(@RequestBody EventFilterVO filter, Criteria cri, Model model, String pageNum, String amount) {
 		List<EventVO> list = null;
-		int parsePageNum = cri.getPageNum();
-		int parseAmount = cri.getAmount();
-		
-		if(parsePageNum == 0) {
-			cri.setPageNum(1);
-		}
-		if(parseAmount == 0) {
-			cri.setAmount(15);
-		}
+
+		cri.setPageNum(filter.getPage_num());
+		cri.setAmount(filter.getAmount_num());
 		
 		int total = eventService.getListCount();
 		PageDTO pdto = new PageDTO(cri, total);
-		list = eventService.getList(cri);
+		EventDTO edto = new EventDTO(filter, cri);
+		EventResponseDTO resdto = new EventResponseDTO(pdto, eventService.getFilterList(edto));
 		
-		model.addAttribute("list", list);
-		model.addAttribute("pageMaker",pdto);
 		
-		return "index";
+		return new ResponseEntity<EventResponseDTO>(resdto,HttpStatus.OK);
 	}
+	
 	
 	@ResponseBody
 	@GetMapping("/favorite/{event_idx}") 
