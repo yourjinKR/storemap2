@@ -27,11 +27,6 @@
 		WHERE LETTER_IDX = #{letter_idx}
 	</select>
 	
-	<!-- 이벤트 승인된 이벤트 IDX -->
-	<select id="getSignList">
-		SELECT EDAY_IDX FROM EVENT_REQUEST WHERE = #{event_idx} AND PON != 0
-	</select>
-	
 	<!-- 일차별 참여 목록 -->
 	<!-- EVENT -->
 	<resultMap type="org.storemap.domain.EventVO" id="eventVO">

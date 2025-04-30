@@ -17,6 +17,8 @@ public interface EventMapper {
 	
 	// 이벤트 신청 최대 값
 	public int endMaxCount(int event_idx);
+	// 이벤트 신청 승인 점포
+	public int getSignList(int event_idx);
 	// 이벤트 리스트 갯수
 	public int getListCount(EventFilterVO filter);
 	// 이벤트 리스트

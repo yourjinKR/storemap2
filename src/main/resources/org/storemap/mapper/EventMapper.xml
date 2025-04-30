@@ -46,17 +46,59 @@
 		SELECT * FROM EVENT WHERE EVENT_IDX = #{EVENT_IDX}
 	</select>
 	
+	<!-- 이벤트 승인된 점포 수  -->
+	<select id="getSignList" parameterType="int" resultType="int">
+		SELECT COUNT(*) 
+		FROM EVENT_REQUEST 
+		JOIN (
+		    SELECT EDAY_IDX 
+		    FROM EVENT_DAY 
+		    WHERE EVENT_IDX = #{event_idx})
+		USING (EDAY_IDX)
+		WHERE PON > 0
+	</select>
+	
 	<!-- 리스트 총 갯수 -->
 	<select id="getListCount" resultType="int">
-		SELECT COUNT(*) FROM EVENT
-		<choose>
-			<when test="sort_type == 'event_bstopdate'">
-				<![CDATA[ WHERE event_bstartdate <= SYSDATE AND event_bstopdate >= SYSDATE]]>
-			</when>
-			<otherwise>
- 				<![CDATA[ WHERE event_rstartdate <= SYSDATE AND event_rstopdate >= SYSDATE]]>
-			</otherwise>
-		</choose> 
+		<![CDATA[ 
+		SELECT COUNT(*)
+	    FROM EVENT E
+	
+	    LEFT JOIN (
+	        SELECT EVENT_IDX, COUNT(*) AS APPLY_COUNT
+	        FROM EVENT_REQUEST 
+	        JOIN EVENT_DAY USING (EDAY_IDX)
+	        WHERE PON > 0
+	        GROUP BY EVENT_IDX
+	    ) ER ON E.EVENT_IDX = ER.EVENT_IDX
+	
+	    LEFT JOIN (
+	        SELECT EVENT_IDX, SUM(STORE_MAX) AS MAX_COUNT
+	        FROM EVENT_DAY
+	        GROUP BY EVENT_IDX
+	    ) ED ON E.EVENT_IDX = ED.EVENT_IDX
+		
+	    WHERE]]>
+	    <choose>
+           	<when test="list_state == 'open'">
+           		<![CDATA[ 
+            		E.EVENT_BSTARTDATE <= SYSDATE 
+            		AND E.EVENT_BSTOPDATE >= SYSDATE
+            		AND E.EVENT_RSTOPDATE > SYSDATE
+                    AND (APPLY_COUNT != MAX_COUNT 
+	                    OR APPLY_COUNT IS NULL)
+           		]]>
+           	</when>
+           	<when test="list_state == 'planned'">
+           		<![CDATA[ E.EVENT_BSTARTDATE > SYSDATE]]>
+           	</when>
+           	<otherwise>
+                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+           	</otherwise>
+		</choose>
+       	<if test="board_search != null and board_search != ''">
+    		AND E.EVENT_TITLE LIKE '%${board_search}%'
+        </if>
 	</select>
 	
 	<!-- GET IDX -->
@@ -67,37 +109,72 @@
 	<select id="getFilterList" resultType="org.storemap.domain.EventVO">
 		<![CDATA[ 
 			SELECT * FROM (
-			    SELECT
-			    	EVENT_IDX, 
-			    	ENTER_IDX,
-			    	EVENT_TITLE, 
-			    	EVENT_RSTARTDATE, 
-			    	EVENT_RSTOPDATE,
-			    	EVENT_BSTARTDATE,
-			    	EVENT_BSTOPDATE, 
-			    	ROWNUM RN FROM (
-						SELECT 
-							EVENT_IDX, 
-							ENTER_IDX, 
-							EVENT_TITLE, 
-							EVENT_RSTARTDATE, 
-							EVENT_RSTOPDATE,
-							EVENT_BSTARTDATE,
-							EVENT_BSTOPDATE
-	 				FROM EVENT
-					]]>
-					<choose>
-						<when test="eventFilter.sort_type == 'event_bstopdate'">
-				 				<![CDATA[ WHERE event_bstartdate <= SYSDATE AND event_bstopdate >= SYSDATE]]>
-						</when>
-						<otherwise>
-				 				<![CDATA[ WHERE event_rstartdate <= SYSDATE AND event_rstopdate >= SYSDATE]]>
-						</otherwise>
-					</choose>
-					<![CDATA[ 
-		   			ORDER BY ${eventFilter.sort_type} ASC)
-				WHERE ROWNUM <= #{criteria.pageNum} * #{criteria.amount})
-			WHERE RN > (#{criteria.pageNum} - 1) * #{criteria.amount}
+		        SELECT
+		            EVENT_IDX, 
+		            ENTER_IDX,
+		            EVENT_TITLE, 
+		            EVENT_RSTARTDATE, 
+		            EVENT_RSTOPDATE,
+		            EVENT_BSTARTDATE,
+		            EVENT_BSTOPDATE,
+                     APPLY_COUNT,
+                        MAX_COUNT,
+		            ROWNUM RN
+		        FROM (
+		            SELECT 
+		                E.EVENT_IDX, 
+		                E.ENTER_IDX, 
+		                E.EVENT_TITLE, 
+		                E.EVENT_RSTARTDATE, 
+		                E.EVENT_RSTOPDATE,
+		                E.EVENT_BSTARTDATE,
+		                E.EVENT_BSTOPDATE,
+                        APPLY_COUNT,
+                        MAX_COUNT
+		            FROM EVENT E
+		
+		            LEFT JOIN (
+		                SELECT EVENT_IDX, COUNT(*) APPLY_COUNT
+		                FROM EVENT_REQUEST 
+		                JOIN EVENT_DAY USING (EDAY_IDX)
+		                WHERE PON > 0
+		                GROUP BY EVENT_IDX
+		            ) ER ON E.EVENT_IDX = ER.EVENT_IDX
+		
+		            LEFT JOIN (
+		                SELECT EVENT_IDX, SUM(STORE_MAX) MAX_COUNT
+		                FROM EVENT_DAY
+		                GROUP BY EVENT_IDX
+		            ) ED ON E.EVENT_IDX = ED.EVENT_IDX
+                    
+		            WHERE 
+		            ]]>
+		            <choose>
+		            	<when test="eventFilter.list_state == 'open'">
+		            		<![CDATA[ 
+			            		E.EVENT_BSTARTDATE <= SYSDATE 
+			            		AND E.EVENT_BSTOPDATE >= SYSDATE
+			            		AND E.EVENT_RSTOPDATE > SYSDATE
+	                        	AND (APPLY_COUNT != MAX_COUNT 
+	                    			OR APPLY_COUNT IS NULL)
+		            		]]>
+		            	</when>
+		            	<when test="eventFilter.list_state == 'planned'">
+		            		<![CDATA[ E.EVENT_BSTARTDATE > SYSDATE]]>
+		            	</when>
+		            	<otherwise>
+			                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+		            	</otherwise>
+		            </choose>
+              		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
+				    	AND E.EVENT_TITLE LIKE '%${eventFilter.board_search}%'
+			        </if>
+		            <![CDATA[ 
+	                ORDER BY ${eventFilter.sort_type} ASC
+		        )
+		        WHERE ROWNUM <= #{criteria.pageNum} * #{criteria.amount}
+		    )
+		    WHERE RN > (#{criteria.pageNum} - 1) * #{criteria.amount}
 		]]> 
 	</select>
 	

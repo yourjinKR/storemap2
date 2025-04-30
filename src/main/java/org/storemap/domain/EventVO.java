@@ -22,5 +22,6 @@ public class EventVO {
 	// 
 	private List<EventDayVO> join_eday;
 	
+	private int approved_store;
 	private int max_store;
 }

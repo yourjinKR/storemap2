@@ -7,6 +7,7 @@
 	<div class="list-top mb30">
 		<h3>진행중인 이벤트 리스트</h3>
 	</div>
+	
 	<div class="board-top d_f mb15">
 		<div class="left-con">
 			<label for="amount">게시물 개수 : </label> 
@@ -39,9 +40,9 @@
 				</div>
 			</div>
 			<div class="search">
-				<label for="board-search">검색 : </label> <input type="text"
-					id="board-search">
-				<button>검색</button>
+				<label for="boardSearch">검색 : </label> 
+				<input type="text" id="boardSearch">
+				<button onclick="eventFilter();">검색</button>
 			</div>
 		</div>
 	</div>
@@ -51,14 +52,14 @@
 			<h4>
 				정렬 <span class="material-symbols-outlined"> swap_vert </span>
 			</h4>
-			<input type="radio" name="sort" id="event_bstopdate" checked> <label for="event_bstopdate">행사 종료일</label>
-			<input type="radio" name="sort" id="event_rstopdate" > <label for="event_rstopdate">입점 마감일</label>
+			<input type="radio" name="sort" id="event_bstopdate" ${loginUser eq null || userType eq 'user' ? 'checked' : ''}> <label for="event_bstopdate">행사 종료일</label>
+			<input type="radio" name="sort" id="event_rstopdate" ${userType eq 'enter' || userType eq 'owner' ? 'checked' : ''}> <label for="event_rstopdate">입점 마감일</label>
 		</li>
 		<li>
 			<h4>일정</h4> 
 			<input type="checkbox" id="eventBdate" checked> 
 			<label for="eventBdate">행사 진행일</label> 
-			<input type="checkbox" id="eventRdate"> 
+			<input type="checkbox" id="eventRdate" checked> 
 			<label for="eventRdate">입점 신청일</label> 
 		</li>
 		<li>
@@ -66,6 +67,13 @@
 		</li>
 		<li><button type="button" onclick="eventFilter();" >적용</button></li>
 	</ul>
+	
+	<ul class="board-tab mb5">
+		<li><a href="open" class="on">진행중인 이벤트</a></li>
+		<li><a href="planned">예정된 이벤트 </a></li>
+		<li><a href="end">종료된 이벤트</a></li>
+	</ul>
+	
 	<table class="barod board-list" id="eventList">
 		<colgroup>
 			<col width="*">

@@ -55,15 +55,11 @@ public class EventServiceImple implements EventService{
 	@Transactional
 	@Override
 	public List<EventVO> getFilterList(EventDTO edto){
-//		if(edto.getEventFilter().getSort_type().equals("eventEndDate")) {
-//			edto.getEventFilter().setSort_type("event_bstopdate");
-//		}else {
-//			edto.getEventFilter().setSort_type("event_rstopdate");
-//		}
 		List<EventVO> list = null;
 		list = mapper.getFilterList(edto);
 		list.forEach(event -> {
 			event.setMax_store(mapper.endMaxCount(event.getEvent_idx()));
+			event.setApproved_store(mapper.getSignList(event.getEvent_idx()));
 		});
 		return list;
 	}

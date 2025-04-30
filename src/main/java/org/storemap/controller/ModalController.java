@@ -166,7 +166,6 @@ public class ModalController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("letterType", type);
 			map.put("loginUser", (String) session.getAttribute("loginUser"));
-			log.info("letter : " + letterService.getLetterList(map));
 			if(letterService.getLetterList(map) != null) {
 				result = new ResponseEntity<List<LetterVO>>(letterService.getLetterList(map), HttpStatus.OK);
 			}else{
