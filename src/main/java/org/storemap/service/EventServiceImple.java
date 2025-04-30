@@ -47,20 +47,19 @@ public class EventServiceImple implements EventService{
 	
 	// 이벤트 리스트 갯수
 	@Override
-	public int getListCount() {
-		log.info("getListCount... " + mapper.getListCount());
-		return mapper.getListCount();
+	public int getListCount(EventFilterVO filter) {
+		return mapper.getListCount(filter);
 	}
 	
 	// 이벤트 리스트
 	@Transactional
 	@Override
 	public List<EventVO> getFilterList(EventDTO edto){
-		if(edto.getEventFilter().getSort_type().equals("eventEndDate")) {
-			edto.getEventFilter().setSort_type("event_bstopdate");
-		}else {
-			edto.getEventFilter().setSort_type("event_rstopdate");
-		}
+//		if(edto.getEventFilter().getSort_type().equals("eventEndDate")) {
+//			edto.getEventFilter().setSort_type("event_bstopdate");
+//		}else {
+//			edto.getEventFilter().setSort_type("event_rstopdate");
+//		}
 		List<EventVO> list = null;
 		list = mapper.getFilterList(edto);
 		list.forEach(event -> {

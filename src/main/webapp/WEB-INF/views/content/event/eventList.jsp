@@ -51,8 +51,8 @@
 			<h4>
 				정렬 <span class="material-symbols-outlined"> swap_vert </span>
 			</h4>
-			<input type="radio" name="sort" id="eventEndDate" checked> <label for="eventEndDate">행사 종료일</label>
-			<input type="radio" name="sort" id="registerEndDate" > <label for="registerEndDate">입점 마감일</label>
+			<input type="radio" name="sort" id="event_bstopdate" checked> <label for="event_bstopdate">행사 종료일</label>
+			<input type="radio" name="sort" id="event_rstopdate" > <label for="event_rstopdate">입점 마감일</label>
 		</li>
 		<li>
 			<h4>일정</h4> 

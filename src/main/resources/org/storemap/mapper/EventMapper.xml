@@ -48,7 +48,15 @@
 	
 	<!-- 리스트 총 갯수 -->
 	<select id="getListCount" resultType="int">
-		SELECT COUNT(*) FROM EVENT 
+		SELECT COUNT(*) FROM EVENT
+		<choose>
+			<when test="sort_type == 'event_bstopdate'">
+				<![CDATA[ WHERE event_bstartdate <= SYSDATE AND event_bstopdate >= SYSDATE]]>
+			</when>
+			<otherwise>
+ 				<![CDATA[ WHERE event_rstartdate <= SYSDATE AND event_rstopdate >= SYSDATE]]>
+			</otherwise>
+		</choose> 
 	</select>
 	
 	<!-- GET IDX -->
@@ -56,34 +64,6 @@
 		SELECT EVENT_IDX FROM EVENT WHERE ENTER_IDX = #{enter_idx}
 	</select>
 	
-	
-	<!-- 리스트 출력 -->
-	<select id="getList" resultType="org.storemap.domain.EventVO">
-		<![CDATA[ 
-			SELECT * FROM (
-			    SELECT
-			    	EVENT_IDX, 
-			    	ENTER_IDX,
-			    	EVENT_TITLE, 
-			    	EVENT_RSTARTDATE, 
-			    	EVENT_RSTOPDATE,
-			    	EVENT_BSTARTDATE,
-			    	EVENT_BSTOPDATE, 
-			    	ROWNUM RN FROM (
-						SELECT 
-							EVENT_IDX, 
-							ENTER_IDX, 
-							EVENT_TITLE, 
-							EVENT_RSTARTDATE, 
-							EVENT_RSTOPDATE,
-							EVENT_BSTARTDATE,
-							EVENT_BSTOPDATE
-	 				FROM EVENT
-		   			ORDER BY EVENT_IDX DESC)
-				WHERE ROWNUM <= #{pageNum} * #{amount})
-			WHERE RN > (#{pageNum} - 1) * #{amount}
-		]]> 
-	</select>
 	<select id="getFilterList" resultType="org.storemap.domain.EventVO">
 		<![CDATA[ 
 			SELECT * FROM (
@@ -105,6 +85,16 @@
 							EVENT_BSTARTDATE,
 							EVENT_BSTOPDATE
 	 				FROM EVENT
+					]]>
+					<choose>
+						<when test="eventFilter.sort_type == 'event_bstopdate'">
+				 				<![CDATA[ WHERE event_bstartdate <= SYSDATE AND event_bstopdate >= SYSDATE]]>
+						</when>
+						<otherwise>
+				 				<![CDATA[ WHERE event_rstartdate <= SYSDATE AND event_rstopdate >= SYSDATE]]>
+						</otherwise>
+					</choose>
+					<![CDATA[ 
 		   			ORDER BY ${eventFilter.sort_type} ASC)
 				WHERE ROWNUM <= #{criteria.pageNum} * #{criteria.amount})
 			WHERE RN > (#{criteria.pageNum} - 1) * #{criteria.amount}

@@ -1,4 +1,3 @@
-console.log("default load");
 const CSS_FILE_PATH = [
 		'/resources/css/reset.css',
 		'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
@@ -13,12 +12,16 @@ for (let hrefs of CSS_FILE_PATH) {
 };
 let thisPlace = "";
 
+
 // 현위치 변수 선언
-let currentLat;
-let currentLng;
-let pageNum = null;
-let amount = null;
+let currentLat, currentLng, pageNum, amount, user_id, auth, today = null;
+
 document.addEventListener("DOMContentLoaded", (event) => {
+	// 세션 데이터 (아이디/권한)
+	userId = document.querySelector("input[name='sessionId']").value;
+	auth = document.querySelector("input[name='auth']").value;
+	today = dateFormate(new Date());
+	
 	pageNum = new URLSearchParams(location.search).get("pageNum");
 	amount = new URLSearchParams(location.search).get("amount");
 	
@@ -62,16 +65,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		}
 	})
 	
-	
-	
 })
 
 
+// 페이징 처리
 function pager(){
-	// 페이징 처리
 	let aEles= document.querySelectorAll(".page-nation li a");
 	if(aEles != null && pageNum != null && amount != null){
-	
 		aEles.forEach(aEles => {
 			aEles.addEventListener("click", function(e){
 				e.preventDefault();

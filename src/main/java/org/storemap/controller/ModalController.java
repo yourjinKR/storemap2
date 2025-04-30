@@ -157,7 +157,8 @@ public class ModalController {
 	// 송수신 메시지 리스트
 	@GetMapping(value = "/getLetterList/{type}",
 			produces = {
-				MediaType.APPLICATION_JSON_VALUE
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE
 			})
 	public ResponseEntity<List<LetterVO>> getLetterList(@PathVariable("type") String type, HttpSession session){
 		ResponseEntity<List<LetterVO>> result = null;
@@ -165,8 +166,12 @@ public class ModalController {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("letterType", type);
 			map.put("loginUser", (String) session.getAttribute("loginUser"));
-			
-			result = new ResponseEntity<List<LetterVO>>(letterService.getLetterList(map), HttpStatus.OK);
+			log.info("letter : " + letterService.getLetterList(map));
+			if(letterService.getLetterList(map) != null) {
+				result = new ResponseEntity<List<LetterVO>>(letterService.getLetterList(map), HttpStatus.OK);
+			}else{
+				result = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
 		}
 		return result;
 	}

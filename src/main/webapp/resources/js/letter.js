@@ -39,13 +39,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 	
 	
-	
-	attendList.addEventListener("change",function(){
-		if(this.value != 0){
-			// n일차 참여 점포 리스트
-			getAttendList(this.value);
-		}
-	})
+	if(attendList != null && auth == "enter"){
+		attendList.addEventListener("change",function(){
+			if(this.value != 0){
+				// n일차 참여 점포 리스트
+				getAttendList(this.value);
+			}
+		})
+	}
 	
 	let div2 = document.querySelector(".letter-form td.por");
 	if(div2 != null){
@@ -57,8 +58,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		})
 	}
 
-	
-	if(document.querySelector("input[name='sessionId']").value != ""){
+	if(userId != ""){
 		getLetter("received");
 	}
 })
@@ -103,56 +103,70 @@ function changeLetterModal(page){
 // 쪽지 리스트
 function getLetter(type){
 	fetch(`/modal/getLetterList/${type}`)
-	.then(response => response.json())
+	.then(res => {
+	    if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+	    return res.text();
+	})
+	.then(text => {
+	    if (!text) return null;
+	    return JSON.parse(text);
+	})
 	.then(result => {
-		let str = "";
-		let firstEl = document.querySelector("#list > .letter-list > li").firstElementChild;
-		result.forEach(letter =>{
-			str += `<li>`;
-			if(type == "received"){
-				firstEl.innerHTML = "작성자";
-				str += `<span class="items">${letter.letter_writer}</span>`;				
-			}else{
-				firstEl.innerHTML = "수신자";
-				str += `<span class="items">${letter.letter_receiver}</span>`;								
-			}
-			str += `<a href="${letter.letter_idx}" class="items t-l">${letter.letter_content}</a>`;
-			str += `<span class="items">${dateFormate(letter.letter_regdate)}</span>`;
-			if(type == "sendLetter"){
-				str += `<i class="items material-symbols-outlined drafts">drafts</i>`;
-			}else{
-				if(letter.letter_read > 0){
+		if(result){
+			let str = "";
+			let firstEl = document.querySelector("#list > .letter-list > li").firstElementChild;
+			result.forEach(letter =>{
+				str += `<li>`;
+				if(type == "received"){
+					firstEl.innerHTML = "작성자";
+					str += `<span class="items">${letter.letter_writer}</span>`;				
+				}else{
+					firstEl.innerHTML = "수신자";
+					str += `<span class="items">${letter.letter_receiver}</span>`;								
+				}
+				str += `<a href="${letter.letter_idx}" class="items t-l">${letter.letter_content}</a>`;
+				str += `<span class="items">${dateFormate(letter.letter_regdate)}</span>`;
+				if(type == "sendLetter"){
 					str += `<i class="items material-symbols-outlined drafts">drafts</i>`;
 				}else{
-					str += `<i class="items material-symbols-outlined">mail</i>`;
+					if(letter.letter_read > 0){
+						str += `<i class="items material-symbols-outlined drafts">drafts</i>`;
+					}else{
+						str += `<i class="items material-symbols-outlined">mail</i>`;
+					}
 				}
-			}
-			str += `</li>`;
-
-			if(result.length > 7){
-				document.querySelector("#list .inner").style.setProperty('width', 'calc(100% + 1.5vw)');
-			}else{
-				document.querySelector("#list .inner").style.setProperty('width', '100%');
-			}
-		})
-		document.querySelector("#listBody").innerHTML = str;
-		document.querySelector(".right-div > .icon > span").innerHTML = result.length;
-		
-		
-		// 리스트 클릭 이벤트
-		let letters = document.querySelectorAll(".letter-list a");
-		if(letters.length > 0 && letter != null){
-			letters.forEach(letterEl => {
-				letterEl.addEventListener("click", function(e){
-					e.preventDefault();
-					let letter_idx = letterEl.getAttribute("href");
-					letterView(letter_idx);
-				})
+				str += `</li>`;
+				
+				if(result.length > 7){
+					document.querySelector("#list .inner").style.setProperty('width', 'calc(100% + 1.5vw)');
+				}else{
+					document.querySelector("#list .inner").style.setProperty('width', '100%');
+				}
 			})
+			document.querySelector("#listBody").innerHTML = str;
+			document.querySelector(".right-div > .icon > span").innerHTML = result.length;
+			
+			
+			// 리스트 클릭 이벤트
+			let letters = document.querySelectorAll(".letter-list a");
+			if(letters.length > 0 && letter != null){
+				letters.forEach(letterEl => {
+					letterEl.addEventListener("click", function(e){
+						e.preventDefault();
+						let letter_idx = letterEl.getAttribute("href");
+						letterView(letter_idx);
+					})
+				})
+			}
+			
+			changeLetterModal("list");
+		}else{
+			let str = "";
+			str += `<li class="empty-data">`;
+			str += 		`<p>데이터 없음</p>`;
+			str += `</li>`;
+			document.querySelector("#listBody").innerHTML = str;
 		}
-		
-		changeLetterModal("list");
-		
 	})
 	.catch(err => console.log(err))
 }
