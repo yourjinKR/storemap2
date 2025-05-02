@@ -5,23 +5,7 @@
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
 <script type="text/javascript" src="/resources/js/map.js"></script>
 <div>
-	<!-- 지도 -->
-    <div id="mapLab">
-<!--  		<div id="clickLatlng" style="width: 1200; height: 80px;"></div>
-		<button id="panToTest">지도 중심좌표 부드럽게 이동시키기</button>
-		<button id="markerTest">마커 생성</button>
-		<button id="markersGen">마커 리스트에 마커 생성</button>		
-		<button id="markersClear">마커 리스트 비우기</button>
-		<button id="markersLog">마커 리스트 요소 확인</button>				
-		<button id="markerListView">등록된 마커 보기</button>
-		<button id="markerListHide">등록된 마커 숨기기</button>
-		<button id="markerViewTest0">idx 0번 가게 보기</button>
-		<button id="markerViewTest1">idx 1번 가게 보기</button>
-		<button id="showMapSideBar">사이드바 열기</button>	
-		<button id="hideMapSideBar">사이드바 닫기</button>	
-		<br> -->
-		<div class="map" id="full" style="width: 1200; height: 1200px;"></div>
-	</div>
+	<div class="map" id="full" style="width: 100%; height: 900px;"></div>
 	<!-- 점포 리스트 사이드바 -->
 	<div class="side-bar" id="store-list">
 		<div id="content">
@@ -39,7 +23,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- 사이드바 리모컨 -->
+	<!-- 사이드바 컨트롤러 -->
 	<div class="side-bar" id="toggle-box">
 		<button class="mapBtn" id="toggle">토글</button>			
 	</div>

@@ -21,6 +21,7 @@
 	</div>
 	<!-- 점포 상세보기 모달 -->
 	<div id="modal">
+		<div class="modal-header"><button class="mapBtn" id="close-store">X</button></div>
 		<div class="modal-content">
 		</div>
 	</div>

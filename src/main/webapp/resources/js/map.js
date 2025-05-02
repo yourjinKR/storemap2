@@ -1,16 +1,14 @@
 console.log("map load");
 
-// 장소 테스트
-const store1 = {store_idx: 1, store_name: "상점1"};
-
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
+
+// ================== 마커 크기 ==================
 const MARKER_WIDTH = 32, // 기본 마커의 너비
     MARKER_HEIGHT = 35; // 기본 마커의 높이
 const CLICKED_WIDTH = 40, // 클릭 마커의 너비
     CLICKED_HEIGHT = 47; // 클릭 마커의 높이
-// 마커 크기
 const markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT), // 기본, 클릭 마커의 크기 
     clickedMarkerSize = new kakao.maps.Size(CLICKED_WIDTH, CLICKED_HEIGHT); // 오버 마커의 크기
 
@@ -44,21 +42,23 @@ document.addEventListener("DOMContentLoaded", () => {
 	linkEle.href = CSS_PATH;
 	document.head.appendChild(linkEle);
 	
-    let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
+    let basicOption = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 	
 	// 지도 이동 테스트 ===============================
 	let container = document.querySelector(".map");
-	basicMap = new kakao.maps.Map(container, optionBasic);
+	basicMap = new kakao.maps.Map(container, basicOption);
 
     // 맵 id별 분기
     mapType = container.getAttribute("id");
     // map.jsp
     if (mapType === "full") {
+        // 가게 상세보기 모달 사이드바 style로 변경
         let storeModal = document.querySelector("#modal");
-        console.log(storeModal);
         storeModal.classList.add("side-bar");
         storeModal.setAttribute("id", "store");
-        console.log(storeModal);
+        // 닫기 버튼 표시
+        let modalHeader = document.querySelector(".modal-header");        
+        modalHeader.style.display = 'block';
     }
     // 영업 위치 설정 지도
     else if (mapType === "store-loc") {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     // 
 
-    // 버튼 서비스
+    // 지도 관련 버튼 서비스
     document.querySelectorAll("button.mapBtn").forEach(btn => {
         btn.addEventListener("click", e => {
             e.preventDefault();
@@ -151,11 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // 현위치 이동 (임시 함수, 추후 수정)
             else if (type === "panToCurrent") {
                 panToLatLng(basicMap, currentLat, currentLng);
-                clickMarker = new kakao.maps.Marker({ 
-                    // 지도 중심좌표에 마커를 생성합니다 
-                    position: new kakao.maps.LatLng(currentLat, currentLng)
-                });
-                clickMarker.setMap(basicMap);
             }
             // 검색
             else if (type === "search") {
@@ -238,7 +233,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let li = searchEleByTitle(title);
 
             showStoreListSideBar();
-            initStoreSideBar(title);
+            // initStoreSideBar(title);
+            viewModalPage(li);
             showStoreSideBar();
             onToggleBtn();
         });
@@ -600,8 +596,8 @@ function panToLatLng(map, lat, lng) {
 
 /** 업로드할 요소 위치를 입력하여 지도를 업로드 함수 (반환값 : 해당 지도 요소) */
 function uploadMap(path, lat, lng) {
-    let optionBasic = {center: new kakao.maps.LatLng(lat, lng), level: 3};
-    let result = new kakao.maps.Map(path, optionBasic);
+    let basicOption = {center: new kakao.maps.LatLng(lat, lng), level: 3};
+    let result = new kakao.maps.Map(path, basicOption);
     return result;
 }
 

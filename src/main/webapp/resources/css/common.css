@@ -22,7 +22,7 @@
 }
 
 .wrap{width:1200px; position:relative;margin:0 auto}
-.wrap.full{width:100%; position:relative; margin:0 auto}
+.wrap.full{width:100%; height:100%; position:relative; margin:0 auto}
 
 /* 리스트 카드형식 */
 .board-card{overflow:hidden;padding: 10px 50px;width:1300px;margin-left:-50px;}

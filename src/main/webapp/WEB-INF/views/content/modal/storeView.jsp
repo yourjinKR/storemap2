@@ -9,7 +9,7 @@
 	<input type="hidden" name="store_idx" value="${svo.store_idx}">
 
     <div class="store-info">
-      <h3>가게정보</h3>
+      <h3>${svo.store_name}</h3>
       <div class="info-text">주소: ${svo.store_address}</div>
       <div class="info-text">영업일: ${svo.store_activity_time}</div>
       <div class="info-text">전화: ${svo.store_num}</div>
