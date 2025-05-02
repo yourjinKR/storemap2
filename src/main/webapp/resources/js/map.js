@@ -52,8 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 맵 id별 분기
     mapType = container.getAttribute("id");
+    // map.jsp
+    if (mapType === "full") {
+        let storeModal = document.querySelector("#modal");
+        console.log(storeModal);
+        storeModal.classList.add("side-bar");
+        storeModal.setAttribute("id", "store");
+        console.log(storeModal);
+    }
     // 영업 위치 설정 지도
-    if (mapType === "store-loc") {
+    else if (mapType === "store-loc") {
         let f = document.forms[0];
         // 위치가 설정되지 않았을 경우
         if (f.lat.value != 0 && f.lng.value != 0) {
@@ -376,7 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // vo 리스트
     let storeVOList = [];
     // 지역명 기반 검색 서비스 함수 실행
-    as.getListByReg("서울특별시", function(data) {
+    as.getListByReg("논현", function(data) {
 
         data.forEach(vo => {
             let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
@@ -388,8 +396,8 @@ document.addEventListener("DOMContentLoaded", () => {
         storeVOList.forEach(vo => {
             // console.log(vo);
             msg += 
-            //`<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
-            	`<li data-store_idx="${vo.store_idx}" name="store_idx">
+            // `<li data-store_idx="${vo.store_idx}" name="store_idx">
+            `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
                 <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
 				<input type="hidden" name="store_address" value="${vo.store_address}">
 				<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
@@ -486,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /** 스토어 사이드바 내용 담기 */
     function initStoreSideBar(idx) {
         // 가게 이미지 및 정보
-        as.getListByReg("서울특별시", function(data) {
+        as.getListByReg("논현", function(data) {
             
             data.forEach(vo => {
                 if (vo.store_idx == idx) {

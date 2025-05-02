@@ -39,15 +39,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- 점포 상세보기 사이드바 -->
-	<div class="side-bar" id="store">
-		<div><button class="mapBtn" id="close-store">X</button></div>
-		<div>
-			<jsp:include page="../modal/storeView.jsp">
-				<jsp:param value="1" name="store_idx"/>
-			</jsp:include>
-		</div>
-	</div>
 	<!-- 사이드바 리모컨 -->
 	<div class="side-bar" id="toggle-box">
 		<button class="mapBtn" id="toggle">토글</button>			

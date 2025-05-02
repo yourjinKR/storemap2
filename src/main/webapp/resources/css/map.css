@@ -1,0 +1,4 @@
+.side-bar#store * {
+    max-width: 100%;
+    box-sizing: border-box; /* 모든 하위 요소도 패딩 포함해 크기 제한 */
+}
