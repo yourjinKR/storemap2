@@ -123,22 +123,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 showStoreMarker("1");
             }
             // 사이드바 열기
-            else if (type === "showStoreListSideBar") {
-                showStoreListSideBar();
+            else if (type === "showListSideBar") {
+                showListSideBar();
             }
             // 사이드바 열기
-            else if (type === "hideStoreListSideBar") {
-                hideStoreListSideBar();
+            else if (type === "hideListSideBar") {
+                hideListSideBar();
             }
             // 토글 버튼
             else if (type === "toggle") {
-                toggleStoreListSideBar();
+                toggleListSideBar();
             }
             // 점포 사이드바 닫기 버튼
             else if (type === "close-store") {
-                storeSideBarCheck = false;
-                semiToggleBtn();
-                closeStoreSideBar();
+                viewSideBarCheck = false;
+                setToggle(300);
+                hideviewSideBar();
             }
             // 우편번호 찾기 버튼
             else if (type === "search-postcode") {
@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
             image : testIcon
         });
 
-        // 마커 이벤트 추가 테스트
+        // 마커 이벤트 추가
         addMarkerEvent(marker);
 
         // 생성된 마커를 배열에 추가
@@ -232,11 +232,10 @@ document.addEventListener("DOMContentLoaded", () => {
             let title = marker.getTitle();
             let li = searchEleByTitle(title);
 
-            showStoreListSideBar();
-            // initStoreSideBar(title);
+            showListSideBar();
             viewModalPage(li);
-            showStoreSideBar();
-            onToggleBtn();
+            showviewSideBar();
+            setToggle(600);
         });
     }
 
@@ -253,18 +252,14 @@ document.addEventListener("DOMContentLoaded", () => {
     /** idx를 받으면 일치하는 마커로 이동 및 강조하는 함수 */
     function showStoreMarker(idx) {
         markerList.forEach(marker => {
-            //console.log(marker.getTitle());
             // idx와 일치시 이동 및 강조
             if (idx === marker.getTitle()) {
-                // 해당 마커의 좌표 출력
-                // console.log(marker.getPosition().getLat());
-                // console.log(marker.getPosition().getLng());
                 // 마커 기준으로 지도 이동
                 panToLatLng(basicMap, marker.getPosition().getLat(), marker.getPosition().getLng());
                 // 마커 강조
                 selectMarker(marker)
             }
-    })
+    });
     }
 
     clickMarker = new kakao.maps.Marker({ 
@@ -430,17 +425,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     // 리스트 중에서 idx 찾기
                     markerList.forEach(marker => {
                         if (marker.getTitle() === idx) {
-                            // console.log(marker.getTitle());
-                            // console.log("idx 일치");
-                            // 가게의 idx와 마커의 title이 일치할때 함수 실행
-                            // showStoreModal(idx);
-                            initStoreSideBar(idx);
-                            showStoreSideBar();
+                            showviewSideBar();
                             showStoreMarker(idx);
                         }
                     });
-                    storeSideBarCheck = true;
-                    onToggleBtn();
+                    viewSideBarCheck = true;
+                    setToggle(600);
                 });
             });
         }
@@ -460,129 +450,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
     
     // ========================= 사이드바 관련 =========================
+
     // 스토어 리스트 사이드바 컨트롤
-    
-    let storeListSideBar = document.querySelector(".side-bar#store-list");
-    /** 스토어 리스트 사이드바 여는 함수 */
-    function showStoreListSideBar() {
-        storeListSideBar.classList.add("show");
+    let ListSideBar = document.querySelector(".side-bar#store-list");
+    /** 리스트 사이드바 여는 함수 */
+    function showListSideBar() {
+        ListSideBar.classList.add("show");
     }
-    /** 스토어 리스트 사이드바 닫는 함수 */
-    function hideStoreListSideBar() {
-        storeListSideBar.classList.remove("show");
+    /** 리스트 사이드바 닫는 함수 */
+    function hideListSideBar() {
+        ListSideBar.classList.remove("show");
     }
 
-    // 스토어 사이드바 컨트롤
-    let storeSideBarCheck = false;
-    /** 스토어 사이드바 여는 함수 */
-    function showStoreSideBar() {
-        let storeSideBar = document.querySelector(".side-bar#store");
-        storeSideBar.classList.add("show");
-        storeSideBarCheck = true;
-        semiToggleBtn();
+    //  뷰 사이드바 컨트롤
+    let viewSideBarCheck = false;
+    let viewSideBar = document.querySelector(".side-bar#store");
+    /** 뷰 사이드바 여는 함수 */
+    function showviewSideBar() {
+        viewSideBar.classList.add("show");
+        viewSideBarCheck = true;
     }
-    /** 스토어 사이드바 닫는 함수 */
-    function hideStoreSideBar() {
-        let storeSideBar = document.querySelector(".side-bar#store");
-        storeSideBar.classList.remove("show");
-    }
-    
-    /** 스토어 사이드바 내용 담기 */
-    function initStoreSideBar(idx) {
-        // 가게 이미지 및 정보
-        as.getListByReg("논현", function(data) {
-            
-            data.forEach(vo => {
-                if (vo.store_idx == idx) {
-                    console.log("테스트");
-                    console.log(vo);
-                    // 이미지
-                    let storeImage = document.querySelector(".store-image");
-                    storeImage.innerHTML = `<img src="/resources/img/${vo.store_image}" alt="이미지" class="store-image">`;
-                    // 정보
-                    let storeInfo = document.querySelector(".store-info");
-                    console.log(storeInfo);
-                    
-                    let context =
-                        `<div class="store-info">
-                            <h3>${vo.store_name}</h3>
-                            <div class="info-text">주소: ${vo.store_address}</div>
-                            <div class="info-text">영업일: ${vo.store_activity_time}</div>
-                            <div class="info-text">전화: ${vo.store_num}</div>
-                        </div>`;
-                    storeInfo.innerHTML = context;
-                }
-            });
-            
-        });
-        // 메뉴 리스트
-        as.getMenuList(idx, function(list) {
-            let menuList = document.querySelector(".storeView .menu-section");
-            console.log(list);
-            
-            let context = '<h3>메뉴</h3>';
-            list.forEach(mvo => {
-                context += 
-                    `<div class="menu-list">
-                        <c:forEach var="mvo" items="${mvo}">
-                            <div class="menu-item">
-                            <img src="/resources/img/${mvo.menu_image}" alt="${mvo.menu_image}">
-                            <div class="menu-name">${mvo.menu_name}</div>
-                            <div class="menu-price">₩${mvo.menu_price}</div>
-                            </div>
-                        </c:forEach>
-                    </div>`;
-            });
-            menuList.innerHTML = context;
-        });
-        // 리뷰
+    /** 뷰 사이드바 닫는 함수 */
+    function hideviewSideBar() {
+        viewSideBar.classList.remove("show");
     }
     
     // 토글 버튼
     let toggleBtn = document.querySelector(".side-bar#toggle-box");
-    /** 토글 버튼 위치 변경 함수 600px */
-    function onToggleBtn() {
-        toggleBtn.style.left = '600px';
-    }
-    /** 토글 버튼 위치 변경 함수 300px */
-    function semiToggleBtn() {
-        toggleBtn.style.left = '300px';
-    }
-    /** 토글 버튼 위치 변경 함수 0px */
-    function offToggleBtn() {
-        toggleBtn.style.left = '0px';
-    }
-    /** 토글 위치 변경 함수 수정버전 (요소, 숫자 입력시 해당 px 위치로 이동) */
-    function setToggle(ele, pixel) {
-        ele.style.left = `${pixel}px`;
+
+    /** 숫자입력시 해당 pixel만큼 토글버튼의 위치를 설정하는 함수 */
+    function setToggle(pixel) {
+        toggleBtn.style.left = `${pixel}px`;
     }
 
-    /** 스토어 리스트 사이드바 토글 함수 */
-    function toggleStoreListSideBar() {
-        let storeListSideBar = document.querySelector(".side-bar#store-list");
+    /** 리스트 사이드바 토글 함수 */
+    function toggleListSideBar() {
+        let ListSideBar = document.querySelector(".side-bar#store-list");
         // 토글 OFF
-        if (storeListSideBar.classList[1] == "show") {
-            hideStoreSideBar();
-            hideStoreListSideBar();
-            offToggleBtn();
+        if (ListSideBar.classList[1] == "show") {
+            hideviewSideBar();
+            hideListSideBar();
+            setToggle(0);
         } 
         // 토글 ON
         else {
-            showStoreListSideBar();
-            if (storeSideBarCheck) {
-                showStoreSideBar();
+            showListSideBar();
+            if (viewSideBarCheck) {
+                showviewSideBar();
             }
-            if (!storeSideBarCheck) {
-                semiToggleBtn();
+            if (!viewSideBarCheck) {
+                setToggle(300);
             } else {
-                onToggleBtn();
+                setToggle(600);
             }
         }
-    }
-
-    /** 점포 사이드바 닫는 함수 */
-    function closeStoreSideBar() {
-        hideStoreSideBar();
     }
 });
 
