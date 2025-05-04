@@ -26,8 +26,8 @@ let selectedMarker = null;
 let clickMarker = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
-let latBasic = 37.511521092235625;
-let lngBasic = 127.02856630406664;
+let basicLat = 37.511521092235625;
+let basicLng = 127.02856630406664;
 
 // 지도 변수 생성
 let basicMap;
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	linkEle.href = CSS_PATH;
 	document.head.appendChild(linkEle);
 	
-    let basicOption = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
+    let basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 3};
 	
 	// 지도 이동 테스트 ===============================
 	let container = document.querySelector(".map");
@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // 지도 중심 화면 설정
             basicMap.setCenter(latlng);
             // 지도 중심 위치 설정
-            latBasic = f.lat.value;
-            lngBasic = f.lng.value;
+            basicLat = f.lat.value;
+            basicLng = f.lng.value;
         }
     }
     // 
@@ -83,11 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(type + " click");
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
-                panToLatLng(basicMap, latBasic, lngBasic);
+                panToLatLng(basicMap, basicLat, basicLng);
             } 
             // 마커 생성 및 보기
             else if (type === "markerTest") {
-                addMarker(basicMap, latBasic, lngBasic);
+                addMarker(basicMap, basicLat, basicLng);
             }
             // 마커 여러개 생성
             else if (type === "markersGen") {
@@ -155,8 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // 검색
             else if (type === "search") {
                 let f = document.querySelector(".form#map");
-                console.log(f);
-                
+                let keyword = f.keyword.value;
+
+                mapSearchService(keyword);
             }
         });
     });
@@ -264,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clickMarker = new kakao.maps.Marker({ 
         // 지도 중심좌표에 마커를 생성합니다 
-        position: new kakao.maps.LatLng(latBasic, lngBasic)
+        position: new kakao.maps.LatLng(basicLat, basicLng)
     });
     clickMarker.setMap(basicMap);
 
@@ -278,6 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clickMarker.setPosition(latlng);
 
         searchAddrFromCoords(latlng);
+        searchDetailAddrFromCoords(latlng);
 
         let f = document.querySelector("#store-modify");
         if (f) {
@@ -304,19 +306,30 @@ document.addEventListener("DOMContentLoaded", () => {
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
                 form.address.value = result[0].address_name; // 서울특별시 강남구 논현동
-                form.area.value = result[0].region_1depth_name; // 서울특별시
+                // form.area.value = result[0].region_1depth_name; // 서울특별시
                 form.regcode.value = result[0].code; // 행정코드
             }
         };
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
     }
-    
+
+    /** 경도위도로 법정동 상세 주소 정보를 요청하는 함수 */
+    function searchDetailAddrFromCoords(coords) {
+        let geocoder = new kakao.maps.services.Geocoder();
+        let callback = function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                console.log(result); // result : 결과 내용, [0] : 역삼동 / [1] : 역삼 1동
+            }
+        }
+        geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+    }
+
     // 비동기 서비스
     const asyncService = (function(){  
         
         // 지역명 기반 검색, 추후에 store_regcode로 진행   
         function getListByReg(store_area, callback){
-            fetch(`/modal/list/${store_area}.json`)
+            fetch(`/modal/list/store_area/${store_area}.json`)
             .then(response => response.json())
             .then(data => {
                 callback(data);
@@ -533,10 +546,10 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a =
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(lat1 * Math.PI / 180) *
-      Math.cos(lat2 * Math.PI / 180) *
-      Math.sin(dLon/2) * Math.sin(dLon/2);
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     const distance = R * c;
@@ -549,4 +562,18 @@ function getDistanceMarkers(marker1, marker2) {
     let latlng1 = marker1.getPosition();
     let latlng2 = marker2.getPosition();
     return getDistanceFromLatLonInKm(latlng1.getLat(), latlng1.getLng(), latlng2.getLat(), latlng2.getLng());
+}
+
+/** 지도 검색 기능 서비스 함수 */
+function mapSearchService(keyword) {
+    // 1. 키워드를 분류
+    // 2. 키워드에 맞는 쿼리문 실행
+    // 2-1. 위치
+    // 2-2. 가게명
+    // 2-3. 메뉴명
+    // 2-4. 지역명 (행정구역 구별하여 검색)
+}
+
+/** 키워드 분류 함수 */
+function classifyKeyword(params) {
 }

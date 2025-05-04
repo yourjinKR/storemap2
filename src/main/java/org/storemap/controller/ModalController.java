@@ -142,14 +142,36 @@ public class ModalController {
 	}
 	
 	//점포 지역별 리스트 비동기 조회
-	@GetMapping(value = "/list/{store_area}",
+	@GetMapping(value = "/list/store_area/{store_area}",
 			produces = {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 		})
-	public ResponseEntity<List<StoreVO>> getList(@PathVariable("store_area") String store_area){
-		log.info("getList..."+store_area);
+	public ResponseEntity<List<StoreVO>> getListByArea(@PathVariable("store_area") String store_area){
+		log.info("getListByArea..."+store_area);
 		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_area), HttpStatus.OK);
+	}
+
+	// 점포 주소별 리스트 비동기 조회 (서비스 수정 필요)
+	@GetMapping(value = "/list/store_address/{store_address}",
+		produces = {
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_JSON_VALUE
+	})
+	public ResponseEntity<List<StoreVO>> getListByadress(@PathVariable("store_adress") String store_address){
+		log.info("getListByadress..."+store_address);
+		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_address), HttpStatus.OK);
+	}
+	
+	// 메뉴 검색 리스트 비동기 조회 (서비스 수정 필요)
+	@GetMapping(value = "/list/store_menu/{store_menu}",
+		produces = {
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_JSON_VALUE
+	})
+	public ResponseEntity<List<StoreVO>> getListByMenu(@PathVariable("store_menu") String store_menu){
+		log.info("getListByMenu..."+store_menu);
+		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_menu), HttpStatus.OK);
 	}
 	
 	/*--------------------------------------------------------------------------*/
