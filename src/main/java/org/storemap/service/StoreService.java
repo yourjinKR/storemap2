@@ -3,6 +3,7 @@ package org.storemap.service;
 import java.util.List;
 import java.util.Map;
 
+import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 
 public interface StoreService {
@@ -36,6 +37,8 @@ public interface StoreService {
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기
 	public List<StoreVO> getAreaList(String store_area);
+	// 현위치 기반 점포 리스트 불러오기
+	public List<StoreVO> getLocList(MapDTO map); 
 	// 점포 좋아요
 	public int favorite(int store_idx);
 	// 점포 좋아요 취소

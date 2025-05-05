@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.LetterVO;
+import org.storemap.domain.MapDTO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.MenuVO;
 import org.storemap.domain.ReviewVO;
@@ -173,6 +174,22 @@ public class ModalController {
 		log.info("getListByMenu..."+store_menu);
 		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_menu), HttpStatus.OK);
 	}
+	
+	// 위치 검색 리스트 비동기 조회 (서비스 수정 필요)
+	@PostMapping(value = "/list/loc",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+		})
+		public ResponseEntity<List<StoreVO>> getListByLoc(@RequestBody MapDTO map){
+			log.info("getListByLoc...");
+			log.info("lat..." + map.getLat());
+			log.info("lng..." + map.getLng());
+			log.info("level..." + map.getLevel());
+			log.info("code..." + map.getCode());
+			log.info("keyword..." + map.getKeyword());
+			return new ResponseEntity<List<StoreVO>>(storeService.getLocList(map), HttpStatus.OK);
+		}
 	
 	/*--------------------------------------------------------------------------*/
 	
