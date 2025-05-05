@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<script type="text/javascript" src="/resources/js/event.js"></script>
+<script type="text/javascript" src="/resources/js/board.js"></script>
 
 <div class="content-list por mt50">
 	<div class="list-top mb30">
