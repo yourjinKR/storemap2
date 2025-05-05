@@ -127,6 +127,11 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public List<StoreVO> getNearestStores(MapDTO map) {
+		return mapper.getNearestStores(map);
+	}
+	
+	@Override
 	public int favorite(int store_idx) {
 		log.info("favorite..."+store_idx);
 		return mapper.updateFavorite(store_idx);

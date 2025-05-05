@@ -175,7 +175,7 @@ public class ModalController {
 		return new ResponseEntity<List<StoreVO>>(storeService.getAreaList(store_menu), HttpStatus.OK);
 	}
 	
-	// 위치 검색 리스트 비동기 조회 (서비스 수정 필요)
+	// 위치 검색 리스트 비동기 조회
 	@PostMapping(value = "/list/loc",
 			produces = {
 					MediaType.APPLICATION_XML_VALUE,
@@ -190,6 +190,24 @@ public class ModalController {
 			log.info("keyword..." + map.getKeyword());
 			return new ResponseEntity<List<StoreVO>>(storeService.getLocList(map), HttpStatus.OK);
 		}
+	
+	// 위치 검색 리스트 비동기 조회
+	@PostMapping(value = "/list/nearest",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+	})
+	public ResponseEntity<List<StoreVO>> getNearestStores(@RequestBody MapDTO map){
+		log.info("getListByLoc...");
+		log.info("lat..." + map.getLat());
+		log.info("lng..." + map.getLng());
+		log.info("level..." + map.getLevel());
+		log.info("code..." + map.getCode());
+		log.info("keyword..." + map.getKeyword());
+		return new ResponseEntity<List<StoreVO>>(storeService.getNearestStores(map), HttpStatus.OK);
+	}
+	
+	
 	
 	/*--------------------------------------------------------------------------*/
 	

@@ -140,7 +140,29 @@
 	
 	<!-- 현위치 기반 점포 리스트 보기  -->
 	<select id="getStoreLocList" parameterType="int" resultType="org.storemap.domain.StoreVO">
-		select * from store WHERE store_regcode LIKE '%' ||  #{gu} || '%'
+		select * from store WHERE store_regcode LIKE #{gu} || '%'
+	</select>
+	
+	<!-- 가장 가까운 좌표 추출 -->
+	<select id="getNearestStores" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
+	    SELECT *
+	    FROM (
+	        SELECT s.*, 
+	               6371 * ACOS(
+	                   COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
+	                   COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
+	                   SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
+	               ) AS distance
+	        FROM store s
+	        WHERE s.store_lat IS NOT NULL AND s.store_lng IS NOT NULL
+	        ORDER BY 
+	               6371 * ACOS(
+	                   COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
+	                   COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
+	                   SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
+	               )
+	    )
+	    WHERE ROWNUM &lt;= 10
 	</select>
 	
 	<!-- 점포 좋아요 업 -->

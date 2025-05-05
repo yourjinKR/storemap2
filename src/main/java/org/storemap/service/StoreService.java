@@ -38,7 +38,9 @@ public interface StoreService {
 	// 점포 지역별 리스트 불러오기
 	public List<StoreVO> getAreaList(String store_area);
 	// 현위치 기반 점포 리스트 불러오기
-	public List<StoreVO> getLocList(MapDTO map); 
+	public List<StoreVO> getLocList(MapDTO map);
+	// 현위치 기반 점포 리스트 불러오기
+	public List<StoreVO> getNearestStores(MapDTO map);
 	// 점포 좋아요
 	public int favorite(int store_idx);
 	// 점포 좋아요 취소
