@@ -26,8 +26,13 @@ let selectedMarker = null;
 let clickMarker = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
-let basicLat = 37.511521092235625;
-let basicLng = 127.02856630406664;
+let basicLat = 37.505410898990775;
+let basicLng = 127.02676741751233;
+
+// 현재 지도의 중심
+let centerLatLng;
+// 현재 지도의 행정구역 (중심 기준)
+let centerLoc = {}
 
 // 지도 변수 생성
 let basicMap;
@@ -42,11 +47,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	linkEle.href = CSS_PATH;
 	document.head.appendChild(linkEle);
 	
-    let basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 3};
+    let basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 1};
 	
 	// 지도 이동 테스트 ===============================
 	let container = document.querySelector(".map");
 	basicMap = new kakao.maps.Map(container, basicOption);
+    // 새로고침
+    centerLatLng = basicMap.getCenter();
+    loadAddrFromCoords(centerLatLng);
 
     // 맵 id별 분기
     mapType = container.getAttribute("id");
@@ -157,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 let f = document.querySelector(".form#map");
                 let keyword = f.keyword.value;
 
-                mapSearchService(keyword);
+                mapSearchService(basicMap, keyword);
             }
         });
     });
@@ -278,8 +286,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let latlng = mouseEvent.latLng;
         clickMarker.setPosition(latlng);
 
+        console.log(latlng.getLat());
+        console.log(latlng.getLng());
         searchAddrFromCoords(latlng);
-        searchDetailAddrFromCoords(latlng);
+        // searchDetailAddrFromCoords(latlng); (상세주소)
 
         let f = document.querySelector("#store-modify");
         if (f) {
@@ -287,6 +297,17 @@ document.addEventListener("DOMContentLoaded", () => {
             f.lng.value = latlng.getLng();
             initAddrFromCoords(latlng, f);
         }
+    });
+
+    // 지도 이동이 완료되었을 발생하는 이벤트
+    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
+        
+        // 지도 중심좌표를 저장 
+        centerLatLng = basicMap.getCenter(); 
+        // 중심 좌표를 기준으로 행정구역 저장
+        loadAddrFromCoords(centerLatLng);
+        console.log(centerLoc);
+        
     });
 
     /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */ 
@@ -313,7 +334,18 @@ document.addEventListener("DOMContentLoaded", () => {
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
     }
 
-    /** 경도위도로 법정동 상세 주소 정보를 요청하는 함수 */
+    /** 경도위도를 기반으로 현재 지도정보를 최신화 */
+    function loadAddrFromCoords(latlng) {
+        let geocoder = new kakao.maps.services.Geocoder();
+        let callback = function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                centerLoc = result[0];
+            }
+        };
+        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+    }
+
+    /** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
     function searchDetailAddrFromCoords(coords) {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function(result, status) {
@@ -323,73 +355,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     }
-
-    // 비동기 서비스
-    const asyncService = (function(){  
-        
-        // 지역명 기반 검색, 추후에 store_regcode로 진행   
-        function getListByReg(store_area, callback){
-            fetch(`/modal/list/store_area/${store_area}.json`)
-            .then(response => response.json())
-            .then(data => {
-                callback(data);
-            })
-            .catch(err => console.log(err));
-        }
-        // 현위치 기반 검색
-        function getListByLocNow(locNow, callback) {
-            
-        }
-
-        // 카테고리 기반 검색 (store table에 카테고리가 없으니 menu에서 찾아야 하는가)
-        function getListByCategory(menu_name, callback) {
-            
-        }
-
-        // 점포명 기반 검색
-        function getListByName(store_name, callback) {
-            
-        }
-
-        // 통합 검색?
-        function getList(keyword, callback) {
-            
-        }
-
-        /** store_idx 입력 시 점포 상세보기 정보 출력 함수 */
-        function getStore(store_idx, callback){
-            fetch(`/modal/${store_idx}.json`)
-                .then(response => response.json())
-                .then(data => {
-                    callback(data);
-                })
-                .catch(err => console.log(err));
-        }
-        
-        /** 메뉴 목록 함수 */
-        function getMenuList(store_idx, callback) {
-            fetch(`/store/list/${store_idx}.json`)
-                .then(response => response.json())
-                .then(data => {
-                    callback(data);
-                })
-                .catch(err => console.log(err));
-        }
-
-        // 함수 객체 리턴
-        return {
-            getListByReg : getListByReg,
-            getStore : getStore,
-            getMenuList : getMenuList
-        };
-    })();
-    const as = asyncService;
     
     // vo 리스트
     let storeVOList = [];
     // 지역명 기반 검색 서비스 함수 실행
     as.getListByReg("논현", function(data) {
-
+        console.log(data);
         data.forEach(vo => {
             let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
             vo.marker = marker;
@@ -520,6 +491,79 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// 비동기 서비스
+const asyncService = (function(){  
+    
+    // 지역명 기반 검색, 추후에 store_regcode로 진행   
+    function getListByReg(store_area, callback){
+        fetch(`/modal/list/store_area/${store_area}.json`)
+        .then(response => response.json())
+        .then(data => {
+            callback(data);
+        })
+        .catch(err => console.log(err));
+    }
+    // 현위치 기반 검색
+    function getListByLoc(condition, callback) {        
+        fetch(`/modal/list/loc.json`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(condition)
+        })
+        .then(response => response.json())
+        .then(data => {
+            callback(data);
+        })
+        .catch(err => console.error(err));
+    }
+
+    // 카테고리 기반 검색 (store table에 카테고리가 없으니 menu에서 찾아야 하는가)
+    function getListByCategory(menu_name, callback) {
+        
+    }
+
+    // 점포명 기반 검색
+    function getListByName(store_name, callback) {
+        
+    }
+
+    // 통합 검색?
+    function getList(keyword, callback) {
+        
+    }
+
+    /** store_idx 입력 시 점포 상세보기 정보 출력 함수 */
+    function getStore(store_idx, callback){
+        fetch(`/modal/${store_idx}.json`)
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => console.log(err));
+    }
+    
+    /** 메뉴 목록 함수 */
+    function getMenuList(store_idx, callback) {
+        fetch(`/store/list/${store_idx}.json`)
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => console.log(err));
+    }
+
+    // 함수 객체 리턴
+    return {
+        getListByReg : getListByReg,
+        getListByLoc : getListByLoc,
+        getStore : getStore,
+        getMenuList : getMenuList
+    };
+})();
+const as = asyncService;
+
 /** 지도, 위도, 경도를 입력하면 지도 이동 */ 
 function panToLatLng(map, lat, lng) {
     // 좌표설정
@@ -565,7 +609,18 @@ function getDistanceMarkers(marker1, marker2) {
 }
 
 /** 지도 검색 기능 서비스 함수 */
-function mapSearchService(keyword) {
+function mapSearchService(map, keyword) {
+    let condition = {
+        level : map.getLevel(),
+        center : map.getCenter(),
+        code : centerLoc.code,
+        keyword : keyword
+    }
+    
+    // 구 를 기준으로 점포 출력
+    as.getListByLoc(condition, function(data) {
+        console.log(data);
+    });
     // 1. 키워드를 분류
     // 2. 키워드에 맞는 쿼리문 실행
     // 2-1. 위치

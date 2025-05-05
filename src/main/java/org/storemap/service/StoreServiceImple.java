@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.StoreMapper;
 
@@ -116,6 +117,13 @@ public class StoreServiceImple implements StoreService{
 	public List<StoreVO> getAreaList(String store_area) {
 		log.info("getAreaList...");
 		return mapper.getStoreAreaList(store_area);
+	}
+	
+	@Override
+	public List<StoreVO> getLocList(MapDTO map) {
+		int code = map.getCode();
+		int gu = code/100000;
+		return mapper.getStoreLocList(gu);
 	}
 	
 	@Override
