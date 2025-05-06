@@ -191,7 +191,7 @@ public class ModalController {
 			return new ResponseEntity<List<StoreVO>>(storeService.getLocList(map), HttpStatus.OK);
 		}
 	
-	// 위치 검색 리스트 비동기 조회
+	// 최근방 점포 리스트 비동기 조회
 	@PostMapping(value = "/list/nearest",
 			produces = {
 					MediaType.APPLICATION_XML_VALUE,

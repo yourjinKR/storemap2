@@ -3,6 +3,7 @@ console.log("map load");
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
+// let markerSrc = 'https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-1b80-61f7-980f-717fb30ba746/raw?se=2025-05-06T09%3A29%3A17Z&sp=r&sv=2024-08-04&sr=b&scid=a705c972-fc76-5385-b439-960e39c3f3b6&skoid=7c382de0-129f-486b-9922-6e4a89c6eb7d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-06T03%3A17%3A54Z&ske=2025-05-07T03%3A17%3A54Z&sks=b&skv=2024-08-04&sig=MER4ejaYvAKWljU8WLODFQEajejq2FH7xTlqQ29sKw4%3D';
 
 // ================== 마커 크기 ==================
 const MARKER_WIDTH = 32, // 기본 마커의 너비
@@ -224,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
         centerLatLng = basicMap.getCenter(); 
         // 중심 좌표를 기준으로 행정구역 저장
         loadAddrFromCoords(centerLatLng);
-        console.log(centerLoc);
+        // console.log(centerLoc);
         
     });
 
@@ -346,7 +347,8 @@ function registerMarker(lat, lng, idx) {
         position: markerPosition,
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
         title : idx,
-        image : testIcon
+        image : testIcon,
+        zIndex : 5
     });
 
     // 마커 이벤트 추가
@@ -378,6 +380,35 @@ function showMarkers(map) {
 /** 배열에 추가된 마커를 지도에서 삭제하는 함수 */
 function hideMarkers() {
     setMarkers(null);    
+}
+
+// ============================= 오버레이 관련 함수 =============================
+let overlayList = [];
+
+/** 커스텀 오버레이를 생성하는 함수 */
+function registerOverlay(map, lat, lng, name) {
+    let content = `
+    <div class="customoverlay">
+        <span class="title">${name}</span>
+    </div>`;
+    // 커스텀 오버레이를 생성합니다
+    let customOverlay = new kakao.maps.CustomOverlay({
+    map: map,
+    position: new kakao.maps.LatLng(lat, lng),
+    content: content,
+    yAnchor: 1,
+    zIndex: 3
+    });
+    // 리스트에 추가
+    overlayList.push(customOverlay);
+}
+
+/** 커스텀 오버레이를 삭제하는 함수 */
+function deleteOverlay() {
+    for (let i = 0; i < overlayList.length; i++) {
+        const element = overlayList[i];
+        element.setMap(null);
+    }
 }
 
 // ============================= 이벤트 추가 관련 함수 =============================
@@ -422,6 +453,7 @@ function addMarkerEvent(marker) {
         selectMarker(marker);
         
         let title = marker.getTitle();
+        //showStoreMarker(title);
         let li = searchEleByTitle(title);
 
         showListSideBar();
@@ -640,7 +672,8 @@ function getDistanceMarkers(marker1, marker2) {
 function mapSearchService(map, keyword) {
     let condition = {
         level : map.getLevel(),
-        center : map.getCenter(),
+        lat : map.getCenter().getLat(),
+        lng : map.getCenter().getLng(),
         code : centerLoc.code,
         keyword : keyword
     }
@@ -672,15 +705,18 @@ function apply2map(data) {
     storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     console.log(data);
 
-    // 마커 삭제
+    // 마커 및 오버레이 삭제
     hideMarkers(basicMap);
     clearMarkers();
     storeVOList = [];
+    deleteOverlay();
+    overlayList = [];
 
     data.forEach(vo => {
         let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
         vo.marker = marker;
         storeVOList.push(vo);
+        registerOverlay(basicMap, vo.store_lat, vo.store_lng, vo.store_name);
     });
 
     let msg = "";
