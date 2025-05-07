@@ -53,7 +53,13 @@ public class MemberController {
 	
 	// 로그인 화면으로 이동
 	@GetMapping("/login")
-	public String loginPage() {
+	public String loginPage(HttpServletRequest request, HttpSession session) {
+		String referer = request.getHeader("Referer");
+		if(referer != null && !referer.contains("/login")) {
+			String contextPath = request.getContextPath();
+			String redirectPath = referer.replaceFirst("http?://[^/]+", "");
+			session.setAttribute("redirectAfterLogin", redirectPath);
+		}
 		return "index";
 	}
 	
@@ -79,6 +85,12 @@ public class MemberController {
 			session.setAttribute("userNickName", member.getMember_nickname());
 			session.setAttribute("userType", member.getMember_type());
 			session.setAttribute("userImage", member.getMember_image());
+			
+			String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+			if(redirectUrl != null && redirectUrl.startsWith("/")) {
+				session.removeAttribute("redirectAfterLogin");
+				return "redirect:" + redirectUrl;
+			}
 			return "redirect:/";
 		}
 		// enter 테이블 검증
@@ -93,6 +105,12 @@ public class MemberController {
 			session.setAttribute("userNum", enter.getEnter_num());
 			session.setAttribute("userImage", enter.getEnter_image());
 			session.setAttribute("userType", "enter");
+			
+			String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+			if(redirectUrl != null && redirectUrl.startsWith("/")) {
+				session.removeAttribute("redirectAfterLogin");
+				return "redirect:" + redirectUrl;
+			}
 			return "redirect:/";
 		}
 		model.addAttribute("msg","아이디 또는 비밀번호가 틀렸습니다.");
@@ -218,14 +236,37 @@ public class MemberController {
 		return result;
 	}
 	
-	// 로그인 화면으로 이동
+	// 회원탈퇴 페이지로 이동
 	@GetMapping("/delete")
 	public String deletePage() {
 		//model.addAttribute("path", "/member/delete");
 		return "index";
 	}
 	
-	
+//	@PostMapping("/delete")
+//	public String deleteMember(@RequestParam String pw, HttpSession session, Model model) {
+//	    String loginId = (String) session.getAttribute("loginUser");
+//	    String userType = (String) session.getAttribute("userType");
+//
+//	    if ("enter".equals(userType)) {
+//	        EnterVO enter = enterService.eLogin(loginId, pw);
+//	        if (enter == null) {
+//	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
+//	            return "index";
+//	        }
+//	        enterService.deleteEnter(enter.getEnter_idx());
+//	    } else {
+//	        MemberVO member = memberService.mLogin(loginId, pw);
+//	        if (member == null) {
+//	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
+//	            return "index";
+//	        }
+//	        memberService.deleteMember(member.getMember_idx());
+//	    }
+//
+//	    session.invalidate(); // 세션 삭제
+//	    return "redirect:/"; // 메인으로
+//	}
 	
 	
 	
