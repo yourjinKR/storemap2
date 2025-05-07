@@ -26,6 +26,7 @@ import org.storemap.domain.LetterVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.MenuVO;
+import org.storemap.domain.ReviewLikeVO;
 import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreLikeVO;
 import org.storemap.domain.StoreVO;
@@ -36,6 +37,7 @@ import org.storemap.service.EventServiceImple;
 import org.storemap.service.LetterServiceImple;
 import org.storemap.service.MemberServiceImple;
 import org.storemap.service.MenuServiceImple;
+import org.storemap.service.ReviewLikeServiceImple;
 import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreLikeServiceImple;
 import org.storemap.service.StoreServiceImple;
@@ -54,6 +56,8 @@ public class ModalController {
 	private MenuServiceImple menuService;
 	@Autowired
 	private ReviewServiceImple reviewService;
+	@Autowired
+	private ReviewLikeServiceImple reviewLikeService;
 	@Autowired
 	private EventServiceImple eventService;
 	@Autowired
@@ -77,24 +81,42 @@ public class ModalController {
 	@GetMapping("/storeView")
 	public String storeView(@RequestParam("store_idx") int store_idx, Model model, HttpSession session) {
 		log.info("storeView..."+store_idx);
-		model.addAttribute("svo",storeService.get(store_idx));
-		model.addAttribute("mlist",menuService.getList(store_idx));
-		model.addAttribute("rlist",reviewService.getList(store_idx));
+		
+		StoreVO storeVO = storeService.get(store_idx);
+        List<MenuVO> menuList = menuService.getList(store_idx);
+        List<ReviewVO> reviewList = reviewService.getList(store_idx);
+		
+		model.addAttribute("svo",storeVO);
+		model.addAttribute("mlist",menuList);
+		model.addAttribute("rlist",reviewList);
 		
 		// 사용자가 로그인되어 있다면 좋아요 상태 확인
 		if(session.getAttribute("loginUserIdx") != null) {
+			
 			int member_idx = (int) session.getAttribute("loginUserIdx");
+			
 			StoreLikeVO likeVO = storeLikeService.getIdx(store_idx, member_idx);
-			model.addAttribute("isLiked", likeVO != null);
+			model.addAttribute("storeLiked", likeVO != null);
+			
+			Map<Integer, Boolean> reviewLikedMap = new HashMap<>();
+			if(reviewList != null && !reviewList.isEmpty()) {
+                for(ReviewVO rvo : reviewList) {
+                    ReviewLikeVO reviewLikeVO = reviewLikeService.getIdx(rvo.getReview_idx(), member_idx);
+                    reviewLikedMap.put(rvo.getReview_idx(), reviewLikeVO != null);
+                }
+            }
+			model.addAttribute("reviewLikedMap", reviewLikedMap);
+			
 		} else {
-			model.addAttribute("isLiked", false);
+			model.addAttribute("storeLiked", false);
+			model.addAttribute("reviewLikedMap", new HashMap<>());
 		}
 		
 		return "index";
 	}
 	
 	//점포좋아요 (토글)
-	@GetMapping("/favorite/toggle")
+	@GetMapping("/storeLike/toggle")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> toggleFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
 		log.info("toggleFavorite..."+store_idx+", "+member_idx);
@@ -106,28 +128,71 @@ public class ModalController {
 			// 좋아요 추가
 			storeLikeService.register(store_idx, member_idx);
 			storeService.favorite(store_idx); // 좋아요 카운트 증가
-			result.put("liked", true);
+			result.put("storeLiked", true);
 		} else {
 			// 좋아요 제거
 			storeLikeService.remove(store_idx, member_idx);
 			storeService.unfavorite(store_idx); // 좋아요 카운트 감소
-			result.put("liked", false);
+			result.put("storeLiked", false);
 		}
+		
+		// 업데이트된 점포 좋아요 카운트 불러오기
+		StoreVO storeVO = storeService.get(store_idx);
+		result.put("storeLikeCount", storeVO.getStore_like_cnt());
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	//점포좋아요 상태 확인
-	@GetMapping("/favorite/check")
+	@GetMapping("/storeLike/check")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> checkFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
 		log.info("checkFavorite..."+store_idx+", "+member_idx);
 		
 		Map<String, Object> result = new HashMap<>();
 		StoreLikeVO likeVO = storeLikeService.getIdx(store_idx, member_idx);
-		result.put("liked", likeVO != null);
+		result.put("storeLiked", likeVO != null);
+		
+		StoreVO storeVO = storeService.get(store_idx);
+		result.put("storeLikeCount", storeVO.getStore_like_cnt());
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
+	
+	//리뷰좋아요 (토글)
+    @GetMapping("/reviewLike/toggle")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> toggleReviewFavorite(@RequestParam("review_idx") int review_idx, @RequestParam("member_idx") int member_idx) {
+        log.info("toggleReviewFavorite..."+review_idx+", "+member_idx);
+        
+        Map<String, Object> result = new HashMap<>();
+        ReviewLikeVO likeVO = reviewLikeService.getIdx(review_idx, member_idx);
+        
+        if(likeVO == null) {
+            // 좋아요 추가
+            reviewLikeService.register(review_idx, member_idx);
+            reviewService.favorite(review_idx); // 좋아요 카운트 증가
+            result.put("reviewLikedMap", true);
+        } else {
+            // 좋아요 제거
+            reviewLikeService.remove(review_idx, member_idx);
+            reviewService.unfavorite(review_idx); // 좋아요 카운트 감소
+            result.put("reviewLikedMap", false);
+        }
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    //리뷰좋아요 상태 확인
+    @GetMapping("/reviewLike/check")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> checkReviewFavorite(@RequestParam("review_idx") int review_idx, @RequestParam("member_idx") int member_idx) {
+        log.info("checkReviewFavorite..."+review_idx+", "+member_idx);
+        
+        Map<String, Object> result = new HashMap<>();
+        ReviewLikeVO likeVO = reviewLikeService.getIdx(review_idx, member_idx);
+        result.put("reviewLikedMap", likeVO != null);
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 	
 	/*--------------------------------------------------------------------------*/
 	

@@ -4,24 +4,24 @@
 
 <mapper namespace="org.storemap.mapper.ReviewLikeMapper">
 	
-	<!-- 1.리뷰 좋야요 등록  -->
-	<insert id="insert" parameterType="org.storemap.domain.ReviewLikeVO">
+	<!-- 1.리뷰 좋아요 등록  -->
+	<insert id="insert" parameterType="int">
 		insert into review_like values(
-	 		#{review_idx},
-	 		#{member_idx}
+	 		#{param1},
+	 		#{param2}
 	 	)
 	</insert>
 	<!-- 2.리뷰 좋아요 삭제  -->
 	<delete id="delete" parameterType="int">
-		delete from review_like where review_idx = #{review_idx}, member_idx = #{member_idx}
+		delete from review_like where review_idx = #{param1} AND member_idx = #{param2}
 	</delete>
 	<!-- 3.리뷰 좋아요한 목록 보기  -->
 	<select id="getReviewLikeList" parameterType="int" resultType="org.storemap.domain.ReviewLikeVO">
 		select * from review_like where member_idx = #{member_idx}
 	</select>
 	<!-- 4.내가 좋아요한 리뷰번호 가져오기  -->
-	<select id="getReviewIdx" parameterType="int" resultType="int">
-		select review_idx from review_like where review_idx = #{review_idx}, member_idx = #{member_idx}
+	<select id="getReviewIdx" parameterType="int" resultType="org.storemap.domain.ReviewLikeVO">
+		select * from review_like where review_idx = #{param1} AND member_idx = #{param2}
 	</select>
 	
 </mapper>

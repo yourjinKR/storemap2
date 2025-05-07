@@ -17,9 +17,9 @@ public class ReviewLikeServiceImple implements ReviewLikeService{
 	private ReviewLikeMapper mapper;
 	
 	@Override
-	public int register(ReviewLikeVO vo) {
-		log.info("register..."+vo);
-		int result = mapper.insert(vo);
+	public int register(int review_idx, int member_idx) {
+		log.info("register..."+review_idx+", "+member_idx);
+		int result = mapper.insert(review_idx, member_idx);
 		return result;
 	}
 	

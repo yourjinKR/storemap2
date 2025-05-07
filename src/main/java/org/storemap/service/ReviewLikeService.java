@@ -6,7 +6,7 @@ import org.storemap.domain.ReviewLikeVO;
 
 public interface ReviewLikeService {
 	// 리뷰 좋아요 등록
-	public int register(ReviewLikeVO vo);
+	public int register(int review_idx, int member_idx);
 	// 리뷰 좋아요 취소
 	public int remove(int review_idx, int member_idx);
 	// 리뷰 좋아요한 목록 보기

@@ -19,4 +19,8 @@ public interface ReviewService {
 	public int hide(int review_idx);
 	// 리뷰 숨기기 해제
 	public int unhide(int review_idx);
+	// 점포 좋아요
+	public int favorite(int review_idx);
+	// 점포 좋아요 취소
+	public int unfavorite(int review_idx);
 }

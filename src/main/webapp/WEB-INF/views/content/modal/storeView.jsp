@@ -14,14 +14,15 @@
       <div class="info-text">영업일: ${svo.store_activity_time}</div>
       <div class="info-text">전화: ${svo.store_num}</div>
       <div class="storeIcon">
-      	<input type="button" name="report" id="report-icon${svo.store_idx}">
-      	<label class="material-symbols-outlined" for="report-icon${svo.store_idx}">
+      	<input type="button" name="storeReport" id="storeReport-icon${svo.store_idx}">
+      	<label class="material-symbols-outlined" for="storeReport-icon${svo.store_idx}">
       		report
       	</label>
-      	<input type="checkbox" name="like" id="like-icon${svo.store_idx}" ${isLiked ? 'checked' : ''}>
-      	<label class="material-symbols-outlined" for="like-icon${svo.store_idx}">
+      	<input type="checkbox" name="storeLike" id="storeLike-icon${svo.store_idx}" ${storeLiked ? 'checked' : ''}>
+      	<label class="material-symbols-outlined" for="storeLike-icon${svo.store_idx}">
       		favorite
       	</label>
+      	<span class="storeLike-count storeLike-count-${svo.store_idx}">${svo.store_like_cnt}</span>
       </div>
     </div>
 
@@ -50,7 +51,7 @@
 		      	<label class="material-symbols-outlined" for="reviewReport-icon${rvo.review_idx}">
 		      		report
 		      	</label>
-		      	<input type="checkbox" name="reviewLike" id="reviewLike-icon${rvo.review_idx}" ${isLiked ? 'checked' : ''}>
+		      	<input type="checkbox" name="reviewLike" id="reviewLike-icon${rvo.review_idx}" ${reviewLikedMap[rvo.review_idx] ? 'checked' : ''}>
 		      	<label class="material-symbols-outlined" for="reviewLike-icon${rvo.review_idx}">
 		      		favorite
 		      	</label>

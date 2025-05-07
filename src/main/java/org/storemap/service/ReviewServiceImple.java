@@ -62,4 +62,15 @@ public class ReviewServiceImple implements ReviewService{
 		return result;
 	}
 	
+	@Override
+	public int favorite(int review_idx) {
+		log.info("favorite..."+review_idx);
+		return mapper.updateFavorite(review_idx);
+	}
+	@Override
+	public int unfavorite(int review_idx) {
+		log.info("unfavorite..."+review_idx);
+	    return mapper.deleteFavorite(review_idx);
+	}
+	
 }

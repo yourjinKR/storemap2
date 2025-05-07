@@ -120,6 +120,18 @@
 			store_hidden = 0
 		where store_idx = #{store_idx}
 	</update>
+	<!-- 14.점포 좋아요 업 -->
+	<update id="updateFavorite" parameterType="int">
+		update store set
+			store_like_cnt = store_like_cnt + 1
+		where store_idx = #{store_idx}
+	</update>
+	<!-- 15.점포 좋아요 다운 -->
+	<update id="deleteFavorite" parameterType="int">
+	    update store set
+	        store_like_cnt = GREATEST(store_like_cnt - 1, 0)
+	    where store_idx = #{store_idx}
+	</update>
 	
 	<!-- 메인페이지 랜덤 출력 -->
 	<select id="getStoreRanList" parameterType="String" resultType="org.storemap.domain.StoreVO">
@@ -202,18 +214,5 @@
 		)
 		WHERE ROWNUM &lt;= 10
 	</select>
-	
-	<!-- 점포 좋아요 업 -->
-	<update id="updateFavorite" parameterType="int">
-		update store set
-			store_like_cnt = store_like_cnt + 1
-		where store_idx = #{store_idx}
-	</update>
-	<!-- 점포 좋아요 다운 -->
-	<update id="deleteFavorite" parameterType="int">
-	    update store set
-	        store_like_cnt = GREATEST(store_like_cnt - 1, 0)
-	    where store_idx = #{store_idx}
-	</update>
 	
 </mapper>

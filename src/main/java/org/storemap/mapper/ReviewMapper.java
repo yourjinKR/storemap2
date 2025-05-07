@@ -19,4 +19,8 @@ public interface ReviewMapper {
 	public int hideReview(int review_idx);
 	// 리뷰 숨기기 해제
 	public int unhideReview(int review_idx);
+	// 점포 좋아요
+	public int updateFavorite(int review_idx);
+	// 점포 좋아요 취소
+	public int deleteFavorite(int review_idx);
 }

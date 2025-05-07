@@ -64,5 +64,17 @@
 			review_hidden = 0
 		where review_idx = #{review_idx}
 	</update>
+	<!-- 점포 좋아요 업 -->
+	<update id="updateFavorite" parameterType="int">
+		update review set
+			review_like_cnt = review_like_cnt + 1
+		where review_idx = #{review_idx}
+	</update>
+	<!-- 점포 좋아요 다운 -->
+	<update id="deleteFavorite" parameterType="int">
+	    update review set
+	        review_like_cnt = GREATEST(review_like_cnt - 1, 0)
+	    where review_idx = #{review_idx}
+	</update>
 	
 </mapper>
