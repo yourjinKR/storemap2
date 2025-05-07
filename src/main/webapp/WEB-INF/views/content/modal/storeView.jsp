@@ -8,21 +8,19 @@
 	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 	<input type="hidden" name="store_idx" value="${svo.store_idx}">
 
-    <div class="store-info">
+    <div class="store-info por">
       <h3>${svo.store_name}</h3>
       <div class="info-text">주소: ${svo.store_address}</div>
       <div class="info-text">영업일: ${svo.store_activity_time}</div>
       <div class="info-text">전화: ${svo.store_num}</div>
-      <div class="favorite">
+      <div class="clickIcon">
+      	<input type="button" name="report" id="report-icon${svo.store_idx}">
+      	<label class="material-symbols-outlined" for="report-icon${svo.store_idx}">
+      		report
+      	</label>
       	<input type="checkbox" name="like" id="like-icon${svo.store_idx}" ${isLiked ? 'checked' : ''}>
       	<label class="material-symbols-outlined" for="like-icon${svo.store_idx}">
       		favorite
-      	</label>
-      </div>
-      <div class="report">
-      	<input type="button" name="declaration" id="reportBtn">
-      	<label class="material-symbols-outlined" for="reportBtn">
-      		notifications
       	</label>
       </div>
     </div>

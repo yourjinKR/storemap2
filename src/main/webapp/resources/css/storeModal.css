@@ -78,17 +78,18 @@
 	color: #333;
 }
 
-/* 좋아요 아이콘 */
+/* 버튼 아이콘 */
 
-.favorite {
+.clickIcon {
 	position: absolute;
 	width: 20px;
   	height: 20px;
-  	top: 450px;
+  	top: 0;
   	right: 50px;
   	cursor: pointer;
+  	white-space:nowrap;
 }
-input[type="checkbox"]{
+input[type="checkbox"], input[type="button"] {
 	width: 0;
 	height: 0;
 	z-index: -1;
@@ -97,7 +98,7 @@ input[type="checkbox"]{
 }
 input[type="checkbox"] + label {
 	font-size:24px;
-	color:#222;
+	color:#f00;
 	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
 }
 input[type="checkbox"]:checked + label {
@@ -105,16 +106,10 @@ input[type="checkbox"]:checked + label {
 	color:#f00;
 	font-variation-settings:'FILL' 1,'wght' 100,'GRAD' 0,'opsz' 32;
 }
-
-/* 신고 아이콘 */
-
-.report{
-	position: absolute;
-	width: 20px;
-  	height: 20px;
-  	top: 450px;
-  	right: 80px;
-  	cursor: pointer;
+input[type="button"] + label {
+	font-size:24px;
+	color:#7A611D;
+	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
 }
 
 /* 메뉴 */

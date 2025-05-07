@@ -85,8 +85,8 @@ function toggleFavorite(storeId, member_idx, checkbox) {
         })
         .catch(error => {
             console.error('Error toggling favorite:', error);
-            // 오류 발생 시 체크박스 상태 되돌리기
-            checkbox.checked = !checkbox.checked;
+            // 오류 발생 시 체크박스 상태 되돌리기(무조건 오류떠서 잠정 보류)
+            //checkbox.checked = !checkbox.checked;
         });
 }
 
