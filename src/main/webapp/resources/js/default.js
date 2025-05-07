@@ -14,7 +14,7 @@ let thisPlace = "";
 
 
 // 현위치 변수 선언
-let currentLat, currentLng, pageNum, amount, user_id, auth, today = null;
+let currentLat, currentLng, pageNum, amount, userId, auth, today = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	// 세션 데이터 (아이디/권한)

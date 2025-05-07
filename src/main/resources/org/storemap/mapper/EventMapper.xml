@@ -65,7 +65,7 @@
 	    FROM EVENT E
 	
 	    LEFT JOIN (
-	        SELECT EVENT_IDX, COUNT(*) AS APPLY_COUNT
+	        SELECT EVENT_IDX, COUNT(*) AS APPROVED_STORE
 	        FROM EVENT_REQUEST 
 	        JOIN EVENT_DAY USING (EDAY_IDX)
 	        WHERE PON > 0
@@ -73,31 +73,51 @@
 	    ) ER ON E.EVENT_IDX = ER.EVENT_IDX
 	
 	    LEFT JOIN (
-	        SELECT EVENT_IDX, SUM(STORE_MAX) AS MAX_COUNT
+	        SELECT EVENT_IDX, SUM(STORE_MAX) AS MAX_STORE
 	        FROM EVENT_DAY
 	        GROUP BY EVENT_IDX
 	    ) ED ON E.EVENT_IDX = ED.EVENT_IDX
 		
 	    WHERE]]>
 	    <choose>
-           	<when test="list_state == 'open'">
-           		<![CDATA[ 
-            		E.EVENT_BSTARTDATE <= SYSDATE 
-            		AND E.EVENT_BSTOPDATE >= SYSDATE
-            		AND E.EVENT_RSTOPDATE > SYSDATE
-                    AND (APPLY_COUNT != MAX_COUNT 
-	                    OR APPLY_COUNT IS NULL)
-           		]]>
-           	</when>
-           	<when test="list_state == 'planned'">
-           		<![CDATA[ E.EVENT_BSTARTDATE > SYSDATE]]>
+           	<when test="auth != '' and auth != 'user'">
+	            <choose>
+	            	<when test="list_state == 'open'">
+	            		<![CDATA[ 
+	            			(E.EVENT_BSTARTDATE > SYSDATE
+		            		OR  E.EVENT_BSTARTDATE <= SYSDATE 
+		            		AND E.EVENT_BSTOPDATE >= SYSDATE
+		            		AND E.EVENT_RSTOPDATE > SYSDATE)
+                        	AND (APPROVED_STORE != MAX_STORE 
+                    		OR APPROVED_STORE IS NULL)
+	            		]]>
+	            	</when>
+	            	<otherwise>
+		                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+	            	</otherwise>
+	            </choose>
            	</when>
            	<otherwise>
-                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+           		<choose>
+	            	<when test="list_state == 'open'">
+	            		<![CDATA[ 
+	            			E.EVENT_BSTARTDATE <= SYSDATE 
+		            		AND E.EVENT_BSTOPDATE >= SYSDATE
+	            		]]>
+	            	</when>
+	            	<when test="list_state == 'planned'">
+	            		<![CDATA[ 
+	            			E.EVENT_BSTARTDATE > SYSDATE
+	            		]]>
+	            	</when>
+	            	<otherwise>
+		                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+	            	</otherwise>
+	            </choose>
            	</otherwise>
 		</choose>
-       	<if test="board_search != null and board_search != ''">
-    		AND E.EVENT_TITLE LIKE '%${board_search}%'
+		<if test="board_search != null and board_search != ''">
+	    	AND E.EVENT_TITLE LIKE '%${board_search}%'
         </if>
 	</select>
 	
@@ -117,8 +137,12 @@
 		            EVENT_RSTOPDATE,
 		            EVENT_BSTARTDATE,
 		            EVENT_BSTOPDATE,
-                     APPLY_COUNT,
-                        MAX_COUNT,
+		            EVENT_FILE,
+		            EVENT_CONTENT,
+                    APPROVED_STORE,
+                    COMMENT_COUNT,
+                    LIKE_COUNT,
+                    MAX_STORE,
 		            ROWNUM RN
 		        FROM (
 		            SELECT 
@@ -129,12 +153,16 @@
 		                E.EVENT_RSTOPDATE,
 		                E.EVENT_BSTARTDATE,
 		                E.EVENT_BSTOPDATE,
-                        APPLY_COUNT,
-                        MAX_COUNT
+		                E.EVENT_FILE,
+		                E.EVENT_CONTENT,
+                        APPROVED_STORE,
+                        COMMENT_COUNT,
+		                LIKE_COUNT,
+                        MAX_STORE
 		            FROM EVENT E
 		
 		            LEFT JOIN (
-		                SELECT EVENT_IDX, COUNT(*) APPLY_COUNT
+		                SELECT EVENT_IDX, COUNT(*) APPROVED_STORE
 		                FROM EVENT_REQUEST 
 		                JOIN EVENT_DAY USING (EDAY_IDX)
 		                WHERE PON > 0
@@ -142,42 +170,101 @@
 		            ) ER ON E.EVENT_IDX = ER.EVENT_IDX
 		
 		            LEFT JOIN (
-		                SELECT EVENT_IDX, SUM(STORE_MAX) MAX_COUNT
+		                SELECT EVENT_IDX, SUM(STORE_MAX) MAX_STORE
 		                FROM EVENT_DAY
 		                GROUP BY EVENT_IDX
 		            ) ED ON E.EVENT_IDX = ED.EVENT_IDX
+		            
+		            LEFT JOIN (
+		                SELECT EVENT_IDX, COUNT(*) LIKE_COUNT
+		                FROM EVENT_LIKE
+		                GROUP BY EVENT_IDX
+		            ) EL ON E.EVENT_IDX = EL.EVENT_IDX
+
+		            LEFT JOIN (
+			            SELECT EVENT_IDX, COUNT(*) COMMENT_COUNT 
+			            FROM COMMENT_EVENT 
+			            GROUP BY EVENT_IDX
+		            ) CE ON E.EVENT_IDX = CE.EVENT_IDX
+		            
                     
-		            WHERE 
-		            ]]>
+		            WHERE ]]>
 		            <choose>
-		            	<when test="eventFilter.list_state == 'open'">
-		            		<![CDATA[ 
-			            		E.EVENT_BSTARTDATE <= SYSDATE 
-			            		AND E.EVENT_BSTOPDATE >= SYSDATE
-			            		AND E.EVENT_RSTOPDATE > SYSDATE
-	                        	AND (APPLY_COUNT != MAX_COUNT 
-	                    			OR APPLY_COUNT IS NULL)
-		            		]]>
-		            	</when>
-		            	<when test="eventFilter.list_state == 'planned'">
-		            		<![CDATA[ E.EVENT_BSTARTDATE > SYSDATE]]>
+		            	<when test="eventFilter.auth != '' and eventFilter.auth != 'user'">
+				            <choose>
+				            	<when test="eventFilter.list_state == 'open'">
+				            		<![CDATA[ 
+				            			(E.EVENT_BSTARTDATE > SYSDATE
+					            		OR  E.EVENT_BSTARTDATE <= SYSDATE 
+					            		AND E.EVENT_BSTOPDATE >= SYSDATE
+					            		AND E.EVENT_RSTOPDATE > SYSDATE)
+			                        	AND (APPROVED_STORE != MAX_STORE 
+			                    		OR APPROVED_STORE IS NULL)
+				            		]]>
+				            	</when>
+				            	<otherwise>
+					                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+				            	</otherwise>
+				            </choose>
+		              		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
+						    	AND E.EVENT_TITLE LIKE '%${eventFilter.board_search}%'
+					        </if>
+			                ORDER BY
+			                <if test="eventFilter.auth != '' and eventFilter.auth != 'user' and eventFilter.list_state == 'open' and eventFilter.sort_type == 'event_rstopdate'">
+				            	<![CDATA[ 
+				                CASE
+				                    WHEN (
+				                    	E.EVENT_RSTARTDATE <= SYSDATE AND 
+				                   		E.EVENT_RSTOPDATE >= SYSDATE) 
+				                   		THEN 1
+				                    WHEN 
+				                    	E.EVENT_BSTARTDATE > SYSDATE 
+				                    	THEN 2
+				                END,
+				                CASE  
+				                    WHEN 
+				                    	APPROVED_STORE >= 0 
+				                    	THEN 1
+				                    WHEN 
+				                    	APPROVED_STORE IS NULL
+				                    	THEN 2
+				                END,
+				                ]]>
+					        </if>
+			                <![CDATA[ ${eventFilter.sort_type} ASC ]]>
 		            	</when>
 		            	<otherwise>
-			                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+		            		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
+						    	E.EVENT_TITLE LIKE '%${eventFilter.board_search}%' AND
+					        </if>
+		            		<choose>
+				            	<when test="eventFilter.list_state == 'open'">
+				            		<![CDATA[ 
+				            			E.EVENT_BSTARTDATE <= SYSDATE 
+					            		AND E.EVENT_BSTOPDATE >= SYSDATE
+							            ORDER BY E.EVENT_BSTOPDATE ASC
+				            		]]>
+				            	</when>
+				            	<when test="eventFilter.list_state == 'planned'">
+				            		<![CDATA[ 
+				            			E.EVENT_BSTARTDATE > SYSDATE
+							            ORDER BY E.EVENT_BSTARTDATE ASC
+				            		]]>
+				            	</when>
+				            	<otherwise>
+					                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+						            ORDER BY E.EVENT_BSTOPDATE DESC
+				            	</otherwise>
+				            </choose>
 		            	</otherwise>
 		            </choose>
-              		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
-				    	AND E.EVENT_TITLE LIKE '%${eventFilter.board_search}%'
-			        </if>
-		            <![CDATA[ 
-	                ORDER BY ${eventFilter.sort_type} ASC
-		        )
+		        <![CDATA[)
 		        WHERE ROWNUM <= #{criteria.pageNum} * #{criteria.amount}
 		    )
 		    WHERE RN > (#{criteria.pageNum} - 1) * #{criteria.amount}
 		]]> 
 	</select>
-	
+	<!-- DECODE(LETTER_READ, 0, 1) -->
 	<select id="endMaxCount" parameterType="int" resultType="int">
 		SELECT SUM(STORE_MAX) 
 		FROM EVENT_DAY 

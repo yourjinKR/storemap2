@@ -64,13 +64,10 @@ public class EventController {
 			},
 			consumes = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<EventResponseDTO> eventFilter(@RequestBody EventFilterVO filter, Criteria cri, Model model) {
-		List<EventVO> list = null;
-
 		cri.setPageNum(filter.getPage_num());
 		cri.setAmount(filter.getAmount_num());
 		
 		int total = eventService.getListCount(filter);
-		log.info("total : " + total);
 		PageDTO pdto = new PageDTO(cri, total);
 		EventDTO edto = new EventDTO(filter, cri);
 		EventResponseDTO resdto = new EventResponseDTO(pdto, eventService.getFilterList(edto));

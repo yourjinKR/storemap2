@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventFilterVO {
 	private int page_num, amount_num;
-	private String sort_type, list_state, board_search;
+	private String sort_type, list_state, board_search, auth;
 	private Date search_date;
 }

@@ -5,7 +5,14 @@
 
 <div class="content-list por mt50">
 	<div class="list-top mb30">
-		<h3>진행중인 이벤트 리스트</h3>
+		<c:choose>
+			<c:when test="${(not empty loginUser) and (userType ne 'user')}">
+				<h3>모집중/모집예정 중인 이벤트</h3>
+			</c:when>
+			<c:otherwise>
+				<h3>진행중인 이벤트 리스트</h3>
+			</c:otherwise>
+		</c:choose>
 	</div>
 	
 	<div class="board-top d_f mb15">
@@ -19,26 +26,28 @@
 			</select> 
 		</div>
 		<div class="right-con d_f">
-			<div class="board-type d_f">
-				<div>
-					<input type="checkbox" name="b-type" id="filterChk" value="list">
-					<label for="filterChk"> <span
-						class="material-symbols-outlined"> filter_alt </span> 필터
-					</label>
+			<c:if test="${(not empty loginUser) and (userType ne 'user')}">
+				<div class="board-type d_f">
+					<div>
+						<input type="checkbox" name="b-type" id="filterChk" value="list">
+						<label for="filterChk"> <span
+							class="material-symbols-outlined"> filter_alt </span> 필터
+						</label>
+					</div>
+					<!-- <div>
+						<input type="radio" name="b-type" id="list-chk" value="list"
+							checked="checked"> <label for="list-chk"> <span
+							class="material-symbols-outlined"> view_list </span>
+						</label>
+					</div>
+					<div>
+						<input type="radio" name="b-type" id="card-chk" value="card">
+						<label for="card-chk"> <span
+							class="material-symbols-outlined"> view_column_2 </span>
+						</label>
+					</div> -->
 				</div>
-				<div>
-					<input type="radio" name="b-type" id="list-chk" value="list"
-						checked="checked"> <label for="list-chk"> <span
-						class="material-symbols-outlined"> view_list </span>
-					</label>
-				</div>
-				<div>
-					<input type="radio" name="b-type" id="card-chk" value="card">
-					<label for="card-chk"> <span
-						class="material-symbols-outlined"> view_column_2 </span>
-					</label>
-				</div>
-			</div>
+			</c:if>
 			<div class="search">
 				<label for="boardSearch">검색 : </label> 
 				<input type="text" id="boardSearch">
@@ -46,62 +55,66 @@
 			</div>
 		</div>
 	</div>
-
-	<ul class="filter">
-		<li>
-			<h4>
-				정렬 <span class="material-symbols-outlined"> swap_vert </span>
-			</h4>
-			<input type="radio" name="sort" id="event_bstopdate" ${loginUser eq null || userType eq 'user' ? 'checked' : ''}> <label for="event_bstopdate">행사 종료일</label>
-			<input type="radio" name="sort" id="event_rstopdate" ${userType eq 'enter' || userType eq 'owner' ? 'checked' : ''}> <label for="event_rstopdate">입점 마감일</label>
-		</li>
-		<li>
-			<h4>일정</h4> 
-			<input type="checkbox" id="eventBdate" checked> 
-			<label for="eventBdate">행사 진행일</label> 
-			<input type="checkbox" id="eventRdate" checked> 
-			<label for="eventRdate">입점 신청일</label> 
-		</li>
-		<li>
-			<h4>지역</h4> 
-		</li>
-		<li><button type="button" onclick="eventFilter();" >적용</button></li>
-	</ul>
-	
+			
 	<ul class="board-tab mb5">
-		<li><a href="open" class="on">진행중인 이벤트</a></li>
-		<li><a href="planned">예정된 이벤트 </a></li>
+		<c:choose>
+			<c:when test="${(not empty loginUser) and (userType ne 'user')}">
+				<li><a href="open" class="on">진행/예정 중인 이벤트</a></li>
+			</c:when>
+			<c:otherwise>
+				<li><a href="open" class="on">진행중인 이벤트</a></li>
+				<li><a href="planned">예정된 이벤트 </a></li>
+			</c:otherwise>
+		</c:choose>
 		<li><a href="end">종료된 이벤트</a></li>
 	</ul>
-	
-	<table class="barod board-list" id="eventList">
-		<colgroup>
-			<col width="*">
-			<col width="100px">
-			<col width="250px">
-			<col width="250px">
-		</colgroup>
-		<tbody>
-			
-		</tbody>
-	</table>
 
-	<ul class="barod board-card d_f hide" id="card">
-		<%
-			for (int i = 0; i < 40; i++) {
-		%>
-		<li class="card-box">
-			<div class="card-img por">
-				사진 <img alt="" src=""> <span class="finsh-icon"> 마감 </span> <span
-					class="event-date">0000-00-00 ~ 0000-00-00</span>
-			</div>
-			<div class="card-text">
-				3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지3줄까지
-			</div>
-		</li>
-		<%
-			}
-		%>
+	<c:choose>
+		<c:when test="${(not empty loginUser) and (userType ne 'user')}">
+			<ul class="filter">
+				<li>
+					<h4>
+						정렬 <span class="material-symbols-outlined"> swap_vert </span>
+					</h4>
+					<input type="radio" name="sort" id="event_bstopdate" ${loginUser eq null || userType eq 'user' ? 'checked' : ''}> <label for="event_bstopdate">행사 종료일</label>
+					<c:if test="${(not empty loginUser) and (userType ne 'user')}">
+						<input type="radio" name="sort" id="event_rstopdate" ${userType eq 'enter' || userType eq 'owner' ? 'checked' : ''}> <label for="event_rstopdate">입점 마감일</label>
+					</c:if>
+				</li>
+				<li>
+					<h4>일정</h4> 
+					<input type="checkbox" id="eventBdate" checked> 
+					<label for="eventBdate">행사 진행일</label> 
+					<c:if test="${(not empty loginUser) and (userType ne 'user')}">
+						<input type="checkbox" id="eventRdate" checked> 
+						<label for="eventRdate">입점 신청일</label> 
+					</c:if>
+				</li>
+				<li>
+					<h4>지역</h4> 
+				</li>
+				<li><button type="button" onclick="eventFilter();" >적용</button></li>
+			</ul>
+	
+			<table class="barod board-list" id="boardList">
+				<colgroup>
+					<col width="*">
+					<col width="100px">
+					<col width="250px">
+					<col width="250px">
+				</colgroup>
+				<tbody>
+					
+				</tbody>
+			</table>
+		</c:when>
+		<c:otherwise>
+		</c:otherwise>
+	</c:choose>
+	
+
+	<ul class="barod board-card d_f" id="boardCard">
+	
 	</ul>
 
 	<!-- page -->

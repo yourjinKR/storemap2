@@ -11,7 +11,8 @@ h3{font-size: 32px}
 .end-icon{background: #BDBDBD;color:#616161}
 
 /* 카드 타입 */
-.board-card{justify-content: space-between;flex-wrap: wrap;}
+.board-card{flex-wrap: wrap;}
+.board-card .card-box{margin-bottom:20px}
 .board-card .finsh-icon{position: absolute;top: 5px;left: 10px;}
 .board-card .event-date{position: absolute;bottom: 5px;right: 10px;border:1px solid #222;border-radius:15px;background:#fff;padding:5px 10px;display:inline-block}
 
@@ -49,6 +50,8 @@ h3{font-size: 32px}
 
 .board-tab{display:flex;justify-content: flex-start;align-items: center;}
 .board-tab li{width:33.3333%;}
+.board-tab li:nth-last-child(2), .board-tab li:nth-last-child(2) + li{width: 50%;}
+.board-tab li:nth-last-child(3), .board-tab li:nth-last-child(3) ~ li{width: 33.3333%;}
 .board-tab li a{display:block;text-align:center;padding:20px 0;font-size:24px; font-weight:bold;border:1px solid #d9d9d9;}
 .board-tab li a.on{background: #1985ff;color: #fff;}
 
