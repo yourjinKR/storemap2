@@ -13,7 +13,7 @@
       <div class="info-text">주소: ${svo.store_address}</div>
       <div class="info-text">영업일: ${svo.store_activity_time}</div>
       <div class="info-text">전화: ${svo.store_num}</div>
-      <div class="clickIcon">
+      <div class="storeIcon">
       	<input type="button" name="report" id="report-icon${svo.store_idx}">
       	<label class="material-symbols-outlined" for="report-icon${svo.store_idx}">
       		report
@@ -43,8 +43,18 @@
       <button type="button" class="rbtn" id="reviewBtn">리뷰 쓰기</button><!-- 버튼css필요 -->
       <div class="review-section-list">
 	      <c:forEach var="rvo" items="${rlist}">
-	      <ul class="review">
+	      <ul class="review por">
 	      	<li>
+	      	<div class="reviewIcon">
+		    	<input type="button" name="reviewReport" id="reviewReport-icon${rvo.review_idx}">
+		      	<label class="material-symbols-outlined" for="reviewReport-icon${rvo.review_idx}">
+		      		report
+		      	</label>
+		      	<input type="checkbox" name="reviewLike" id="reviewLike-icon${rvo.review_idx}" ${isLiked ? 'checked' : ''}>
+		      	<label class="material-symbols-outlined" for="reviewLike-icon${rvo.review_idx}">
+		      		favorite
+		      	</label>
+		    </div>
 		  	  <img src="/resources/img/${rvo.writer_image}" alt="${rvo.writer_image}">
 		        <div class="review-content">
 		          <div class="stars">${rvo.review_star}</div>

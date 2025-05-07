@@ -78,40 +78,6 @@
 	color: #333;
 }
 
-/* 버튼 아이콘 */
-
-.clickIcon {
-	position: absolute;
-	width: 20px;
-  	height: 20px;
-  	top: 0;
-  	right: 50px;
-  	cursor: pointer;
-  	white-space:nowrap;
-}
-input[type="checkbox"], input[type="button"] {
-	width: 0;
-	height: 0;
-	z-index: -1;
-	position:absolute;
-	left: -9999px;
-}
-input[type="checkbox"] + label {
-	font-size:24px;
-	color:#f00;
-	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
-}
-input[type="checkbox"]:checked + label {
-	font-size:24px;
-	color:#f00;
-	font-variation-settings:'FILL' 1,'wght' 100,'GRAD' 0,'opsz' 32;
-}
-input[type="button"] + label {
-	font-size:24px;
-	color:#7A611D;
-	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
-}
-
 /* 메뉴 */
 
 .menu-section {
@@ -184,6 +150,43 @@ input[type="button"] + label {
 
 .stars {
 	color: gold;
+}
+
+/* 버튼 아이콘 */
+
+.storeIcon, .reviewIcon {
+	position: absolute;
+	width: 20px;
+  	height: 20px;
+  	top: 0;
+  	right: 50px;
+  	cursor: pointer;
+  	white-space:nowrap;
+}
+
+input[type="checkbox"], input[type="button"] {
+	width: 0;
+	height: 0;
+	z-index: -1;
+	position:absolute;
+	left: -9999px;
+}
+
+input[type="checkbox"] + label {
+	font-size:24px;
+	color:#f00;
+	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
+}
+input[type="checkbox"]:checked + label {
+	font-size:24px;
+	color:#f00;
+	font-variation-settings:'FILL' 1,'wght' 100,'GRAD' 0,'opsz' 32;
+}
+
+input[type="button"] + label {
+	font-size:24px;
+	color:#7A611D;
+	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
 }
 
 /*모달*/
