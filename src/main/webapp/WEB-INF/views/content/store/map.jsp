@@ -19,10 +19,14 @@
 				</form>		
 			</div>
 			<div id="body">
-				<jsp:include page="../modal/storeListModal.jsp"/>		
+				<jsp:include page="../modal/storeListModal.jsp"/>	
+				<div id="searchFail">
+					<div>검색 결과가 존재하지 않습니다.</div>
+				</div>	
 			</div>
 		</div>
 	</div>
+
 	<!-- 사이드바 컨트롤러 -->
 	<div class="side-bar" id="toggle-box">
 		<button class="mapBtn" id="toggle">토글</button>			

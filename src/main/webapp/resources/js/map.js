@@ -36,7 +36,7 @@ let storeUL = document.querySelector(".store-card ul");
 
 // 스토어 리스트 사이드바 컨트롤
 let listSideBar = document.querySelector(".side-bar#store-list");
-//  뷰 사이드바 컨트롤
+/** true : 사이드바가 열린 상태 */  
 let viewSideBarCheck = false;
 let viewSideBar = document.querySelector(".side-bar#store");
 // 토글 버튼
@@ -85,8 +85,18 @@ document.addEventListener("DOMContentLoaded", () => {
         // 닫기 버튼 표시
         let modalHeader = document.querySelector(".modal-header");        
         modalHeader.style.display = 'block';
+
+        // 기본 상태
+        let basicCondition = {
+            level : basicMap.getLevel(),
+            lat : basicMap.getCenter().getLat(),
+            lng : basicMap.getCenter().getLng(),
+        };
+        as.getListNearest(basicCondition, function (data) {
+            apply2map(data);
+        })
     }
-    // 영업 위치 설정 지도
+    // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
         let f = document.forms[0];
         // 위치가 설정되지 않았을 경우
@@ -275,43 +285,6 @@ document.addEventListener("DOMContentLoaded", () => {
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     }
     
-    // 지역명 기반 검색 서비스 함수 실행
-    as.getListByReg("논현", function(data) {
-        storeUL = document.querySelector(".store-card ul");
-        console.log(data);
-        data.forEach(vo => {
-            let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
-            vo.marker = marker;
-            storeVOList.push(vo);
-        });
-        let msg = "";
-        // 점포 리스트 출력
-        storeVOList.forEach(vo => {
-            // console.log(vo);
-            msg += 
-            // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-            `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
-                <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
-				<input type="hidden" name="store_address" value="${vo.store_address}">
-				<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
-				<input type="hidden" name="store_num" value="${vo.store_num}">
-				<div class="store-description">
-					<div class="store-name">${vo.store_name}</div>
-					<div class="store-content">${vo.store_content}</div>
-				</div>
-				<br>
-            </li>`;
-            storeUL.innerHTML = msg;
-        });
-
-        let storeLI = document.querySelectorAll(".store-card ul li");
-        // 가게와 마커를 메핑
-        storeMarkerMapping(storeLI);
-
-        // console.log(storeVOList);
-        showMarkers(basicMap);
-    });
-    
     // ========================= 사이드바 선언 =========================
 
     // 스토어 리스트 사이드바 컨트롤
@@ -418,16 +391,17 @@ function storeMarkerMapping(stores) {
         stores.forEach(store => {
             // idx 추출
             let idx = store.getAttribute("data-store_idx");
+            // 가게 클릭 이벤트 추가
             store.addEventListener('click', e => {
                 // 리스트 중에서 idx 찾기
                 markerList.forEach(marker => {
                     if (marker.getTitle() === idx) {
                         showviewSideBar();
                         showStoreMarker(idx);
+                        setToggle(600);
                     }
                 });
                 viewSideBarCheck = true;
-                setToggle(600);
             });
         });
     }
@@ -533,6 +507,10 @@ function toggleListSideBar() {
     }
 }
 
+/** 토글 위치 계산하는 함수, 이걸 만들까 말까 만들까 말까 */
+function calcToggle() {
+}
+
 // 비동기 서비스
 const asyncService = (function(){
     
@@ -600,8 +578,18 @@ const asyncService = (function(){
         .then(response => response.json())
         .then(data => {
             callback(data);
+            document.querySelector(".storeListModal").style.display = "block"; // 스토어 리스트 view
+            document.querySelector("#searchFail").style.display = "none"; // 경고 문구 hide
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.error(err);
+            // 찾는 결과가 없을때 경고 문구를 보여주고 스토어 리스트를 숨김 처리
+            document.querySelector(".storeListModal").style.display = "none"; // 스토어 리스트 hide
+            document.querySelector("#searchFail").style.display = "block"; // 경고 문구 view
+            viewSideBarCheck = false;
+            hideviewSideBar();
+            setToggle(300);
+        });
     }
 
     /** store_idx 입력 시 점포 상세보기 정보 출력 함수 */
@@ -696,14 +684,19 @@ function mapSearchService(map, keyword) {
     //     console.log(data);
     // });
 
-    // 현재 가장 가까운 점포 10개 출력
-    // as.getListNearest(condition, function (data) {
-    //     apply2map(data);
-    // });
-    // 키워드 검색
-    as.getListByKeyword(condition, function (data) {
-        apply2map(data);
-    });
+    if (!keyword) {
+        // 현재 가장 가까운 점포 10개 출력
+        as.getListNearest(condition, function (data) {
+            apply2map(data);
+        });
+    }
+    else {
+        // 키워드 검색
+        as.getListByKeyword(condition, function (data) {
+            apply2map(data);
+            panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
+        });
+    }
 
     // 1. 키워드를 분류
     // 2. 키워드에 맞는 쿼리문 실행
@@ -730,7 +723,7 @@ function apply2map(data) {
     overlayList = [];
 
     data.forEach(vo => {
-        let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx); // 마커 추가예정
+        let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx);
         vo.marker = marker;
         storeVOList.push(vo);
         registerOverlay(basicMap, vo.store_lat, vo.store_lng, vo.store_name);
@@ -764,7 +757,7 @@ function apply2map(data) {
     showMarkers(basicMap);
 
     // 지도 이동
-    panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
+    // panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
 }
 
 // ======= 키워드 검색 관련 =======
@@ -776,7 +769,7 @@ function searchPlaces() {
     let keyword = document.getElementById('keyword').value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+        // alert('키워드를 입력해주세요!');
         return false;
     }
 
@@ -791,12 +784,12 @@ function placesSearchCB(data, status, pagination) {
         
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
 
-        alert('검색 결과가 존재하지 않습니다.');
+        // alert('검색 결과가 존재하지 않습니다.');
         return;
 
     } else if (status === kakao.maps.services.Status.ERROR) {
 
-        alert('검색 결과 중 오류가 발생했습니다.');
+        // alert('검색 결과 중 오류가 발생했습니다.');
         return;
 
     }
