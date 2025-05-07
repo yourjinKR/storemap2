@@ -56,6 +56,7 @@ public class MemberController {
 	public String loginPage(HttpServletRequest request, HttpSession session) {
 		String referer = request.getHeader("Referer");
 		if(referer != null && !referer.contains("/login")) {
+			// URL에서 도메인을 제거해 상대경로로 저장
 			String contextPath = request.getContextPath();
 			String redirectPath = referer.replaceFirst("http?://[^/]+", "");
 			session.setAttribute("redirectAfterLogin", redirectPath);
@@ -213,7 +214,7 @@ public class MemberController {
 		return result;
 	}
 	
-	// 첨부파일
+	// 첨부파일(진행중)
 	
 	
 	// 개인 회원가입 처리
@@ -243,7 +244,7 @@ public class MemberController {
 		return "index";
 	}
 	
-//	@PostMapping("/delete")
+//	@PostMapping("/delete") // 진행중
 //	public String deleteMember(@RequestParam String pw, HttpSession session, Model model) {
 //	    String loginId = (String) session.getAttribute("loginUser");
 //	    String userType = (String) session.getAttribute("userType");
