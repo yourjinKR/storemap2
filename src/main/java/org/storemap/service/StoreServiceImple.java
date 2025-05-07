@@ -132,6 +132,11 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public List<StoreVO> getStoreKeywordList(MapDTO map) {
+		return mapper.getStoreKeywordList(map);
+	}
+	
+	@Override
 	public int favorite(int store_idx) {
 		log.info("favorite..."+store_idx);
 		return mapper.updateFavorite(store_idx);

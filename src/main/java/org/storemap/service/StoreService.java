@@ -41,6 +41,8 @@ public interface StoreService {
 	public List<StoreVO> getLocList(MapDTO map);
 	// 현위치 기반 점포 리스트 불러오기
 	public List<StoreVO> getNearestStores(MapDTO map);
+	// 키워드 검색 점포 리스트 불러오기
+	public List<StoreVO> getStoreKeywordList(MapDTO map);
 	// 점포 좋아요
 	public int favorite(int store_idx);
 	// 점포 좋아요 취소

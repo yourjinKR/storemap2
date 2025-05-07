@@ -143,7 +143,7 @@
 		select * from store WHERE store_regcode LIKE #{gu} || '%'
 	</select>
 	
-	<!-- 가장 가까운 좌표 추출 -->
+	<!-- 가장 가까운 점포 리스트 보기 -->
 	<select id="getNearestStores" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
 	    SELECT *
 	    FROM (
@@ -163,6 +163,44 @@
 	               )
 	    )
 	    WHERE ROWNUM &lt;= 10
+	</select>
+	
+	<!-- 키워드에 해당하는 검색어 찾기 -->
+	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
+		SELECT *
+		FROM (
+		    SELECT DISTINCT s.*,
+		        6371 * ACOS(
+		            COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
+		            COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
+		            SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
+		        ) AS distance,
+		        CASE
+		            WHEN s.store_address LIKE '%' || #{keyword} || '%' THEN 1
+		            WHEN s.store_name LIKE '%' || #{keyword} || '%' THEN 2
+		            WHEN EXISTS (
+		                SELECT 1 FROM menu m
+		                WHERE m.store_idx = s.store_idx
+		                  AND m.menu_name LIKE '%' || #{keyword} || '%'
+		            ) THEN 3
+		            ELSE 4
+		        END AS priority
+		    FROM store s
+		    WHERE s.store_hidden = 0
+		      AND s.store_lat IS NOT NULL
+		      AND s.store_lng IS NOT NULL
+		      AND (
+		            s.store_address LIKE '%' || #{keyword} || '%'
+		         OR s.store_name LIKE '%' || #{keyword} || '%'
+		         OR EXISTS (
+		             SELECT 1 FROM menu m
+		             WHERE m.store_idx = s.store_idx
+		               AND m.menu_name LIKE '%' || #{keyword} || '%'
+		         )
+		      )
+		    ORDER BY priority, distance
+		)
+		WHERE ROWNUM &lt;= 10
 	</select>
 	
 	<!-- 점포 좋아요 업 -->

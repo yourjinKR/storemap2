@@ -198,16 +198,20 @@ public class ModalController {
 					MediaType.APPLICATION_JSON_VALUE
 	})
 	public ResponseEntity<List<StoreVO>> getNearestStores(@RequestBody MapDTO map){
-		log.info("getListByLoc...");
-		log.info("lat..." + map.getLat());
-		log.info("lng..." + map.getLng());
-		log.info("level..." + map.getLevel());
-		log.info("code..." + map.getCode());
-		log.info("keyword..." + map.getKeyword());
+		log.info("getNearestStores..." + map);
 		return new ResponseEntity<List<StoreVO>>(storeService.getNearestStores(map), HttpStatus.OK);
 	}
 	
-	
+	// 키워드 검색 점포 리스트 비동기 조회
+	@PostMapping(value = "/list/keyword",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+	})
+	public ResponseEntity<List<StoreVO>> getListByKeyword(@RequestBody MapDTO map){
+		log.info("getListByKeyword..." + map);
+		return new ResponseEntity<List<StoreVO>>(storeService.getStoreKeywordList(map), HttpStatus.OK);
+	}
 	
 	/*--------------------------------------------------------------------------*/
 	

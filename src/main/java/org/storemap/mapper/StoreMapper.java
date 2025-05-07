@@ -41,6 +41,8 @@ public interface StoreMapper {
 	public List<StoreVO> getStoreLocList(int gu);
 	// 가장 가까운 점포 리스트 불러오기
 	public List<StoreVO> getNearestStores(MapDTO map);
+	// 키워드 검색 점포 리스트 불러오기
+	public List<StoreVO> getStoreKeywordList(MapDTO map);
 	// 점포 좋아요
 	public int updateFavorite(int store_idx);
 	// 점포 좋아요 취소

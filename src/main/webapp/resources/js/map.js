@@ -588,9 +588,20 @@ const asyncService = (function(){
         
     }
 
-    // 통합 검색?
-    function getList(keyword, callback) {
-        
+    // 키워드 검색
+    function getListByKeyword(condition, callback) {
+        fetch(`/modal/list/keyword.json`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(condition)
+        })
+        .then(response => response.json())
+        .then(data => {
+            callback(data);
+        })
+        .catch(err => console.error(err));
     }
 
     /** store_idx 입력 시 점포 상세보기 정보 출력 함수 */
@@ -619,7 +630,8 @@ const asyncService = (function(){
         getListByReg : getListByReg,
         getListByLoc : getListByLoc,
         getStore : getStore,
-        getMenuList : getMenuList
+        getMenuList : getMenuList,
+        getListByKeyword : getListByKeyword
     };
 })();
 const as = asyncService;
@@ -670,6 +682,7 @@ function getDistanceMarkers(marker1, marker2) {
 
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
+    searchPlaces();
     let condition = {
         level : map.getLevel(),
         lat : map.getCenter().getLat(),
@@ -684,9 +697,13 @@ function mapSearchService(map, keyword) {
     // });
 
     // 현재 가장 가까운 점포 10개 출력
-    as.getListNearest(condition, function (data) {
+    // as.getListNearest(condition, function (data) {
+    //     apply2map(data);
+    // });
+    // 키워드 검색
+    as.getListByKeyword(condition, function (data) {
         apply2map(data);
-    })
+    });
 
     // 1. 키워드를 분류
     // 2. 키워드에 맞는 쿼리문 실행
@@ -745,4 +762,42 @@ function apply2map(data) {
 
     // console.log(storeVOList);
     showMarkers(basicMap);
+
+    // 지도 이동
+    panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
+}
+
+// ======= 키워드 검색 관련 =======
+// 키워드 검색을 요청하는 함수
+function searchPlaces() {
+    // 장소 검색 객체를 생성합니다
+    let ps = new kakao.maps.services.Places();  
+
+    let keyword = document.getElementById('keyword').value;
+
+    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+        alert('키워드를 입력해주세요!');
+        return false;
+    }
+
+    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+    ps.keywordSearch(keyword, placesSearchCB); 
+}
+
+// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+function placesSearchCB(data, status, pagination) {
+    if (status === kakao.maps.services.Status.OK) {
+        console.log(data);
+        
+    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+        alert('검색 결과가 존재하지 않습니다.');
+        return;
+
+    } else if (status === kakao.maps.services.Status.ERROR) {
+
+        alert('검색 결과 중 오류가 발생했습니다.');
+        return;
+
+    }
 }
