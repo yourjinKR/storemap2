@@ -189,7 +189,7 @@ input[type="button"] + label {
 	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
 }
 
-.storeLike-count {
+.storeLike-count, .reviewLike-count {
 	font-size: 14px;
 	font-weight: bold;
 	color: #f00;

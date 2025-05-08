@@ -112,17 +112,26 @@ function checkInitialReviewLike() {
             .then(response => response.json())
             .then(data => {
                 checkbox.checked = data.reviewLikedMap;
+                // 좋아요 카운트 업데이트 (검증 목적)
+                const reviewLikeCount = document.querySelector(`.reviewLike-count-${review_idx}`);
+                if (reviewLikeCount && data.reviewLikeCount) {
+                    reviewLikeCount.textContent = data.reviewLikeCount;
+                }
             })
             .catch(error => console.error('Error checking favorite status:', error));
     });
 }
 
-// 점포 즐겨찾기 상태 전환
+// 점포 좋아요 상태 전환
 function toggleStoreLike(store_idx, member_idx, checkbox) {
 	const storeLikeCount = document.querySelector(`.storeLike-count-${store_idx}`);
 	let currentCount = parseInt(storeLikeCount.textContent || '0');
     let newCount = checkbox.checked ? currentCount + 1 : Math.max(currentCount - 1, 0);
     
+    // 애니메이션을 위해 먼저 클래스 제거
+    storeLikeCount.classList.remove('like-update');
+    // 강제로 리플로우 발생시켜 애니메이션 초기화
+    void storeLikeCount.offsetWidth;
     // 즉시 UI 업데이트
     storeLikeCount.textContent = newCount;
     storeLikeCount.classList.add('like-update');
@@ -153,14 +162,39 @@ function toggleStoreLike(store_idx, member_idx, checkbox) {
 
 //리뷰 좋아요 상태 전환
 function toggleReviewLike(review_idx, member_idx, checkbox) {
+	const reviewLikeCount = document.querySelector(`.reviewLike-count-${review_idx}`);
+    let currentCount = parseInt(reviewLikeCount.textContent || '0');
+    let newCount = checkbox.checked ? currentCount + 1 : Math.max(currentCount - 1, 0);
+    
+    // 애니메이션을 위해 먼저 클래스 제거
+    reviewLikeCount.classList.remove('like-update');
+    // 강제로 리플로우 발생시켜 애니메이션 초기화
+    void reviewLikeCount.offsetWidth;
+    // 즉시 UI 업데이트
+    reviewLikeCount.textContent = newCount;
+    reviewLikeCount.classList.add('like-update');
+    
     fetch(`/modal/reviewLike/toggle?review_idx=${review_idx}&member_idx=${member_idx}`)
         .then(response => response.json())
         .then(data => {
             // 서버 상태와 일치하도록 체크박스 업데이트
             checkbox.checked = data.reviewLikedMap;
+            // 좋아요 수 카운트 업데이트
+            if (reviewLikeCount && data.reviewLikeCount !== undefined) {
+                reviewLikeCount.textContent = data.reviewLikeCount;
+            }
+            // 좋아요 상태 애니메이션 효과
+            setTimeout(() => {
+                reviewLikeCount.classList.remove('like-update');
+            }, 500);
         })
         .catch(error => {
             console.error('Error toggling review favorite:', error);
+            // 오류 발생 시 체크박스 상태 되돌리기
+//            checkbox.checked = !checkbox.checked;
+//            reviewLikeCount.textContent = currentCount;
+//            reviewLikeCount.classList.remove('like-update');
+//            alert('좋아요 처리 중 오류가 발생했습니다.');
         });
 }
 

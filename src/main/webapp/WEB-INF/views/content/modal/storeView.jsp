@@ -55,6 +55,7 @@
 		      	<label class="material-symbols-outlined" for="reviewLike-icon${rvo.review_idx}">
 		      		favorite
 		      	</label>
+		      	<span class="reviewLike-count reviewLike-count-${rvo.review_idx}">${rvo.review_like_cnt}</span>
 		    </div>
 		  	  <img src="/resources/img/${rvo.writer_image}" alt="${rvo.writer_image}">
 		        <div class="review-content">

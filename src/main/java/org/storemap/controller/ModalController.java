@@ -179,6 +179,10 @@ public class ModalController {
             result.put("reviewLikedMap", false);
         }
         
+        // 업데이트된 리뷰 좋아요 카운트 불러오기
+        ReviewVO reviewVO = reviewService.get(review_idx);
+        result.put("reviewLikeCount", reviewVO.getReview_like_cnt());
+        
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     //리뷰좋아요 상태 확인
@@ -190,6 +194,9 @@ public class ModalController {
         Map<String, Object> result = new HashMap<>();
         ReviewLikeVO likeVO = reviewLikeService.getIdx(review_idx, member_idx);
         result.put("reviewLikedMap", likeVO != null);
+        
+        ReviewVO reviewVO = reviewService.get(review_idx);
+        result.put("reviewLikeCount", reviewVO.getReview_like_cnt());
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
