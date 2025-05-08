@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         console.log(latlng.getLat());
         console.log(latlng.getLng());
-        searchAddrFromCoords(latlng);
+        // searchAddrFromCoords(latlng);
         // searchDetailAddrFromCoords(latlng); (상세주소)
 
         let f = document.querySelector("#store-modify");
@@ -256,7 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
                 form.address.value = result[0].address_name; // 서울특별시 강남구 논현동
-                // form.area.value = result[0].region_1depth_name; // 서울특별시
                 form.regcode.value = result[0].code; // 행정코드
             }
         };
