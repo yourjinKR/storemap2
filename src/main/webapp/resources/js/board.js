@@ -4,7 +4,7 @@ linkEle.rel = 'stylesheet';
 linkEle.href = BOARD_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
-let filterBtn, filter, filterAmount, boardSearch, rDate, bDate = null;
+let filterBtn, filter, eLocation, filterAmount, boardSearch, sortCountType, rDate, bDate = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	boardSearch = document.querySelector("#boardSearch");
@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 	// 이벤트 리스트 출력
 	if(window.location.pathname == "/event/eventList"){
-		
 		if(userId != null && userId != "" && auth != "user"){
 			// 필터 모달
 			filterBtn = document.querySelector("#filterChk");
@@ -29,10 +28,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		filterAmount = document.querySelector("#amount");
 		if(filterAmount != null){
 			filterAmount.addEventListener("change",function(){
-				eventFilter(pageNum, this.value)
+				eventFilter(pageNum, this.value);
+			})
+		}
+		
+		// 지역선택
+		eLocation = document.querySelector("#eLocation");
+		if(eLocation != null){
+			eLocation.addEventListener("change",function(){
+				eventFilter(pageNum);
 			})
 		}
 	
+		// 게시판 탭변경
 		let tabEl = document.querySelectorAll(".board-tab li a");
 		if(tabEl != null || tabEl.length > 0){
 			tabEl.forEach(tab => {
@@ -47,11 +55,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			})
 		}
 		
+		// 게시물 검색
 		if(boardSearch != null){
 			boardSearch.addEventListener("keydown", function(e){
 				if(e.keyCode == 13){
 					eventFilter();
 				}
+			})
+		}
+		
+		// 좋아요 or 댓글순
+		let sortBtn = document.querySelectorAll(".board-top .left-con input[type=checkbox]");
+		if(sortBtn.length > 0){
+			sortBtn.forEach(btnEl => {
+				btnEl.addEventListener("change", function(){
+					let sortChkBtn = document.querySelectorAll(".board-top .left-con input[type=checkbox]:checked");
+					if(sortChkBtn.length > 1){
+						sortBtn.forEach(btnEl => btnEl.checked = false);
+						this.checked = true;
+					}
+					sortCountType = sortChkBtn.length == 0 ? "" : this.value;
+					eventFilter();
+				})
 			})
 		}
 		
@@ -78,8 +103,9 @@ function eventFilter(pageNum){
 			'Content-Type' : 'application/json'
         },
         body: JSON.stringify({
-        	sort_type : sort != null ? sort.getAttribute("id") : 'event_bstopdate',
-        	search_date : "",
+        	sort_date_type : sort != null ? sort.getAttribute("id") : 'event_bstopdate',
+			sort_count_type : sortCountType != null ? sortCountType : "", 
+        	event_location : eLocation != null ? eLocation.value : "전체",
         	list_state : showList != null ? showList.getAttribute("href") : "open",
         	board_search : boardSearch != null || boardSearch != "" ? boardSearch.value : "",
     		page_num : pageNumData,
@@ -130,11 +156,9 @@ function eventFilter(pageNum){
 function cardBoard(result){
 	let str = "";
 	if(result != null && result.event.length > 0){
-		console.log(result.event );
-		
 		result.event.forEach(data => {
-			str += 	`<li class="card-box">`;
-			str += 		`<div class="card-img por">`;
+			str += 	`<li class="card-box" data-idx="${data.event_idx}">`;
+			str += 		`<div class="card-img por">idx : ${data.event_idx}<br> 지역 : ${data.event_location}<br> 제목 : ${data.event_title}`;
 			str += 		`<img alt="" src="/resources/img/${data.event_file}">`;
 			str += 		`<span class="event-date">${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</span>`;
 			str += 		`</div>`;
@@ -145,7 +169,10 @@ function cardBoard(result){
 			str += 		`</div>`;
 			str += `</li>`;
 		})
-	
+	}else{
+		str += `<div class="empty-data">
+					검색된 이벤트가 없습니다.
+				</div>`;
 	}
 	document.querySelector("#boardCard").innerHTML = str;
 }
@@ -156,7 +183,11 @@ function listBoard(result){
 	let str = "";
 	if(result != null && result.event.length > 0){
 		result.event.forEach(data => {
+			let address = data.event_location.split(" ");
 			str += 	`<tr data-idx="${data.event_idx}">`;
+			str += 		`<td>`;
+			str += 		`지역 : ${address[0]} `;
+			str += 		`</td>`;
 			str += 		`<td>`;
 			str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">${data.event_title}&emsp;신청 : ${data.approved_store}&emsp;최대 : ${data.max_store}</a>`;
 			str += 		`</td>`;

@@ -116,6 +116,9 @@
 	            </choose>
            	</otherwise>
 		</choose>
+        <if test="event_location != '전체'">
+    		AND E.EVENT_LOCATION LIKE '%${event_location}%'
+        </if>
 		<if test="board_search != null and board_search != ''">
 	    	AND E.EVENT_TITLE LIKE '%${board_search}%'
         </if>
@@ -127,7 +130,6 @@
 	</select>
 	
 	<select id="getFilterList" resultType="org.storemap.domain.EventVO">
-		<![CDATA[ 
 			SELECT * FROM (
 		        SELECT
 		            EVENT_IDX, 
@@ -139,6 +141,7 @@
 		            EVENT_BSTOPDATE,
 		            EVENT_FILE,
 		            EVENT_CONTENT,
+		            EVENT_LOCATION,
                     APPROVED_STORE,
                     COMMENT_COUNT,
                     LIKE_COUNT,
@@ -155,6 +158,7 @@
 		                E.EVENT_BSTOPDATE,
 		                E.EVENT_FILE,
 		                E.EVENT_CONTENT,
+		                E.EVENT_LOCATION,
                         APPROVED_STORE,
                         COMMENT_COUNT,
 		                LIKE_COUNT,
@@ -187,8 +191,7 @@
 			            GROUP BY EVENT_IDX
 		            ) CE ON E.EVENT_IDX = CE.EVENT_IDX
 		            
-                    
-		            WHERE ]]>
+		            WHERE
 		            <choose>
 		            	<when test="eventFilter.auth != '' and eventFilter.auth != 'user'">
 				            <choose>
@@ -209,8 +212,11 @@
 		              		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
 						    	AND E.EVENT_TITLE LIKE '%${eventFilter.board_search}%'
 					        </if>
+					        <if test="eventFilter.event_location != '전체'">
+		            			AND E.EVENT_LOCATION LIKE '%${eventFilter.event_location}%'
+					        </if>
 			                ORDER BY
-			                <if test="eventFilter.auth != '' and eventFilter.auth != 'user' and eventFilter.list_state == 'open' and eventFilter.sort_type == 'event_rstopdate'">
+			                <if test="eventFilter.auth != '' and eventFilter.auth != 'user' and eventFilter.list_state == 'open' and eventFilter.sort_date_type == 'event_rstopdate'">
 				            	<![CDATA[ 
 				                CASE
 				                    WHEN (
@@ -231,29 +237,66 @@
 				                END,
 				                ]]>
 					        </if>
-			                <![CDATA[ ${eventFilter.sort_type} ASC ]]>
+			                <![CDATA[ ${eventFilter.sort_date_type} ASC ]]>
 		            	</when>
 		            	<otherwise>
-		            		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
-						    	E.EVENT_TITLE LIKE '%${eventFilter.board_search}%' AND
-					        </if>
 		            		<choose>
 				            	<when test="eventFilter.list_state == 'open'">
 				            		<![CDATA[ 
-				            			E.EVENT_BSTARTDATE <= SYSDATE 
-					            		AND E.EVENT_BSTOPDATE >= SYSDATE
-							            ORDER BY E.EVENT_BSTOPDATE ASC
+				            			(E.EVENT_BSTARTDATE <= SYSDATE 
+					            		AND E.EVENT_BSTOPDATE >= SYSDATE)
 				            		]]>
 				            	</when>
 				            	<when test="eventFilter.list_state == 'planned'">
-				            		<![CDATA[ 
-				            			E.EVENT_BSTARTDATE > SYSDATE
-							            ORDER BY E.EVENT_BSTARTDATE ASC
-				            		]]>
+				            		<![CDATA[E.EVENT_BSTARTDATE > SYSDATE]]>
 				            	</when>
 				            	<otherwise>
-					                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
-						            ORDER BY E.EVENT_BSTOPDATE DESC
+					                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]>
+				            	</otherwise>
+				            </choose>
+				            
+				            <if test="eventFilter.board_search != null and eventFilter.board_search != ''">
+						    	AND E.EVENT_TITLE LIKE '%${eventFilter.board_search}%'
+					        </if>
+				            <if test="eventFilter.event_location != '전체'">
+		            			AND E.EVENT_LOCATION LIKE '%${eventFilter.event_location}%'
+					        </if>
+					        
+				            ORDER BY
+				            <choose>
+				            	<when test="eventFilter.sort_count_type == 'lCount'">
+				            		 CASE
+		                                WHEN 
+					                    	LIKE_COUNT >= 0 
+					                    	THEN 1
+						                WHEN 
+					                    	LIKE_COUNT IS NULL
+					                    	THEN 2
+		                            END,
+		                            LIKE_COUNT DESC,
+				            	</when>
+				            	<when test="eventFilter.sort_count_type == 'cCount'">
+				            		 CASE
+		                                WHEN 
+					                    	COMMENT_COUNT >= 0 
+					                    	THEN 1
+						                WHEN 
+					                    	COMMENT_COUNT IS NULL
+					                    	THEN 2
+		                            END,
+		                            COMMENT_COUNT DESC,
+				            	</when>
+				            </choose>
+				            
+				            <choose>
+				            	<when test="eventFilter.list_state == 'open'">
+		                            E.EVENT_BSTOPDATE ASC
+				            	</when>
+				            	<when test="eventFilter.list_state == 'planned'">
+		                            E.EVENT_BSTARTDATE ASC
+				            	</when>
+				            	<otherwise>
+		                            E.EVENT_BSTOPDATE ASC
 				            	</otherwise>
 				            </choose>
 		            	</otherwise>

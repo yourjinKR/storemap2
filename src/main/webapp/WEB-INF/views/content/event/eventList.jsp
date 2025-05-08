@@ -16,14 +16,40 @@
 	</div>
 	
 	<div class="board-top d_f mb15">
-		<div class="left-con">
-			<label for="amount">게시물 개수 : </label> 
-			<select id="amount">
-				<option value="20" selected>20</option>
-				<option value="30">30</option>
-				<option value="40">40</option>
-				<option value="50">50</option>
-			</select> 
+		<div class="left-con d_f">
+			<div>
+				<label for="amount">게시물 개수 : </label> 
+				<select id="amount">
+					<option value="20" selected>20</option>
+					<option value="30">30</option>
+					<option value="40">40</option>
+					<option value="50">50</option>
+				</select>
+			</div>
+			<div class="select-box">
+				<label for="eLocation">지역 : </label> 
+				<select id="eLocation">
+					<option value="전체">전체</option>
+					<option value="서울">서울</option>
+					<option value="경기">경기</option>
+					<option value="인천">인천</option>
+					<option value="강원">강원</option>
+					<option value="충청남도">충남</option>
+					<option value="대전">대전</option>
+					<option value="충청북도">충북</option>
+					<option value="부산">부산</option>
+					<option value="울산">울산</option>
+					<option value="대구">대구</option>
+					<option value="경상북도">경북</option>
+					<option value="경상남도">경남</option>
+					<option value="전라남도">전남</option>
+					<option value="광주">광주</option>
+					<option value="전라북도">전북</option>
+					<option value="제주">제주</option>
+				</select>
+			</div>
+			<div><input type="checkbox" id="lCount" value="lCount"><label for="lCount">좋아요 순</label></div>
+			<div><input type="checkbox" id="cCount" value="cCount"><label for="cCount">댓글 순</label></div>
 		</div>
 		<div class="right-con d_f">
 			<c:if test="${(not empty loginUser) and (userType ne 'user')}">
@@ -59,14 +85,15 @@
 	<ul class="board-tab mb5">
 		<c:choose>
 			<c:when test="${(not empty loginUser) and (userType ne 'user')}">
-				<li><a href="open" class="on">진행/예정 중인 이벤트</a></li>
+				<li><a href="open" class="on">모집중/모집예정 중인 이벤트</a></li>
+				<li><a href="end">모집 종료된 이벤트</a></li>
 			</c:when>
 			<c:otherwise>
 				<li><a href="open" class="on">진행중인 이벤트</a></li>
 				<li><a href="planned">예정된 이벤트 </a></li>
+				<li><a href="end">종료된 이벤트</a></li>
 			</c:otherwise>
 		</c:choose>
-		<li><a href="end">종료된 이벤트</a></li>
 	</ul>
 
 	<c:choose>
@@ -98,6 +125,7 @@
 	
 			<table class="barod board-list" id="boardList">
 				<colgroup>
+					<col width="175px">
 					<col width="*">
 					<col width="100px">
 					<col width="250px">

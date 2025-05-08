@@ -2,6 +2,7 @@
 
 h3{font-size: 32px}
 
+
 .board-top{justify-content: space-between;align-items: center}
 .right-con{align-items: center;}
 .state-icon{width: 78px ;background: #f00; color:#fff; border-radius: 15px;padding:5px 15px;font-size: 12px !important;font-weight:bold;}
@@ -23,8 +24,8 @@ h3{font-size: 32px}
 
 
 .board-list tr > td{border-bottom: 1px solid #222;border-left: 1px solid #222;vertical-align: middle;padding:10px;font-size:16px;}
-.board-list tr > td.empty-data{text-align:center;padding:50px 0;font-size:28px;font-weight:bold;color:#d9d9d9}
-.board-list tr > td:nth-child(n+2) {text-align:center;}
+
+.board-list tr > td:nth-child(n+3) {text-align:center;}
 
 .board-type {gap:5px;}
 .board-type input[type="checkbox"],
@@ -48,12 +49,21 @@ h3{font-size: 32px}
 .filter h4 .material-symbols-outlined {font-size:18px;font-variation-settings:'FILL' 0,'wght' 200,'GRAD' 0,'opsz' 48}
 .filter button{background:#1985ff;color:#fff;border:none;padding:5px 20px; border-radius:5px;font-size:18px;}
 
+.board-top .left-con{align-items: center;gab:10px;}
+.board-top .left-con > div{border-left:1px solid #d9d9d9;padding:0px 10px}
+/* .btns-sort > div:last-child{border-right:0;} */
+.board-top .left-con input + label{}
+.board-top .left-con input:checked + label{color:#1985ff;font-weight:bold;}
+
+
 .board-tab{display:flex;justify-content: flex-start;align-items: center;}
 .board-tab li{width:33.3333%;}
 .board-tab li:nth-last-child(2), .board-tab li:nth-last-child(2) + li{width: 50%;}
 .board-tab li:nth-last-child(3), .board-tab li:nth-last-child(3) ~ li{width: 33.3333%;}
 .board-tab li a{display:block;text-align:center;padding:20px 0;font-size:24px; font-weight:bold;border:1px solid #d9d9d9;}
 .board-tab li a.on{background: #1985ff;color: #fff;}
+
+.empty-data{width: 100%; border:1px solid #d9d9d9 !important; text-align:center;padding:100px 0 !important;font-size:32px !important;font-weight:bold;color:#d9d9d9;}
 
 @keyframes warning {
   0%{
