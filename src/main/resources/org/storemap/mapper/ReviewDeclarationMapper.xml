@@ -15,7 +15,7 @@
 	</insert>
 	<!-- 2.리뷰 신고 삭제  -->
 	<delete id="delete" parameterType="int">
-		delete from review_declaration where review_idx = #{review_idx}, member_idx = #{member_idx}
+		delete from review_declaration where review_idx = #{review_idx} AND member_idx = #{member_idx}
 	</delete>
 	<!-- 3.리뷰 신고 목록  -->
 	<select id="getReviewDeclarationList" resultType="org.storemap.domain.ReviewDeclarationVO">
@@ -23,7 +23,7 @@
 	</select>
 	<!-- 4.리뷰 신고 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewDeclarationVO">
-		select * from review_declaration where review_idx = #{review_idx}, member_idx = #{member_idx}
+		select * from review_declaration where review_idx = #{review_idx} AND member_idx = #{member_idx}
 	</select>
 	
 </mapper>

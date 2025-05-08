@@ -199,6 +199,7 @@ input[type="button"] + label {
 }
 
 /* 좋아요 수 업데이트 애니메이션 */
+
 .like-update {
 	animation: pulse 0.5s ease-in-out;
 }
@@ -209,7 +210,7 @@ input[type="button"] + label {
 	100% { transform: scale(1); }
 }
 
-/*모달*/
+/* 모달 */
 
 #modal{
 	position: fixed;
@@ -232,4 +233,24 @@ input[type="button"] + label {
 
 .modal-header {
 	display: none;
+}
+
+#store-report-selection, #review-report-selection{
+	position: absolute;
+	z-index: 999;
+	left: 50%;
+	top: 0;
+	transform: translateX(-50%);
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
+}
+
+.store-report-content, .review-report-content {
+  background-color: #fff;
+  margin: 50% auto;
+  padding:20px;
+  border-radius: 10px;
 }

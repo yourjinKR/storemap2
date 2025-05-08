@@ -16,12 +16,39 @@ function closeModal(){
 }
 
 function initializeEvents() {
+	let currentStoreIdx, currentMemberIdx;  // 신고용 store_idx, member_idx 전역 변수 저장
+	const declarationService = (function(){
+		//메뉴 추가 함수
+	    function storeDeclaration(vo, callback){
+	        fetch('/modal/storeDeclaration',{
+	            method: 'post',
+	            body: JSON.stringify(vo),
+	            headers: {
+	                'Content-type' : 'application/json; charset=utf-8'
+	            }
+	        })
+	            .then(response => response.text())
+	            .then(data => {
+	                callback(data);
+	            })
+	            .catch(err => console.log(err));
+	    }
+	    return {
+	    	storeDeclaration: storeDeclaration
+	    };
+	})();
+	const ds = declarationService;
+	
     document.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => {
             let type = btn.getAttribute("id");
             
             if(type === 'reviewBtn'){
                 location.href=`/store/review?store_idx=${store_id}`;
+            }else if(type == 'storeReportBtn'){
+            	addStoreReport();
+            }else if(type == 'reviewReportBtn'){
+            	addReviewReport();
             }else if(type === 'removeReviewBtn'){
                 // 자기 리뷰 삭제 버튼 만들까말까
                 if(confirm("정말 삭제하시겠습니까?")){
@@ -30,6 +57,30 @@ function initializeEvents() {
             }
         });
     });
+    
+    // 점포 신고 추가 함수
+    function addStoreReport(){
+    	const inputAddCategory = document.querySelector("input[name='declaration_category']:checked");
+    	const inputAddContent = document.querySelector("textarea[name='declaration_content']");
+    	
+    	if(!inputAddContent.value){
+    		alert("신고 내용을 입력하세요");
+    		return;
+    	}
+    	
+    	ds.storeDeclaration(
+    		{
+    			store_idx: currentStoreIdx,
+    			member_idx: currentMemberIdx,
+    			declaration_category: inputAddCategory.value,
+    			declaration_content: inputAddContent.value
+    		},
+    		function(result){
+    			console.log("result: " + result);
+    			document.querySelector("#store-report-selection").style.display = "none";
+    		}
+    	);
+    }
     
     // 점포 즐겨찾는 체크박스 설정
     const storeLikeCheckboxes = document.querySelectorAll('input[name="storeLike"]');
@@ -47,6 +98,33 @@ function initializeEvents() {
             toggleStoreLike(store_idx, member_idx, this);
         });
     });
+    
+    
+    // 점포 신고 버튼 눌렀을때
+    const storeReportBtns = document.querySelectorAll('input[name="storeReport"]');
+    storeReportBtns.forEach(button => {
+    	button.addEventListener("click", () => {
+    		const storeReport = document.querySelector("#store-report-selection")
+    		currentStoreIdx = button.id.replace('storeReport-icon', '');
+    		currentMemberIdx = document.querySelector('input[name="member_idx"]').value;
+    		
+    		if (!currentMemberIdx || currentMemberIdx === '0') {
+                alert('로그인이 필요합니다.');
+                return;
+            }
+    		
+    		storeReport.style.display = "block";
+    	});
+    });
+    //점포 신고창 닫기 이벤트
+    let storeReports = document.querySelector('#store-report-selection');
+    if(storeReports != null){
+    	storeReports.addEventListener('click', function(e){
+    		if ( e.target == document.querySelector('#store-report-selection') ) {
+    			storeReports.style.display = "none";	
+    		}
+    	})
+    }
     
     // 리뷰 좋아요 체크박스 설정
     const reviewLikeCheckboxes = document.querySelectorAll('input[name="reviewLike"]');

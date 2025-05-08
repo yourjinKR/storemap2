@@ -26,8 +26,10 @@ import org.storemap.domain.LetterVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.MenuVO;
+import org.storemap.domain.ReviewDeclarationVO;
 import org.storemap.domain.ReviewLikeVO;
 import org.storemap.domain.ReviewVO;
+import org.storemap.domain.StoreDeclarationVO;
 import org.storemap.domain.StoreLikeVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.EnterServiceImple;
@@ -37,8 +39,10 @@ import org.storemap.service.EventServiceImple;
 import org.storemap.service.LetterServiceImple;
 import org.storemap.service.MemberServiceImple;
 import org.storemap.service.MenuServiceImple;
+import org.storemap.service.ReviewDeclarationServiceImple;
 import org.storemap.service.ReviewLikeServiceImple;
 import org.storemap.service.ReviewServiceImple;
+import org.storemap.service.StoreDeclarationServiceImple;
 import org.storemap.service.StoreLikeServiceImple;
 import org.storemap.service.StoreServiceImple;
 
@@ -53,11 +57,15 @@ public class ModalController {
 	@Autowired
 	private StoreLikeServiceImple storeLikeService;
 	@Autowired
+	private StoreDeclarationServiceImple storeDeclarationService;
+	@Autowired
 	private MenuServiceImple menuService;
 	@Autowired
 	private ReviewServiceImple reviewService;
 	@Autowired
 	private ReviewLikeServiceImple reviewLikeService;
+	@Autowired
+	private ReviewDeclarationServiceImple reviewDeclarationService;
 	@Autowired
 	private EventServiceImple eventService;
 	@Autowired
@@ -116,8 +124,8 @@ public class ModalController {
 	}
 	
 	//점포좋아요 (토글)
-	@GetMapping("/storeLike/toggle")
 	@ResponseBody
+	@GetMapping("/storeLike/toggle")
 	public ResponseEntity<Map<String, Object>> toggleFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
 		log.info("toggleFavorite..."+store_idx+", "+member_idx);
 		
@@ -143,8 +151,8 @@ public class ModalController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	//점포좋아요 상태 확인
-	@GetMapping("/storeLike/check")
 	@ResponseBody
+	@GetMapping("/storeLike/check")
 	public ResponseEntity<Map<String, Object>> checkFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
 		log.info("checkFavorite..."+store_idx+", "+member_idx);
 		
@@ -158,9 +166,19 @@ public class ModalController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	//점포신고요청
+	@PostMapping(value = "/storeDeclaration",
+			consumes = "application/json",
+			produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<String> storeDeclarationRegister(@RequestBody StoreDeclarationVO vo){
+		log.info("add..."+vo);
+		return storeDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
+			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	//리뷰좋아요 (토글)
+	@ResponseBody
     @GetMapping("/reviewLike/toggle")
-    @ResponseBody
     public ResponseEntity<Map<String, Object>> toggleReviewFavorite(@RequestParam("review_idx") int review_idx, @RequestParam("member_idx") int member_idx) {
         log.info("toggleReviewFavorite..."+review_idx+", "+member_idx);
         
@@ -186,8 +204,8 @@ public class ModalController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     //리뷰좋아요 상태 확인
+	@ResponseBody
     @GetMapping("/reviewLike/check")
-    @ResponseBody
     public ResponseEntity<Map<String, Object>> checkReviewFavorite(@RequestParam("review_idx") int review_idx, @RequestParam("member_idx") int member_idx) {
         log.info("checkReviewFavorite..."+review_idx+", "+member_idx);
         
@@ -200,6 +218,16 @@ public class ModalController {
         
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
+    //리뷰신고요청
+	/*@PostMapping(value = "/reviewDeclaration",
+			consumes = "application/json",
+			produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<String> reviewDeclarationRegister(@RequestBody ReviewDeclarationVO vo){
+		log.info("add..."+vo);
+		return reviewDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
+			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}*/
 	
 	/*--------------------------------------------------------------------------*/
 	

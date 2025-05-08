@@ -76,5 +76,32 @@
 	      </c:forEach>
       </div>
     </div>
+    <!-- 점포 신고 모달 -->
+    <div id="store-report-selection">
+    	<div class="store-report-content">
+    		<h3>점포 신고하기</h3>
+			    <div>
+			      <label><input type="radio" name="declaration_category" value="위생 문제" checked> 위생 문제</label><br>
+			      <label><input type="radio" name="declaration_category" value="메뉴 변경"> 메뉴 변경</label><br>
+			      <label><input type="radio" name="declaration_category" value="가격 문제"> 가격 문제</label><br>
+			      <label><input type="radio" name="declaration_category" value="음식 품질"> 음식 품질</label><br>
+			      <label><input type="radio" name="declaration_category" value="음식 냄새"> 음식 냄새</label><br>
+			      <label><input type="radio" name="declaration_category" value="조리 과정 문제"> 조리 과정 문제</label><br>
+			      <label><input type="radio" name="declaration_category" value="불친절한 서비스"> 불친절한 서비스</label><br>
+			      <label><input type="radio" name="declaration_category" value="운영시간 문제"> 운영시간 무제</label><br>
+			      <label><input type="radio" name="declaration_category" value="불완전한 메뉴"> 불완전한 메뉴</label><br>
+			      <label><input type="radio" name="declaration_category" value="기타"> 기타</label>
+			    </div>
+			    <div>
+			      <textarea name="declaration_content" placeholder="신고 내용을 입력하세요"></textarea>
+			    </div>
+			    <button type="button" class="add_report" id="storeReportBtn">신고 제출</button>
+		</div>
+    </div>
+    <!-- 리뷰 신고 모달 -->
+    <div id="review-report-selection">
+    	<div class="review-report-content">
+		</div>
+    </div>
 </div>
 <script type="text/javascript" src="/resources/js/storeModal.js"></script>
