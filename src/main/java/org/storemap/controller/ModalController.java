@@ -274,6 +274,17 @@ public class ModalController {
 		return new ResponseEntity<List<StoreVO>>(storeService.getNearestStores(map), HttpStatus.OK);
 	}
 	
+	// 반경 거리 내 점포 리스트 비동기 조회
+	@PostMapping(value = "/list/within",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+	})
+	public ResponseEntity<List<StoreVO>> getStoresWithinDistance(@RequestBody MapDTO map){
+		log.info("getStoresWithinDistance..." + map);
+		return new ResponseEntity<List<StoreVO>>(storeService.getStoresWithinDistance(map), HttpStatus.OK);
+	}	
+	
 	// 키워드 검색 점포 리스트 비동기 조회
 	@PostMapping(value = "/list/keyword",
 			produces = {

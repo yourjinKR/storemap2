@@ -137,6 +137,11 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public List<StoreVO> getStoresWithinDistance(MapDTO map) {
+		return mapper.getStoresWithinDistance(map);
+	}
+	
+	@Override
 	public int favorite(int store_idx) {
 		log.info("favorite..."+store_idx);
 		return mapper.updateFavorite(store_idx);
