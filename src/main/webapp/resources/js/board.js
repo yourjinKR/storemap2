@@ -10,6 +10,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	boardSearch = document.querySelector("#boardSearch");
 	rDate = document.querySelector("#eventRdate");
 	bDate = document.querySelector("#eventBdate");
+
+	// 게시물 수
+	filterAmount = document.querySelector("#amount");
+	if(filterAmount != null){
+		filterAmount.addEventListener("change",function(){
+			if(window.location.pathname == "/event/eventList"){
+				eventFilter(pageNum, this.value);			
+			}else{
+				getNotice();
+			}
+		})
+	}
 	
 	// 이벤트 리스트 출력
 	if(window.location.pathname == "/event/eventList"){
@@ -22,14 +34,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 					filter.classList.toggle("on");
 				})
 			}
-		}
-		
-		// 게시물 수
-		filterAmount = document.querySelector("#amount");
-		if(filterAmount != null){
-			filterAmount.addEventListener("change",function(){
-				eventFilter(pageNum, this.value);
-			})
 		}
 		
 		// 지역선택
@@ -82,8 +86,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		
 		eventFilter(pageNum);
 	}
+	
+	
+	
+	if(window.location.pathname == "/admin/notice"){
+		getNotice();
+	}
+	
 });
 
+// 이벤트 필터
 function eventFilter(pageNum){
 	if(userId != null && userId != "" && auth != "user"){
 		if(document.querySelectorAll(".filter input[type=checkbox]:checked").length == 0){
@@ -152,7 +164,7 @@ function eventFilter(pageNum){
 }
 
 
-// 카드 형태 게시판
+// 이벤트 카드 형태 게시판
 function cardBoard(result){
 	let str = "";
 	if(result != null && result.event.length > 0){
@@ -178,7 +190,7 @@ function cardBoard(result){
 }
 
 
-// 리스트 형태 게시판
+// 이벤트 리스트 형태 게시판
 function listBoard(result){
 	let str = "";
 	if(result != null && result.event.length > 0){
@@ -241,7 +253,77 @@ function listBoard(result){
 				<td colspan="4" class="empty-data">
 					검색된 이벤트가 없습니다.
 				</td>
-			</tr>`
+			</tr>`;
 	}
 	document.querySelector("#boardList tbody").innerHTML = str;
+}
+
+
+function getNotice(){
+	let pageNumData = pageNum != null ? pageNum : 1;
+	let amountData = filterAmount.value;
+	let searchData = boardSearch != null || boardSearch != "" ? boardSearch.value : "";
+	let sendData = `?pageNum=${pageNumData}&amount=${amountData}`+ (searchData != "" ? `&search=${searchData}` : ``);
+	fetch(`/admin/getNotice/${sendData}`)
+	.then(response => response.json())
+	.then(result => {
+		let str = "";
+		console.log(result.announce);
+		if(result != null && result.announce.length > 0){
+			result.announce.forEach(data => {
+				str += 	`<tr data-idx="${data.announce_idx}">`;
+				str += 		`<td class="t-c">`;
+				str += 			`${data.announce_idx}`;
+				str += 		`</td>`;
+				str += 		`<td>`;
+				str += 			`<a href="/admin/noticeView?idx=${data.announce_idx}">`;
+				str += 				`${data.announce_title}`;
+				if(today <= dateFormate((data.announce_regdate + 86400000 * 3))){
+					str += 			`<span class="new-icon">N</span>`;
+				}
+				str += 			`</a>`;
+				str += 		`</td>`;
+				str += 		`<td class="t-c">`;
+				str += 			`${dateFormate(data.announce_regdate)}`;
+				str += 		`</td>`;
+				str += 	`</tr>`;
+			})
+		}else{
+			str += `
+				<tr>
+					<td colspan="2" class="empty-data">
+						공지사항이 없습니다.
+					</td>
+				</tr>`;
+		}
+		document.querySelector("#boardList tbody").innerHTML = str;
+
+		let paging = "";
+		let pageMaker = result.pager;
+		
+		paging += `<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}" data-amount="${pageMaker.cri.amount}">`;
+		if(pageMaker.prev){
+			paging += `<li class="previous">`;
+			paging += `<a href="${pageMaker.startPage-1 }"> &lt; </a>`;
+			paging += `</li>`;
+		}
+		
+		for (var i = pageMaker.startPage; i <= pageMaker.endPage; i++) {
+			paging += `<li>`;
+			paging += `<a href="${i}" class="${pageMaker.cri.pageNum == i ? 'active' : '' }"> ${i}</a>`;
+			paging += `</li>`;
+		}
+		
+		if(pageMaker.next){
+			paging += `<li>`;
+			paging += `<a href="${pageMaker.endPage+1 }"> &gt; </a>`;
+			paging += `</li>`;
+		}
+		paging += `</ul>`;
+		
+		document.querySelector(".page-wrap").innerHTML = paging;
+		
+		pager();
+	})
+	.catch(err => console.log(err))
 }
