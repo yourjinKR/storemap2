@@ -21,8 +21,8 @@
 			</div>
 			<div id="body">
 				<jsp:include page="../modal/storeListModal.jsp"/>	
-				<div id="searchFail">
-					<div>검색 결과가 존재하지 않습니다.</div>
+				<div id="search-fail">
+					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>
 				</div>	
 			</div>
 		</div>
