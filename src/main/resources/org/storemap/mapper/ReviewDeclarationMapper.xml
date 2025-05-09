@@ -3,6 +3,22 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.ReviewDeclarationMapper">
+	<resultMap id="reviewDeclarationMap" type="org.storemap.domain.ReviewDeclarationVO">
+		<result property="review_idx" column="review_idx"/>
+		<result property="member_idx" column="member_idx"/>
+		<result property="declaration_category" column="declaration_category"/>
+		<result property="declaration_content" column="declaration_content"/>
+		<association property="review" resultMap="reviewMap"/>
+		<association property="member" resultMap="memberMap"/>
+	</resultMap>
+	<resultMap id="reviewMap" type="org.storemap.domain.ReviewVO">
+		<id property="review_idx" column="review_idx"/>
+		<result property="review_title" column="review_title"/>
+	</resultMap>
+	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
+		<id property="member_idx" column="member_idx"/>
+		<result property="member_name" column="member_name"/>
+	</resultMap>
 	
 	<!-- 1.리뷰 신고 등록  -->
 	<insert id="insert" parameterType="org.storemap.domain.ReviewDeclarationVO">
@@ -15,7 +31,7 @@
 	</insert>
 	<!-- 2.리뷰 신고 삭제  -->
 	<delete id="delete" parameterType="int">
-		delete from review_declaration where review_idx = #{review_idx} AND member_idx = #{member_idx}
+		delete from review_declaration where review_idx = #{param1} AND member_idx = #{param2}
 	</delete>
 	<!-- 3.리뷰 신고 목록  -->
 	<select id="getReviewDeclarationList" resultType="org.storemap.domain.ReviewDeclarationVO">
@@ -24,6 +40,12 @@
 	<!-- 4.리뷰 신고 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewDeclarationVO">
 		select * from review_declaration where review_idx = #{review_idx} AND member_idx = #{member_idx}
+	</select>
+	<!-- 5.리뷰 조인 신고 목록 -->
+	<select id="getReviewDeclarationMap" resultMap="reviewDeclarationMap">
+		SELECT r.review_idx, r.review_title, m.member_idx, m.member_name, d.declaration_category, d.declaration_content
+		FROM review r, member m, review_declaration d
+		WHERE d.review_idx = r.review_idx AND d.member_idx = m.member_idx
 	</select>
 	
 </mapper>

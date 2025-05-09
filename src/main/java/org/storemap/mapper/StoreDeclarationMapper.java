@@ -13,4 +13,6 @@ public interface StoreDeclarationMapper {
 	public List<StoreDeclarationVO> getStoreDeclarationList();
 	// 점포 신고 보기
 	public StoreDeclarationVO read(int store_idx, int member_idx);
+	// 조인 신고 목록
+	public List<StoreDeclarationVO> getStoreDeclarationMap();
 }

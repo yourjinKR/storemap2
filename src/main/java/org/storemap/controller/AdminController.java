@@ -31,6 +31,7 @@ import org.storemap.service.EventRequestServiceImple;
 import org.storemap.service.EventServiceImple;
 import org.storemap.service.MemberServiceImple;
 import org.storemap.service.ReviewDeclarationServiceImple;
+import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreDeclarationServiceImple;
 import org.storemap.service.StoreLikeServiceImple;
 import org.storemap.service.StoreRequestServiceImple;
@@ -50,6 +51,8 @@ public class AdminController {
 	private StoreServiceImple storeService;
 	@Autowired
 	private EventServiceImple eventService;
+	@Autowired
+	private ReviewServiceImple reviewService;
 	@Autowired
 	private StoreRequestServiceImple storeReqService;
 	@Autowired
@@ -71,8 +74,11 @@ public class AdminController {
 	@GetMapping("/adminMain")
 	public String adminMain(Model model) {
 		log.info("adminMainGet...");
+		model.addAttribute("storeReportList",storeDeclService.getDeclarationMap());
+		model.addAttribute("reviewReportList",reviewDeclService.getDeclarationMap());
 		return "index";
 	}
+	
 	@GetMapping("/adminEnterView")
 	public String adminEnterView() {
 		log.info("adminEnterViewGet...");
@@ -93,7 +99,6 @@ public class AdminController {
 	public String adminStoreView(Model model) {
 		log.info("adminStoreViewGet...");
 		model.addAttribute("reqList", storeReqService.getDisReqList());
-		// model.addAttribute("memberList", 1);
 		return "index";
 	}
 	@GetMapping("/adminMemberView")
@@ -102,13 +107,59 @@ public class AdminController {
 		return "index";
 	}
 	
+	// 점포 숨기기
+	@PostMapping("/storeReportHide")
+	public String storeReportHide(int store_idx, int member_idx) {
+		log.info("storeReportHide..."+store_idx);
+		storeService.hide(store_idx);
+		storeDeclService.remove(store_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 점포 숨기기 해제
+	@PostMapping("/storeReportunHide")
+	public String storeReportunHide(int store_idx) {
+		log.info("storeReportunHide..."+store_idx);
+		storeService.unhide(store_idx);
+		return "redirect:/admin/adminMain";
+	}
+	
+	// 리뷰 숨기기
+	@PostMapping("/reviewReportHide")
+	public String reviewReportHide(int review_idx, int member_idx) {
+		log.info("reviewReportHide..."+review_idx);
+		reviewService.hide(review_idx);
+		reviewDeclService.remove(review_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 리뷰 숨기기 해제
+	@PostMapping("/reviewReportunHide")
+	public String reviewReportunHide(int review_idx) {
+		log.info("reviedwReportunHide..."+review_idx);
+		reviewService.unhide(review_idx);
+		return "redirect:/admin/adminMain";
+	}
+	
+	// 점포 승인 취소
 	@PostMapping("/adminStoreRemove")
 	public String adminStoreRemove(int member_idx) {
 		log.info("adminStoreRemove..."+member_idx);
 		storeReqService.remove(member_idx);
 		return "redirect:/admin/adminStoreView";
 	}
-	
+	// 점포 신고 취소
+	@PostMapping("/storeReportRemove")
+	public String storeReportRemove(int store_idx, int member_idx) {
+		log.info("storeReportRemove..."+store_idx+", "+member_idx);
+		storeDeclService.remove(store_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 리뷰 신고 취소
+	@PostMapping("/reviewReportRemove")
+	public String reviewReportRemove(int review_idx, int member_idx) {
+		log.info("reviewReportRemove..."+review_idx+", "+member_idx);
+		reviewDeclService.remove(review_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
 	
 	@GetMapping("/notice")
 	public String adminNotice() {

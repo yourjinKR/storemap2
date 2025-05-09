@@ -3,6 +3,22 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.StoreDeclarationMapper">
+	<resultMap id="storeDeclarationMap" type="org.storemap.domain.StoreDeclarationVO">
+		<result property="store_idx" column="store_idx"/>
+		<result property="member_idx" column="member_idx"/>
+		<result property="declaration_category" column="declaration_category"/>
+		<result property="declaration_content" column="declaration_content"/>
+		<association property="store" resultMap="storeMap"/>
+		<association property="member" resultMap="memberMap"/>
+	</resultMap>
+	<resultMap id="storeMap" type="org.storemap.domain.StoreVO">
+		<id property="store_idx" column="store_idx"/>
+		<result property="store_name" column="store_name"/>
+	</resultMap>
+	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
+		<id property="member_idx" column="member_idx"/>
+		<result property="member_name" column="member_name"/>
+	</resultMap>
 
 	<!-- 1.점포 신고 등록  -->
 	<insert id="insert" parameterType="org.storemap.domain.StoreDeclarationVO">
@@ -15,7 +31,7 @@
 	</insert>
 	<!-- 2.점포 신고 삭제  -->
 	<delete id="delete" parameterType="int">
-		delete from store_declaration where store_idx = #{store_idx} AND member_idx = #{member_idx}
+		delete from store_declaration where store_idx = #{param1} AND member_idx = #{param2}
 	</delete>
 	<!-- 3.점포 신고 목록  -->
 	<select id="getStoreDeclarationList" resultType="org.storemap.domain.StoreDeclarationVO">
@@ -24,6 +40,12 @@
 	<!-- 4.점포 신고 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.StoreDeclarationVO">
 		select * from store_declaration where store_idx = #{store_idx} AND member_idx = #{member_idx}
+	</select>
+	<!-- 5.점포 조인 신고 목록 -->
+	<select id="getStoreDeclarationMap" resultMap="storeDeclarationMap">
+		SELECT s.store_idx, s.store_name, m.member_idx, m.member_name, d.declaration_category, d.declaration_content
+		FROM store s, member m, store_declaration d
+		WHERE d.store_idx = s.store_idx AND d.member_idx = m.member_idx
 	</select>
 	
 </mapper>

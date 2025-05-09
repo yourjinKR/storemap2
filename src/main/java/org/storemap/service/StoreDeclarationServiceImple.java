@@ -42,4 +42,10 @@ public class StoreDeclarationServiceImple implements StoreDeclarationService{
 		return mapper.read(store_idx, member_idx);
 	}
 	
+	@Override
+	public List<StoreDeclarationVO> getDeclarationMap() {
+		log.info("getDeclarationMap...");
+		return mapper.getStoreDeclarationMap();
+	}
+	
 }

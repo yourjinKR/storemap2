@@ -10,4 +10,7 @@ import lombok.NoArgsConstructor;
 public class ReviewDeclarationVO {
 	private int review_idx, member_idx;
 	private String declaration_category, declaration_content;
+	
+	private ReviewVO review;   // 조인 대상 필드
+	private MemberVO member; // 조인 대상 필드
 }

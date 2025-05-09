@@ -42,4 +42,10 @@ public class ReviewDeclarationServiceImple implements ReviewDeclarationService{
 		return mapper.read(review_idx, member_idx);
 	}
 	
+	@Override
+	public List<ReviewDeclarationVO> getDeclarationMap() {
+		log.info("getDeclarationMap...");
+		return mapper.getReviewDeclarationMap();
+	}
+	
 }
