@@ -16,9 +16,9 @@ function closeModal(){
 }
 
 function initializeEvents() {
-	let currentStoreIdx, currentMemberIdx;  // 신고용 store_idx, member_idx 전역 변수 저장
+	let currentStoreIdx, currentReviewIdx, currentMemberIdx;  // 신고용 store_idx, review_idx, member_idx 전역 변수 저장
 	const declarationService = (function(){
-		//메뉴 추가 함수
+		//점포신고 추가 함수
 	    function storeDeclaration(vo, callback){
 	        fetch('/modal/storeDeclaration',{
 	            method: 'post',
@@ -33,8 +33,24 @@ function initializeEvents() {
 	            })
 	            .catch(err => console.log(err));
 	    }
+	    //리뷰신고 추가 함수
+	    function reviewDeclaration(vo, callback){
+	        fetch('/modal/reviewDeclaration',{
+	            method: 'post',
+	            body: JSON.stringify(vo),
+	            headers: {
+	                'Content-type' : 'application/json; charset=utf-8'
+	            }
+	        })
+	            .then(response => response.text())
+	            .then(data => {
+	                callback(data);
+	            })
+	            .catch(err => console.log(err));
+	    }
 	    return {
-	    	storeDeclaration: storeDeclaration
+	    	storeDeclaration: storeDeclaration,
+	    	reviewDeclaration: reviewDeclaration
 	    };
 	})();
 	const ds = declarationService;
@@ -78,8 +94,34 @@ function initializeEvents() {
     		function(result){
     			console.log("result: " + result);
     			document.querySelector("#store-report-selection").style.display = "none";
+    			alert("점포신고를 성공 했습니다.");
     		}
     	);
+    }
+    
+    // 리뷰 신고 추가 함수
+    function addReviewReport(){
+    	 const inputAddCategory = document.querySelector("#review-report-selection input[name='declaration_category']:checked");
+    	 const inputAddContent = document.querySelector("#review-report-selection textarea[name='declaration_content']");
+    	 
+    	 if(!inputAddContent.value){
+    	     alert("신고 내용을 입력하세요");
+    	     return;
+    	 }
+    	 
+    	 ds.reviewDeclaration(
+    	     {
+    	         review_idx: currentReviewIdx,
+    	         member_idx: currentMemberIdx,
+    	         declaration_category: inputAddCategory.value,
+    	         declaration_content: inputAddContent.value
+    	     },
+    	     function(result){
+    	         console.log("result: " + result);
+    	         document.querySelector("#review-report-selection").style.display = "none";
+    	         alert("리뷰신고를 성공 했습니다.");
+    	     }
+    	 );
     }
     
     // 점포 즐겨찾는 체크박스 설정
@@ -98,7 +140,6 @@ function initializeEvents() {
             toggleStoreLike(store_idx, member_idx, this);
         });
     });
-    
     
     // 점포 신고 버튼 눌렀을때
     const storeReportBtns = document.querySelectorAll('input[name="storeReport"]');
@@ -142,6 +183,32 @@ function initializeEvents() {
             toggleReviewLike(review_idx, member_idx, this);
         });
     });
+    
+    // 리뷰 신고 버튼 눌렀을때
+    const reviewReportBtns = document.querySelectorAll('input[name="reviewReport"]');
+    reviewReportBtns.forEach(button => {
+    	button.addEventListener("click", () => {
+    		const reviewReport = document.querySelector("#review-report-selection")
+    		currentReviewIdx = button.id.replace('reviewReport-icon', '');
+    		currentMemberIdx = document.querySelector('input[name="member_idx"]').value;
+    		
+    		if (!currentMemberIdx || currentMemberIdx === '0') {
+                alert('로그인이 필요합니다.');
+                return;
+            }
+    		
+    		reviewReport.style.display = "block";
+    	});
+    });
+    //리뷰 신고창 닫기 이벤트
+    let reviewReports = document.querySelector('#review-report-selection');
+    if(reviewReports != null){
+    	reviewReports.addEventListener('click', function(e){
+    		if ( e.target == document.querySelector('#review-report-selection') ) {
+    			reviewReports.style.display = "none";	
+    		}
+    	})
+    }
     
     // 초기 즐겨찾기 상태 확인
     checkInitialStoreLike();

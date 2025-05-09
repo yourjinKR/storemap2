@@ -80,27 +80,44 @@
     <div id="store-report-selection">
     	<div class="store-report-content">
     		<h3>점포 신고하기</h3>
-			    <div>
-			      <label><input type="radio" name="declaration_category" value="위생 문제" checked> 위생 문제</label><br>
-			      <label><input type="radio" name="declaration_category" value="메뉴 변경"> 메뉴 변경</label><br>
-			      <label><input type="radio" name="declaration_category" value="가격 문제"> 가격 문제</label><br>
-			      <label><input type="radio" name="declaration_category" value="음식 품질"> 음식 품질</label><br>
-			      <label><input type="radio" name="declaration_category" value="음식 냄새"> 음식 냄새</label><br>
-			      <label><input type="radio" name="declaration_category" value="조리 과정 문제"> 조리 과정 문제</label><br>
-			      <label><input type="radio" name="declaration_category" value="불친절한 서비스"> 불친절한 서비스</label><br>
-			      <label><input type="radio" name="declaration_category" value="운영시간 문제"> 운영시간 무제</label><br>
-			      <label><input type="radio" name="declaration_category" value="불완전한 메뉴"> 불완전한 메뉴</label><br>
-			      <label><input type="radio" name="declaration_category" value="기타"> 기타</label>
-			    </div>
-			    <div>
-			      <textarea name="declaration_content" placeholder="신고 내용을 입력하세요"></textarea>
-			    </div>
-			    <button type="button" class="add_report" id="storeReportBtn">신고 제출</button>
+			<div>
+			  <label><input type="radio" name="declaration_category" value="위생 문제" checked> 위생 문제</label><br>
+			  <label><input type="radio" name="declaration_category" value="메뉴 변경"> 메뉴 변경</label><br>
+			  <label><input type="radio" name="declaration_category" value="가격 문제"> 가격 문제</label><br>
+			  <label><input type="radio" name="declaration_category" value="음식 품질"> 음식 품질</label><br>
+			  <label><input type="radio" name="declaration_category" value="음식 냄새"> 음식 냄새</label><br>
+			  <label><input type="radio" name="declaration_category" value="조리 과정 문제"> 조리 과정 문제</label><br>
+			  <label><input type="radio" name="declaration_category" value="불친절한 서비스"> 불친절한 서비스</label><br>
+			  <label><input type="radio" name="declaration_category" value="운영시간 문제"> 운영시간 무제</label><br>
+			  <label><input type="radio" name="declaration_category" value="불완전한 메뉴"> 불완전한 메뉴</label><br>
+			  <label><input type="radio" name="declaration_category" value="기타"> 기타</label>
+			</div>
+			<div>
+			  <textarea name="declaration_content" placeholder="신고 내용을 입력하세요"></textarea>
+			</div>
+			<button type="button" class="add_report" id="storeReportBtn">신고 제출</button>
 		</div>
     </div>
     <!-- 리뷰 신고 모달 -->
     <div id="review-report-selection">
     	<div class="review-report-content">
+    		<h3>리뷰 신고하기</h3>
+			<div>
+			  <label><input type="radio" name="declaration_category" value="욕설" checked> 욕설</label><br>
+			  <label><input type="radio" name="declaration_category" value="허위 정보"> 허위 정보</label><br>
+			  <label><input type="radio" name="declaration_category" value="비방"> 비방</label><br>
+			  <label><input type="radio" name="declaration_category" value="광고"> 광고</label><br>
+			  <label><input type="radio" name="declaration_category" value="개인정보 노출"> 개인정보 노출</label><br>
+			  <label><input type="radio" name="declaration_category" value="중복 리뷰"> 중복 리뷰</label><br>
+			  <label><input type="radio" name="declaration_category" value="음란성"> 음란성</label><br>
+			  <label><input type="radio" name="declaration_category" value="비속어"> 비속어</label><br>
+			  <label><input type="radio" name="declaration_category" value="도배"> 도배</label><br>
+			  <label><input type="radio" name="declaration_category" value="기타"> 기타</label>
+			</div>
+			<div>
+			  <textarea name="declaration_content" placeholder="신고 내용을 입력하세요"></textarea>
+			</div>
+			<button type="button" class="add_report" id="reviewReportBtn">신고 제출</button>
 		</div>
     </div>
 </div>

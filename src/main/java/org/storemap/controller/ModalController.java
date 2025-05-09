@@ -170,8 +170,8 @@ public class ModalController {
 	@PostMapping(value = "/storeDeclaration",
 			consumes = "application/json",
 			produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> storeDeclarationRegister(@RequestBody StoreDeclarationVO vo){
-		log.info("add..."+vo);
+	public ResponseEntity<String> storeDeclaration(@RequestBody StoreDeclarationVO vo){
+		log.info("storeDeclaration..."+vo);
 		return storeDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -220,14 +220,14 @@ public class ModalController {
     }
     
     //리뷰신고요청
-	/*@PostMapping(value = "/reviewDeclaration",
+	@PostMapping(value = "/reviewDeclaration",
 			consumes = "application/json",
 			produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> reviewDeclarationRegister(@RequestBody ReviewDeclarationVO vo){
-		log.info("add..."+vo);
+	public ResponseEntity<String> reviewDeclaration(@RequestBody ReviewDeclarationVO vo){
+		log.info("reviewDeclaration..."+vo);
 		return reviewDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-	}*/
+	}
 	
 	/*--------------------------------------------------------------------------*/
 	
