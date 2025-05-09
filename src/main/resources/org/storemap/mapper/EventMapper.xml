@@ -317,15 +317,37 @@
 	<!-- 게시글 등록 -->
 	<insert id="insertEvent" parameterType="org.storemap.domain.EventVO">
     INSERT INTO event (
-        event_idx,enter_idx, event_title, event_category,
-        event_location, event_location_detail, event_content,
-        event_like_cnt, event_rstartdate, event_rstopdate,
-        event_bstartdate, event_bstopdate, event_hidden, event_file
+        event_idx,
+        enter_idx,
+        event_title,
+        event_category,
+        event_location, 
+        event_location_detail, 
+        event_content,
+        event_like_cnt, 
+        event_rstartdate, 
+        event_rstopdate,
+        event_bstartdate, 
+        event_bstopdate, 
+        event_hidden, 
+        event_file, 
+        event_postcode
     ) VALUES (
-        event_seq.nextval,#{enter_idx}, #{event_title}, #{event_category},
-        #{event_location}, #{event_location_detail}, #{event_content},
-        0, #{event_rstartdate}, #{event_rstopdate},
-        #{event_bstartdate}, #{event_bstopdate}, 0, #{event_file}
+        event_seq.nextVal, 
+        #{enter_idx},
+        #{event_title},
+        #{event_category},
+        #{event_location}, 
+        #{event_location_detail}, 
+        #{event_content},
+        0, 
+        #{event_rstartdate}, 
+        #{event_rstopdate},
+        #{event_bstartdate}, 
+        #{event_bstopdate}, 
+        0, 
+        #{event_file, jdbcType=VARCHAR}, 
+        #{event_postcode}
     )
 	</insert>
 	

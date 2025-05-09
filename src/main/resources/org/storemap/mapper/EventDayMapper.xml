@@ -11,7 +11,7 @@
             event_starttime,
             event_stoptime
         ) VALUES (
-            eday_seq.nextval,
+            eday_seq.nextVal,
             #{event_idx},
             #{store_max},
             #{event_starttime},

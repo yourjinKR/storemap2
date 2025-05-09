@@ -17,4 +17,5 @@ public class EventDayServiceImple implements EventDayService{
 		public int insertEventDay(EventDayVO eventDayVO) {
 			return mapper.insertEventday(eventDayVO);
 		}
+	
 }

@@ -10,7 +10,7 @@
             enter_idx,
             filename
         ) VALUES (
-            attach_seq.nextval
+            attach_seq.nextval,
             #{event_idx},
             #{enter_idx},
             #{filename}

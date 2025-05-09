@@ -4,7 +4,7 @@ linkEle.rel = 'stylesheet';
 linkEle.href = EVENT_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
-
+let f;
 document.addEventListener("DOMContentLoaded", (event) => {
 	
 	// 이벤트 등록 시 일정 추가 버튼 클릭 이벤트
@@ -12,9 +12,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	const startDateInput = document.getElementById("startDate");
 	const endDateInput = document.getElementById("endDate");
 
-	
-	  
-	  if(startDateInput != null && endDateInput != null){
+		if(startDateInput != null && endDateInput != null){
 		  startDateInput.setAttribute("min", today);
 			endDateInput.setAttribute("min", today);
 
@@ -35,68 +33,83 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			    }
 			  });
 	  }
+		
+	f = document.forms[0];
+	console.log(document.querySelectorAll('button.eventBtn'));
+
+	document.querySelectorAll('button.eventBtn').forEach(btn=>{
+		btn.addEventListener('click',(e)=>{
+			e.preventDefault();
+			console.log('click');
+			
+			if(e.currentTarget.getAttribute("id")=="registerBtn"){
+				register();
+			}else if(e.currentTarget.getAttribute("id")=="resetBtn"){
+				f.reset();
+			}else if(e.currentTarget.getAttribute("id")=="listBtn"){
+				goIndex();
+			}
+		})
+	});
 });
 
 
-// generateDays 함수 정의
 function generateDays() {
-  const container = document.getElementById("eventDaysContainer");
-  container.innerHTML = "";
+	  const container = document.getElementById("eventDaysContainer");
+	  container.innerHTML = "";
 
-  const startInput = document.getElementById("startDate");
-  const endInput = document.getElementById("endDate");
+	  const startInput = document.getElementById("startDate");
+	  const endInput = document.getElementById("endDate");
 
-  const startDate = new Date(startInput.value);
-  const endDate = new Date(endInput.value);
+	  const startDate = new Date(startInput.value);
+	  const endDate = new Date(endInput.value);
 
-  if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
-    alert("올바른 날짜를 선택하세요.");
-    return;
-  }
+	  if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
+	    alert("올바른 날짜를 선택하세요.");
+	    return;
+	  }
 
-  // 일괄 입력 폼 추가
-  const bulkDiv = document.createElement("div");
-  bulkDiv.style.marginBottom = "15px";
-  bulkDiv.innerHTML = `
-    <fieldset style="border:1px solid #aaa; padding:10px;">
-      <legend><strong> 일괄 입력</strong></legend>
-      최대 입점 수: <input type="number" id="bulkStoreMax" style="width: 80px;">
-      시작 시간: <input type="time" id="bulkStartTime">
-      종료 시간: <input type="time" id="bulkStopTime">
-      <button type="button" onclick="bulkFill()">일괄 등록</button>
-    </fieldset>
-  `;
-  container.appendChild(bulkDiv);
+	  // 일괄 입력 폼 추가
+	  const bulkDiv = document.createElement("div");
+	  bulkDiv.style.marginBottom = "15px";
+	  bulkDiv.innerHTML = `
+	    <fieldset style="border:1px solid #aaa; padding:10px;">
+	      <legend><strong> 일괄 입력</strong></legend>
+	      최대 입점 수: <input type="number" id="bulkStoreMax" style="width: 80px;">
+	      시작 시간: <input type="time" id="bulkStartTime">
+	      종료 시간: <input type="time" id="bulkStopTime">
+	      <button type="button" onclick="bulkFill()">일괄 등록</button>
+	    </fieldset>
+	  `;
+	  container.appendChild(bulkDiv);
 
-  // 날짜별 일정 생성
-  let current = new Date(startDate);
-  let index = 0;
+	  // 날짜별 일정 생성
+	  let current = new Date(startDate);
+	  let index = 0;
 
-    while (current <= endDate) {
-      const yyyyMMdd = current.toISOString().split("T")[0];
-      const dayIndex = index + 1;
+	  while (current <= endDate) {
+	    const yyyyMMdd = current.toISOString().split("T")[0];
+	    const dayIndex = index + 1;
 
-    const div = document.createElement("div");
-    div.style.marginBottom = "15px";
-    div.innerHTML = `
-      <fieldset style="border:1px solid #ccc; padding:10px;">
-        <legend><strong>${dayIndex}일차 (${yyyyMMdd})</strong></legend>
-        <input type="hidden" name="days[${index}].eday_date" value="${yyyyMMdd}">
-        최대 입점 수:
-        <input type="number" name="days[${index}].store_max" class="storeMax" required style="width: 80px;">
-        시작 시간:
-        <input type="time" name="days[${index}].event_starttime" class="startTime" required>
-        종료 시간:
-        <input type="time" name="days[${index}].event_stoptime" class="stopTime" required>
-      </fieldset>
-    `;
-    container.appendChild(div);
+	    const div = document.createElement("div");
+	    div.style.marginBottom = "15px";
+	    div.innerHTML = `
+	      <fieldset style="border:1px solid #ccc; padding:10px;">
+	        <legend><strong>${dayIndex}일차 (${yyyyMMdd})</strong></legend>
+	        최대 입점 수:
+	        <input type="number" name="eventDay[${index}].store_max" class="storeMax" required style="width: 80px;">
+	        시작 시간:
+	        <input type="time" name="eventDay[${index}].event_starttime" class="startTime" required>
+	        종료 시간:
+	        <input type="time" name="eventDay[${index}].event_stoptime" class="stopTime" required>
+	      </fieldset>
+	    `;
+	    container.appendChild(div);
 
-    current.setDate(current.getDate() + 1);
-    index++;
-  }
-}
-
+	    current.setDate(current.getDate() + 1);
+	    index++;
+	  }
+	}
 
 // 일괄 등록 함수
 function bulkFill() {
@@ -128,4 +141,18 @@ function bulkFill() {
   stopTimeInputs.forEach(input => input.value = stopTimeValue);
 
   alert("일괄 입력 완료!");
+}
+
+
+	
+function register(){
+	console.log(1);
+	
+	console.log(f.enter_idx.value);
+	f.action="/event/eventRegister";
+	f.submit();
+}
+
+function goIndex(){
+	location.href = "/event/eventList";
 }

@@ -75,6 +75,7 @@ public class EventServiceImple implements EventService{
 	// 이벤트 등록
 	@Override
 	public int insertEvent(EventVO eventVO) {
+		log.info("RegisterService..." + eventVO);
 		return mapper.insertEvent(eventVO);
 	}
 }

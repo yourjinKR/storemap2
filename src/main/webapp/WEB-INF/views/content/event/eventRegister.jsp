@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/event.js"></script>
 
 <style>
@@ -12,7 +12,9 @@
   .btn-sec { background-color: #6c757d; color: white; border: none; }
   .textarea { resize: none; }
 </style>
+<%
 
+%>
 <div class="page-header">
   <h1>이벤트 등록</h1>
 </div>
@@ -78,13 +80,14 @@
 		  </div>
           </td>
         </tr>
+        	
       </tbody>
     </table>
-
+		<input type="hidden" name="enter_idx" value="${loginUserIdx }">
     <div class="panel-body-btns">
-       <button type="submit" class="btn btn-sec">새 게시글 등록</button> 
-      <button type="reset" class="btn btn-fir">다시 작성</button>
-      <button type="button" class="btn btn-fir" onclick="location.href='/event/eventList'">목록으로 이동</button>
+      <button type="button" class="eventBtn" id="registerBtn">새 게시글 등록</button> 
+      <button type="reset" class="eventBtn" id="resetBtn">다시 작성</button>
+      <button type="button" class="eventBtn" id="listBtn">목록으로 이동</button>
     </div>
   </form>
 </div>
