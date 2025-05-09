@@ -209,17 +209,20 @@ function headerLogout(){
 
 // 사이드바 로그아웃
 function sidebarLogout(){
-	document.getElementById('slogoutLink').addEventListener('click', function(e) {
-		e.preventDefault();
-		console.log("1");
-		fetch('/member/logout', {
-			method : 'POST'
-		})
-		.then(() => {
-			location.href = '/member/login';
-		})
-		.catch(err => {
-			console.log("에러 : ", err);
-		})
-	});
+	let logoutBnt = document.getElementById('slogoutLink');
+	if(logoutBnt != null){
+		logoutBnt.addEventListener('click', function(e) {
+			e.preventDefault();
+			console.log("1");
+			fetch('/member/logout', {
+				method : 'POST'
+			})
+			.then(() => {
+				location.href = '/member/login';
+			})
+			.catch(err => {
+				console.log("에러 : ", err);
+			})
+		});
+	}
 }
