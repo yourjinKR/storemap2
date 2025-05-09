@@ -43,6 +43,8 @@ public interface StoreMapper {
 	public List<StoreVO> getNearestStores(MapDTO map);
 	// 키워드 검색 점포 리스트 불러오기
 	public List<StoreVO> getStoreKeywordList(MapDTO map);
+	// 키워드와 지역명이 일치하는 점포 리스트 불러오기
+	public List<StoreVO> getStoreAddrKeywordList(MapDTO map);
 	// 반경 거리 내  점포 리스트 불러오기
 	public List<StoreVO> getStoresWithinDistance(MapDTO map);
 	// 점포 좋아요

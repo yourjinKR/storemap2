@@ -33,13 +33,15 @@ let storeVOList = [];
 /** 장소 정보를 담는 리스트 */
 let placeList = [];
 /** 지하철 정보 */
-let subwayInfo = {};
+let subwayInfo = null;
 
 // 출력 위치 확인
 let storeUL = document.querySelector(".store-card ul");
 
 // 스토어 리스트 사이드바 컨트롤
 let listSideBar = document.querySelector(".side-bar#store-list");
+// 스토어 리스트의 검색 결과 div
+let searchResult;
 /** true : 사이드바가 열린 상태 */  
 let viewSideBarCheck = false;
 let viewSideBar = document.querySelector(".side-bar#store");
@@ -96,9 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
             lat : basicMap.getCenter().getLat(),
             lng : basicMap.getCenter().getLng(),
         };
-        as.getListNearest(basicCondition, function (data) {
+        as.getListNearest(basicCondition, function(data) {
             apply2map(data);
         })
+        searchResult = document.querySelector(".search-result#store-list");
     }
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
@@ -519,14 +522,15 @@ function calcToggle() {
 // 비동기 서비스
 const asyncService = (function(){
     
-    // 가장 가까운 점포 리스트 구하기 (현재는 10개로 임시 지정 중)
-    function getListNearest(searchCondition, callback){
+    /** 현위치에서 가장 가까운 점포 n개 로드하는 함수 */
+    function getListNearest(condition, amount, callback){
+        condition.amount = amount;
         fetch(`/modal/list/nearest.json`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(searchCondition)
+            body: JSON.stringify(condition)
         })
         .then(response => response.json())
         .then(data => {
@@ -538,7 +542,8 @@ const asyncService = (function(){
     }
 
     // 반경 내 점포 리스트
-    function getListWhithin(searchCondition, callback){
+    function getListWhithin(searchCondition, kilometer, callback){
+        searchCondition.kilometer = kilometer;
         fetch(`/modal/list/within.json`, {
             method: 'POST',
             headers: {
@@ -591,9 +596,27 @@ const asyncService = (function(){
         
     }
 
-    // 키워드 검색
+    /** 키워드 기반 검색 함수 */
     function getListByKeyword(searchCondition, callback) {
         fetch(`/modal/list/keyword.json`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(searchCondition)
+        })
+        .then(response => response.json())
+        .then(data => {
+            callback(data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
+    /** 지역명=키워드 기반 검색 함수 */
+    function getListByAddrKeyword(searchCondition, callback) {
+        fetch(`/modal/list/addrKeyword.json`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -637,7 +660,8 @@ const asyncService = (function(){
         getListByLoc : getListByLoc,
         getStore : getStore,
         getMenuList : getMenuList,
-        getListByKeyword : getListByKeyword
+        getListByKeyword : getListByKeyword,
+        getListByAddrKeyword : getListByAddrKeyword
     };
 })();
 const as = asyncService;
@@ -686,6 +710,11 @@ function getDistanceMarkers(marker1, marker2) {
     return getDistanceFromLatLonInKm(latlng1.getLat(), latlng1.getLng(), latlng2.getLat(), latlng2.getLng());
 }
 
+// 검색어 정규식
+/** "역"으로 끝나는 문자 */
+const subwayRegex = /역$/;
+
+/** 검색어 조건 */
 let searchCondition = {};
 
 /** 지도 검색 기능 서비스 함수 */
@@ -705,35 +734,36 @@ function mapSearchService(map, keyword) {
 
     if (!keyword) {
         // 현재 가장 가까운 점포 10개 출력
-        as.getListNearest(searchCondition, function (data) {
+        as.getListNearest(searchCondition, 10, function (data) {
             apply2map(data);
         });
     }
     else {
-        if (keyword.includes('역')) {
-            // 지하철 조회 서비스 실행
-            searchSubway();
+        // 검색어가 '역'으로 끝날 경우 지하철 주변 점포 찾기 서비스를 우선적으로 실행
+        if (subwayRegex.test(keyword)) {
+            searchSubway(keyword);
         }
         else {
-            // 장소 조회 서비스 실행
-            searchPlaces();
-            // 키워드 검색
-            as.getListByKeyword(searchCondition, function (data) {
-                apply2map(data);
-                if(data[0].store_lat && data[0].store_lng) {
-                    // 검색 결과 중 가장 가까운 점포로 이동
+            as.getListByAddrKeyword(searchCondition, function (data) {
+                if (data.length != 0) {
+                    console.log('지역명 존재');
+                    apply2map(data);
                     panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
+                }
+                else {
+                    // 검색어와 일치하는 지역명이 없을 경우 검색어에 '역'을 붙이고, 일치하는 지하철역을 검색 
+                    keyword += '역';
+                    console.log(`지역명을 발견하지 못함... ${keyword}로 검색...`);
+                    againSearch = true;
+                    // 역 이름 재검색 후, 결과값이 없다면  점포명, 메뉴명으로 실행
+                    searchSubway(keyword);
                 }
             });
         }
     }
 
-    // 1. 키워드를 분류
-    // 2. 키워드에 맞는 쿼리문 실행
-    // 2-1. 위치
-    // 2-2. 가게명
-    // 2-3. 메뉴명
-    // 2-4. 지역명 (행정구역 구별하여 검색)
+    // 검색 결과 문구 출력
+    searchResult.innerHTML = `"${keyword}"의 검색결과`;
 }
 
 /** 키워드 분류 함수 */
@@ -795,10 +825,8 @@ function apply2map(data) {
 
 // ======= 키워드 검색 관련 =======
 /** 장소 검색을 요청하는 함수 */
-function searchPlaces() {
+function searchPlaces(keyword) {
     let ps = new kakao.maps.services.Places();  
-
-    let keyword = document.getElementById('keyword').value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         // alert('키워드를 입력해주세요!');
@@ -810,10 +838,8 @@ function searchPlaces() {
 }
 
 /** 역 검색을 요청하는 함수 */
-function searchSubway() {
+function searchSubway(keyword) {
     let ps = new kakao.maps.services.Places();  
-
-    let keyword = document.getElementById('keyword').value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         // alert('키워드를 입력해주세요!');
@@ -821,10 +847,29 @@ function searchSubway() {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청
-    ps.keywordSearch(keyword, subwaySearchCB);
+    let options = {category_group_code : 'SW8'};
+    ps.keywordSearch(keyword, subwaySearchCB, options);
+}
+
+/** 역 검색을 요청하는 함수 */
+function reSearchSubway(keyword) {
+    let ps = new kakao.maps.services.Places();  
+
+    if (!keyword.replace(/^\s+|\s+$/g, '')) {
+        // alert('키워드를 입력해주세요!');
+        return false;
+    }
+
+    // 장소검색 객체를 통해 키워드로 장소검색을 요청
+    let options = {category_group_code : 'SW8'};
+    ps.keywordSearch(keyword, subwaySearchCB, options);
 }
 
 // ==================== 장소 검색 서비스 관련 함수 ====================
+
+/** true = 검색 기능을 재실행 하는 여부 */
+let againSearch;
+
 /** 장소검색이 완료됐을 때 호출되는 콜백함수 */ 
 function placesSearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
@@ -847,33 +892,32 @@ function placesSearchCB(data, status, pagination) {
 /** 역(subway) 검색이 완료됐을 때 호출되는 콜백함수 */
 function subwaySearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
-        for (let i = 0; i < data.length; i++) {
-            let ele = data[i];
-            if(ele.category_group_code === 'SW8') {
-                subwayInfo = ele;
-                // console.log(subwayInfo);
-                // 역으로 화면 이동
-                panToLatLng(basicMap, subwayInfo.y, subwayInfo.x);
-                // 좌표 설정
-                searchCondition.lat = subwayInfo.y;
-                searchCondition.lng = subwayInfo.x;
-                // 반경 거리 지정 (km)
-                searchCondition.kilometer = 0.5; 
-                // 역 근처 점포 출력
-                as.getListWhithin(searchCondition, function (data) {
-                    apply2map(data);
-                });
-                return;
-            }
+        subwayInfo = data[0];
+        // 역으로 화면 이동
+        panToLatLng(basicMap, subwayInfo.y, subwayInfo.x);
+        // 좌표 설정
+        searchCondition.lat = subwayInfo.y;
+        searchCondition.lng = subwayInfo.x;
+        // 역 근처 점포 출력
+        as.getListWhithin(searchCondition, 0.5, function (data) {
+            apply2map(data);
+        });
+    } 
+    else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        if(againSearch) {
+            console.log("재검색입니다.");
+            as.getListByKeyword(searchCondition, function (data) {
+                apply2map(data);
+            })
+            againSearch = false;
         }
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         // alert('subway 검색 결과가 존재하지 않습니다.');
         return;
-
-    } else if (status === kakao.maps.services.Status.ERROR) {
+    } 
+    else if (status === kakao.maps.services.Status.ERROR) {
+        failSearch();
         // alert('subway 검색 결과 중 오류가 발생했습니다.');
         return;
-
     }
 }
 
@@ -901,3 +945,17 @@ function failSearch() {
     hideviewSideBar();
     setToggle(300);
 }
+
+var places = new kakao.maps.services.Places();
+
+var callback = function(result, status) {
+    if (status === kakao.maps.services.Status.OK) {
+        console.log(result);
+    }
+};
+
+// 공공기관 코드 검색
+places.categorySearch('SW8', callback, {
+    // Map 객체를 지정하지 않았으므로 좌표객체를 생성하여 넘겨준다.
+    location: new kakao.maps.LatLng(37.564968, 126.939909)
+});

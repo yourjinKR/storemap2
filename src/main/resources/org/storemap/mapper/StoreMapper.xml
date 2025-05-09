@@ -174,7 +174,7 @@
 	                   SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
 	               )
 	    )
-	    WHERE ROWNUM &lt;= 10
+	    WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
 	<!-- 반경 거리 내 점포 리스트 -->
@@ -197,6 +197,25 @@
                     ) &lt;= #{kilometer}  <!-- 반경 500m 이하 점포들만 필터링 -->
             ORDER BY distance
         )
+	</select>
+	
+	<!-- 키워드와 지역명이 일치하는 점포 찾기 -->
+	<select id="getStoreAddrKeywordList" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
+	    SELECT *
+	    FROM (
+	        SELECT s.*,
+	               6371 * ACOS(
+	                   COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
+	                   COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
+	                   SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
+	               ) AS distance
+	        FROM store s
+	        WHERE s.store_hidden = 0
+	          AND s.store_lat IS NOT NULL
+	          AND s.store_lng IS NOT NULL
+	          AND s.store_address LIKE '%' || #{keyword} || '%'
+	        ORDER BY distance
+	    )
 	</select>
 	
 	<!-- 키워드에 해당하는 검색어 찾기 -->

@@ -137,6 +137,11 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public List<StoreVO> getStoreAddrKeywordList(MapDTO map) {
+		return mapper.getStoreAddrKeywordList(map);
+	}
+	
+	@Override
 	public List<StoreVO> getStoresWithinDistance(MapDTO map) {
 		return mapper.getStoresWithinDistance(map);
 	}

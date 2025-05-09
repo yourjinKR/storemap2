@@ -16,7 +16,8 @@
 				<form class="form" id="map">
 					<input type="text" id="keyword">
 					<button class="mapBtn" id="search">검색</button>
-				</form>		
+				</form>
+				<div class="search-result" id="store-list">""의 검색 결과</div>
 			</div>
 			<div id="body">
 				<jsp:include page="../modal/storeListModal.jsp"/>	
