@@ -908,6 +908,7 @@ function subwaySearchCB(data, status, pagination) {
             console.log("재검색입니다.");
             as.getListByKeyword(searchCondition, function (data) {
                 apply2map(data);
+                panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
             })
             againSearch = false;
         }
