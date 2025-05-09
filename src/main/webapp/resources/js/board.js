@@ -4,7 +4,7 @@ linkEle.rel = 'stylesheet';
 linkEle.href = BOARD_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
-let filterBtn, filter, eLocation, filterAmount, boardSearch, sortCountType, rDate, bDate = null;
+let filterBtn, filter, eLocation, filterAmount, boardSearch, sortCountType, rDate, bDate, setFixed= null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	boardSearch = document.querySelector("#boardSearch");
@@ -87,11 +87,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		eventFilter(pageNum);
 	}
 	
-	
-	
+	// 공지사항 리스트 출력
 	if(window.location.pathname == "/admin/notice"){
 		getNotice();
 	}
+	
+	
 	
 });
 
@@ -127,38 +128,14 @@ function eventFilter(pageNum){
 	})
 	.then(response => response.json())
 	.then(result => {
+		console.log(result);
 		if(userId != null && userId != "" && auth != "user"){
 			listBoard(result);
 		}else{
 			cardBoard(result);
 		}
-
-		let paging = "";
-		let pageMaker = result.pager;
 		
-		paging += `<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}" data-amount="${pageMaker.cri.amount}">`;
-		if(pageMaker.prev){
-			paging += `<li class="previous">`;
-			paging += `<a href="${pageMaker.startPage-1 }"> &lt; </a>`;
-			paging += `</li>`;
-		}
-		
-		for (var i = pageMaker.startPage; i <= pageMaker.endPage; i++) {
-			paging += `<li>`;
-			paging += `<a href="${i}" class="${pageMaker.cri.pageNum == i ? 'active' : '' }"> ${i}</a>`;
-			paging += `</li>`;
-		}
-		
-		if(pageMaker.next){
-			paging += `<li>`;
-			paging += `<a href="${pageMaker.endPage+1 }"> &gt; </a>`;
-			paging += `</li>`;
-		}
-		paging += `</ul>`;
-		
-		document.querySelector(".page-wrap").innerHTML = paging;
-		
-		pager();
+		pager(result.pager);
 	})
 	.catch(err => console.log(err))
 }
@@ -243,10 +220,6 @@ function listBoard(result){
 		}else{
 			document.querySelectorAll("#boardList colgroup col")[3].classList.add("hide");
 		}
-		
-		filterBtn.checked = false;
-		filter.classList.remove("on");
-
 	}else{
 		str += `
 			<tr>
@@ -255,11 +228,47 @@ function listBoard(result){
 				</td>
 			</tr>`;
 	}
+	
+	filterBtn.checked = false;
+	filter.classList.remove("on");
+	
 	document.querySelector("#boardList tbody").innerHTML = str;
 }
 
+// 공지사항 고정
+function noticeFixed(){
+	fetch(`/admin/updateFixed`,{
+		method : 'POST',
+		headers:{
+			'Content-Type' : 'application/json'
+	    },
+	    body: JSON.stringify(setFixed)
+	})
+	.then(result => {
+		getNotice();
+	})
+	.catch(err => console.log(err))
+}
 
-function getNotice(){
+// 수정된 고정 게시글 idx
+function setFixedData(){
+	// 공지사항 고정
+	let fixNotice = document.querySelectorAll("#boardList input[name='fixChk[]']");
+	setFixed = [];
+	
+	fixNotice.forEach(idx => {
+		idx.addEventListener("change", function(){
+			if(setFixed.includes(idx.value)){
+				setFixed.pop(idx.value);
+			}else{
+				setFixed.push(idx.value);
+			}
+		})
+	})
+}
+
+// 공지사항 리스트
+function getNotice(pageNum){
 	let pageNumData = pageNum != null ? pageNum : 1;
 	let amountData = filterAmount.value;
 	let searchData = boardSearch != null || boardSearch != "" ? boardSearch.value : "";
@@ -268,14 +277,22 @@ function getNotice(){
 	.then(response => response.json())
 	.then(result => {
 		let str = "";
-		console.log(result.announce);
 		if(result != null && result.announce.length > 0){
 			result.announce.forEach(data => {
 				str += 	`<tr data-idx="${data.announce_idx}">`;
+				if(auth == 'admin'){
+					str += 	`<td class="t-c">`;
+					str += 		`<input type="checkbox" name="fixChk[]" value="${data.announce_idx}" ${data.fixed == 1 ? 'checked' : ''}>`;
+					str += 	`</td>`;
+				}
 				str += 		`<td class="t-c">`;
-				str += 			`${data.announce_idx}`;
+				if(data.fixed == 1){
+					str += 			`<span class="fixed-icon" data-idx="${data.announce_idx}">고정</span>`;
+				}else{
+					str += 			`${data.announce_idx}`;
+				}
 				str += 		`</td>`;
-				str += 		`<td>`;
+				str += 		`<td class="t-l">`;
 				str += 			`<a href="/admin/noticeView?idx=${data.announce_idx}">`;
 				str += 				`${data.announce_title}`;
 				if(today <= dateFormate((data.announce_regdate + 86400000 * 3))){
@@ -297,33 +314,9 @@ function getNotice(){
 				</tr>`;
 		}
 		document.querySelector("#boardList tbody").innerHTML = str;
-
-		let paging = "";
-		let pageMaker = result.pager;
 		
-		paging += `<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}" data-amount="${pageMaker.cri.amount}">`;
-		if(pageMaker.prev){
-			paging += `<li class="previous">`;
-			paging += `<a href="${pageMaker.startPage-1 }"> &lt; </a>`;
-			paging += `</li>`;
-		}
-		
-		for (var i = pageMaker.startPage; i <= pageMaker.endPage; i++) {
-			paging += `<li>`;
-			paging += `<a href="${i}" class="${pageMaker.cri.pageNum == i ? 'active' : '' }"> ${i}</a>`;
-			paging += `</li>`;
-		}
-		
-		if(pageMaker.next){
-			paging += `<li>`;
-			paging += `<a href="${pageMaker.endPage+1 }"> &gt; </a>`;
-			paging += `</li>`;
-		}
-		paging += `</ul>`;
-		
-		document.querySelector(".page-wrap").innerHTML = paging;
-		
-		pager();
+		pager(result.pager);
+		setFixedData();
 	})
 	.catch(err => console.log(err))
 }

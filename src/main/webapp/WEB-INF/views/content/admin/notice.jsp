@@ -24,19 +24,25 @@
 			<div class="search">
 				<label for="boardSearch">검색 : </label> 
 				<input type="text" id="boardSearch">
-				<button onclick="eventFilter();">검색</button>
+				<button onclick="getNotice();">검색</button>
 			</div>
 		</div>
 	</div>
 	
 	<table class="barod board-list" id="boardList">
 		<colgroup>
-			<col width="75px">
+			<c:if test="${userType eq 'admin'}">
+				<col width="50px">
+			</c:if>
+			<col width="90px">
 			<col width="*">
 			<col width="120px">
 		</colgroup>
 		<thead>
 			<tr>
+				<c:if test="${userType eq 'admin'}">
+					<th>고정</th>
+				</c:if>
 				<th>번호</th>
 				<th>제목</th>
 				<th>내용</th>
@@ -46,6 +52,13 @@
 			
 		</tbody>
 	</table>
+	
+	<c:if test="${userType eq 'admin'}">
+		<div class="btn-box">
+			<a href="#" onclick="noticeFixed()">저장</a>
+			<a href="/admin/noticeWrite">글쓰기</a>
+		</div>
+	</c:if>
 
 	<!-- page -->
 	<div class="page-wrap">

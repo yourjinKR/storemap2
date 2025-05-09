@@ -13,6 +13,12 @@
 	</div>
 	
 	<div class="right-div d_f">
+		<c:choose>
+			<c:when test="">
+			</c:when>
+			<c:otherwise>
+			</c:otherwise>
+		</c:choose>
 		<c:if test="${loginUser ne '' and loginUser ne null}">
 			<div class="icon" onclick="modalShow('letter')">
 				<span>1</span>
@@ -33,6 +39,13 @@
 				<a class="btn" href="/member/login">로그인</a>
 			</c:otherwise>
 		</c:choose>
+		<c:if test="${loginUser eq '' and loginUser ne null}">
+		<button type="button" class="side-btn">
+			<span class="material-symbols-outlined">
+				menu
+			</span>
+		</button> 
+		</c:if>
 	</div>	
 </div>
 

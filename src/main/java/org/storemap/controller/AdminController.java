@@ -1,39 +1,33 @@
 package org.storemap.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.storemap.domain.AnnounceDTO;
 import org.storemap.domain.AnnounceResponseDTO;
 import org.storemap.domain.AnnounceVO;
 import org.storemap.domain.Criteria;
-import org.storemap.domain.EventDTO;
-import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.FilterVO;
 import org.storemap.domain.PageDTO;
-import org.storemap.domain.StoreRequestVO;
 import org.storemap.service.AnnounceServiceImple;
 import org.storemap.service.CommentDeclarationServiceImple;
 import org.storemap.service.EnterRequestServiceImple;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDeclarationServiceImple;
-import org.storemap.service.EventLikeServiceImple;
 import org.storemap.service.EventRequestServiceImple;
 import org.storemap.service.EventServiceImple;
 import org.storemap.service.MemberServiceImple;
 import org.storemap.service.ReviewDeclarationServiceImple;
 import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreDeclarationServiceImple;
-import org.storemap.service.StoreLikeServiceImple;
 import org.storemap.service.StoreRequestServiceImple;
 import org.storemap.service.StoreServiceImple;
 
@@ -161,11 +155,14 @@ public class AdminController {
 		return "redirect:/admin/adminMain";
 	}
 	
+	
+	// 공지사항 이동
 	@GetMapping("/notice")
 	public String adminNotice() {
 		return "index";
 	}
 	
+	// 공지사항 리스트
 	@GetMapping(value = "/getNotice",
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
@@ -182,6 +179,40 @@ public class AdminController {
 		PageDTO pdto = new PageDTO(cri, total);
 		AnnounceResponseDTO resDto = new AnnounceResponseDTO(pdto, announceService.getNotice(filter));
 		return new ResponseEntity<AnnounceResponseDTO>(resDto, HttpStatus.OK);
+	}
+	
+	// 고정 게시물 수정
+	@PostMapping(value = "/updateFixed")
+	public void updateFixed(@RequestBody int[] data) {
+		int result = announceService.updateFixed(data);
+	}
+	
+	// 공지사항 쓰기
+	@GetMapping("/noticeWrite")
+	public String noticeWrite() {
+		return "index";
+	}
+	@PostMapping("/noticeWrite")
+	public String insertNotice(AnnounceVO vo) {
+		int result = announceService.insertNotice(vo);
+		log.info(result);
+		return "redirect:/admin/notice";
+	}
+	
+	// 공지사항 View
+	@GetMapping("/noticeView")
+	public String noticeView(int idx, Model model) {
+		AnnounceVO vo = announceService.getNoticeView(idx);
+		model.addAttribute("vo" , vo);
+		return "index";
+	}
+	
+	// 공지사항 삭제
+	@DeleteMapping(value="/noticeDelete/{announce_idx}",
+		produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<String> noticeDelete(@PathVariable int announce_idx) {
+		int result = announceService.noticeDelete(announce_idx);
+		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 	
 }

@@ -32,11 +32,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 	setStorageData(pageNum, amount);
 	
-	// 사이드바
+	// 로그인 후
 	let mypage = document.querySelector(".right-div .profile");
 	let sideBar = document.querySelector(".side-bar");
 	if(mypage != null){
 		mypage.addEventListener("click", function(){
+			sideBar.classList.add("show");
+		})
+	}
+	
+	// 로그인전
+	let menu = document.querySelector(".side-btn");
+	if(menu != null){
+		menu.addEventListener("click", function(){
 			sideBar.classList.add("show");
 		})
 	}
@@ -69,7 +77,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 
 // 페이징 처리
-function pager(){
+function pager(pageMaker){
+	let paging = "";
+	
+	paging += `<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}" data-amount="${pageMaker.cri.amount}">`;
+	if(pageMaker.prev){
+		paging += `<li class="previous">`;
+		paging += 	`<a href="${pageMaker.startPage-1 }"> &lt; </a>`;
+		paging += `</li>`;
+	}
+	
+	for (var i = pageMaker.startPage; i <= pageMaker.endPage; i++) {
+		paging += `<li>`;
+		paging += 	`<a href="${i}" class="${pageMaker.cri.pageNum == i ? 'active' : '' }"> ${i}</a>`;
+		paging += `</li>`;
+	}
+	
+	if(pageMaker.next){
+		paging += `<li>`;
+		paging += 	`<a href="${pageMaker.endPage+1 }"> &gt; </a>`;
+		paging += `</li>`;
+	}
+	paging += `</ul>`;
+	
+	document.querySelector(".page-wrap").innerHTML = paging;
+	
 	let aEles= document.querySelectorAll(".page-nation li a");
 	if(aEles != null && pageNum != null && amount != null){
 		aEles.forEach(aEles => {
@@ -79,6 +111,9 @@ function pager(){
 				let pageNum = this.getAttribute("href");
 				if(window.location.pathname == "/event/eventList"){
 					eventFilter(pageNum, amount);
+				}
+				if(window.location.pathname == "/admin/notice"){
+					getNotice(pageNum);
 				}
 			})
 		})

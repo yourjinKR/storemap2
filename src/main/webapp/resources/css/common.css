@@ -110,5 +110,11 @@
 .page-nation a.active{background-color: #0078ff;color: #fff;}
 .page-nation a:hover{background-color: #0078ff;color: #fff;}
 
+.btn-box{text-align:right;}
+.btn-box a{display:inline-block; padding:10px 25px;background: #1985ff; color:#fff;font-size:18px;border-radius:5px;margin-top:15px;}
+
+.side-btn {padding:0;background:none;height:35px; border:none; cursor:pointer}
+.side-btn .material-symbols-outlined{font-size:50px;line-height:35px; height:35px; }
+
 
 

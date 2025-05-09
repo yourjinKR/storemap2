@@ -48,8 +48,10 @@
 					<option value="제주">제주</option>
 				</select>
 			</div>
-			<div><input type="checkbox" id="lCount" value="lCount"><label for="lCount">좋아요 순</label></div>
-			<div><input type="checkbox" id="cCount" value="cCount"><label for="cCount">댓글 순</label></div>
+			<c:if test="${(empty loginUser) or (userType eq 'user')}">
+				<div><input type="checkbox" id="lCount" value="lCount"><label for="lCount">좋아요 순</label></div>
+				<div><input type="checkbox" id="cCount" value="cCount"><label for="cCount">댓글 순</label></div>
+			</c:if>
 		</div>
 		<div class="right-con d_f">
 			<c:if test="${(not empty loginUser) and (userType ne 'user')}">
