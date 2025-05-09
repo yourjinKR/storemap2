@@ -1,11 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!-- 점포 주인아이디로 로그인 안하면 접근못하게 하기 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- url로 접근 못하게 하기? -->
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
 <script type="text/javascript" src="/resources/js/map.js"></script>
 <div class="store">
 	<h1>점포관리</h1>
+	<c:choose>
+		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
+			<!-- 완성하면 본문내용 전부 여기로 -->
+		</c:when>
+		<c:otherwise>
+			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
+		</c:otherwise>
+	</c:choose>
 
   <form method="post" id="store-modify">
   	<input type="hidden" name="member_idx" value="${vo.member_idx}">

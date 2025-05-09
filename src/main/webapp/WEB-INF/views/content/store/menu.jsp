@@ -2,6 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="menu">
+	<c:choose>
+		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
+			<!-- 완성하면 본문내용 전부 여기로 -->
+		</c:when>
+		<c:otherwise>
+			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
+		</c:otherwise>
+	</c:choose>
     <button type="button" class="add_menu" id="addMenuPageBtn">메뉴 추가</button>
 	<button type="button" class="add_menu" id="storeBtn">점포 관리</button>
 	<!-- 메뉴 목록 -->

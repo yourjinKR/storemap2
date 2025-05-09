@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/resources/js/postcode.js"></script>
 <div>
 	<h1>관리자단</h1>
-
+	
 	<div class="map" id="postcode" style="width:500px;height:400px;"></div>
 	<div class="form" id="postcode">
 		<input type="text" id="postcodeInput" placeholder="우편번호">
@@ -21,6 +21,13 @@
 		<input type="text" id="extraAddressInput" placeholder="참고항목">
 	</div>
 
-
+	<c:choose>
+    	<c:when test="${(not empty loginUser) and (userType eq 'admin')}">
+    		<!-- 점포신고db 불러와 게시글 확인 -->
+    	</c:when>
+    	<c:otherwise>
+    		<div><label>관리자 계정으로만 접속 가능합니다!</label></div>
+    	</c:otherwise>
+    </c:choose>
 
 </div>
