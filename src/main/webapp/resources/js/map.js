@@ -942,21 +942,24 @@ function placesSearchCB(data, status, pagination) {
                         console.log('점포명 및 메뉴명을 검색 실행');
                         apply2map(data);
                     }
+                    else if (placeInfo.category_group_name === "음식점") {
+                        console.log('일반 음식점은 검색 지원하지 않음');
+                    }
                     else {
                         console.log('카카오 라이브러리에서 추천하는 장소로 이동');
-                        panToLatLng(panToLatLng(basicMap, placeInfo.y, placeInfo.x));
+                        panToLatLng(basicMap, placeInfo.y, placeInfo.x);ㄷㅍ
                     }
                 })
             }
         });
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
+        failSearch();
         // alert('검색 결과가 존재하지 않습니다.');
         return;
 
     } else if (status === kakao.maps.services.Status.ERROR) {
-
+        failSearch();
         // alert('검색 결과 중 오류가 발생했습니다.');
         return;
 
@@ -998,13 +1001,7 @@ function subwayServiceCB(data, status, pagination) {
         });
     } 
     else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        if(againSearch) {
-            console.log("재검색입니다.");
-            as.getListByKeyword(searchCondition, function (data) {
-                apply2map(data);
-            })
-            againSearch = false;
-        }
+        failSearch();
         // alert('subway 검색 결과가 존재하지 않습니다.');
         return;
     } 
@@ -1043,11 +1040,6 @@ function failSearch() {
     setToggle(300);
     // 찾는 점포 결과가 없으나 카카오 라이브러리에서 받은 장소가 있다면 해당 장소로 이동 진행
     document.querySelector("#fail-content").innerHTML = `주변엔 점포가 없네요...`;
-    if(Object.keys(placeInfo).length != 0 && Object.keys(subwayInfo).length === 0) {
-        console.log('장소 억지로 찾아가기');
-        console.log(placeInfo);
-        panToLatLng(basicMap, placeInfo.y, placeInfo.x);
-    }
 }
 
 var places = new kakao.maps.services.Places();
@@ -1063,3 +1055,9 @@ places.categorySearch('SW8', callback, {
     // Map 객체를 지정하지 않았으므로 좌표객체를 생성하여 넘겨준다.
     location: new kakao.maps.LatLng(37.564968, 126.939909)
 });
+
+/** 검색어에 따른 이벤트 리스트 보여주기 */
+function viewEventList() {
+    console.log('이벤트 리스트 함수 실행');
+    
+}

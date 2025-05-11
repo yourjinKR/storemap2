@@ -20,6 +20,7 @@
 				<div class="search-result" id="store-list">""의 검색 결과</div>
 			</div>
 			<div id="body">
+				<div class="event-search" id="map" onclick="viewEventList()">이벤트 검색</div>
 				<jsp:include page="../modal/storeListModal.jsp"/>	
 				<div id="search-fail">
 					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>
