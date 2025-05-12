@@ -114,19 +114,25 @@
 			store_hidden = 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 13.점포 숨기기 해제 -->
+	<!-- 13.점포 숨기기 해제, 점포 철수 -->
 	<update id="unhideStore" parameterType="int">
 		update store set 
 			store_hidden = 0
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 14.점포 좋아요 업 -->
+	<!-- 14.점포 시작! -->
+	<update id="storeStart" parameterType="int">
+		update store set 
+			store_hidden = 2
+		where store_idx = #{store_idx}
+	</update>
+	<!-- 15.점포 좋아요 업 -->
 	<update id="updateFavorite" parameterType="int">
 		update store set
 			store_like_cnt = store_like_cnt + 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 15.점포 좋아요 다운 -->
+	<!-- 16.점포 좋아요 다운 -->
 	<update id="deleteFavorite" parameterType="int">
 	    update store set
 	        store_like_cnt = GREATEST(store_like_cnt - 1, 0)

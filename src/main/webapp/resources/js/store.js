@@ -12,6 +12,10 @@ document.querySelectorAll('button').forEach(btn => {
 		
 		if(type === 'registerBtn'){
 			register();
+		}else if(type === 'startBtn'){
+			start();
+		}else if(type === 'stopBtn'){
+			stop();
 		}else if(type === 'modifyBtn'){
 			modify();
 		}else if(type === 'menuBtn'){
@@ -25,6 +29,15 @@ document.querySelectorAll('button').forEach(btn => {
 		}
 	})
 });
+
+function start(){
+	f.action = '/store/storeStart';
+	f.submit();
+}
+function stop(){
+	f.action = '/store/storeStop';
+	f.submit();
+}
 
 function register(){
 	if(!f.store_name.value){
@@ -91,6 +104,7 @@ function menu(){
 	location.href=`/store/menu?store_idx=${store_idx}`;
 }
 
+// 점주에서 user로 격하도 시켜야됨
 function remove(){
 	if(confirm("정말 삭제하시겠습니까?")){
 		f.action = `/store/storeRemove?store_idx=${store_idx}`;

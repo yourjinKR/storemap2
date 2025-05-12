@@ -61,6 +61,22 @@ public class StoreController {
 		return "index";
 	}
 	
+	// 점포 시작!
+	@PostMapping("/storeStart")
+	public String storeStart(StoreVO vo) {
+		log.info("storeStart...");
+		storeService.modify(vo);
+		storeService.start(vo.getStore_idx());
+		return "redirect:/store/storeModify?store_idx="+vo.getStore_idx();
+	}
+	// 점포 철수!
+	@PostMapping("/storeStop")
+	public String storeStop(StoreVO vo) {
+		log.info("storeStart...");
+		storeService.unhide(vo.getStore_idx());
+		return "redirect:/store/storeModify?store_idx="+vo.getStore_idx();
+	}
+	
 	// 점포 수정
 	@PostMapping("/storeModify")
 	public String storeModify(StoreVO vo) {

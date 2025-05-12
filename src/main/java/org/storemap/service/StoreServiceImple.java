@@ -101,6 +101,12 @@ public class StoreServiceImple implements StoreService{
 		int result = mapper.unhideStore(store_idx);
 		return result;
 	}
+	@Override
+	public int start(int store_idx) {
+		log.info("start..."+store_idx);
+		int result = mapper.storeStart(store_idx);
+		return result;
+	}
 	
 	// 메인페이지 점포 목록 랜덤
 	@Override
