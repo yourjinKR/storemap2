@@ -4,7 +4,13 @@ linkEle.rel = 'stylesheet';
 linkEle.href = NOTICE_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
+let formData = null;
+
 document.addEventListener("DOMContentLoaded", (event) => {
+	
+	formData = new FormData();
+	
+	
 	const toolbarOptions = [
 	  ['bold', 'underline', 'strike'],        // toggled buttons
 	  ['blockquote','code-block'],
@@ -35,6 +41,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			},
 			theme: 'snow'
 		});
+		
+		quill.on('text-change', function() {
+		        document.getElementById("quill_html").value = quill.root.innerHTML;
+		        console.log(document.getElementById("quill_html").value)
+		});
+		
+		quill.getModule('toolbar').addHandler('image', function () {
+	        selectLocalImage();
+	    });
 	}
 	
 	
@@ -60,6 +75,69 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		})
 	})
 });
+
+// 파일 핸들링
+function selectLocalImage() {
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.accept = "image/*";
+
+    fileInput.click();
+
+    fileInput.addEventListener("change", function () {  // change 이벤트로 input 값이 바뀌면 실행
+
+        if (this.value !== "") { // 파일이 있을때만.
+
+            var ext = this.value.split(".").pop().toLowerCase();
+
+//            if ($.inArray(ext, ["gif", "jpg", "jpeg", "png", "bmp"]) == -1) {
+//
+//                alert("jpg, jpeg, png, bmp, gif 파일만 업로드 가능합니다.");
+//                return;
+//            }
+
+
+            var fileSize = this.files[0].size;
+
+            var maxSize = 20 * 1024 * 1024;
+
+            if (fileSize > maxSize) {
+
+                alert("업로드 가능한 최대 이미지 용량은 20MB입니다.");
+
+                return;
+
+            }
+
+            
+            const file = fileInput.files[0];
+            formData.append('uploadFile', file);
+            for (const x of formData.entries()) {
+        	 console.log(x);
+        	};
+//            $.ajax({
+//                type: 'post',
+//                enctype: 'multipart/form-data',
+//                url: '/file/upload',
+//                data: formData,
+//                processData: false,
+//                contentType: false,
+//                dataType: 'text',
+//                success: function (data) {
+//                    const range = quill.getSelection();
+//                    quill.insertEmbed(range.index, 'image', "/file/display?fileName=" + data);
+//
+//                },
+//                error: function (err) {
+//                    console.log('ERROR!! ::');
+//                    console.log(err);
+//                }
+//            });
+
+        }
+
+    });
+}
 
 // 공지 생성
 function noticeInsert(){

@@ -11,7 +11,7 @@
 	
 	<form method="post">
 		<input type="hidden" name="member_idx" value="${loginUserIdx}">
-		<input type="hidden" name="announce_content">
+		<input type="hidden" name="announce_content" id="quill_html">
 		<input type="hidden" name="fixed" value="0">
 
 		<table>	
