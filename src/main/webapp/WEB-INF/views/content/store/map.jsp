@@ -4,6 +4,7 @@
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
 <script type="text/javascript" src="/resources/js/map.js"></script>
+<script type="text/javascript" src="/resources/js/board.js"></script>
 <div>
 	<div class="map" id="full" style="width: 100%; height: 900px;"></div>
 	<!-- 점포 리스트 사이드바 -->
@@ -20,7 +21,7 @@
 				<div class="search-result" id="store-list">""의 검색 결과</div>
 			</div>
 			<div id="body">
-				<div class="event-search" id="map" onclick="viewEventList()">이벤트 검색</div>
+				<div class="event-search" id="map" onclick="viewEventList()">이벤트 n개 발견</div>
 				<jsp:include page="../modal/storeListModal.jsp"/>	
 				<div id="search-fail">
 					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>
