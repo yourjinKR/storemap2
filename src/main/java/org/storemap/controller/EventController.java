@@ -37,6 +37,7 @@ import org.storemap.domain.PageDTO;
 import org.storemap.service.AttachFileService;
 import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
+import org.storemap.service.EventDayService;
 import org.storemap.service.EventDayServiceImple;
 import org.storemap.service.EventServiceImple;
 
@@ -91,9 +92,9 @@ public class EventController {
 	public String eventRegister(EventVO eventVO) {
 		
 		log.info("eventRegister....." + eventVO);
-		
+
 		eventService.insertEvent(eventVO);
-		
+//		eventDayService.insertEventDay(eventDayVO);
 		return "redirect:/event/eventList";
 	}	
 	

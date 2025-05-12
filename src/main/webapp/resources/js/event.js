@@ -1,8 +1,8 @@
 const EVENT_CSS_FILE_PATH = '/resources/css/event.css';
-let linkEle = document.createElement('link');
-linkEle.rel = 'stylesheet';
-linkEle.href = EVENT_CSS_FILE_PATH;
-document.head.appendChild(linkEle);
+let eventLinkEle = document.createElement('link');
+eventLinkEle.rel = 'stylesheet';
+eventLinkEle.href = EVENT_CSS_FILE_PATH;
+document.head.appendChild(eventLinkEle);
 
 let f;
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				f.reset();
 			}else if(e.currentTarget.getAttribute("id")=="listBtn"){
 				goIndex();
+			}else if(e.currentTarget.getAttribute("id")=="goRegister"){
+				goRegister();
 			}
 		})
 	});
@@ -155,4 +157,9 @@ function register(){
 
 function goIndex(){
 	location.href = "/event/eventList";
+}
+
+function goRegister(){
+	console.log(1)
+	location.href ="/event/eventRegister"
 }

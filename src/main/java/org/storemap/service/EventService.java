@@ -26,4 +26,6 @@ public interface EventService {
 	public int insertEvent(EventVO eventVO);
 	// 이벤트 정보 호출
 	public int getIdx(int enter_idx);
+	
+	
 }

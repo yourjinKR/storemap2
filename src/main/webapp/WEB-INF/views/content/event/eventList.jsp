@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript" src="/resources/js/board.js"></script>
+<script type="text/javascript" src="/resources/js/event.js"></script>
+
 
 <div class="content-list por mt50">
 	<div class="list-top mb30">
@@ -146,7 +148,7 @@
 	<ul class="barod board-card d_f" id="boardCard">
 	
 	</ul>
-
+		<button type="button" class="eventBtn" id="goRegister">새 게시글 등록</button>
 	<!-- page -->
 	<div class="page-wrap">
 		<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}"
