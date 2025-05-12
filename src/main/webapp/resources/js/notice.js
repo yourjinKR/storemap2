@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 // 공지 생성
-function noticeDelete(){
+function noticeInsert(){
 	let f = document.forms[0];
 	let btn = document.querySelector(".write-btn");
 	if(f != null && btn != null){
