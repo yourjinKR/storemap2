@@ -1,27 +1,43 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
-<script type="text/javascript" src="/resources/js/map.js"></script>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script type="text/javascript" src="/resources/js/postcode.js"></script>
-<div>
-	<!--
-	<h1>관리자단</h1>
-	
-	<div class="map" id="postcode" style="width:500px;height:400px;"></div>
-	<div class="form" id="postcode">
-		<input type="text" id="postcodeInput" placeholder="우편번호">
-		<button id="search-postcode">우편번호 찾기</button><br>
-		<input type="text" id="roadAddressInput" placeholder="도로명주소">
-		<input type="text" id="jibunAddressInput" placeholder="지번주소">
-		<span id="guide" style="color:#999;display:none"></span>
-		<input type="text" id="detailAddressInput" placeholder="상세주소">
-		<input type="text" id="extraAddressInput" placeholder="참고항목">
+<script type="text/javascript" src="/resources/js/admin.js"></script>
+
+<div class="admin-wrap">
+	<div class="admin-header">
+		<div class="left-con">
+			<ul class="main-tab">
+				<li><a href="member">유저 관리</a></li>
+				<li><a href="store" class="on">점포 관리</a></li>
+				<li><a href="enter">그룹/기업 관리</a></li>
+				<li><a href="event">이벤트 관리</a></li>
+			</ul>	
+		</div>
+		<div class="right-con">
+			<a href="/">메인으로</a>
+			<p>계정 : 관리자</p>
+		</div>
 	</div>
-	<br>
-	-->
+	
+	<!-- 유저 관리 -->
+	<div class="tab-content member-content mt50">
+		<jsp:include page="./adminMember.jsp"/>
+	</div>
+	<!-- 점포 관리 -->
+	<div class="tab-content store-content on mt50">
+		<jsp:include page="./adminStore.jsp"/>
+	</div>
+	<!-- 그룹/기업 관리 -->
+	<div class="tab-content enter-content mt50">
+		<jsp:include page="./adminEnter.jsp"/>
+	</div>
+	<!-- 이벤트 관리 -->
+	<div class="tab-content event-content mt50">
+		<jsp:include page="./adminEvent.jsp"/>
+	</div>
+	
+</div>
+<%-- 
 	<c:choose>
     	<c:when test="${(not empty loginUser) and (userType eq 'admin')}">
     		<div>
@@ -64,5 +80,5 @@
     		<div><label>관리자 계정으로만 접속 가능합니다!</label></div>
     	</c:otherwise>
     </c:choose>
-<script type="text/javascript" src="/resources/js/admin.js"></script>
-</div>
+<script type="text/javascript" src="/resources/js/admin.js"></script> 
+--%>
