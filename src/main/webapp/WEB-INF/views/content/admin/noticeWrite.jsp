@@ -27,13 +27,17 @@
 				</tr>
 				<tr>
 					<td>
-						<div id="editor">
-						  
+						<div class="mt15">
+							<div id="editor">
+							  
+							</div>
 						</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<button type="button" class="btn write-btn">등록</button>
+		<div class="btn-box">
+			<a href="noticeInsert" class="btn write-btn">등록</a>
+		</div>
 	</form>
 </div>

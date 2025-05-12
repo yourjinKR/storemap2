@@ -181,18 +181,16 @@ function listBoard(result){
 			str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">${data.event_title}&emsp;신청 : ${data.approved_store}&emsp;최대 : ${data.max_store}</a>`;
 			str += 		`</td>`;
 			str += 		`<td>`;
-			if(today >= dateFormate(data.event_rstartdate) && today <= dateFormate(data.event_rstopdate)){
+			
+			if(today > dateFormate(data.event_rstopdate) || data.max_store == data.approved_store){
+				str += 	 `<span class="state-icon end-icon">모집 종료</span>`;
+			}else if(today < dateFormate(data.event_rstartdate)){
+				str += 	 `<span class="state-icon planned-icon">모집 예정</span>`;
+			}else{
 				if((data.approved_store / data.max_store * 100) < 80){
 					str += 	 `<span class="state-icon open-icon">모집 중</span>`;
 				}else{
 					str += 	 `<span class="state-icon warning-icon">마감 임박</span>`;
-				}
-			}else{
-				if(today <= dateFormate(data.event_rstartdate)){
-					str += 	 `<span class="state-icon planned-icon">모집 예정</span>`;
-					
-				}else{
-					str += 	 `<span class="state-icon end-icon">모집 종료</span>`;
 				}
 			}
 			

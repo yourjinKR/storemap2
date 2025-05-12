@@ -37,15 +37,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 	}
 	
-	let f = document.forms[0];
-	let btn = document.querySelector(".write-btn");
-	if(f != null && btn != null){
-		btn.addEventListener("click" ,function (){
-			document.querySelector("input[name='announce_content']").value = quill.root.innerHTML;
-			f.action = "/admin/noticeWrite";
-			f.submit();
-		})
-	}
 	
 	let btns = document.querySelectorAll(".btn-box a");
 	btns.forEach(btn => {
@@ -53,6 +44,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			e.preventDefault();
 			let target = btn.getAttribute("href");
 			switch (target) {
+			case "noticeInsert":
+				noticeInsert();
+				
+				break;
 			case "noticeDelete":
 				if(confirm("삭제하시겠습니다?")){
 					noticeDelete();
@@ -66,6 +61,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	})
 });
 
+// 공지 생성
+function noticeDelete(){
+	let f = document.forms[0];
+	let btn = document.querySelector(".write-btn");
+	if(f != null && btn != null){
+		document.querySelector("input[name='announce_content']").value = quill.root.innerHTML;
+		f.action = "/admin/noticeWrite";
+		f.submit();
+	}
+}
+
+// 공지 삭제
 function noticeDelete(){
 	let idx = document.querySelector(".notice-title").dataset['idx'];
 	fetch(`/admin/noticeDelete/${idx}`,{

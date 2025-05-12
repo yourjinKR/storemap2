@@ -7,5 +7,8 @@ h3{font-size: 32px;padding:10px 0 15px;margin-bottom:15px;text-align:center;font
 table {width:100%;} 
 table th{border-bottom:1px solid #222;padding:10px 0}
 table td{}
+table td input[type='text']{height:40px; width: 100%;margin-top:15px;border-radius:5px;border:1px solid #d9d9d9;padding:0 10px;}
 
 .content-box{border:1px solid #d9d9d9;border-radius:5px;margin-top:15px; min-height:300px;padding:10px;}
+
+#editor {min-height:300px}
