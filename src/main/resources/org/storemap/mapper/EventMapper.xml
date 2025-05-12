@@ -8,7 +8,7 @@
 		<![CDATA[
 			SELECT * FROM (
 			    SELECT * FROM EVENT 
-			    WHERE EVENT_BSTOPDATE >= SYSDATE AND EVENT_BSTARTDATE <= SYSDATE
+			    WHERE EVENT_BSTOPDATE >= TRUNC(SYSDATE) AND EVENT_BSTARTDATE <= TRUNC(SYSDATE)
 			    ORDER BY DBMS_RANDOM.RANDOM
 			)
 			WHERE ROWNUM <= 10
@@ -19,7 +19,7 @@
 		<![CDATA[
 			SELECT * FROM (
 			    SELECT * FROM EVENT 
-			    WHERE EVENT_BSTARTDATE > SYSDATE
+			    WHERE EVENT_BSTARTDATE > TRUNC(SYSDATE)
 			    ORDER BY DBMS_RANDOM.RANDOM
 			)
 			WHERE ROWNUM <= 10
@@ -84,16 +84,18 @@
 	            <choose>
 	            	<when test="list_state == 'open'">
 	            		<![CDATA[ 
-	            			(E.EVENT_BSTARTDATE > SYSDATE
-		            		OR  E.EVENT_BSTARTDATE <= SYSDATE 
-		            		AND E.EVENT_BSTOPDATE >= SYSDATE
-		            		AND E.EVENT_RSTOPDATE > SYSDATE)
+	            			(E.EVENT_RSTARTDATE > TRUNC(SYSDATE)
+		            		OR  E.EVENT_RSTARTDATE <= TRUNC(SYSDATE) 
+		            		AND E.EVENT_RSTOPDATE >= TRUNC(SYSDATE))
                         	AND (APPROVED_STORE != MAX_STORE 
-                    		OR APPROVED_STORE IS NULL)
+                    		OR MAX_STORE != 0)
 	            		]]>
 	            	</when>
 	            	<otherwise>
-		                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+		                <![CDATA[
+		                	E.EVENT_RSTOPDATE < TRUNC(SYSDATE) OR
+		                	APPROVED_STORE = MAX_STORE
+						]]> 
 	            	</otherwise>
 	            </choose>
            	</when>
@@ -101,17 +103,17 @@
            		<choose>
 	            	<when test="list_state == 'open'">
 	            		<![CDATA[ 
-	            			E.EVENT_BSTARTDATE <= SYSDATE 
-		            		AND E.EVENT_BSTOPDATE >= SYSDATE
+	            			E.EVENT_BSTARTDATE <= TRUNC(SYSDATE) 
+		            		AND E.EVENT_BSTOPDATE >= TRUNC(SYSDATE)
 	            		]]>
 	            	</when>
 	            	<when test="list_state == 'planned'">
 	            		<![CDATA[ 
-	            			E.EVENT_BSTARTDATE > SYSDATE
+	            			E.EVENT_BSTARTDATE > TRUNC(SYSDATE)
 	            		]]>
 	            	</when>
 	            	<otherwise>
-		                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+		                <![CDATA[E.EVENT_BSTOPDATE < TRUNC(SYSDATE)]]> 
 	            	</otherwise>
 	            </choose>
            	</otherwise>
@@ -197,16 +199,18 @@
 				            <choose>
 				            	<when test="eventFilter.list_state == 'open'">
 				            		<![CDATA[ 
-				            			(E.EVENT_BSTARTDATE > SYSDATE
-					            		OR  E.EVENT_BSTARTDATE <= SYSDATE 
-					            		AND E.EVENT_BSTOPDATE >= SYSDATE
-					            		AND E.EVENT_RSTOPDATE > SYSDATE)
+				            			(E.EVENT_RSTARTDATE > TRUNC(SYSDATE)
+					            		OR  E.EVENT_RSTARTDATE <= TRUNC(SYSDATE) 
+					            		AND E.EVENT_RSTOPDATE >= TRUNC(SYSDATE))
 			                        	AND (APPROVED_STORE != MAX_STORE 
-			                    		OR APPROVED_STORE IS NULL)
+			                    		OR MAX_STORE != 0)
 				            		]]>
 				            	</when>
 				            	<otherwise>
-					                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]> 
+					                <![CDATA[
+					                	E.EVENT_RSTOPDATE < TRUNC(SYSDATE) OR
+					                	APPROVED_STORE = MAX_STORE
+				                	]]> 
 				            	</otherwise>
 				            </choose>
 		              		<if test="eventFilter.board_search != null and eventFilter.board_search != ''">
@@ -220,11 +224,11 @@
 				            	<![CDATA[ 
 				                CASE
 				                    WHEN (
-				                    	E.EVENT_RSTARTDATE <= SYSDATE AND 
-				                   		E.EVENT_RSTOPDATE >= SYSDATE) 
+				                    	E.EVENT_RSTARTDATE <= TRUNC(SYSDATE) AND 
+				                   		E.EVENT_RSTOPDATE >= TRUNC(SYSDATE)) 
 				                   		THEN 1
 				                    WHEN 
-				                    	E.EVENT_BSTARTDATE > SYSDATE 
+				                    	E.EVENT_BSTARTDATE > TRUNC(SYSDATE) 
 				                    	THEN 2
 				                END,
 				                CASE  
@@ -243,15 +247,15 @@
 		            		<choose>
 				            	<when test="eventFilter.list_state == 'open'">
 				            		<![CDATA[ 
-				            			(E.EVENT_BSTARTDATE <= SYSDATE 
-					            		AND E.EVENT_BSTOPDATE >= SYSDATE)
+				            			(E.EVENT_BSTARTDATE <= TRUNC(SYSDATE) 
+					            		AND E.EVENT_BSTOPDATE >= TRUNC(SYSDATE))
 				            		]]>
 				            	</when>
 				            	<when test="eventFilter.list_state == 'planned'">
-				            		<![CDATA[E.EVENT_BSTARTDATE > SYSDATE]]>
+				            		<![CDATA[E.EVENT_BSTARTDATE > TRUNC(SYSDATE)]]>
 				            	</when>
 				            	<otherwise>
-					                <![CDATA[E.EVENT_BSTOPDATE < SYSDATE]]>
+					                <![CDATA[E.EVENT_BSTOPDATE < TRUNC(SYSDATE)]]>
 				            	</otherwise>
 				            </choose>
 				            
