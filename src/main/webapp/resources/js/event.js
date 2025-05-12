@@ -96,15 +96,13 @@ function generateDays() {
 	    const div = document.createElement("div");
 	    div.style.marginBottom = "15px";
 	    div.innerHTML = `
-	      <fieldset style="border:1px solid #ccc; padding:10px;">
-	        <legend><strong>${dayIndex}일차 (${yyyyMMdd})</strong></legend>
-	        최대 입점 수:
-	        <input type="number" name="eventDay[${index}].store_max" class="storeMax" required style="width: 80px;">
-	        시작 시간:
-	        <input type="time" name="eventDay[${index}].event_starttime" class="startTime" required>
-	        종료 시간:
-	        <input type="time" name="eventDay[${index}].event_stoptime" class="stopTime" required>
-	      </fieldset>
+		최대 입점 수:
+		    <input type="number" name="eventDayList[${index}].store_max" class="storeMax" required style="width: 80px;">
+		시작 시간:
+		    <input type="time" name="eventDayList[${index}].event_starttime" class="startTime" required>
+		종료 시간:
+		    <input type="time" name="eventDayList[${index}].event_stoptime" class="stopTime" required>
+		  </fieldset>
 	    `;
 	    container.appendChild(div);
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
+import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.mapper.EventMapper;
@@ -20,6 +21,8 @@ public class EventServiceImple implements EventService{
 	
 	@Autowired
 	private EventMapper mapper;
+	@Autowired
+	private EventDayService eventDayService;
 	
 	// 메인 페이지 진행중인 이벤트
 	@Override
@@ -75,7 +78,20 @@ public class EventServiceImple implements EventService{
 	// 이벤트 등록
 	@Override
 	public int insertEvent(EventVO eventVO) {
-		log.info("RegisterService..." + eventVO);
 		return mapper.insertEvent(eventVO);
+	}
+	@Transactional
+	@Override
+	public void registerEventWithDays(EventVO eventVO) {
+	    mapper.insertEvent(eventVO);
+		log.info("edayService..." + eventVO.getEventDay());
+		
+		if (eventVO.getEventDay() != null) {
+	        for (EventDayVO day : eventVO.getEventDay()) {
+	            day.setEvent_idx(eventVO.getEvent_idx()); // 외래키 설정
+	            eventDayService.insertEventDay(day);      // 각 날짜 저장
+	        }
+	    }
+
 	}
 }

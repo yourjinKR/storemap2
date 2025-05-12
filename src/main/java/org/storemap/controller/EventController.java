@@ -90,18 +90,15 @@ public class EventController {
 	// 게시글 등록 컨트롤러
 	@PostMapping("/eventRegister")
 	public String eventRegister(EventVO eventVO) {
-		
 		log.info("eventRegister....." + eventVO);
-
-		eventService.insertEvent(eventVO);
-//		eventDayService.insertEventDay(eventDayVO);
+		log.info("eventDay...." + eventVO.getEventDay());
+		eventService.registerEventWithDays(eventVO);
 		return "redirect:/event/eventList";
 	}	
 	
 	//이벤트 등록 화면 보여주는 컨트롤러
 	@GetMapping("/eventRegister")
 	public String showEventRegister() {
-		log.info("eventRegister...");
 		return "index";
 	}
 	//이벤트 상세보기 화면으로 이동	

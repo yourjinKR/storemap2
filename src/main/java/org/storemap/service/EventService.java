@@ -3,6 +3,7 @@ package org.storemap.service;
 import java.util.List;
 
 import org.storemap.domain.EventDTO;
+import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 
@@ -26,6 +27,7 @@ public interface EventService {
 	public int insertEvent(EventVO eventVO);
 	// 이벤트 정보 호출
 	public int getIdx(int enter_idx);
-	
+	// 이벤트, 이벤트데이 트랜잭션 처리
+	public void registerEventWithDays(EventVO eventVO);
 	
 }

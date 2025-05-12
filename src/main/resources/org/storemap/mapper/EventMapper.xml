@@ -320,6 +320,9 @@
 	
 	<!-- 게시글 등록 -->
 	<insert id="insertEvent" parameterType="org.storemap.domain.EventVO">
+    <selectKey keyProperty="event_idx" resultType="int" order="BEFORE">
+    	select event_seq.nextVal from dual
+    </selectKey>
     INSERT INTO event (
         event_idx,
         enter_idx,
@@ -337,7 +340,7 @@
         event_file, 
         event_postcode
     ) VALUES (
-        event_seq.nextVal, 
+        #{event_idx}, 
         #{enter_idx},
         #{event_title},
         #{event_category},
