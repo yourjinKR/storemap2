@@ -128,7 +128,6 @@ function eventFilter(pageNum){
 	})
 	.then(response => response.json())
 	.then(result => {
-		console.log(result);
 		if(userId != null && userId != "" && auth != "user"){
 			listBoard(result);
 		}else{

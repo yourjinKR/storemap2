@@ -14,10 +14,11 @@
 </head>
 <%
 	request.setAttribute("path", request.getAttribute("javax.servlet.forward.request_uri"));
-
-	
 %>
 <body>
+	사용자 : ${ loginUser }, 권한 : ${ userType }
+	<input type="hidden" name="sessionId" value="${ loginUser }">
+	<input type="hidden" name="auth" value="${ userType }">
 	<c:choose>
 		<c:when test="${path eq '/store/map'}"></c:when>
 		<c:when test="${path eq '/modal/storeView'}"></c:when>

@@ -18,12 +18,8 @@ let currentLat, currentLng, pageNum, amount, userId, auth, today = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	// 세션 데이터 (아이디/권한)
-	let session = document.querySelector("input[name='sessionId']");
-	let sessionAuth = document.querySelector("input[name='auth']");
-	if(session != null || sessionAuth != null){
-		userId = session.value;
-		anth = sessionAuth.value;
-	}
+    userId = document.querySelector("input[name='sessionId']").value;
+    auth = document.querySelector("input[name='auth']").value;
 	today = dateFormate(new Date());
 	
 	pageNum = new URLSearchParams(location.search).get("pageNum");
