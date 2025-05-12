@@ -31,8 +31,10 @@ public interface StoreService {
 	//public int getTotalRecordCount();
 	// 점포 숨기기 등록
 	public int hide(int store_idx);
-	// 점포 숨기기 해제
+	// 점포 숨기기 해제, 점포 철수
 	public int unhide(int store_idx);
+	// 점포 시작!
+	public int start(int store_idx);
 	// 메인페이지 점포 목록 랜덤 출력
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기

@@ -9,7 +9,7 @@
 	<!-- Store hidden이 1이면 접근 못하게 하기 컨트롤러? -->
 	<c:choose>
 		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
-			
+			<div><label>제대로 접속중</label></div>
 		</c:when>
 		<c:otherwise>
 			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
@@ -72,6 +72,17 @@
     <input type="text" id="rnum" name="store_rnum" value="${vo.store_rnum}">
 
     <div class="panel-body-btns">
+    	<c:choose>
+			<c:when test="${vo.store_hidden eq 0}">
+				<button type="button" class="btn btn-sec" id="startBtn">점포 시작</button>
+			</c:when>
+			<c:when test="${vo.store_hidden eq 2}">
+				<button type="button" class="btn btn-sec" id="stopBtn">점포 철수</button>
+			</c:when>
+			<c:otherwise>
+				<div><label>관리자에게 숨김처리 당함</label></div>
+			</c:otherwise>
+		</c:choose>
     	<button type="button" class="btn btn-sec" id="menuBtn">메뉴 관리</button>
     	<button type="button" class="btn btn-sec" id="modifyBtn">수정 완료</button>
     	<button type="button" class="btn btn-sec" id="removeBtn">점포 삭제</button>
