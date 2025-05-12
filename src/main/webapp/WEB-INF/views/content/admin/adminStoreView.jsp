@@ -11,7 +11,7 @@
 		            <c:forEach var="rvo" items="${reqList}">
 		                <div>
 		                	<div>${rvo.member.member_name}님의 ${rvo.store.store_name}</div>
-		                    <input type="hidden" name="member_idx" value="${rvo.member_idx}">
+		                    <input type="hidden" name="member_idx" value="${rvo.member.member_idx}">
 		                    <button type="button" id="storeApprovalBtn">점포 승인</button>
 		                    <button type="button" id="storeDisallowBtn">점포 불허</button>
 		                </div>

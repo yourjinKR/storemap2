@@ -85,7 +85,7 @@
 		</c:choose>
     	<button type="button" class="btn btn-sec" id="menuBtn">메뉴 관리</button>
     	<button type="button" class="btn btn-sec" id="modifyBtn">수정 완료</button>
-    	<button type="button" class="btn btn-sec" id="removeBtn">점포 삭제</button>
+    	<button type="button" class="btn btn-sec" id="removeBtn">점주 취소</button>
     	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
     </div>
   </form>

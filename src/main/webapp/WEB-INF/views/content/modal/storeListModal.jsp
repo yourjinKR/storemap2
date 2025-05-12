@@ -4,19 +4,22 @@
 <div class="storeListModal">
 	<div class="store-card">
 		<ul>
-		<!-- 숨겨진 리스트는 불러오지 않게 하기 AND 시작된 리스트hide2만 불러오기 -->
 			<c:forEach var="vo" items="${list}">
-				<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
-					<img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
-					<input type="hidden" name="store_address" value="${vo.store_address}">
-					<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
-					<input type="hidden" name="store_num" value="${vo.store_num}">
-					<div class="store-description">
-						<div class="store-name">${vo.store_name}</div>
-						<div class="store-content">${vo.store_content}</div>
-					</div>
-					<br>
-				</li>
+			<c:choose>
+				<c:when test="${vo.store_hidden eq 0}">
+					<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
+						<img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
+						<input type="hidden" name="store_address" value="${vo.store_address}">
+						<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
+						<input type="hidden" name="store_num" value="${vo.store_num}">
+						<div class="store-description">
+							<div class="store-name">${vo.store_name}</div>
+							<div class="store-content">${vo.store_content}</div>
+						</div>
+						<br>
+					</li>
+				</c:when>
+				</c:choose>
 			</c:forEach>
 		</ul>
 	</div>

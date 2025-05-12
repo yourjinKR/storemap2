@@ -46,6 +46,7 @@ public class StoreController {
 	public String storeRgister(@RequestParam("member_idx") int member_idx, StoreVO vo) {
 		log.info("storeRegister..."+vo);
 		if(storeService.getMember(member_idx) != null) {
+			// 수정필요
 			System.out.println("이미 점포 신청중 입니다!!");
 			return "redirect:/";
 		}else {
