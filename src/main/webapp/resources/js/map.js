@@ -947,7 +947,7 @@ function placesSearchCB(data, status, pagination) {
                     }
                     else {
                         console.log('카카오 라이브러리에서 추천하는 장소로 이동');
-                        panToLatLng(basicMap, placeInfo.y, placeInfo.x);ㄷㅍ
+                        panToLatLng(basicMap, placeInfo.y, placeInfo.x);
                     }
                 })
             }
