@@ -18,8 +18,12 @@ let currentLat, currentLng, pageNum, amount, userId, auth, today = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	// 세션 데이터 (아이디/권한)
-	userId = document.querySelector("input[name='sessionId']").value;
-	auth = document.querySelector("input[name='auth']").value;
+	let session = document.querySelector("input[name='sessionId']");
+	let sessionAuth = document.querySelector("input[name='auth']");
+	if(session != null || sessionAuth != null){
+		userId = session.value;
+		anth = sessionAuth.value;
+	}
 	today = dateFormate(new Date());
 	
 	pageNum = new URLSearchParams(location.search).get("pageNum");
@@ -67,12 +71,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 	// 헤더 검색창
 	let search = document.querySelector(".search-bar input[name='search']");
-	search.addEventListener("keydown", function(e){
-		if(e.keyCode == 13){
-			location.href="/store/map";
-		}
-	})
-	
+	if(search != null){
+		search.addEventListener("keydown", function(e){
+			if(e.keyCode == 13){
+				location.href="/store/map";
+			}
+		})
+	}
 })
 
 
