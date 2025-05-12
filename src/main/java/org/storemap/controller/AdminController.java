@@ -64,7 +64,7 @@ public class AdminController {
 	@Autowired
 	private AnnounceServiceImple announceService;
 	
-	
+	// 관리자 신고 모음?
 	@GetMapping("/adminMain")
 	public String adminMain(Model model) {
 		log.info("adminMainGet...");
@@ -83,16 +83,19 @@ public class AdminController {
 		log.info("adminEventViewGet...");
 		return "index";
 	}
+	// 점포 승인
 	@PostMapping("/adminStoreView")
 	public String storeApproval(int member_idx) {
 		log.info("storeApproval..."+member_idx);
 		storeReqService.modify(member_idx);
+		memberService.approvalOwner(member_idx);
 		return "redirect:/admin/adminStoreView";
 	}
+	// 점포 승인 페이지
 	@GetMapping("/adminStoreView")
 	public String adminStoreView(Model model) {
 		log.info("adminStoreViewGet...");
-		model.addAttribute("reqList", storeReqService.getDisReqList());
+		model.addAttribute("reqList", storeReqService.getDisReqListMap());
 		return "index";
 	}
 	@GetMapping("/adminMemberView")

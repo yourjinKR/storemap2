@@ -37,4 +37,11 @@ public class MemberServiceImple implements MemberService{
 		int result = memberMapper.modifyMember(member);
 		return result;
 	}
+	
+	@Override
+	public int approvalOwner(int member_idx) {
+		int result = memberMapper.approvalOwner(member_idx);
+		return result;
+	}
+	
 }

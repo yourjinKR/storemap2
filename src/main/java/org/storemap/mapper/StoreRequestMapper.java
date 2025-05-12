@@ -13,4 +13,6 @@ public interface StoreRequestMapper {
 	public int delete(int member_idx);
 	// 점주 신청 요청 리스트 불러오기
 	public List<StoreRequestVO> getDisReqList();
+	// 조인 신청 요청 리스트 불러오기
+	public List<StoreRequestVO> getDisReqListMap();
 }

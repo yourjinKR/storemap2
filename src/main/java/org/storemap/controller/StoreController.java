@@ -51,7 +51,7 @@ public class StoreController {
 		}else {
 			storeService.register(vo);
 			storeRequestService.register(member_idx);
-			return "redirect:/store/menu?store_idx="+vo.getStore_idx();
+			return "redirect:/index";
 		}
 	}
 	// 점포 등록 페이지 이동

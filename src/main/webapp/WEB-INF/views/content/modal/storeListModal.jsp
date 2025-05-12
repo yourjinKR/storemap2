@@ -4,6 +4,7 @@
 <div class="storeListModal">
 	<div class="store-card">
 		<ul>
+		<!-- 숨겨진 리스트는 불러오지 않게 하기 AND 시작된 리스트hide2만 불러오기 -->
 			<c:forEach var="vo" items="${list}">
 				<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
 					<img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">

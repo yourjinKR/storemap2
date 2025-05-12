@@ -10,6 +10,7 @@
 		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
 			<!-- 완성하면 본문내용 전부 여기로 -->
 		</c:when>
+		<!-- Store hidden이 1이면 접근 못하게 하기 컨트롤러? -->
 		<c:otherwise>
 			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
 		</c:otherwise>

@@ -14,4 +14,7 @@ public interface MemberService {
 	
 	// 개인정보 수정
 	public int modifyMember(MemberVO member);
+	
+	// 점주 요청 승인
+	public int approvalOwner(int member_idx);
 }

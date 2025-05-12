@@ -40,4 +40,11 @@ public class StoreRequestServiceImple implements StoreRequestService{
 		log.info("getDisReqList...");
 		return mapper.getDisReqList();
 	}
+	
+	@Override
+	public List<StoreRequestVO> getDisReqListMap() {
+		log.info("getDisReqListMap...");
+		return mapper.getDisReqListMap();
+	}
+	
 }

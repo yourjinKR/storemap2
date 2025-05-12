@@ -3,6 +3,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.StoreRequestMapper">
+	<resultMap id="disReqListMap" type="org.storemap.domain.StoreRequestVO">
+		<result property="member_idx" column="member_idx"/>
+		<result property="pon" column="pon"/>
+		<association property="member" resultMap="memberMap"/>
+		<association property="store" resultMap="storeMap"/>
+	</resultMap>
+	<resultMap id="storeMap" type="org.storemap.domain.StoreVO">
+		<id property="store_idx" column="store_idx"/>
+		<result property="member_idx" column="member_idx"/>
+		<result property="store_name" column="store_name"/>
+	</resultMap>
+	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
+		<id property="member_idx" column="member_idx"/>
+		<result property="member_name" column="member_name"/>
+	</resultMap>
 
 	<!-- 1.점주 신청 요청 등록  -->
 	<insert id="insert" parameterType="int">
@@ -26,6 +41,12 @@
 	<!-- 4.점주 신청 요청 리스트 불러오기 -->
 	<select id="getDisReqList" resultType="org.storemap.domain.StoreRequestVO">
 		SELECT * FROM store_request WHERE pon = 0
+	</select>
+	<!-- 5.점주 신청 요청 리스트 이름으로 불러오기 -->
+	<select id="getDisReqListMap" resultMap="disReqListMap">
+		SELECT r.member_idx, m.member_name, s.store_name, r.pon
+		FROM member m, store s, store_request r
+		WHERE r.pon = 0 AND r.member_idx = m.member_idx AND r.member_idx = s.member_idx
 	</select>
 	
 </mapper>
