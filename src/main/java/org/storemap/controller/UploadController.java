@@ -63,11 +63,18 @@ public class UploadController {
 	private String getUploadPath() {
 		// 현재 실행되는 프로젝트의 루트 디렉토리
 	    String projectRoot = System.getProperty("user.dir");
-
+	    String path = servletContext.getRealPath("/resources/img");
+	    String result = null;
+	    int index = path.indexOf(".metadata");
+	    String keyword = ".metadata";
+	    if (index != -1) {
+	        result = path.substring(0, index);
+	    }
 	    // 상대 경로 설정: src/main/webapp/resources/img
-	    String relativePath = "src/main/webapp/resources/img";
+	    
+	    String relativePath = "storemap2/src/main/webapp/resources/img";
 
-	    File uploadDir = new File(projectRoot, relativePath);
+	    File uploadDir = new File(result, relativePath);
 
 	    // 디렉토리가 없으면 생성
 	    if (!uploadDir.exists()) {
