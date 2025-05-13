@@ -102,7 +102,13 @@ public class EventController {
 	public String eventRegister(EventVO eventVO) {
 		log.info("eventRegister....." + eventVO);
 		log.info("eventDay...." + eventVO.getEventDay());
-		eventService.registerEventWithDays(eventVO);
+		
+		try {
+			eventService.registerEventWithDays(eventVO);
+		} catch (RuntimeException e) {
+			log.error("에러발생" + e);
+		}
+		
 		return "redirect:/event/eventList";
 	}	
 	

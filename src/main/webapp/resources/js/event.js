@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			console.log('click');
 			
 			if(e.currentTarget.getAttribute("id")=="registerBtn"){
-				register();
+				logEventDayList();
 			}else if(e.currentTarget.getAttribute("id")=="resetBtn"){
 				f.reset();
 			}else if(e.currentTarget.getAttribute("id")=="listBtn"){
@@ -146,9 +146,9 @@ function bulkFill() {
 
 	
 function register(){
-	console.log(1);
 	
-	console.log(f.enter_idx.value);
+	let a = document.querySelectorAll('input[name="eventDayList[0]"]');
+	console.log(a.value);
 	f.action="/event/eventRegister";
 	f.submit();
 }
@@ -160,4 +160,25 @@ function goIndex(){
 function goRegister(){
 	console.log(1)
 	location.href ="/event/eventRegister"
+}
+function logEventDayList() {
+    const storeMaxInputs = document.querySelectorAll('.storeMax');
+    const startTimeInputs = document.querySelectorAll('.startTime');
+    const stopTimeInputs = document.querySelectorAll('.stopTime');
+
+    const eventDayList = [];
+
+    for (let i = 0; i < storeMaxInputs.length; i++) {
+        const item = {
+            store_max: storeMaxInputs[i].value,
+            event_starttime: startTimeInputs[i].value,
+            event_stoptime: stopTimeInputs[i].value
+        };
+        eventDayList.push(item);
+    }
+
+    console.log("이벤트 날짜 정보 리스트:", eventDayList);
+    
+	f.action="/event/eventRegister";
+	f.submit();
 }
