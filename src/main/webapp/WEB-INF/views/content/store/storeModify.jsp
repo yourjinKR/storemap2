@@ -6,10 +6,16 @@
 <script type="text/javascript" src="/resources/js/map.js"></script>
 <div class="store">
 	<h1>점포관리</h1>
-	<!-- Store hidden이 1이면 접근 못하게 하기 컨트롤러? -->
 	<c:choose>
 		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
-			<div><label>제대로 접속중</label></div>
+			<c:choose>
+				<c:when test="${vo.store_hidden eq 1}">
+					<div><label>관리자에 의해 숨김처리 되었습니다.</label></div>	
+				</c:when>
+				<c:otherwise>
+					<div><label>제대로 접속중</label></div>			
+				</c:otherwise>
+			</c:choose>
 		</c:when>
 		<c:otherwise>
 			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
