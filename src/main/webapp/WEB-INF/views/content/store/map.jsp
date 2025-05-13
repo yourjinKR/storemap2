@@ -11,19 +11,23 @@
 		<div id="content">
 			<div class="header" id="store-list">
 				<div class="logo">
-					로고
+					<a href="/">로고</a>
 				</div>
 				<form class="form" id="map">
 					<input type="text" id="keyword">
 					<button class="mapBtn" id="search">검색</button>
 				</form>
-				<div class="search-result" id="store-list">""의 검색 결과</div>
+				<!-- <div class="search-result" id="store-list">""의 검색 결과</div>  -->
+				<div id="swap-content">
+					<button class="mapBtn" id="event-mode">이벤트</button>
+					<button class="mapBtn" id="store-mode">점포</button>
+				</div>
 			</div>
 			<div id="body">
-				<div class="event-search" id="map">이벤트 n개 발견</div>
-				<jsp:include page="../modal/storeListModal.jsp"/>	
+				<jsp:include page="../modal/storeListModal.jsp"/>
+				<jsp:include page="../modal/eventListModal.jsp"/>
 				<div id="search-fail">
-					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>
+					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>	
 				</div>	
 			</div>
 		</div>
@@ -32,5 +36,10 @@
 	<!-- 사이드바 컨트롤러 -->
 	<div class="side-bar" id="toggle-box">
 		<button class="mapBtn" id="toggle">토글</button>			
+	</div>
+	
+	<!-- 이벤트 모달 -->
+	<div class="side-bar" id="event-list">
+		<div>이벤트 리스트 모달</div> 
 	</div>
 </div>

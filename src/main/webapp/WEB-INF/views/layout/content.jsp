@@ -109,6 +109,10 @@
 		<c:when test="${path eq '/modal/postcodeForm'}">
 			<jsp:include page="../content/modal/postcodeForm.jsp" />
 		</c:when>
+		<%-- 이벤트 리스트 모달 --%>
+		<c:when test="${path eq '/modal/eventListModal'}">
+			<jsp:include page="../content/modal/eventListModal.jsp" />
+		</c:when>
 
 		<%-- 지도 --%>
 		<c:when test="${path eq '/store/map'}">

@@ -13,3 +13,6 @@
     display: none;
     background: red;
 }
+
+.side-bar#event-list{left: -300px; overflow: auto;}
+.side-bar.show#event-list{opacity:1; left:300px; overflow: auto;}

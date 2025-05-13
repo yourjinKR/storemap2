@@ -318,6 +318,61 @@
 		WHERE EVENT_IDX = #{event_idx}
 	</select>
 	
+	<!-- 키워드 검색 -->
+	<select id="getEventListByKeyword" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.EventVO">
+	    SELECT
+	        E.EVENT_IDX, 
+	        E.ENTER_IDX,
+	        E.EVENT_TITLE, 
+	        E.EVENT_RSTARTDATE, 
+	        E.EVENT_RSTOPDATE,
+	        E.EVENT_BSTARTDATE,
+	        E.EVENT_BSTOPDATE,
+	        E.EVENT_FILE,
+	        E.EVENT_CONTENT,
+	        E.EVENT_LOCATION,
+	        NVL(ER.APPROVED_STORE, 0) AS APPROVED_STORE,
+	        NVL(CE.COMMENT_COUNT, 0) AS COMMENT_COUNT,
+	        NVL(EL.LIKE_COUNT, 0) AS LIKE_COUNT,
+	        NVL(ED.MAX_STORE, 0) AS MAX_STORE
+	    FROM EVENT E
+	    LEFT JOIN (
+	        SELECT EVENT_IDX, COUNT(*) APPROVED_STORE
+	        FROM EVENT_REQUEST 
+	        JOIN EVENT_DAY USING (EDAY_IDX)
+	        WHERE PON > 0
+	        GROUP BY EVENT_IDX
+	    ) ER ON E.EVENT_IDX = ER.EVENT_IDX
+	
+	    LEFT JOIN (
+	        SELECT EVENT_IDX, SUM(STORE_MAX) MAX_STORE
+	        FROM EVENT_DAY
+	        GROUP BY EVENT_IDX
+	    ) ED ON E.EVENT_IDX = ED.EVENT_IDX
+	
+	    LEFT JOIN (
+	        SELECT EVENT_IDX, COUNT(*) LIKE_COUNT
+	        FROM EVENT_LIKE
+	        GROUP BY EVENT_IDX
+	    ) EL ON E.EVENT_IDX = EL.EVENT_IDX
+	
+	    LEFT JOIN (
+	        SELECT EVENT_IDX, COUNT(*) COMMENT_COUNT 
+	        FROM COMMENT_EVENT 
+	        GROUP BY EVENT_IDX
+	    ) CE ON E.EVENT_IDX = CE.EVENT_IDX
+	
+	    WHERE 1 = 1
+	    <if test="keyword != null and keyword != ''">
+	        AND (
+	            E.EVENT_TITLE LIKE '%' || #{keyword} || '%'
+	            OR E.EVENT_LOCATION LIKE '%' || #{keyword} || '%'
+	        )
+	    </if>
+	    ORDER BY E.EVENT_BSTARTDATE DESC
+	</select>
+
+	
 	<!-- 게시글 등록 -->
 	<insert id="insertEvent" parameterType="org.storemap.domain.EventVO">
     <selectKey keyProperty="event_idx" resultType="int" order="BEFORE">

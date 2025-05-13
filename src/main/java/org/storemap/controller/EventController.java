@@ -33,6 +33,7 @@ import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
+import org.storemap.domain.MapDTO;
 import org.storemap.domain.PageDTO;
 import org.storemap.service.AttachFileService;
 import org.storemap.service.AttachFileServiceImple;
@@ -78,7 +79,16 @@ public class EventController {
 		
 		return new ResponseEntity<EventResponseDTO>(resdto,HttpStatus.OK);
 	}
-	
+
+	@PostMapping(value = "/eventFilter/keyword",
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE,
+			},
+			consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<List<EventVO>> eventFilterKeyword(@RequestBody MapDTO map, Model model) {
+		log.info("eventFilterKeyword..."+ map);
+		return new ResponseEntity<List<EventVO>>(eventService.getEventListByKeyword(map), HttpStatus.OK);
+	}
 	
 	@ResponseBody
 	@GetMapping("/favorite/{event_idx}") 

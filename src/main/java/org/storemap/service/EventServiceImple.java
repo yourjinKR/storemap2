@@ -11,6 +11,7 @@ import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
+import org.storemap.domain.MapDTO;
 import org.storemap.mapper.EventMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -61,6 +62,12 @@ public class EventServiceImple implements EventService{
 		List<EventVO> list = null;
 		list = mapper.getFilterList(edto);
 		return list;
+	}
+	
+	// 이벤트 리스트 (검색어만)
+	@Override
+	public List<EventVO> getEventListByKeyword(MapDTO map) {
+		return mapper.getEventListByKeyword(map);
 	}
 
 	// 이벤트 좋아요

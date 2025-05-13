@@ -5,6 +5,7 @@ import java.util.List;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
+import org.storemap.domain.MapDTO;
 
 public interface EventMapper {
 	// 메인 페이지 진행중인 이벤트
@@ -23,6 +24,8 @@ public interface EventMapper {
 	public int getListCount(EventFilterVO filter);
 	// 이벤트 리스트
 	public List<EventVO> getFilterList(EventDTO edto);
+	// 이벤트 리스트 (검색어만)
+	public List<EventVO> getEventListByKeyword(MapDTO map); 
 	// 이벤트 좋아요
 	public int updateFavorite(int event_idx);
 	// 이벤트 상세보기

@@ -85,6 +85,14 @@ public class ModalController {
 		return "index";
 	}
 	
+	//점포 리스트 모달
+	@GetMapping("/eventListModal")
+	public String eventListModal(Model model) {
+		log.info("eventListModal...");
+		model.addAttribute("list",storeService.getList());
+		return "index";
+	}
+	
 	//점포 정보 팝업
 	@GetMapping("/storeView")
 	public String storeView(@RequestParam("store_idx") int store_idx, Model model, HttpSession session) {
