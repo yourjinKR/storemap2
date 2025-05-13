@@ -408,8 +408,8 @@ public class ModalController {
 	@GetMapping(value="/getEdayList",
 	produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventVO> getEdayList(HttpSession session) {
-		List<EventVO> e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
-		log.info(e_idx);
+		//List<EventVO> e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
+		//log.info(e_idx);
 		return null;
 		//List<EventVO> result = letterService.getEdayList(e_idx);
 //		
