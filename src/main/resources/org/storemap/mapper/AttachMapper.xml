@@ -11,14 +11,18 @@
             store_idx,
             enter_idx,
             filename,
-            member_idx
+            member_idx,
+            uuid,
+            uploadPath
         ) VALUES (
             attach_seq.nextval,
             #{event_idx},
             #{store_idx},
             #{enter_idx},
             #{filename},
-            #{member_idx}
+            #{member_idx},
+            #{uuid},
+            #{uploadPath}
         )
 	</insert>
 	<!-- 2. 파일 수정 -->
@@ -28,7 +32,9 @@
 			store_idx = #{store_idx},
 			enter_idx = #{enter_idx},
 			fileName = #{fileName},
-			member_idx = #{member_idx}
+			member_idx = #{member_idx},
+			uuid = #{uuid},
+			uploadPath = #{uploadPath}
 			where attach_idx = #{attach_idx}
 	</update>
 	<!-- 3. 파일 삭제 -->

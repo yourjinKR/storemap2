@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AttachFileVO {
 	private int attach_idx, event_idx, store_idx, enter_idx;
-	private String filename;
+	private String filename, uploadPath, uuid;
 }
