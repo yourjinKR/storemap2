@@ -347,13 +347,11 @@ function clearMarkers() {
 
 /** 배열에 추가된 마커를 지도에 표시하는 함수 */
 function showMarkers(map, list) {
-    console.log('마커를 생성합니다');
     setMarkers(map, list)    
 }
 
 /** 배열에 추가된 마커를 지도에서 삭제하는 함수 */
 function hideMarkers(list) {
-    console.log('마커를 삭제합니다');
     setMarkers(null, list);    
 }
 
@@ -769,20 +767,15 @@ function classifyKeyword(params) {
 
 /** 검색결과를 지도에 적용하는 콜백함수 (점포) */
 function apply2map(data) {
+    storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
+    storeUL.innerHTML = "";
+
     if (data.length == 0) {
         console.log("data 없음");
         failSearch();
     } else {
-        panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
         completeSearch();
     }
-
-    storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
-    storeUL.innerHTML = "";
-    // console.log(data);
-
-    // 마커 및 오버레이 삭제
-    // deleteAllEle();
 
     // 데이터 등록
     data.forEach(vo => {
@@ -820,10 +813,12 @@ function apply2map(data) {
     markerMapping(storeLI);
 
     // 스토어 맵 모드일 경우 마커와 오버레이 표시
-    if (storeMapMode) {
+    if (storeMapMode && storeVOList.length != 0) {
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
         showOverlay(basicMap, storeOverlayList);
+
+        panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
     }
 }
 
@@ -860,10 +855,12 @@ function apply2eventMap(data) {
     eventUL.innerHTML += msg;
 
     // 이벤트 모드일때 마커와 오버레이 요소들 표시
-    if (eventMapMode) {
+    if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
         showOverlay(basicMap, eventOverlayList);
+
+        panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
     }
 }
 
@@ -1043,17 +1040,13 @@ function completeSearch() {
 /** 검색결과가 없거나 실패할때 호출하는 함수 */
 function failSearch() {
     // store의 검색 결과가 없을 때
-    if (storeVOList.length == 0) {
+    if (storeVOList.length == 0 && storeMapMode) {
         storeListModal.style.display = "none"; // 스토어 리스트 hide
+        // document.querySelector(".store-card").innerHTML = "<div>검색결과가 존재하지 않습니다...</div>";
     }
     // event의 검색 결과가 없을 때
-    if (eventVOList.length == 0) {
+    if (eventVOList.length == 0 && eventMapMode) {
         eventListModal.style.display = "none";
-    }
-    // 모든 결과가 없을때는 경고 문구를 보여준다
-    if (storeVOList.length == 0 && eventVOList.length == 0) {
-        console.log('검색 결과 둘 다 없음');
-        // failModal.style.display = "block"; // 경고 문구 view
     }
     viewSideBarCheck = false;
     hideviewSideBar();
@@ -1120,7 +1113,6 @@ function address2coordPromise(vo) {
                 resolve(vo); // 변환된 vo를 반환
             } 
             else {
-                console.log('주소가 올바르지 않습니다');
                 resolve(null); // 실패한 경우에도 resolve하여 전체 처리를 막지 않음
             }
         });
@@ -1136,7 +1128,6 @@ function processAllEvents(data) {
         eventVOList = results.filter(vo => vo !== null);
 
         // 후처리 코드 삽입
-        console.log("모든 이벤트의 좌표 변환 완료:", eventVOList);
         apply2eventMap(eventVOList);
 
         // 여기에 마커 이벤트 등록이나 기타 후처리를 수행
@@ -1180,7 +1171,9 @@ function swap2eventMap() {
         viewSideBarCheck = false;
         setToggle(300);
 
-        panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+        if (eventVOList.length != 0) {
+            panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+        }
     }
 
 }
@@ -1212,6 +1205,8 @@ function swap2storeMap() {
         viewSideBarCheck = false;
         setToggle(300);
 
-        panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
+        if(storeVOList.length != 0) {
+            panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
+        }
     }
 }
