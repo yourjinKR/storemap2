@@ -33,6 +33,23 @@
 	</bean>
 	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 	
+	
+	<!-- Cloudinary Configuration -->
+    <bean id="cloudinary" class="com.cloudinary.Cloudinary">
+        <constructor-arg>
+            <map>
+                <entry key="cloud_name" value="dbdkdnohv" /> <!-- Cloudinary 대시보드에서 확인한 Cloud Name -->
+                <entry key="api_key" value="297464466347446" />       <!-- Cloudinary 대시보드에서 확인한 API Key -->
+                <entry key="api_secret" value="25VQmR6C2q3Bg0otkRgK-x_gp6g" /> <!-- Cloudinary 대시보드에서 확인한 API Secret -->
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!-- Cloudinary Service -->
+    <bean id="cloudinaryService" class="org.storemap.service.CloudinaryService">
+        <constructor-arg ref="cloudinary" />
+    </bean>
+	
 	<!-- 객체 스캔 -->
 	<mybatis-spring:scan base-package="org.storemap.mapper"/>
 	<context:component-scan base-package="org.storemap.service"/>

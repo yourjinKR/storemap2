@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AnnounceResponseDTO;
 import org.storemap.domain.AnnounceVO;
 import org.storemap.domain.Criteria;
@@ -196,9 +197,15 @@ public class AdminController {
 		return "index";
 	}
 	@PostMapping("/noticeWrite")
-	public String insertNotice(AnnounceVO vo) {
-		int result = announceService.insertNotice(vo);
-		log.info(result);
+	public String insertNotice(MultipartFile[] files,AnnounceVO vo) {
+		for (MultipartFile multipartFile : files) {
+			log.info("-------------------------");
+			log.info("upload File Name : " + multipartFile.getOriginalFilename());
+			log.info("upload File size : " + multipartFile.getSize());
+		}
+		log.info(vo);
+		//int result = announceService.insertNotice(vo);
+		//log.info(result);
 		return "redirect:/admin/notice";
 	}
 	
