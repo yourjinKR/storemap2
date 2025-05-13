@@ -1,5 +1,8 @@
 package org.storemap.controller;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AnnounceResponseDTO;
 import org.storemap.domain.AnnounceVO;
@@ -196,17 +200,24 @@ public class AdminController {
 	public String noticeWrite() {
 		return "index";
 	}
+	
 	@PostMapping("/noticeWrite")
-	public String insertNotice(MultipartFile[] files,AnnounceVO vo) {
-		for (MultipartFile multipartFile : files) {
-			log.info("-------------------------");
-			log.info("upload File Name : " + multipartFile.getOriginalFilename());
-			log.info("upload File size : " + multipartFile.getSize());
+	public String insertNotice(MultipartFile[] files, AnnounceVO vo) {
+		// 파일 저장 로직
+		for (MultipartFile file : files) {
+			if (!file.isEmpty()) {
+				log.info(file.getSize());
+				log.info(file.getOriginalFilename());
+				
+			}
 		}
-		log.info(vo);
+
+		// 공지사항 데이터 처리
+		log.info("공지사항 데이터: " + vo);
 		//int result = announceService.insertNotice(vo);
-		//log.info(result);
-		return "redirect:/admin/notice";
+		//log.info("공지사항 저장 결과: " + result);
+
+		return null;
 	}
 	
 	// 공지사항 View

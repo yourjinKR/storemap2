@@ -4,12 +4,10 @@ linkEle.rel = 'stylesheet';
 linkEle.href = NOTICE_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
-let formData, quill = null;
+let formData, fileData, quill = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
-	
-	formData = new FormData();
-	
+	fileData = [];
 	
 	const toolbarOptions = [
 	  ['bold', 'underline', 'strike'],        // toggled buttons
@@ -59,6 +57,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			let target = btn.getAttribute("href");
 			switch (target) {
 			case "noticeInsert":
+				
 				noticeInsert();
 				
 				break;
@@ -96,41 +95,53 @@ function selectLocalImage() {
                 return;
 
             }
-            const file = fileInput.files[0];
-            formData.append('uploadFile', file);
-            for (const x of formData.entries()) {
-        	 console.log(x);
-        	};
+            
+            fileData.push(fileInput.files[0]);
+            
         }
     });
 }
 
-// 공지 생성
-function noticeInsert(){
-	let f = document.forms[0];
-	let btn = document.querySelector(".write-btn");
-	if(f != null && btn != null){
-		document.querySelector("#quill_html").value = quill.root.innerHTML;
-	}
-	fetch("/admin/noticeWrite", {
-		method: "POST",
-		body: formData
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error("Network response was not ok");
-		}
-		return response.text(); // 서버 응답 처리
-	})
-	.then(data => {
-		console.log("Success:", data);
-		alert("Notice successfully submitted!");
-		location.href = "/admin/notice"; // 성공 시 리다이렉트
-	})
-	.catch(error => {
-		console.error("Error:", error);
-		alert("Error submitting notice.");
-	});
+function noticeInsert() {
+    const form = document.forms[0];
+    if (!form) return;
+
+    // Quill 에디터 내용 저장
+    document.querySelector("#quill_html").value = quill.root.innerHTML;
+
+    // FormData 생성
+    const formData = new FormData(form);
+
+    // fileData 배열의 파일을 FormData에 추가
+    for (const file of fileData) {
+    	formData.append("files", file);
+    }
+ 
+    // FormData 확인 (디버깅용)
+    for (const entry of formData.entries()) {
+        console.log(entry[0], entry[1]);
+    }
+
+    // 데이터 전송
+    fetch("/admin/noticeWrite", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.text();
+    })
+    .then(data => {
+        console.log("Success:", data);
+        alert("공지사항이 성공적으로 등록되었습니다.");
+        location.href = "/admin/notice"; // 성공 시 리다이렉트
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("공지사항 등록 중 오류가 발생했습니다.");
+    });
 }
 
 // 공지 삭제

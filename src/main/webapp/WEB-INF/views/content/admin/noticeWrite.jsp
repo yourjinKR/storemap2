@@ -9,10 +9,8 @@
 <div class="notice-wrap">
 	<h3>공지사항</h3>
 	
-	<%-- <form method="post" enctype="multipart/form-data">
-		<input type="hidden" name="member_idx" value="${loginUserIdx}">
+	<form method="post" enctype="multipart/form-data">
 		<input type="hidden" name="announce_content" id="quill_html">
-		<input type="hidden" name="files" id="uploadData">
 		<input type="hidden" name="fixed" value="0">
 
 		<table>	
@@ -41,16 +39,4 @@
 			<a href="noticeInsert" class="btn write-btn">등록</a>
 		</div>
 	</form>
- --%>
-    
-  	 <h1>Upload File</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" />
-        <button type="submit">Upload</button>
-    </form>
-    
-   <h1>Upload Result</h1>
-    <p>Uploaded File URL:</p>
-    <a href="${url}" target="_blank">${url}</a>
-    <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/9694eb43-2874-454c-bdc7-634ff10e3229.jpg.jpg" alt="Uploaded Image" />
 </div>
