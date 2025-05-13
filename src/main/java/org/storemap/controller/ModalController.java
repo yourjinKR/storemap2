@@ -340,7 +340,7 @@ public class ModalController {
 			})
 	public ResponseEntity<List<LetterVO>> getLetterList(@PathVariable("type") String type, HttpSession session){
 		ResponseEntity<List<LetterVO>> result = null;
-		if(session.getAttribute("loginUser") != null && (session.getAttribute("userType").equals("enter") || session.getAttribute("userType").equals("admin"))){
+		if(session.getAttribute("loginUser") != null){
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("letterType", type);
 			map.put("loginUser", (String) session.getAttribute("loginUser"));
@@ -359,7 +359,7 @@ public class ModalController {
 	public ResponseEntity<LetterVO> getLetterView(@PathVariable("letter_idx") int letter_idx, HttpSession session){
 		ResponseEntity<LetterVO> result = null;
 		
-		if(session.getAttribute("loginUser") != null && (session.getAttribute("userType").equals("enter") || session.getAttribute("userType").equals("admin"))){
+		if(session.getAttribute("loginUser") != null){
 			
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("letter_idx", Integer.toString(letter_idx));
@@ -408,10 +408,13 @@ public class ModalController {
 	@GetMapping(value="/getEdayList",
 	produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventVO> getEdayList(HttpSession session) {
-		int e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
-		EventVO result = letterService.getEdayList(e_idx);
-		
-		return new ResponseEntity<EventVO>(result,HttpStatus.OK);
+		List<EventVO> e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
+		log.info(e_idx);
+		return null;
+		//List<EventVO> result = letterService.getEdayList(e_idx);
+//		
+//		
+//		return new ResponseEntity<EventVO>(result,HttpStatus.OK);
 	}
 	
 	// 우편번호 입력 form

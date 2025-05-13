@@ -159,7 +159,6 @@ function getLetter(type){
 				})
 			}
 			
-			changeLetterModal("list");
 		}else{
 			let str = "";
 			str += `<li class="empty-data">`;
@@ -167,6 +166,7 @@ function getLetter(type){
 			str += `</li>`;
 			document.querySelector("#listBody").innerHTML = str;
 		}
+		changeLetterModal("list");
 	})
 	.catch(err => console.log(err))
 }
@@ -193,6 +193,16 @@ function letterView(letter_idx){
 
 // 쪽지 전송
 function insertLetter(f){
+	if(hideReceiver.value == ""){
+		alert("받는 사람을 입력해주세요.");
+		return;
+	}
+	if(writeContent.value.length <= 10){
+		alert("내용을 10자 이상 입력해주세요.");
+		return;
+	}
+
+	
 	fetch(`/modal/insertLetter`,{
 		method : "post",
 		headers:{
@@ -213,10 +223,12 @@ function insertLetter(f){
 			alert("전송에 실패 하였습니다");
 			return;
 		}else{
+			alert("전송이 완료되었습니다.");
 			writeReceiver.value = "";
 			writeContent.value = "";
 			hideReceiver.value = "";
 		}
+		getLetter("received");
 	})
 	.catch(err => console.log(err))
 }

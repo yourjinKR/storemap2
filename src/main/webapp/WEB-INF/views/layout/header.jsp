@@ -17,7 +17,7 @@
 		</c:choose>
 		<c:if test="${loginUser ne null}">
 			<div class="icon" onclick="modalShow('letter')">
-				<span>1</span>
+				<span>0</span>
 				<i class="material-symbols-outlined">
 					mail
 				</i>

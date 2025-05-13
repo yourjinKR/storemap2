@@ -127,7 +127,7 @@
 	</select>
 	
 	<!-- GET IDX -->
-	<select id="getIdx" parameterType="int" resultType="int">
+	<select id="getIdx" parameterType="int" resultType="org.storemap.domain.EventVO">
 		SELECT EVENT_IDX FROM EVENT WHERE ENTER_IDX = #{enter_idx}
 	</select>
 	

@@ -49,7 +49,7 @@
 	<resultMap type="org.storemap.domain.EventDayVO" id="eventDayVO">
 		<result property="eday_idx" column="eday_idx"/>
 		<result property="event_idx" column="event_idx"/>
-		<result property="store_list" column="store_list"/>
+		<result property="store_max" column="store_max"/>
 		<result property="event_starttime" column="event_starttime"/>
 		<result property="event_stoptime" column="event_stoptime"/>
 	</resultMap>
