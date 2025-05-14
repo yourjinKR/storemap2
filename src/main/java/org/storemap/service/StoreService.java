@@ -3,12 +3,13 @@ package org.storemap.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 
 public interface StoreService {
 	// 점포 등록
-	public int register(StoreVO vo);
+	public int register(MultipartFile file, StoreVO vo);
 	// 점포 관리
 	public int modify(StoreVO vo);
 	// 점포 삭제

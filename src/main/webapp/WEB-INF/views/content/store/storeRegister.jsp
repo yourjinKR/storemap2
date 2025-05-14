@@ -5,7 +5,7 @@
 	<h1>점포등록</h1>
 	<c:choose>
 		<c:when test="${(not empty loginUser) and (userType eq 'user')}">
-		  <form method="post">
+		  <form method="post" enctype="multipart/form-data">
 		  	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 		  
 		    <label for="sname">점포명</label>
@@ -13,11 +13,6 @@
 		    
 		    <label for="simage">이미지</label>
 			<input type="file" id="simage" name="store_image">
-			<!-- 파일업로드 -->
-		    <div class="file-upload">
-		      <button type="button">이미지 업로드 수정 필요</button>
-		      <span>attach_file.jpg</span>
-		    </div>
 		
 		    <label for="pnum">연락처</label>
 		    <input type="text" id="pnum" name="store_num" placeholder="000-000-0000">
@@ -58,4 +53,5 @@
 		</c:otherwise>
 	</c:choose>
 <script type="text/javascript" src="/resources/js/store.js"></script>
+
 </div>

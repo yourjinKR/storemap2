@@ -65,8 +65,42 @@ function register(){
 		return;
 	}
 	
-	f.action = '/store/storeRegister';
-	f.submit();
+	// FormData 생성
+    const formData = new FormData();
+	formData.append("member_idx" , document.querySelector("input[name='member_idx']").value);
+	formData.append("store_name" , document.querySelector("input[name='store_name']").value);
+	formData.append("store_image" , document.querySelector("input[name='store_image']").value);
+	formData.append("store_num" , document.querySelector("input[name='store_num']").value);
+	formData.append("store_email" , document.querySelector("input[name='store_email']").value);
+	formData.append("store_address" , document.querySelector("input[name='store_address']").value);
+	formData.append("store_area" , document.querySelector("select[name='store_area']").value);
+	formData.append("store_activity_time" , document.querySelector("input[name='store_activity_time']").value);
+	formData.append("store_content" , document.querySelector("textarea[name='store_content']").value);
+	formData.append("store_rnum" , document.querySelector("input[name='store_rnum']").value);
+	//이미지 파일
+    formData.append("file", document.querySelector("input[type='file']").files[0]);
+
+    // 데이터 전송
+    fetch("/store/storeRegister", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+	    if (!response.ok) {
+	        throw new Error('서버오류'+response);
+	    }
+        return response.text();
+    })
+    .then(data => {
+        console.log("Success:", data);
+        alert("점포 등록 완료.");
+        location.href = "/"; // 성공 시 리다이렉트
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("점포 등록 실패.");
+    });
+
 };
 
 function modify(){

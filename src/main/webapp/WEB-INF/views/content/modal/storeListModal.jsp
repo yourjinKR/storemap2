@@ -8,6 +8,8 @@
 			<c:choose>
 				<c:when test="${vo.store_hidden eq 0}">
 					<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name="store_idx">
+						<!--<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_menu1.jpg.webp" alt="${vo.store_image}"/>
+						-->
 						<img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
 						<input type="hidden" name="store_address" value="${vo.store_address}">
 						<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">

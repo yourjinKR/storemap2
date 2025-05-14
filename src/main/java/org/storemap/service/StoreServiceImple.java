@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.StoreMapper;
@@ -17,12 +18,26 @@ public class StoreServiceImple implements StoreService{
 	
 	@Autowired
 	private StoreMapper mapper;
+	//이미지 업로드 서버
+	@Autowired
+	private CloudinaryService cloudinaryService;
 	
 	@Override
-	public int register(StoreVO vo) {
+	public int register(MultipartFile file, StoreVO vo) {
 		log.info("register..."+vo);
-		int result = mapper.insert(vo);
-		return result;
+		try {
+			// 파일이 있는 경우에만 이미지 업로드 처리
+			if(file != null && !file.isEmpty()) {
+				String imageUrl = cloudinaryService.uploadFile(file);
+				vo.setStore_image(imageUrl);
+			} else {
+				// 기본 이미지 URL 설정 (Default값 나중에 수정)
+				vo.setStore_image("store1.jpg");
+			}
+			return mapper.insert(vo);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to register store", e);
+		}
 	}
 	
 	@Override

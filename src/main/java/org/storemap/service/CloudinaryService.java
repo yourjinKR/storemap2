@@ -32,10 +32,10 @@ public class CloudinaryService {
             if (originalFilename == null) {
                 throw new IllegalArgumentException("파일 이름이 비어있습니다.");
             }
-            String fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
             
             // UUID를 활용한 고유 파일 이름 생성
-            String uniqueFilename = UUID.randomUUID().toString() +"_"+ originalFilename;
+            String uuid = UUID.randomUUID().toString();
+            String uniqueFilename = uuid +"_"+ originalFilename;
 
             // Cloudinary 업로드 옵션 설정
             Map<String, Object> uploadOptions = new HashMap<>();
@@ -43,12 +43,16 @@ public class CloudinaryService {
 
             // Cloudinary에 업로드
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadOptions);
+            
+            // attachDAO에 insert
             AttachFileVO vo = new AttachFileVO();
             vo.setFilename(originalFilename);
-            vo.setUuid(UUID.randomUUID().toString());
+            vo.setUuid(uuid);
             mapper.insertAttach(vo);
+            
             // 업로드된 파일 URL 반환
-            return UUID.randomUUID().toString();
+            return uuid;
+            
         } catch (IOException e) {
             throw new RuntimeException("Cloudinary 파일 업로드 실패", e);
         }

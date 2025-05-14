@@ -2,6 +2,9 @@ package org.storemap.controller;
 
 import java.util.List;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.MenuVO;
 import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreVO;
+import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.MenuServiceImple;
 import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreRequestServiceImple;
@@ -42,19 +47,25 @@ public class StoreController {
 	private StoreRequestServiceImple storeRequestService;
 	
 	// 점포 추가
+	@ResponseBody
 	@PostMapping("/storeRegister")
-	public String storeRgister(@RequestParam("member_idx") int member_idx, StoreVO vo) {
+	public ResponseEntity<String> storeRegister(@RequestParam("member_idx") int member_idx, StoreVO vo, MultipartFile file) {
 		log.info("storeRegister..."+vo);
-		if(storeService.getMember(member_idx) != null) {
-			// 수정필요
-			System.out.println("이미 점포 신청중 입니다!!");
-			return "redirect:/";
-		}else {
-			storeService.register(vo);
-			storeRequestService.register(member_idx);
-			return "redirect:/index";
+		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
+		try {
+			//점포생성 + 이미지 업로드
+			int result = storeService.register(file, vo);			
+			if(result > 0) {
+				//점주요청
+				storeRequestService.register(member_idx);
+			}
+			return new ResponseEntity<String>("succeed", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error during store registration", e);
+			return new ResponseEntity<String>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
 	// 점포 등록 페이지 이동
 	@GetMapping("/storeRegister")
 	public String storeRegisterPage() {
@@ -80,8 +91,9 @@ public class StoreController {
 	
 	// 점포 수정
 	@PostMapping("/storeModify")
-	public String storeModify(StoreVO vo) {
+	public String storeModify(StoreVO vo, @RequestParam(value="uploadFile", required=false) MultipartFile[] uploadFile) {
 		log.info("storeModify..."+vo);
+		// 파일업로드
 		storeService.modify(vo);
 		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}
@@ -140,6 +152,7 @@ public class StoreController {
 			produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> menuRegister(@RequestBody MenuVO vo){
 		log.info("add..."+vo);
+		//파일 업로드
 		return menuService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -153,6 +166,7 @@ public class StoreController {
 	public ResponseEntity<String> menuModify(@PathVariable("menu_idx") int menu_idx, @RequestBody MenuVO vo){
 		log.info("menu_idx: "+menu_idx);
 		log.info("modify: "+vo);
+		//파일 업로드
 		vo.setMenu_idx(menu_idx);
 		
 		int modifyCount = menuService.modify(vo);
@@ -176,6 +190,7 @@ public class StoreController {
 	@PostMapping("/review")
 	public String review(ReviewVO vo) {
 		log.info("review..."+vo);
+		//파일 업로드
 		reviewService.register(vo);
 		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}

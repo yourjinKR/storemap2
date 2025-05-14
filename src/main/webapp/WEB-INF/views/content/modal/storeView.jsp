@@ -3,12 +3,9 @@
 
 <div class="storeView">
 	
-	<form method="post" enctype="multipart/form-data">
-		<input type="file" name="uploadFile" multiple="multiple"><br>
-		<button type="button" id="uploadBtn">파일 등록</button>
-	</form>
-	
 	<div class="store-image">
+		<!--<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_menu1.jpg.webp" alt="가게 이미지" class="store-image"/>
+		-->
     	<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">	
 	</div>
 	<input type="hidden" name="member_idx" value="${loginUserIdx}">
@@ -128,4 +125,3 @@
     </div>
 </div>
 <script type="text/javascript" src="/resources/js/storeModal.js"></script>
-<script type="text/javascript" src="/resources/js/upload.js"></script>
