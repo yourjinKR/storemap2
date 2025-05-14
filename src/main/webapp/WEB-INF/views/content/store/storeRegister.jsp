@@ -24,13 +24,7 @@
 		    <input type="text" id="address" name="store_address" placeholder="서울 강남구 1번지">
 		
 		    <label for="area">활동 지역</label>
-		    <select id="area" name="store_area">
-		        <option value="서울">서울</option>
-		        <option value="경기">경기</option>
-		        <option value="인천">인천</option>
-		        <option value="강원">강원</option>
-		        <option value="제주">제주</option>
-		      </select>
+		    <input type="text" id="area" name="store_area" value="서울">
 		
 		    <label for="activitytime">점포 운영 시간</label>
 		    <input type="text" id="activitytime" name="store_activity_time" placeholder="09:00~20:30">

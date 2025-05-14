@@ -11,7 +11,7 @@ public interface StoreService {
 	// 점포 등록
 	public int register(MultipartFile file, StoreVO vo);
 	// 점포 관리
-	public int modify(StoreVO vo);
+	public int modify(MultipartFile file, StoreVO vo);
 	// 점포 삭제
 	public int remove(int store_idx);
 	// 점포 목록

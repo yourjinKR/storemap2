@@ -8,11 +8,11 @@ public interface AttachFileMapper {
 	//파일 업로드
 	public int insertAttach(AttachFileVO vo);
 	//파일 업데이트
-	public void update(AttachFileVO vo);
+	public void updateAttach(AttachFileVO vo);
 	//파일 삭제
 	public void delete(int attach_idx);
 	//파일 목록
 	public List<AttachFileVO> findByIdx(int attach_idx);
-	
+	//uuid로 vo 가져오기
 	public AttachFileVO getAttach(String uuid);
 }

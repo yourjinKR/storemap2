@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.MenuVO;
 import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreVO;
-import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.MenuServiceImple;
 import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreRequestServiceImple;
@@ -53,13 +52,18 @@ public class StoreController {
 		log.info("storeRegister..."+vo);
 		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
 		try {
-			//점포생성 + 이미지 업로드
-			int result = storeService.register(file, vo);			
-			if(result > 0) {
-				//점주요청
-				storeRequestService.register(member_idx);
+			if(storeService.getMember(member_idx) != null) {
+				//이미 점포 신청중일시
+				return new ResponseEntity<String>("이미 점주 신청중 입니다.!!", HttpStatus.INTERNAL_SERVER_ERROR);
+			}else {
+				//점포생성 + 이미지 업로드
+				int result = storeService.register(file, vo);			
+				if(result > 0) {
+					//점주요청
+					storeRequestService.register(member_idx);
+				}
+				return new ResponseEntity<String>("succeed", HttpStatus.OK);
 			}
-			return new ResponseEntity<String>("succeed", HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("Error during store registration", e);
 			return new ResponseEntity<String>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -77,7 +81,8 @@ public class StoreController {
 	@PostMapping("/storeStart")
 	public String storeStart(StoreVO vo) {
 		log.info("storeStart...");
-		storeService.modify(vo);
+		//파일 업로드
+		//storeService.modify(vo);
 		storeService.start(vo.getStore_idx());
 		return "redirect:/store/storeModify?store_idx="+vo.getStore_idx();
 	}
@@ -90,19 +95,27 @@ public class StoreController {
 	}
 	
 	// 점포 수정
+	@ResponseBody
 	@PostMapping("/storeModify")
-	public String storeModify(StoreVO vo, @RequestParam(value="uploadFile", required=false) MultipartFile[] uploadFile) {
+	public ResponseEntity<String> storeModify(StoreVO vo, MultipartFile file) {
 		log.info("storeModify..."+vo);
+		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
 		// 파일업로드
-		storeService.modify(vo);
-		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
+		try {
+			//점포수정 + 이미지 재업로드
+			storeService.modify(file, vo);			
+			return new ResponseEntity<String>("succeed", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error during store modify", e);
+			return new ResponseEntity<String>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}
 	// 점포 관리 페이지 이동
 	@GetMapping("/storeModify")
 	public String storeModifyPage(@RequestParam("store_idx") int store_idx, Model model) {
 		log.info("storeModifyPage..."+store_idx);
 		model.addAttribute("vo", storeService.get(store_idx));
-		//storeService.get(store_idx);
 		return "index";
 	}
 	

@@ -35,8 +35,6 @@ import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.PageDTO;
-import org.storemap.service.AttachFileService;
-import org.storemap.service.AttachFileServiceImple;
 import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayService;
 import org.storemap.service.EventDayServiceImple;
@@ -52,8 +50,6 @@ public class EventController {
 	private EventServiceImple eventService;
 	@Autowired
 	private EventDayServiceImple eventDayService;
-	@Autowired
-	private AttachFileServiceImple attachFileService;
 	@Autowired
 	private CommentEventServiceImple commentEventService;
 	

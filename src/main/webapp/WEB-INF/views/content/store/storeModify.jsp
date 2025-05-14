@@ -31,11 +31,6 @@
     
     <label for="simage">이미지</label>
 	<input type="file" id="simage" name="store_image">
-	<!-- 파일업로드 -->
-    <div class="file-upload">
-      <button type="button">이미지 업로드 수정 필요</button>
-      <span>attach_file.jpg</span>
-    </div>
 
     <label for="pnum">연락처</label>
     <input type="text" id="pnum" name="store_num" value="${vo.store_num}">
@@ -53,7 +48,7 @@
     <label for="address">주소</label>
     <input type="text" id="address" name="store_address" value="${vo.store_address}">
 	
-	<label for="address">행정코드</label>
+	<label for="regcode">행정코드</label>
     <input type="text" id="regcode" name="store_regcode" value="${vo.store_regcode}">
 	
     <label for="area">주요 활동 지역</label>
