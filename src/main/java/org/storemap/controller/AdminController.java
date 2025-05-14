@@ -2,6 +2,7 @@ package org.storemap.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AnnounceResponseDTO;
 import org.storemap.domain.AnnounceVO;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.FilterVO;
 import org.storemap.domain.PageDTO;
@@ -226,6 +228,18 @@ public class AdminController {
 		AnnounceVO vo = announceService.getNoticeView(idx);
 		model.addAttribute("vo" , vo);
 		return "index";
+	}
+	
+	// 공지사항 View
+	@GetMapping("/getImgData/{announce_idx}")
+	public String getImgData(@PathVariable("announce_idx") int announce_idx) {
+		List<AttachFileVO> list = null;
+		String uuid = announceService.getUuid(announce_idx);
+		String[] arr = uuid.split(",");
+		for (String string : arr) {
+			log.info(string);
+		}
+		return null;
 	}
 	
 	// 공지사항 삭제

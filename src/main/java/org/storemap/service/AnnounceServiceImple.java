@@ -1,5 +1,6 @@
 package org.storemap.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +51,21 @@ public class AnnounceServiceImple implements AnnounceService{
 	@Transactional
 	@Override
 	public int insertNotice(MultipartFile[] files, AnnounceVO vo) {
+		String uuidData = "";
 		for (int i = 0; i < files.length; i++) {
-			vo.setAnnounce_imgae(cloudinaryService.uploadFile(files[i]));
+			uuidData += cloudinaryService.uploadFile(files[i]);
+			if(i < files.length - 1) {
+				uuidData += ",";
+			}
 		}
+		vo.setAnnounce_imgae(uuidData);
 		return mapper.insertNotice(vo);
 	}
 	
 	// 공지
 	@Override
 	public AnnounceVO getNoticeView(int announce_idx) {
+		AnnounceVO vo = mapper.getNoticeView(announce_idx);
 		return mapper.getNoticeView(announce_idx);
 	}
 	
@@ -66,5 +73,10 @@ public class AnnounceServiceImple implements AnnounceService{
 	@Override
 	public int noticeDelete(int announce_idx) {
 		return mapper.noticeDelete(announce_idx);
+	}
+	// uuid 정보 
+	@Override
+	public String getUuid(int announce_idx) {
+		return mapper.getUuid(announce_idx);
 	}
 }

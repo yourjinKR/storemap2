@@ -12,6 +12,13 @@
             #{uuid}
         )
 	</insert>
+	
+	<select id="getAttach" parameterType="String" resultType="org.storemap.domain.AttachFileVO">
+		SELECT * 
+		FROM ATTACH_FILE
+		WHERE UUID = #{uuid}
+	</select>
+	
 	<!-- 2. 파일 수정 -->
 	<update id="update" parameterType="org.storemap.domain.AttachFileVO">
 		update attach_file set 

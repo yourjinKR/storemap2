@@ -13,4 +13,6 @@ public interface AttachFileMapper {
 	public void delete(int attach_idx);
 	//파일 목록
 	public List<AttachFileVO> findByIdx(int attach_idx);
+	
+	public AttachFileVO getAttach(String uuid);
 }

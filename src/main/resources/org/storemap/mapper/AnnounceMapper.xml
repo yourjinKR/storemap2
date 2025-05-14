@@ -50,6 +50,11 @@
 		SELECT * FROM ANNOUNCE WHERE ANNOUNCE_IDX = #{announce_idx}
 	</select>
 	
+	<!-- 파일정보 -->
+	<select id="getUuid" parameterType="int" resultType="String">
+		SELECT ANNOUNCE_IMAGE FROM ANNOUNCE WHERE ANNOUNCE_IDX = #{announce_idx}
+	</select>
+	
 	<!-- 공지 고정 -->
 	<update id="updateFixed" parameterType="int">
 		UPDATE ANNOUNCE 

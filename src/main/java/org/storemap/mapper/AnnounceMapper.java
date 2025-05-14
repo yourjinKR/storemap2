@@ -19,4 +19,7 @@ public interface AnnounceMapper {
 	public AnnounceVO getNoticeView(int announce_idx);
 	// 공지 삭제
 	public int noticeDelete(int announce_idx);
+	
+	// uuid 정보 
+	public String getUuid(int announce_idx);
 }

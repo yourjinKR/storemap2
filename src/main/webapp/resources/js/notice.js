@@ -72,6 +72,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			}
 		})
 	})
+	
+	getImgData();
 });
 
 // 파일 핸들링
@@ -112,6 +114,7 @@ function selectLocalImage() {
     });
 }
 
+// 공지 등록
 function noticeInsert() {
     const form = document.forms[0];
     if (!form) return;
@@ -173,6 +176,16 @@ function noticeDelete(){
 		}else{
 			alert("삭제에 실패하였습니다");
 		}
+	})
+	.catch(err => console.log(err))
+}
+
+function getImgData(){
+	let idx = document.querySelector(".notice-title").dataset['idx'];
+	fetch(`/admin/getImgData/${idx}`)
+	.then(response => response.json())
+	.then(result => {
+		console.log(result);
 	})
 	.catch(err => console.log(err))
 }
