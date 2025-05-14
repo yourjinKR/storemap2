@@ -442,7 +442,7 @@ function addMarkerEvent(marker) {
         let li = searchEleByTitle(title);
 
         showListSideBar();
-        viewModalPage(li);
+        viewDetailModalPage(li, "store");
         showviewSideBar();
         setToggle(600);
     });
@@ -794,7 +794,7 @@ function apply2map(data) {
         // console.log(vo);
         msg += 
         // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-        `<li data-store_idx="${vo.store_idx}" onclick="viewModalPage(this)" name ="store_idx">
+        `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
             <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
             <input type="hidden" name="store_address" value="${vo.store_address}">
             <input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
