@@ -7,34 +7,19 @@
 	<insert id="insert" parameterType="org.storemap.domain.AttachFileVO">
 		INSERT INTO attach_file (
             attach_idx,
-            event_idx,
-            store_idx,
-            enter_idx,
             filename,
-            member_idx,
-            uuid,
-            uploadPath
+            uuid
         ) VALUES (
             attach_seq.nextval,
-            #{event_idx},
-            #{store_idx},
-            #{enter_idx},
             #{filename},
-            #{member_idx},
-            #{uuid},
-            #{uploadPath}
+            #{uuid}
         )
 	</insert>
 	<!-- 2. 파일 수정 -->
-	<update id="update" parameterType="org.joonzis.domain.AttachFileVO">
+	<update id="update" parameterType="org.storemap.domain.AttachFileVO">
 		update attach_file set 
-			event_idx = #{event_idx},
-			store_idx = #{store_idx},
-			enter_idx = #{enter_idx},
 			fileName = #{fileName},
-			member_idx = #{member_idx},
-			uuid = #{uuid},
-			uploadPath = #{uploadPath}
+			uuid = #{uuid}
 			where attach_idx = #{attach_idx}
 	</update>
 	<!-- 3. 파일 삭제 -->
@@ -42,7 +27,7 @@
 		delete from attach_file where attach_idx = #{attach_idx}
 	</delete>
 	<!-- 4. 파일 목록 -->
-	<select id="findByIdx" parameterType="int" resultType="org.joonzis.domain.AttachFileVO">
+	<select id="findByIdx" parameterType="int" resultType="org.storemap.domain.AttachFileVO">
 		select * from attach_file where attach_idx = #{attach_idx}
 	</select>
 	
