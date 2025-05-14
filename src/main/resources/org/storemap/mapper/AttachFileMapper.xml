@@ -2,14 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.storemap.mapper.AttachMapper">
+<mapper namespace="org.storemap.mapper.AttachFileMapper">
 
-	<insert id="insert" parameterType="org.storemap.domain.AttachFileVO">
-		INSERT INTO attach_file (
-            attach_idx,
-            filename,
-            uuid
-        ) VALUES (
+	<insert id="insertAttach" parameterType="org.storemap.domain.AttachFileVO">
+		INSERT INTO 
+		attach_file VALUES (
             attach_seq.nextval,
             #{filename},
             #{uuid}

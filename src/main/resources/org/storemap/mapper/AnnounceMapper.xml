@@ -69,7 +69,7 @@
 			#{announce_title},
 			#{announce_content},
 			SYSDATE, 
-			null, 
+			#{announce_imgae}, 
 			0
 		)
 	</insert>

@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AnnounceDTO;
 import org.storemap.domain.AnnounceVO;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.FilterVO;
 import org.storemap.mapper.AnnounceMapper;
 
@@ -18,6 +20,9 @@ public class AnnounceServiceImple implements AnnounceService{
 	
 	@Autowired
 	private AnnounceMapper mapper;
+	// 파일 서버
+	@Autowired
+	private CloudinaryService cloudinaryService;
 	
 	// 공지사항 리스트
 	@Override
@@ -42,16 +47,23 @@ public class AnnounceServiceImple implements AnnounceService{
 	}
 	
 	// 공지등록
-	public int insertNotice(AnnounceVO vo) {
+	@Transactional
+	@Override
+	public int insertNotice(MultipartFile[] files, AnnounceVO vo) {
+		for (int i = 0; i < files.length; i++) {
+			vo.setAnnounce_imgae(cloudinaryService.uploadFile(files[i]));
+		}
 		return mapper.insertNotice(vo);
 	}
 	
-	// 공지등록
+	// 공지
+	@Override
 	public AnnounceVO getNoticeView(int announce_idx) {
 		return mapper.getNoticeView(announce_idx);
 	}
 	
 	// 공지 삭제
+	@Override
 	public int noticeDelete(int announce_idx) {
 		return mapper.noticeDelete(announce_idx);
 	}

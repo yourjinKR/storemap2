@@ -3,6 +3,8 @@ package org.storemap.controller;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -202,22 +204,20 @@ public class AdminController {
 	}
 	
 	@PostMapping("/noticeWrite")
-	public String insertNotice(MultipartFile[] files, AnnounceVO vo) {
+	public ResponseEntity<String> insertNotice(MultipartFile[] files, AnnounceVO vo, HttpSession session) {
 		// 파일 저장 로직
-		for (MultipartFile file : files) {
-			if (!file.isEmpty()) {
-				log.info(file.getSize());
-				log.info(file.getOriginalFilename());
-				
-			}
-		}
+		vo.setMember_idx((int) session.getAttribute("loginUserIdx"));
 
 		// 공지사항 데이터 처리
 		log.info("공지사항 데이터: " + vo);
-		//int result = announceService.insertNotice(vo);
+		int result = announceService.insertNotice(files, vo);
+		log.info(result);
 		//log.info("공지사항 저장 결과: " + result);
 
-		return null;
+		
+		return result > 0 ? 
+			new ResponseEntity<String>("succeed", HttpStatus.OK) : 
+			new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 	}
 	
 	// 공지사항 View

@@ -15,11 +15,6 @@ public class AttachFileServiceImple implements AttachFileService{
 	@Autowired
 	AttachFileMapper mapper;
 	
-	@Override
-	public void register(AttachFileVO vo) {
-		log.info("register..."+vo);
-		mapper.insert(vo);
-	}
 	
 	@Override
 	public void modify(AttachFileVO vo) {

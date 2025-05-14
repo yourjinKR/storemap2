@@ -6,7 +6,7 @@ import org.storemap.domain.AttachFileVO;
 
 public interface AttachFileMapper {
 	//파일 업로드
-	public void insert(AttachFileVO vo);
+	public int insertAttach(AttachFileVO vo);
 	//파일 업데이트
 	public void update(AttachFileVO vo);
 	//파일 삭제

@@ -2,7 +2,7 @@ package org.storemap.service;
 
 import java.util.List;
 
-import org.storemap.domain.AnnounceDTO;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AnnounceVO;
 import org.storemap.domain.FilterVO;
 
@@ -14,7 +14,7 @@ public interface AnnounceService {
 	// 게시물 고정
 	public int updateFixed(int[] data);
 	// 공지등록
-	public int insertNotice(AnnounceVO vo);
+	public int insertNotice(MultipartFile[] files, AnnounceVO vo);
 	// 공지 View
 	public AnnounceVO getNoticeView(int announce_idx);
 	// 공지 삭제

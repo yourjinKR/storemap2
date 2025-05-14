@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		});
 		
 		quill.on('text-change', function() {
-		        document.getElementById("quill_html").value = quill.root.innerHTML;
-		        console.log(document.getElementById("quill_html").value)
+	        document.getElementById("quill_html").value = quill.root.innerHTML;
+	        console.log(document.getElementById("quill_html").value)
 		});
 		
 		quill.getModule('toolbar').addHandler('image', function () {
@@ -98,6 +98,16 @@ function selectLocalImage() {
             
             fileData.push(fileInput.files[0]);
             
+            const range = quill.getSelection(); // 사용자가 선택한 에디터 범위
+            
+            if (fileInput.files[0] && /^image\//.test(fileInput.files[0].type)) {
+	        	const reader = new FileReader();
+	        	reader.onload = function (e) {
+	        		const range = quill.getSelection();
+	        		quill.insertEmbed(range ? range.index : 0, 'image', e.target.result);
+	            };
+	            reader.readAsDataURL(fileInput.files[0]); // base64로 변환
+            }
         }
     });
 }
@@ -106,9 +116,14 @@ function noticeInsert() {
     const form = document.forms[0];
     if (!form) return;
 
+    let editorImg = document.querySelectorAll("#editor img");
+    editorImg.forEach(img => {
+    	img.setAttribute("src", "");
+    })
+    
     // Quill 에디터 내용 저장
     document.querySelector("#quill_html").value = quill.root.innerHTML;
-
+    
     // FormData 생성
     const formData = new FormData(form);
 
