@@ -36,7 +36,7 @@ public class CloudinaryService {
             String fileExtension = originalFilename.substring(originalFilename.lastIndexOf('.'));
             
             // UUID를 활용한 고유 파일 이름 생성
-            String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+            String uniqueFilename = UUID.randomUUID().toString() +"_"+ originalFilename;
 
             // Cloudinary 업로드 옵션 설정
             Map<String, Object> uploadOptions = new HashMap<>();
