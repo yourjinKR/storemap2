@@ -51,6 +51,7 @@
             <input type="date" name="event_bstartdate" id="startDate" required> ~ 
             <input type="date" name="event_bstopdate" id="endDate" required>
             <button type="button" onclick="generateDays()">일정 생성</button>
+            <br><small style="color: gray;">이벤트 및 행사는 모집일로부터 7일 이상부터 개최할 수 있습니다.</small>
           </td>
         </tr>
         <tr>

@@ -100,15 +100,12 @@ public class EventController {
 	// 게시글 등록 컨트롤러
 	@PostMapping("/eventRegister")
 	public String eventRegister(EventVO eventVO) {
-		log.info("eventRegister....." + eventVO);
-		log.info("eventDay...." + eventVO.getEventDay());
-		
+		log.info("eventRegister....." + eventVO);		
 		try {
-			eventService.registerEventWithDays(eventVO);
+	        eventService.registerEventWithDays(eventVO);  // 서비스 호출
 		} catch (RuntimeException e) {
 			log.error("에러발생" + e);
-		}
-		
+		}		
 		return "redirect:/event/eventList";
 	}	
 	

@@ -96,33 +96,28 @@ public class EventServiceImple implements EventService{
 	@Transactional
 	@Override
 	public void registerEventWithDays(EventVO eventVO) {
-	    try {
+		try {
 	        // event insert
 	        mapper.insertEvent(eventVO);
-	        log.info("이벤트 등록 완료: {}"+ eventVO.getEvent_idx());
-
 	        // eventDay insert
 	        if (eventVO.getEventDay() != null) {
 	            for (EventDayVO day : eventVO.getEventDay()) {
-	                day.setEvent_idx(eventVO.getEvent_idx());
-	                log.info("이벤트 날짜 등록 시도: {}"+ day);
-	                int result = eventDayMapper.insertEventday(day);
+	            	// event_idx 값이 eventDayVO에 제대로 설정되었는지 확인
+	                day.setEvent_idx(eventVO.getEvent_idx());                
+	                int result = eventDayMapper.insertEventday(day);    
+	                // eventDay 삽입 결과 확인
 	                if (result == 0) {
-	                	throw new RuntimeException("트랜잭션 동작");
+	                    log.error("eventDay 삽입 실패 - event_idx: {}, eventDay: {}" + day.getEvent_idx() + day);  // 실패 시 로그
+	                    throw new RuntimeException("트랜잭션 동작");
+	                } else {
+	                    log.info("eventDay 삽입 성공 - event_idx: {}, eventDay: {}" + day.getEvent_idx() + day);  // 성공 시 로그
 	                }
 	            }
 	        }
-
-	        // 강제로 예외 발생시켜 트랜잭션 롤백 테스트
-//	        if (true) {
-//	            throw new RuntimeException("트랜잭션 롤백 테스트용 강제 예외 발생");
-//	        }
-
-	        log.info("이 메세지는 절대 출력되지 않아야 정상입니다.");
-	        
+	        log.info("이 메세지는 절대 출력되지 않아야 정상입니다.");	        
 	    } catch (RuntimeException e) {
-	        // 트랜잭션 롤백을 강제하는 예외 처리
-	        log.error("예외 발생: ", e);
+	        System.out.println("예외 발생!");
+	        e.printStackTrace(); // 여기가 중요!!
 	        throw e;  // 예외를 다시 던져서 트랜잭션 롤백을 처리
 	    }
 	}

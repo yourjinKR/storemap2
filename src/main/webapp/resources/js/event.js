@@ -32,6 +32,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			      endDateInput.value = "";
 			    }
 			  });
+			   
+			  const rstart = document.getElementById('rstartDate');
+			    const rend = document.getElementById('rendDate');
+			    const bstart = document.getElementById('startDate');
+			    const bend = document.getElementById('endDate');
+
+			    // 오늘 이전 모집 시작일 선택 방지
+			    rstart.min = today;
+
+			    // 모집 시작일을 선택하면 마감일 최소 날짜 제한
+			    rstart.addEventListener('change', function () {
+			      if (rstart.value) {
+			        rend.min = rstart.value;
+			        if (rend.value && rend.value < rstart.value) {
+			          rend.value = '';
+			        }
+			      }
+			    });
+
+			    // 모집 마감일을 선택하면 행사 시작일은 최소 7일 뒤부터
+			    rend.addEventListener('change', function () {
+			      if (rend.value) {
+			        const rendDate = new Date(rend.value);
+			        rendDate.setDate(rendDate.getDate() + 7); // +7일
+
+			        const minEventDate = rendDate.toISOString().split('T')[0];
+			        bstart.min = minEventDate;
+			        bend.min = minEventDate;
+
+			        // 기존 값이 제한보다 작으면 초기화
+			        if (bstart.value && bstart.value < minEventDate) bstart.value = '';
+			        if (bend.value && bend.value < minEventDate) bend.value = '';
+			      }
+			    });
 	  }
 		
 	f = document.forms[0];
@@ -97,11 +131,11 @@ function generateDays() {
 	    div.style.marginBottom = "15px";
 	    div.innerHTML = `
 		최대 입점 수:
-		    <input type="number" name="eventDayList[${index}].store_max" class="storeMax" required style="width: 80px;">
+		    <input type="number" name="eventDay[${index}].store_max" class="storeMax" required style="width: 80px;">
 		시작 시간:
-		    <input type="time" name="eventDayList[${index}].event_starttime" class="startTime" required>
+		    <input type="time" name="eventDay[${index}].event_starttime" class="startTime" required>
 		종료 시간:
-		    <input type="time" name="eventDayList[${index}].event_stoptime" class="stopTime" required>
+		    <input type="time" name="eventDay[${index}].event_stoptime" class="stopTime" required>
 		  </fieldset>
 	    `;
 	    container.appendChild(div);
@@ -145,13 +179,13 @@ function bulkFill() {
 
 
 	
-function register(){
-	
-	let a = document.querySelectorAll('input[name="eventDayList[0]"]');
-	console.log(a.value);
-	f.action="/event/eventRegister";
-	f.submit();
-}
+//function register(){
+//	
+//	let a = document.querySelectorAll('input[name="eventDayList[0]"]');
+//	console.log(a.value);
+//	f.action="/event/eventRegister";
+//	f.submit();
+//}
 
 function goIndex(){
 	location.href = "/event/eventList";
