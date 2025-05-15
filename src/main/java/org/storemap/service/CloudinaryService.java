@@ -33,9 +33,11 @@ public class CloudinaryService {
                 throw new IllegalArgumentException("파일 이름이 비어있습니다.");
             }
             
+            String fileName = originalFilename.substring(0, originalFilename.indexOf("."));
+            
             // UUID를 활용한 고유 파일 이름 생성
             String uuid = UUID.randomUUID().toString();
-            String uniqueFilename = uuid +"_"+ originalFilename;
+            String uniqueFilename = uuid +"_"+ fileName;
 
             // Cloudinary 업로드 옵션 설정
             Map<String, Object> uploadOptions = new HashMap<>();
