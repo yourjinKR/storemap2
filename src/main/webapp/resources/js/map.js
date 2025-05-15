@@ -462,9 +462,17 @@ function addMarkerEvent(marker, type) {
             showviewSideBar();
         }
         else if (type === "event") {
-
+            showListSideBar();
+            showviewSideBar();
         }
         setToggle(600);
+
+        // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작
+        if (storeMapMode) {
+            document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
+        } else if (eventMapMode) {
+            document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
+        }
     });
 }
 
