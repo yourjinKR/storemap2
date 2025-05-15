@@ -39,7 +39,7 @@
 .side-bar#event{left: -300px; overflow: auto;}
 .side-bar#toggle-box {opacity:1; left:0; overflow:auto; background:transparent; top:50%; height:auto; width:50px; display:inline-flex; white-space:nowrap; position:absolute; transform:translateY(-50%);}
 .side-bar.show{opacity:1; right:0}
-.side-bar.show#list{opacity:1; left:0; overflow: auto;}
+.side-bar.show#list{opacity:1; left:0;}
 .side-bar.show#store{opacity:1; left:300px; overflow: auto;}
 .side-bar.show#event{opacity:1; left:300px; overflow: auto;}
 .side-bar.show#toggle-box{opacity:1; left: 600px; overflow: auto;}

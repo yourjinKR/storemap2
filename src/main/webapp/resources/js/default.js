@@ -59,9 +59,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	// 위치 정보 실행 (1회)
-	if (!positionCheck) {
-		getCurrentPlace();
-	}
+	getCurrentPlace();
+
 
 	// 헤더 로그아웃
 	headerLogout();

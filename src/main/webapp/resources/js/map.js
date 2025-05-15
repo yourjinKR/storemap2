@@ -89,26 +89,36 @@ document.addEventListener("DOMContentLoaded", () => {
 	linkEle.href = CSS_PATH;
 	document.head.appendChild(linkEle);
 	
+    /** 로컬 스토리지 기반 경도위도 값 */
     let currentPosition = getPositionData();
-    // console.log(currentPosition.lat);
-    // console.log(currentPosition.lng);
-    
-    let basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 1};
-    // panToLatLng(map, currentPosition.lat, currentPosition.lng);
 
-	// 지도 이동 테스트 ===============================
+    // 지도 기본 설정값
+    let basicOption = {};
+    if(currentPosition) {
+        console.log('위치설정 있음');
+        basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 1};
+
+        clickMarker = new kakao.maps.Marker({ 
+            position: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng)
+        });
+
+    } else {
+        console.log('기본 위치가 없는 관계로 솔데스크 강남점으로...')
+        basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 1};
+
+        clickMarker = new kakao.maps.Marker({ 
+            position: new kakao.maps.LatLng(basicLat, basicLng)
+        });
+    }
+
+	// 기본 설정값으로 지도 생성
 	let container = document.querySelector(".map");
 	basicMap = new kakao.maps.Map(container, basicOption);
     // 새로고침
     centerLatLng = basicMap.getCenter();
     loadAddrFromCoords(centerLatLng);
 
-    // 클릭 마커
-    clickMarker = new kakao.maps.Marker({ 
-        // 지도 중심좌표에 마커를 생성합니다 
-        position: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng)
-    });
-    // console.log(basicMap instanceof kakao.maps.Map); // true가 나와야 함    
+    // 클릭 마커 생성  
     clickMarker.setMap(basicMap);
 
     // 맵 id별 분기
@@ -120,13 +130,16 @@ document.addEventListener("DOMContentLoaded", () => {
         storeModal.classList.add("side-bar");
         storeModal.setAttribute("id", "store");
         // 닫기 버튼 표시
-        let modalHeader = document.querySelector(".modal-header");        
-        modalHeader.style.display = 'block';
+        let storeHeader = document.querySelectorAll(".modal-header")[0];        
+        storeHeader.style.display = 'block';
 
         // 이벤트 상세보기 모달 사이드바 style로 변경
         let eventModal = document.querySelector("#modal");
         eventModal.classList.add("side-bar");
         eventModal.setAttribute("id", "event");
+        // 닫기 버튼 표시
+        let eventHeader = document.querySelectorAll(".modal-header")[1];        
+        eventHeader.style.display = 'block';
 
         // 기본 상태
         let basicCondition = {
@@ -138,10 +151,9 @@ document.addEventListener("DOMContentLoaded", () => {
         //     apply2storeMap(data);
         // })
 
-        // 요소 선언
+        // ==================== 요소 선언 ====================
+        // 검색바
         searchResult = document.querySelector(".search-result#store-list");
-
-        // ========================= 사이드바 선언 =========================
         // 스토어 리스트 사이드바
         listSideBar = document.querySelector(".side-bar#list");
         //  뷰 사이드바
@@ -247,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="customoverlay">
                     <span class="title">현위치 설정</span>
                     <button onclick="getMyCurrentPlace()">변경</button>
+                    <button onclick="cancelMyCurrentPlace()">취소</button>
                 </div>`,
     yAnchor: 1,
     zIndex: 3
@@ -1285,6 +1298,7 @@ function swap2storeMap() {
 /** 위치정보 커스텀 변경 시작 함수 (map.js와 연동) */
 function setMyCurrentPlace() {
     positionOverlay.setMap(basicMap);
+    positionOverlay.setPosition(clickMarker.getPosition());
     alert("클릭하여 정확한 위치를 설정하시오");
 	customPositionMode = true;
 }
@@ -1297,4 +1311,9 @@ function getMyCurrentPlace() {
     setPositionData(currentLat, currentLng);
     positionOverlay.setMap(null);
     console.log('현위치 커스텀 변경 완료' + latLng);
+}
+/** 위치정보 커스텀 변경 취소 함수 */
+function cancelMyCurrentPlace() {
+    customPositionMode = false;
+    positionOverlay.setMap(null);
 }
