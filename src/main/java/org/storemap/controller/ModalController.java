@@ -85,14 +85,6 @@ public class ModalController {
 		return "index";
 	}
 	
-	//점포 리스트 모달
-	@GetMapping("/eventListModal")
-	public String eventListModal(Model model) {
-		log.info("eventListModal...");
-		model.addAttribute("list",storeService.getList());
-		return "index";
-	}
-	
 	//점포 정보 팝업
 	@GetMapping("/storeView")
 	public String storeView(@RequestParam("store_idx") int store_idx, Model model, HttpSession session) {
@@ -236,6 +228,28 @@ public class ModalController {
 		return reviewDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	/*--------------------------------------------------------------------------*/
+	
+	// 이벤트 리스트 모달
+	@GetMapping("/eventListModal")
+	public String eventListModal(Model model) {
+		log.info("eventListModal...");
+		model.addAttribute("list",storeService.getList());
+		return "index";
+	}
+	
+	// 이벤트 상세보기
+	@GetMapping("/eventView")
+	public String eventView(@RequestParam("event_idx") int event_idx, Model model) {
+		log.info("eventView..." + event_idx);
+		EventVO evo = eventService.getEventOneView(event_idx);
+		model.addAttribute("evo", evo);
+		log.info("evo..." + evo);
+		return "index";
+	}
+	
+	
 	
 	/*--------------------------------------------------------------------------*/
 	

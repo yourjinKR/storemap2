@@ -7,6 +7,7 @@ document.head.appendChild(linkEle);
 const modal = document.querySelector("#modal");
 const image = document.querySelector(".store-info-image");
 let store_id;
+let event_id;
 
 function openModal() {
     modal.style.display = "block";
@@ -368,7 +369,7 @@ function removeReview() {
 //         .catch(error => console.err(err));
 // }
 
-/** 모달 여는 동적 함수 (li, type)  */
+/** 모달 여는 동적 함수 (list, type)  */
 function viewDetailModalPage(li, type) {
     const idx = li.getAttribute(`data-${type}_idx`);
     if (!idx) {
@@ -379,7 +380,8 @@ function viewDetailModalPage(li, type) {
     fetch(`/modal/${type}View?${type}_idx=${idx}`)
         .then(response => response.text())
         .then(html => {
-            document.querySelector(".modal-content").innerHTML = html;
+            // console.log(html);
+            document.querySelector(`.modal-content#${type}`).innerHTML = html;
 
             // 동적으로 input name에 맞춰서 값 가져오기 (예: store_idx, event_idx 등)
             const input = document.querySelector(`input[name="${type}_idx"]`);
@@ -390,6 +392,9 @@ function viewDetailModalPage(li, type) {
             // 모달 타입마다 분기 실행
             if (type === "store") {
                 initializeEvents();
+            }
+            else if (type === "event") {
+                
             }
             openModal();
         })

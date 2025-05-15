@@ -7,7 +7,7 @@
 		<!-- 숨겨진 리스트는 불러오지 않게 하기 AND 시작된 리스트hide2만 불러오기 -->
 			<li data-event_idx="" onclick="" name="event_idx">
 				<img src="/resources/img/store1.jpg" alt="">
-				<div class="store-description">
+				<div class="event-description">
 					<div class="event-name">이벤트명</div>
 					<div class="event-location">이벤트장소</div>
 				</div>
@@ -15,12 +15,13 @@
 			</li>
 		</ul>
 	</div>
-	<!-- 점포 상세보기 모달 -->
+	<!-- 이벤트 상세보기 모달 -->
 	<div id="modal">
 		<div class="modal-header">
 			<button class="mapBtn" id="close-event">X</button>
 		</div>
-		<div class="modal-content">
+		<div class="modal-content" id="event">
 		</div>
 	</div>
 </div>
+<script type="text/javascript" src="/resources/js/eventModal.js"></script>

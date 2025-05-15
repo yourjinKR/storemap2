@@ -113,6 +113,10 @@
 		<c:when test="${path eq '/modal/eventListModal'}">
 			<jsp:include page="../content/modal/eventListModal.jsp" />
 		</c:when>
+		<%-- 이벤트 상세보기 모달 --%>
+		<c:when test="${path eq '/modal/eventView'}">
+			<jsp:include page="../content/modal/eventView.jsp" />
+		</c:when>
 
 		<%-- 지도 --%>
 		<c:when test="${path eq '/store/map'}">

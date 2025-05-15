@@ -1,13 +1,11 @@
 @charset "UTF-8";
 
-/*storeListModal*/
-
-.storeListModal {
+.eventListModal {
 	font-family: sans-serif;
 	background-color: #f4f4f4;
 }
 
-.store-card {
+.event-card {
 	width: 300px;
 	margin: 20px auto;
 	background-color: white;
@@ -16,36 +14,36 @@
 	overflow: auto;
 }
 
-.store-card img {
+.event-card img {
 	width: 100%;
 	height: auto;
 	display: block;
 }
 
-.store-description {
+.event-description {
 	padding: 15px;
 	background-color: #e1e1e1;
 }
 
-.store-name {
+.event-name {
 	font-size: 1.2em;
 	font-weight: bold;
 	margin-bottom: 10px;
 	padding: 10px;
 }
 
-.store-content {
+.event-content {
 	color: #555;
 	font-size: 0.95em;
 	line-height: 1.4em;
 }
 
-/*storeView*/
+/*eventView*/
 .wrap{
 	width:640px;
 	
 }
-.storeView {
+.eventView {
 	font-family: sans-serif;
 	background-color: #fff;
 	width: 100%;
@@ -55,20 +53,20 @@
 	position: relative; /* 위치 기준점 설정 */
 }
 
-.store-info-image {
+.event-info-image {
 	border-radius: 8px;
 }
 
-.store-image {
+.event-image {
 	width: 100%;
 	border-radius: 8px;
 }
 
-.store-info {
+.event-info {
 	margin-top: 20px;
 }
 
-.store-info h3 {
+.event-info h3 {
 	margin-bottom: 10px;
 	font-size: 1.2em;
 }
@@ -154,7 +152,7 @@
 
 /* 버튼 아이콘 */
 
-.storeIcon, .reviewIcon {
+.eventIcon, .reviewIcon {
 	position: absolute;
 	width: 20px;
   	height: 20px;
@@ -189,7 +187,7 @@ input[type="button"] + label {
 	font-variation-settings:'FILL' 0,'wght' 100,'GRAD' 0,'opsz' 32;
 }
 
-.storeLike-count, .reviewLike-count {
+.eventLike-count, .reviewLike-count {
 	font-size: 14px;
 	font-weight: bold;
 	color: #f00;
@@ -235,7 +233,7 @@ input[type="button"] + label {
 	display: none;
 }
 
-#store-report-selection, #review-report-selection{
+#event-report-selection, #review-report-selection{
 	position: absolute;
 	z-index: 999;
 	left: 50%;
@@ -248,7 +246,7 @@ input[type="button"] + label {
 	display: none;
 }
 
-.store-report-content, .review-report-content {
+.event-report-content, .review-report-content {
   background-color: #fff;
   margin: 50% auto;
   padding:20px;

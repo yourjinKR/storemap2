@@ -106,6 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let modalHeader = document.querySelector(".modal-header");        
         modalHeader.style.display = 'block';
 
+        // 이벤트 상세보기 모달 사이드바 style로 변경
+        let eventModal = document.querySelector("#modal");
+        eventModal.classList.add("side-bar");
+        eventModal.setAttribute("id", "event");
+
         // 기본 상태
         let basicCondition = {
             level : basicMap.getLevel(),
@@ -113,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             lng : basicMap.getCenter().getLng(),
         };
         as.getListNearest(basicCondition, 5, function(data) {
-            apply2map(data);
+            apply2storeMap(data);
         })
 
         // 요소 선언
@@ -121,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ========================= 사이드바 선언 =========================
         // 스토어 리스트 사이드바
-        listSideBar = document.querySelector(".side-bar#store-list");
+        listSideBar = document.querySelector(".side-bar#list");
         //  뷰 사이드바
         viewSideBarCheck = false;
         viewSideBar = document.querySelector(".side-bar#store");
@@ -395,19 +400,29 @@ function hideOverlay(overlayList) {
 }
 
 // ============================= 이벤트 추가 관련 함수 =============================
-/** 점포 클릭 이벤트 추가 및 마커 매핑 함수 */ 
-function markerMapping(eles) {
+/** 점포 클릭 이벤트 추가 및 마커 매핑 함수 (ele, type) */ 
+function markerMapping(eles, type) {
     if (eles != null ) {
         eles.forEach(ele => {
+
             // idx 추출
-            let idx = ele.getAttribute("data-store_idx");
+            let idx = ele.getAttribute(`data-${type}_idx`);
+
+            // type 분기
+            let list = [];
+            if (type === "store") {
+                list = storeVOList;
+            } else if (type === "event") {
+                list = eventVOList;
+            }
+
             // 가게 클릭 이벤트 추가
             ele.addEventListener('click', e => {
                 // 리스트 중에서 idx 찾기
-                storeVOList.forEach(vo => {
+                list.forEach(vo => {
                     if (vo.marker.getTitle() === idx) {
                         showviewSideBar();
-                        emphStoreMarker(idx);
+                        emphMarker(idx);
                         setToggle(600);
                     }
                 });
@@ -417,33 +432,38 @@ function markerMapping(eles) {
     }
 }
 
-/** 타이틀로 idx가 일치하는 리스트의 요소 찾기 */
-function searchEleByTitle(title) {
+/** 타이틀로 idx가 일치하는 리스트의 요소 찾는 동적 함수 (list, type) */
+function searchEleByTitle(title, type) {
     let result;
-    let storeLIS = document.querySelectorAll(".store-card ul li");
-    storeLIS.forEach(storeLI => {
-        let idx = storeLI.getAttribute("data-store_idx");
+    const LIS = document.querySelectorAll(`.${type}-card ul li`);
+    LIS.forEach(LI => {
+        let idx = LI.getAttribute(`data-${type}_idx`);
         if (idx === title) {
-            result = storeLI;
+            result = LI;
         }
     });
     return result;
 }
 
 /** 마커 클릭 이벤트 추가 함수 */ 
-function addMarkerEvent(marker) {
+function addMarkerEvent(marker, type) {
     kakao.maps.event.addListener(marker, 'click', function() {
         console.log("marker idx : " + marker.getTitle());
         // 마커 선택
         selectMarker(marker);
         
         let title = marker.getTitle();
-        emphStoreMarker(title);
-        let li = searchEleByTitle(title);
+        emphMarker(title);
+        let li = searchEleByTitle(title, type);
+        viewDetailModalPage(li, type);
 
-        showListSideBar();
-        viewDetailModalPage(li, "store");
-        showviewSideBar();
+        if (type === "store") {
+            showListSideBar();
+            showviewSideBar();
+        }
+        else if (type === "event") {
+
+        }
         setToggle(600);
     });
 }
@@ -459,14 +479,20 @@ function selectMarker(marker) {
 }
 
 /** idx를 받으면 일치하는 마커로 이동 및 강조하는 함수 */
-function emphStoreMarker(idx) {
-    markerList.forEach(marker => {
+function emphMarker(idx) {
+    let list = [];
+    if(storeMapMode) {
+        list = storeVOList;
+    } else if (eventMapMode) {
+        list = eventVOList;
+    }
+    list.forEach(vo => {
         // idx와 일치시 이동 및 강조
-        if (idx === marker.getTitle()) {
+        if (idx === vo.marker.getTitle()) {
             // 마커 기준으로 지도 이동
-            panToLatLng(basicMap, marker.getPosition().getLat(), marker.getPosition().getLng());
+            panToLatLng(basicMap, vo.marker.getPosition().getLat(), vo.marker.getPosition().getLng());
             // 마커 강조
-            selectMarker(marker)
+            selectMarker(vo.marker);
         }
     });
 }
@@ -497,9 +523,9 @@ function setToggle(pixel) {
 }
 /** 리스트 사이드바 토글 함수 */
 function toggleListSideBar() {
-    let ListSideBar = document.querySelector(".side-bar#store-list");
+    // let ListSideBar = document.querySelector(".side-bar#store-list");
     // 토글 OFF
-    if (ListSideBar.classList[1] == "show") {
+    if (listSideBar.classList[1] == "show") {
         hideviewSideBar();
         hideListSideBar();
         setToggle(0);
@@ -766,7 +792,7 @@ function classifyKeyword(params) {
 }
 
 /** 검색결과를 지도에 적용하는 콜백함수 (점포) */
-function apply2map(data) {
+function apply2storeMap(data) {
     storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     storeUL.innerHTML = "";
 
@@ -780,7 +806,7 @@ function apply2map(data) {
     // 데이터 등록
     data.forEach(vo => {
         let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx);
-        addMarkerEvent(marker);
+        addMarkerEvent(marker, "store");
         vo.type = "store";
         vo.marker = marker;
         storeVOList.push(vo);
@@ -808,9 +834,9 @@ function apply2map(data) {
         storeUL.innerHTML = msg;
     });
 
-    let storeLI = document.querySelectorAll(".store-card ul li");
+    let storeLIS = document.querySelectorAll(".store-card ul li");
     // 가게와 마커를 메핑
-    markerMapping(storeLI);
+    markerMapping(storeLIS, "store");
 
     // 스토어 맵 모드일 경우 마커와 오버레이 표시
     if (storeMapMode && storeVOList.length != 0) {
@@ -838,7 +864,7 @@ function apply2eventMap(data) {
     data.forEach(vo => {
         msg += 
         // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-        `<li data-event_idx="${vo.event_idx}" onclick="" name="event_idx">
+        `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
             <img src="/resources/img/store1.jpg" alt="">
                 <div class="store-description">
                     <div class="event-title">${vo.event_title}</div>
@@ -862,6 +888,9 @@ function apply2eventMap(data) {
 
         panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
     }
+
+    let eventLIS = document.querySelectorAll(".event-card ul li");
+    markerMapping(eventLIS, "event");
 }
 
 // ======= 키워드 검색 관련 =======
@@ -924,7 +953,7 @@ function placesSearchCB(data, status, pagination) {
             
             if (data.length != 0) {
                 // console.log('지역명 존재');
-                apply2map(data);
+                apply2storeMap(data);
                 panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
             }
             else if (placeInfo.category_group_name === "지하철역") {
@@ -936,7 +965,7 @@ function placesSearchCB(data, status, pagination) {
                 as.getListByKeyword(searchCondition, function (data) {
                     if (data.length != 0) {
                         // console.log('점포명 및 메뉴명을 검색 실행');
-                        apply2map(data);
+                        apply2storeMap(data);
                     }
                     else if (placeInfo.category_group_name === "음식점") {
                         // console.log('일반 음식점은 검색 지원하지 않음');
@@ -944,7 +973,7 @@ function placesSearchCB(data, status, pagination) {
                     else {
                         // console.log('카카오 라이브러리에서 추천하는 장소로 이동');
                         panToLatLng(basicMap, placeInfo.y, placeInfo.x);
-                        apply2map(data);
+                        apply2storeMap(data);
                     }
                 })
             }
@@ -994,7 +1023,7 @@ function subwayServiceCB(data, status, pagination) {
         searchCondition.lng = subwayInfo.x;
         // 역 근처 점포 출력
         as.getListWhithin(searchCondition, 0.5, function (data) {
-            apply2map(data);
+            apply2storeMap(data);
         });
     } 
     else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -1105,6 +1134,10 @@ function address2coordPromise(vo) {
                 let lat = result[0].y;
                 let lng = result[0].x;
                 let marker = registerMarker(lat, lng, vo.event_idx);
+
+                // 마커에 이벤트 추가
+                addMarkerEvent(marker, "event");
+
                 vo.marker = marker;
                 vo.event_lat = lat;
                 vo.event_lng = lng;
@@ -1174,6 +1207,9 @@ function swap2eventMap() {
         if (eventVOList.length != 0) {
             panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
         }
+
+        // 사이드바를 event로 변경
+        viewSideBar = document.querySelector(".side-bar#event");
     }
 
 }
@@ -1208,5 +1244,8 @@ function swap2storeMap() {
         if(storeVOList.length != 0) {
             panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
         }
+
+        // 사이드바를 store로 재설정
+        viewSideBar = document.querySelector(".side-bar#store");
     }
 }

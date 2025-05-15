@@ -30,7 +30,7 @@
 		<div class="modal-header">
 			<button class="mapBtn" id="close-store">X</button>
 		</div>
-		<div class="modal-content">
+		<div class="modal-content" id="store">
 		</div>
 	</div>
 </div>
