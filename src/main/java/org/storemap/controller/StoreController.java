@@ -78,13 +78,21 @@ public class StoreController {
 	}
 	
 	// 점포 시작!
+	@ResponseBody
 	@PostMapping("/storeStart")
-	public String storeStart(StoreVO vo) {
+	public ResponseEntity<String> storeStart(StoreVO vo, MultipartFile file) {
 		log.info("storeStart...");
-		//파일 업로드
-		//storeService.modify(vo);
-		storeService.start(vo.getStore_idx());
-		return "redirect:/store/storeModify?store_idx="+vo.getStore_idx();
+		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
+		//점포수정 + 이미지 재업로드
+		try {
+			storeService.modify(file, vo);	
+			//hide=2로 점포시작
+			storeService.start(vo.getStore_idx());
+			return new ResponseEntity<String>("succeed", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error during store modify", e);
+			return new ResponseEntity<String>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	// 점포 철수!
 	@PostMapping("/storeStop")
@@ -100,16 +108,14 @@ public class StoreController {
 	public ResponseEntity<String> storeModify(StoreVO vo, MultipartFile file) {
 		log.info("storeModify..."+vo);
 		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
-		// 파일업로드
+		//점포수정 + 이미지 재업로드
 		try {
-			//점포수정 + 이미지 재업로드
 			storeService.modify(file, vo);			
 			return new ResponseEntity<String>("succeed", HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("Error during store modify", e);
 			return new ResponseEntity<String>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		//return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
 	}
 	// 점포 관리 페이지 이동
 	@GetMapping("/storeModify")
@@ -160,41 +166,50 @@ public class StoreController {
 	}
 	
 	// 메뉴 추가
-	@PostMapping(value = "/new",
-			consumes = "application/json",
-			produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> menuRegister(@RequestBody MenuVO vo){
+	@PostMapping("/new")
+	public ResponseEntity<String> menuRegister(MenuVO vo, MultipartFile file){
 		log.info("add..."+vo);
-		//파일 업로드
-		return menuService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
-			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
+		// 메뉴추가 + 파일 업로드
+		try {
+			menuService.register(file, vo);
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error during menu add", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	// 메뉴 수정
 	@RequestMapping(method = {RequestMethod.PUT, RequestMethod.PATCH},
-			value = "/{menu_idx}",
-			consumes = "application/json",
-			produces = MediaType.TEXT_PLAIN_VALUE
-			)
-	public ResponseEntity<String> menuModify(@PathVariable("menu_idx") int menu_idx, @RequestBody MenuVO vo){
+			value = "/{menu_idx}")
+	public ResponseEntity<String> menuModify(@PathVariable("menu_idx") int menu_idx, MenuVO vo, MultipartFile file){
 		log.info("menu_idx: "+menu_idx);
 		log.info("modify: "+vo);
-		//파일 업로드
+		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
 		vo.setMenu_idx(menu_idx);
-		
-		int modifyCount = menuService.modify(vo);
-		
-		return modifyCount==1 ?
-		new ResponseEntity<String>("success", HttpStatus.OK) :
-		new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		// 메뉴수정 + 파일 업로드
+		try {
+			menuService.modify(file, vo);
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error during menu modify", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	// 메뉴 삭제
-	@DeleteMapping(value = "/{menu_idx}", produces = MediaType.TEXT_PLAIN_VALUE)
+	@DeleteMapping("/{menu_idx}")
 	public ResponseEntity<String> menuRemove(@PathVariable("menu_idx") int menu_idx){
 		log.info("remove..."+menu_idx);
-		return menuService.remove(menu_idx)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
-			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		// 메뉴삭제 + 파일 삭제
+		try {
+			menuService.remove(menu_idx);
+			return new ResponseEntity<String>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error during menu remove", e);
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	/*--------------------------------------------------------------------------*/

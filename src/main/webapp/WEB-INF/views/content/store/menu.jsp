@@ -32,7 +32,6 @@
 		<div class="add-modal-content">
 			<div class="menu-add">
 				<h3>메뉴추가</h3>
-				<input type="hidden" name="store_idx" value="${store_idx}">
 		    	<label for="mimage">이미지</label>
 		    	<input type="file" id="mimage" name="menu_image">
 		    	<label for="mname">메뉴</label>
@@ -48,9 +47,8 @@
 		<div class="modify-modal-content">
 		    <div class="menu-update">
 		    	<h3>메뉴수정</h3>
-		    	<input type="hidden" name="store_idx" value="${store_idx}">
 		    	<label for="modifyImage">이미지</label>
-		    	<input type="text" id="modifyImage" name="modify_image" readonly>
+		    	<input type="file" id="modifyImage" name="modify_image">
 		    	<label for="modifyName">메뉴</label>
 		    	<input type="text" id="modifyName" name="modify_name">
 		    	<label for="modifyPrice">가격</label>

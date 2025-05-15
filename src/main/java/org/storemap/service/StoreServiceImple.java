@@ -20,8 +20,6 @@ public class StoreServiceImple implements StoreService{
 	
 	@Autowired
 	private StoreMapper mapper;
-	@Autowired
-	private AttachFileMapper attach;
 	//이미지 업로드 서버
 	@Autowired
 	private CloudinaryService cloudinaryService;
@@ -47,20 +45,21 @@ public class StoreServiceImple implements StoreService{
 	@Override
 	public int modify(MultipartFile file, StoreVO vo) {
 		log.info("modify..."+vo);
+		StoreVO svo = mapper.read(vo.getStore_idx());
+		String oldImg = svo.getStore_image();
 		try {
-			// 기존 점포 정보 불러오기
-			StoreVO svo = mapper.read(vo.getStore_idx());
-			if (svo == null) {
-	            throw new RuntimeException("Store not found with ID: " + vo.getStore_idx());
-	        }
 			// 파일이 있는 경우에만 이미지 업로드 처리
 			if(file != null && !file.isEmpty()) {
+				// 이미지가 이미 있는 경우 삭제
+				if(!oldImg.equals("store1.jpg")) {
+					cloudinaryService.deleteFile(oldImg);
+				}
 				// 새 이미지 직접 업로드
 				String imageUrl = cloudinaryService.uploadFile(file);
 				vo.setStore_image(imageUrl);
 			} else {
 				// 파일 없을 경우 기존 이미지 유지
-				vo.setStore_image(svo.getStore_image());
+				vo.setStore_image(oldImg);
 			}
 			return mapper.update(vo);
 		} catch (Exception e) {

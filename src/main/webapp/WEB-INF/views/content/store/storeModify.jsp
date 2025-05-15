@@ -23,8 +23,8 @@
 	</c:choose>
 
   <form method="post" id="store-modify">
-  	<input type="hidden" name="member_idx" value="${vo.member_idx}">
   	<input type="hidden" name="store_idx" value="${vo.store_idx}">
+  	<input type="hidden" name="member_idx" value="${vo.member_idx}">
   
     <label for="sname">점포명</label>
     <input type="text" id="sname" name="store_name" value="${vo.store_name}">

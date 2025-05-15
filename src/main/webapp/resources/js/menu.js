@@ -24,13 +24,10 @@ const menuService = (function(){
         .catch(err => console.log(err));
     }
     //메뉴 추가 함수
-    function add(vo, callback){
+    function add(formData, callback){
         fetch('/store/new',{
             method: 'post',
-            body: JSON.stringify(vo),
-            headers: {
-                'Content-type' : 'application/json; charset=utf-8'
-            }
+            body: formData
         })
             .then(response => response.text())
             .then(data => {
@@ -39,13 +36,10 @@ const menuService = (function(){
             .catch(err => console.log(err));
     }
     //메뉴 수정 함수
-    function update(menu_idx, vo, callback){
+    function update(menu_idx, formData, callback){
     	fetch(`/store/${menu_idx}`,{
             method: 'put',
-            body: JSON.stringify(vo),
-            headers: {
-                'Content-type' : 'application/json; charset=utf-8'
-            }
+            body: formData
         })
             .then(response => response.text())
             .then(data => {
@@ -172,7 +166,7 @@ let menu_idx;
 function menuModifyPage(li){
 	menu_idx = li.getAttribute('data-menu_idx');
 	ms.get(menu_idx, function(){
-		inputModifyImage.value = "menu1.jpg";// 파일업로드 만들면 고칠것 li.querySelector(".menu-image").alt;
+		inputModifyImage.value = '';
 		inputModifyName.value = li.querySelector(".menu-name").textContent;
 		inputModifyPrice.value = li.querySelector(".menu-price").textContent.substring(1);
 	});
@@ -182,17 +176,21 @@ function menuModifyPage(li){
 
 // 메뉴 추가 함수
 function addMenu(){
-	if(!inputAddImage.value || !inputAddName.value || !inputAddPrice.value){
+	if(!inputAddName.value || !inputAddPrice.value){
 		alert("모든 내용을 입력하세요");
 		return;
 	}
+	
+	// FormData 생성
+	const formData = new FormData();
+    formData.append("store_idx", store_idx);
+    formData.append("menu_name", inputAddName.value);
+    formData.append("menu_price", inputAddPrice.value);
+    // 이미지 파일
+    formData.append("file", inputAddImage.files[0]);
+	
 	ms.add(
-		{
-			store_idx: store_idx,
-			menu_image: inputAddImage.value,
-			menu_name: inputAddName.value,
-			menu_price: inputAddPrice.value
-		},
+		formData,
 		function(result){
 			console.log("result: " + result);
 			closeAddModal();
@@ -203,11 +201,21 @@ function addMenu(){
 
 // 메뉴 수정 함수
 function updateMenu(){
-	ms.update(menu_idx,{
-		menu_image : inputModifyImage.value,
-		menu_name : inputModifyName.value,
-		menu_price : inputModifyPrice.value
-	},
+	//FormData 생성
+	const formData = new FormData();
+    formData.append("store_idx", store_idx);
+    formData.append("menu_name", inputModifyName.value);
+    formData.append("menu_price", inputModifyPrice.value);
+    // 이미지 파일
+    formData.append("file", inputModifyImage.files[0]);
+    
+	const vo = {
+		menu_image: inputModifyImage.value,
+		menu_name: inputModifyName.value,
+		menu_price: inputModifyPrice.value
+	};
+	
+	ms.update(menu_idx, formData,
 	function(){
 		closeModifyModal();
 		showMenuList();
