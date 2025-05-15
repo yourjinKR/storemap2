@@ -1,5 +1,6 @@
 package org.storemap.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.storemap.domain.AnnounceVO;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.FilterVO;
 import org.storemap.mapper.AnnounceMapper;
+import org.storemap.mapper.AttachFileMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -21,6 +23,9 @@ public class AnnounceServiceImple implements AnnounceService{
 	
 	@Autowired
 	private AnnounceMapper mapper;
+	@Autowired
+	private AttachFileMapper attachMapper;
+	
 	// 파일 서버
 	@Autowired
 	private CloudinaryService cloudinaryService;
@@ -58,7 +63,7 @@ public class AnnounceServiceImple implements AnnounceService{
 				uuidData += ",";
 			}
 		}
-		vo.setAnnounce_imgae(uuidData);
+		vo.setAnnounce_image(uuidData);
 		return mapper.insertNotice(vo);
 	}
 	
@@ -66,7 +71,14 @@ public class AnnounceServiceImple implements AnnounceService{
 	@Override
 	public AnnounceVO getNoticeView(int announce_idx) {
 		AnnounceVO vo = mapper.getNoticeView(announce_idx);
-		return mapper.getNoticeView(announce_idx);
+		String uuidArr = vo.getAnnounce_image();
+		String[] arr = uuidArr.split(",");
+		List<AttachFileVO> fileList = new ArrayList<AttachFileVO>();
+		for (String uuid : arr) {
+			fileList.add(attachMapper.getAttach(uuid));
+		}
+		vo.setAttach_list(fileList);
+		return vo;
 	}
 	
 	// 공지 삭제
@@ -76,7 +88,9 @@ public class AnnounceServiceImple implements AnnounceService{
 	}
 	// uuid 정보 
 	@Override
-	public String getUuid(int announce_idx) {
-		return mapper.getUuid(announce_idx);
+	public List<AttachFileVO> getUuid(int announce_idx) {
+		List<AttachFileVO> list = null;
+		
+		return list;
 	}
 }

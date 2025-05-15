@@ -21,5 +21,5 @@ public interface AnnounceService {
 	// 공지 삭제
 	public int noticeDelete(int announce_idx);
 	// uuid 정보 
-	public String getUuid(int announce_idx);
+	public List<AttachFileVO> getUuid(int announce_idx);
 }
