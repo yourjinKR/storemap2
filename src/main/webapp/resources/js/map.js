@@ -96,6 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let basicOption = {};
     if(currentPosition) {
         console.log('위치설정 있음');
+        currentLat = currentPosition.lat;
+        currentLng = currentPosition.lng;
         basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 1};
 
         clickMarker = new kakao.maps.Marker({ 
@@ -229,8 +231,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 
             }
             // 현위치 이동 (임시 함수, 추후 수정)
-            else if (type === "panToCurrent") {
+            else if (type === "panto-current") {
                 panToLatLng(basicMap, currentLat, currentLng);
+                clickMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLng));
             }
             // 검색
             else if (type === "search") {

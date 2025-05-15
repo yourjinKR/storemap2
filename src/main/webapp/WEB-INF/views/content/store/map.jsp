@@ -22,6 +22,7 @@
 					<button class="mapBtn" id="event-mode">이벤트</button>
 					<button class="mapBtn" id="store-mode">점포</button>
 					<button class="mapBtn" id="custom-position">현위치 재설정</button>
+					<button class="mapBtn" id="panto-current">현위치 이동</button>
 				</div>
 			</div>
 			<div id="body">
