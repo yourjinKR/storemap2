@@ -94,11 +94,41 @@ public class AnnounceServiceImple implements AnnounceService{
 		return mapper.noticeDelete(announce_idx);
 	}
 	
-	// uuid 정보 
+	// 공지 수정
+	@Transactional
 	@Override
-	public List<AttachFileVO> getUuid(int announce_idx) {
-		List<AttachFileVO> list = null;
+	public int updateNotice(MultipartFile[] files, AnnounceVO vo) {
+		AnnounceVO oldvo = mapper.getNoticeView(vo.getAnnounce_idx());
+		String oldImg = oldvo.getAnnounce_image();
+		String[] oldArr = oldImg.split(",");
 		
-		return list;
+		String uuidData = vo.getAnnounce_image();
+		String[] arr = uuidData.split(",");
+		
+		String newUuid = "";
+		int fileIdx = 0;
+		for (int i = 0; i < arr.length; i++) {
+			System.out.println(arr[i]);
+			if(arr[i].equals("newFile")) {
+				newUuid += cloudinaryService.uploadFile(files[fileIdx]);
+				fileIdx++;
+			}else {
+				for (String old : oldArr) {
+					if(uuidData.indexOf(old) == -1) {
+						cloudinaryService.deleteFile(old);
+					}else {
+						newUuid += old;
+					}
+				}
+			}
+			if(i < arr.length - 1) {
+				newUuid += ",";
+			}
+		}
+		for (String uuid : arr) {
+		}
+		vo.setAnnounce_image(newUuid);
+		
+		return mapper.updateNotice(vo);
 	}
 }

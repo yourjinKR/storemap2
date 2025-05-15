@@ -10,5 +10,6 @@ table td{}
 table td input[type='text']{height:40px; width: 100%;margin-top:15px;border-radius:5px;border:1px solid #d9d9d9;padding:0 10px;}
 
 .content-box{border:1px solid #d9d9d9;border-radius:5px;margin-top:15px; min-height:300px;padding:10px;}
-
-#editor {min-height:300px}
+.ql-editor{min-height:300px;}
+.notice-view .ql-toolbar{display:none;}
+.notice-view .ql-container{margin-top:15px;}

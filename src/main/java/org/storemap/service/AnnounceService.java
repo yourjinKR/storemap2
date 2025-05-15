@@ -14,12 +14,12 @@ public interface AnnounceService {
 	public int getListCount(FilterVO filter);
 	// 게시물 고정
 	public int updateFixed(int[] data);
-	// 공지등록
+	// 공지 등록
 	public int insertNotice(MultipartFile[] files, AnnounceVO vo);
+	// 공지 수정
+	public int updateNotice(MultipartFile[] files, AnnounceVO vo);
 	// 공지 View
 	public AnnounceVO getNoticeView(int announce_idx);
 	// 공지 삭제
 	public int noticeDelete(int announce_idx);
-	// uuid 정보 
-	public List<AttachFileVO> getUuid(int announce_idx);
 }

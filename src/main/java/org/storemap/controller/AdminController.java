@@ -175,6 +175,23 @@ public class AdminController {
 	public String adminNotice() {
 		return "index";
 	}
+	// 공지 수정페이지
+	@GetMapping("/noticeModify")
+	public String noticeModify() {
+		return "index";
+	}
+
+	// 공지사항 쓰기 페이지
+	@GetMapping("/noticeWrite")
+	public String noticeWrite() {
+		return "index";
+	}
+	
+	// 공지사항 View
+	@GetMapping("/noticeView")
+	public String noticeView() {
+		return "index";
+	}
 	
 	// 공지사항 리스트
 	@GetMapping(value = "/getNotice",
@@ -201,15 +218,9 @@ public class AdminController {
 		int result = announceService.updateFixed(data);
 	}
 	
-	// 공지사항 쓰기
-	@GetMapping("/noticeWrite")
-	public String noticeWrite() {
-		return "index";
-	}
-	
+	// 공지 등록 액션
 	@PostMapping("/noticeWrite")
 	public ResponseEntity<String> insertNotice(MultipartFile[] files, AnnounceVO vo, HttpSession session) {
-		// 파일 저장 로직
 		vo.setMember_idx((int) session.getAttribute("loginUserIdx"));
 
 		// 공지사항 데이터 처리
@@ -220,12 +231,18 @@ public class AdminController {
 			new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 	}
 	
-	// 공지사항 View
-	@GetMapping("/noticeView")
-	public String noticeView() {
-		return "index";
+	// 공지 등록 액션
+	@PostMapping("/noticeUpdate")
+	public ResponseEntity<String> updateNotice(MultipartFile[] files, AnnounceVO vo, HttpSession session) {
+		vo.setMember_idx((int) session.getAttribute("loginUserIdx"));
+		// 공지사항 데이터 처리
+		int result = announceService.updateNotice(files, vo);
+		
+		return result > 0 ? 
+			new ResponseEntity<String>("succeed", HttpStatus.OK) : 
+			new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 	}
-	
+
 	// 공지사항 View
 	@GetMapping(value = "/getNotice/{announce_idx}",
 			produces = MediaType.APPLICATION_JSON_VALUE)

@@ -15,11 +15,10 @@ public interface AnnounceMapper {
 	public int updateFixed(int data);
 	// 공지등록
 	public int insertNotice(AnnounceVO vo);
+	// 공지등록
+	public int updateNotice(AnnounceVO vo);
 	// 공지 View
 	public AnnounceVO getNoticeView(int announce_idx);
 	// 공지 삭제
 	public int noticeDelete(int announce_idx);
-	
-	// uuid 정보 
-	public String getUuid(int announce_idx);
 }

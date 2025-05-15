@@ -64,6 +64,14 @@
 			END
 		WHERE ANNOUNCE_IDX = #{idx}
 	</update>
+	<update id="updateNotice" parameterType="org.storemap.domain.AnnounceVO">
+		UPDATE ANNOUNCE SET 
+		ANNOUNCE_CONTENT = #{announce_content},
+		ANNOUNCE_TITLE = #{announce_title},
+		ANNOUNCE_IMAGE = #{announce_image},
+		ANNOUNCE_REGDATE = SYSDATE
+		WHERE ANNOUNCE_IDX = #{announce_idx}
+	</update>
 	
 	<!-- 공지등록 -->
 	<insert id="insertNotice" parameterType="org.storemap.domain.AnnounceVO">

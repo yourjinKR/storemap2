@@ -17,6 +17,9 @@
 		<c:when test="${path eq '/admin/noticeWrite'}">
 			<jsp:include page="../content/admin/noticeWrite.jsp" />
 		</c:when>
+		<c:when test="${path eq '/admin/noticeModify'}">
+			<jsp:include page="../content/admin/noticeModify.jsp" />
+		</c:when>
 		<c:when test="${path eq '/member/login'}">
 			<jsp:include page="/WEB-INF/views/content/member/login.jsp" />
 		</c:when>
