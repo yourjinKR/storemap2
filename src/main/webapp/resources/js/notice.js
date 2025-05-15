@@ -3,6 +3,7 @@ let linkEle = document.createElement('link');
 linkEle.rel = 'stylesheet';
 linkEle.href = NOTICE_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
+const IMG_URL = "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/";
 
 let formData, fileData, quill = null;
 
@@ -72,8 +73,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			}
 		})
 	})
-	
-	getImgData();
+	getNotice();
 });
 
 // 파일 핸들링
@@ -180,12 +180,24 @@ function noticeDelete(){
 	.catch(err => console.log(err))
 }
 
-function getImgData(){
-	let idx = document.querySelector(".notice-title").dataset['idx'];
-	fetch(`/admin/getImgData/${idx}`)
+function getNotice(){
+	let idx = new URLSearchParams(window.location.search).get("idx");
+	fetch(`/admin/getNotice/${idx}`)
 	.then(response => response.json())
 	.then(result => {
+		document.querySelector(".content-box").innerHTML = result.announce_content
+		let img = document.querySelectorAll(".content-box img");
+		result.attach_list.forEach((attach,i) => {
+			img[i].setAttribute("src", IMG_URL+attach.uuid+"_"+attach.filename);
+			console.log(attach);
+		})
 		console.log(result);
 	})
-	.catch(err => console.log(err))
+	
+//	fetch(`/admin/getImgData/${idx}`)
+//	.then(response => response.json())
+//	.then(result => {
+//		console.log(result);
+//	})
+//	.catch(err => console.log(err))
 }

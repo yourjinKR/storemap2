@@ -26,6 +26,7 @@ import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.FilterVO;
 import org.storemap.domain.PageDTO;
+import org.storemap.mapper.AttachFileMapper;
 import org.storemap.service.AnnounceServiceImple;
 import org.storemap.service.CommentDeclarationServiceImple;
 import org.storemap.service.EnterRequestServiceImple;
@@ -224,22 +225,16 @@ public class AdminController {
 	
 	// 공지사항 View
 	@GetMapping("/noticeView")
-	public String noticeView(int idx, Model model) {
-		AnnounceVO vo = announceService.getNoticeView(idx);
-		model.addAttribute("vo" , vo);
+	public String noticeView() {
 		return "index";
 	}
 	
 	// 공지사항 View
-	@GetMapping("/getImgData/{announce_idx}")
-	public String getImgData(@PathVariable("announce_idx") int announce_idx) {
-		List<AttachFileVO> list = null;
-		String uuid = announceService.getUuid(announce_idx);
-		String[] arr = uuid.split(",");
-		for (String string : arr) {
-			log.info(string);
-		}
-		return null;
+	@GetMapping(value = "/getNotice/{announce_idx}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AnnounceVO> getImgData(@PathVariable("announce_idx") int announce_idx) {
+		AnnounceVO vo = announceService.getNoticeView(announce_idx);
+		return new ResponseEntity<AnnounceVO>(vo, HttpStatus.OK);
 	}
 	
 	// 공지사항 삭제
