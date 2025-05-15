@@ -27,8 +27,8 @@
 			where attach_idx = #{attach_idx}
 	</update>
 	<!-- 3. 파일 삭제 -->
-	<delete id="delete" parameterType="int">
-		delete from attach_file where attach_idx = #{attach_idx}
+	<delete id="deleteAttach" parameterType="String">
+		DELETE FROM ATTACH_FILE WHERE UUID = #{uuid}
 	</delete>
 	<!-- 4. 파일 목록 -->
 	<select id="findByIdx" parameterType="int" resultType="org.storemap.domain.AttachFileVO">

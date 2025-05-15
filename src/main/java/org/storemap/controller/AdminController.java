@@ -28,6 +28,7 @@ import org.storemap.domain.FilterVO;
 import org.storemap.domain.PageDTO;
 import org.storemap.mapper.AttachFileMapper;
 import org.storemap.service.AnnounceServiceImple;
+import org.storemap.service.CloudinaryService;
 import org.storemap.service.CommentDeclarationServiceImple;
 import org.storemap.service.EnterRequestServiceImple;
 import org.storemap.service.EnterServiceImple;
@@ -212,11 +213,7 @@ public class AdminController {
 		vo.setMember_idx((int) session.getAttribute("loginUserIdx"));
 
 		// 공지사항 데이터 처리
-		log.info("공지사항 데이터: " + vo);
 		int result = announceService.insertNotice(files, vo);
-		log.info(result);
-		//log.info("공지사항 저장 결과: " + result);
-
 		
 		return result > 0 ? 
 			new ResponseEntity<String>("succeed", HttpStatus.OK) : 

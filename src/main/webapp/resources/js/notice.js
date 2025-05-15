@@ -164,7 +164,7 @@ function noticeInsert() {
 
 // 공지 삭제
 function noticeDelete(){
-	let idx = document.querySelector(".notice-title").dataset['idx'];
+	let idx = new URLSearchParams(window.location.search).get("idx");
 	fetch(`/admin/noticeDelete/${idx}`,{
 		method : 'delete'
 	})
@@ -185,13 +185,12 @@ function getNotice(){
 	fetch(`/admin/getNotice/${idx}`)
 	.then(response => response.json())
 	.then(result => {
-		document.querySelector(".content-box").innerHTML = result.announce_content
+		document.querySelector(".content-box").innerHTML = result.announce_content;
+		document.querySelector(".notice-title").innerHTML = result.announce_title;
 		let img = document.querySelectorAll(".content-box img");
 		result.attach_list.forEach((attach,i) => {
 			img[i].setAttribute("src", IMG_URL+attach.uuid+"_"+attach.filename);
-			console.log(attach);
 		})
-		console.log(result);
 	})
 	
 //	fetch(`/admin/getImgData/${idx}`)

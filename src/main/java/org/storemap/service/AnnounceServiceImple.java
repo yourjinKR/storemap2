@@ -82,10 +82,18 @@ public class AnnounceServiceImple implements AnnounceService{
 	}
 	
 	// 공지 삭제
+	@Transactional
 	@Override
 	public int noticeDelete(int announce_idx) {
+		AnnounceVO vo = mapper.getNoticeView(announce_idx);
+		String uuidArr = vo.getAnnounce_image();
+		String[] arr = uuidArr.split(",");
+		for (String uuid : arr) {
+			cloudinaryService.deleteFile(uuid);
+		}
 		return mapper.noticeDelete(announce_idx);
 	}
+	
 	// uuid 정보 
 	@Override
 	public List<AttachFileVO> getUuid(int announce_idx) {
