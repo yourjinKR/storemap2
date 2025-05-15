@@ -15,6 +15,8 @@ let thisPlace = "";
 
 // 현위치 변수 선언
 let currentLat, currentLng, pageNum, amount, userId, auth, today = null;
+/** 위치정보 확인 여부 */
+let positionCheck = false;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	// 세션 데이터 (아이디/권한)
@@ -56,8 +58,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		})
 	}
 
-	// 위치 정보
-	getCurrentPlace();
+	// 위치 정보 실행 (1회)
+	if (!positionCheck) {
+		getCurrentPlace();
+	}
 
 	// 헤더 로그아웃
 	headerLogout();
@@ -124,9 +128,17 @@ function pager(pageMaker){
 
 // 위치 정보 (위도,경도)
 function getCurrentPlace(){
+    // 이미 로컬스토리지에 위치정보가 있다면 함수 종료
+    if (localStorage.getItem("position_data")) {
+        console.log("기존 위치 정보가 존재하므로 위치를 다시 설정하지 않습니다.");
+        return;
+    }
+
 	window.navigator.geolocation.getCurrentPosition(function(position){
+			console.log("현위치를 다시 설정합니다");
 			currentLat = position.coords.latitude;
 			currentLng = position.coords.longitude;
+			setPositionData(currentLat, currentLng);
 
 			getAddr(currentLat, currentLng);
 			
@@ -155,6 +167,19 @@ function setStorageData(pageNum, amount){
 //로컬 스토리지 출력
 function getStorageData(){
 	return JSON.parse(localStorage.getItem("page_data"));
+}
+
+/** 로컬 스토리지에 위치정보를 저장 */
+function setPositionData(lat, lng) {
+	let positionData = {
+		lat : lat,
+		lng : lng
+	};
+	localStorage.setItem("position_data", JSON.stringify(positionData));
+} 
+/** 로컬 스토리에 담긴 위치정보를 출력 */
+function getPositionData(){
+	return JSON.parse(localStorage.getItem("position_data"));
 }
 
 // 위치 정보 주소 변환

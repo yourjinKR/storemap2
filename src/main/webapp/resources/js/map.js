@@ -23,7 +23,7 @@ let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, click
 
 // 클릭하여 강조된 마커
 let selectedMarker = null;
-// 지도 클릭 이벤트 마커
+/** 지도 클릭 이벤트 마커 */
 let clickMarker = null;
 
 // 지도에 표시된 마커 객체를 가지고 있을 배열
@@ -76,6 +76,10 @@ let mapType;
 let eventMapMode = false;
 /** store map  */
 let storeMapMode = true;
+/** 현위치 커스텀 설정 모드 */
+let customPositionMode = false;
+/** 현위치 커스텀 설정 오버레이 */
+let positionOverlay = null;
 
 // 페이지 로드 후 script 실행
 document.addEventListener("DOMContentLoaded", () => {
@@ -85,14 +89,27 @@ document.addEventListener("DOMContentLoaded", () => {
 	linkEle.href = CSS_PATH;
 	document.head.appendChild(linkEle);
 	
-    let basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 1};
-	
+    let currentPosition = getPositionData();
+    // console.log(currentPosition.lat);
+    // console.log(currentPosition.lng);
+    
+    let basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 1};
+    // panToLatLng(map, currentPosition.lat, currentPosition.lng);
+
 	// 지도 이동 테스트 ===============================
 	let container = document.querySelector(".map");
 	basicMap = new kakao.maps.Map(container, basicOption);
     // 새로고침
     centerLatLng = basicMap.getCenter();
     loadAddrFromCoords(centerLatLng);
+
+    // 클릭 마커
+    clickMarker = new kakao.maps.Marker({ 
+        // 지도 중심좌표에 마커를 생성합니다 
+        position: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng)
+    });
+    // console.log(basicMap instanceof kakao.maps.Map); // true가 나와야 함    
+    clickMarker.setMap(basicMap);
 
     // 맵 id별 분기
     mapType = container.getAttribute("id");
@@ -117,9 +134,9 @@ document.addEventListener("DOMContentLoaded", () => {
             lat : basicMap.getCenter().getLat(),
             lng : basicMap.getCenter().getLng(),
         };
-        as.getListNearest(basicCondition, 5, function(data) {
-            apply2storeMap(data);
-        })
+        // as.getListNearest(basicCondition, 5, function(data) {
+        //     apply2storeMap(data);
+        // })
 
         // 요소 선언
         searchResult = document.querySelector(".search-result#store-list");
@@ -218,18 +235,22 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "store-mode") {
                 ctrlMapMode("store");
             }
+            else if (type === "custom-position") {
+                setMyCurrentPlace();
+            }
         });
     });
 
-
-
-    clickMarker = new kakao.maps.Marker({ 
-        // 지도 중심좌표에 마커를 생성합니다 
-        position: new kakao.maps.LatLng(basicLat, basicLng)
+    // 현위치 커스텀 설정 오버레이를 생성합니다
+    positionOverlay = new kakao.maps.CustomOverlay({
+    content: `
+                <div class="customoverlay">
+                    <span class="title">현위치 설정</span>
+                    <button onclick="getMyCurrentPlace()">변경</button>
+                </div>`,
+    yAnchor: 1,
+    zIndex: 3
     });
-    clickMarker.setMap(basicMap);
-
-
 
     // 지도 클릭 이벤트 (경도 위도 출력)
     kakao.maps.event.addListener(basicMap, 'click', function(mouseEvent) {        
@@ -238,16 +259,18 @@ document.addEventListener("DOMContentLoaded", () => {
         let latlng = mouseEvent.latLng;
         clickMarker.setPosition(latlng);
 
-        // console.log(latlng.getLat());
-        // console.log(latlng.getLng());
-        // searchAddrFromCoords(latlng);
-        // searchDetailAddrFromCoords(latlng); (상세주소)
+        if (mapType === "full" && customPositionMode) {
+            positionOverlay.setPosition(latlng);
+        }
 
-        let f = document.querySelector("#store-modify");
-        if (f) {
-            f.lat.value = latlng.getLat();
-            f.lng.value = latlng.getLng();
-            initAddrFromCoords(latlng, f);
+        if (mapType === "store-loc") {
+            
+            let f = document.querySelector("#store-modify");
+            if (f) {
+                f.lat.value = latlng.getLat();
+                f.lng.value = latlng.getLng();
+                initAddrFromCoords(latlng, f);
+            }
         }
     });
 
@@ -386,8 +409,8 @@ function registerOverlay(lat, lng, name) {
 /** 커스텀 오버레이를 보여주는 함수 */
 function showOverlay(map, overlayList) {
     for (let i = 0; i < overlayList.length; i++) {
-    const element = overlayList[i];
-    element.setMap(map);
+        const element = overlayList[i];
+        element.setMap(map);
     }
 }
 
@@ -720,6 +743,7 @@ const as = asyncService;
 
 /** 지도, 위도, 경도를 입력하면 지도 이동 */ 
 function panToLatLng(map, lat, lng) {
+    console.log('화면 이동');
     // 좌표설정
     let moveLatLon = new kakao.maps.LatLng(lat, lng);	
     // 이동
@@ -1256,4 +1280,21 @@ function swap2storeMap() {
         // 사이드바를 store로 재설정
         viewSideBar = document.querySelector(".side-bar#store");
     }
+}
+
+/** 위치정보 커스텀 변경 시작 함수 (map.js와 연동) */
+function setMyCurrentPlace() {
+    positionOverlay.setMap(basicMap);
+    alert("클릭하여 정확한 위치를 설정하시오");
+	customPositionMode = true;
+}
+/** 위치정보 커스텀 변경 종료 함수 */
+function getMyCurrentPlace() {
+    customPositionMode = false;
+    let latLng = positionOverlay.getPosition();
+    currentLat = latLng.getLat();
+    currentLng = latLng.getLng();
+    setPositionData(currentLat, currentLng);
+    positionOverlay.setMap(null);
+    console.log('현위치 커스텀 변경 완료' + latLng);
 }
