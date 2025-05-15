@@ -3,7 +3,6 @@ package org.storemap.service;
 import java.util.List;
 
 import org.storemap.domain.EventDTO;
-import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;

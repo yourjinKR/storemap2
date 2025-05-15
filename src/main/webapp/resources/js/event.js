@@ -66,7 +66,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			        if (bend.value && bend.value < minEventDate) bend.value = '';
 			      }
 			    });
-	  }
+			    	// 게시글 등록 성공시 modal 및 등록한 페이지로 이동
+			    const modal = document.getElementById("successModal");
+			    const viewBtn = document.getElementById("registerBtn");
+
+			    if (modal && viewBtn) {
+			        modal.style.display = "block";
+
+			        viewBtn.addEventListener("click", function () {
+			            const event_idx = "${event_idx}";
+			            if (eventId) {
+			                window.location.href = "/event/eventView?event_idx=" + event_idx;
+			            } else {
+			                alert("게시글 ID가 없습니다.");
+			            }
+			        });
+			    }
+		}
 		
 	f = document.forms[0];
 	console.log(document.querySelectorAll('button.eventBtn'));
@@ -77,6 +93,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			console.log('click');
 			
 			if(e.currentTarget.getAttribute("id")=="registerBtn"){
+				event.preventDefault();
 				logEventDayList();
 			}else if(e.currentTarget.getAttribute("id")=="resetBtn"){
 				f.reset();
@@ -213,6 +230,47 @@ function logEventDayList() {
 
     console.log("이벤트 날짜 정보 리스트:", eventDayList);
     
-	f.action="/event/eventRegister";
+    if (!f.event_title.value) {
+        alert("행사명을 입력하세요.");
+        return;
+    }
+
+    if (!f.event_category.value) {
+        alert("카테고리를 선택하세요.");
+        return;
+    }
+
+    if (!f.event_rstartdate.value) {
+        alert("모집 시작 날짜를 선택하세요.");
+        return;
+    }
+
+    if (!f.event_rstopdate.value) {
+        alert("모집 종료 날짜를 선택하세요.");
+        return;
+    }
+
+    if (!f.event_bstartdate.value) {
+        alert("행사 시작 날짜를 선택하세요.");
+        return;
+    }
+
+    if (!f.event_bstopdate.value) {
+        alert("행사 종료 날짜를 선택하세요.");
+        return;
+    }
+
+    if (!f.event_content.value.trim()) {
+        alert("행사 내용을 입력하세요.");
+        return;
+    }
+
+    if (!f.eventImage.value) {
+        alert("대표 이미지를 선택하세요.");
+        return;
+    }
+	
+    f.action="/event/eventRegister";
 	f.submit();
 }
+

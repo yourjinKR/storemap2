@@ -93,17 +93,33 @@ public class EventController {
 		return 1; 
 	}
 	
-	// 게시글 등록 컨트롤러
 	@PostMapping("/eventRegister")
-	public String eventRegister(EventVO eventVO) {
-		log.info("eventRegister....." + eventVO);		
-		try {
-	        eventService.registerEventWithDays(eventVO);  // 서비스 호출
-		} catch (RuntimeException e) {
-			log.error("에러발생" + e);
-		}		
-		return "redirect:/event/eventList";
-	}	
+	public String eventRegister(EventVO eventVO, 
+	                             @RequestParam("eventImage") MultipartFile eventImage) {
+	    log.info("eventRegister....." + eventVO);
+
+	    // 파일이 업로드된 경우 처리
+	    if (!eventImage.isEmpty()) {
+	        try {
+	            // 업로드된 파일의 이름을 가져옴
+	            String fileName = eventImage.getOriginalFilename(); // 파일명만 추출
+	            eventVO.setEvent_file(fileName);  // event_file 필드에 파일명 저장
+
+	        } catch (Exception e) {
+	            log.error("파일 처리 중 오류 발생: " + e.getMessage());
+	            return "errorPage";  // 오류 페이지로 이동 (파일 업로드 실패 시)
+	        }
+	    }
+
+	    try {
+	        // 파일명만 포함된 EventVO 객체를 서비스에 전달하여 DB에 저장
+	    	eventService.registerEventWithDays(eventVO);  // 서비스 호출
+	    } catch (RuntimeException e) {
+	        log.error("에러 발생: " + e);
+	    }
+
+	    return "redirect:/event/eventRegister";  // 등록 완료 후 이벤트 목록 페이지로 리다이렉트
+	}
 	
 	//이벤트 등록 화면 보여주는 컨트롤러
 	@GetMapping("/eventRegister")

@@ -113,8 +113,7 @@ public class EventServiceImple implements EventService{
 	                    log.info("eventDay 삽입 성공 - event_idx: {}, eventDay: {}" + day.getEvent_idx() + day);  // 성공 시 로그
 	                }
 	            }
-	        }
-	        log.info("이 메세지는 절대 출력되지 않아야 정상입니다.");	        
+	        }	        
 	    } catch (RuntimeException e) {
 	        System.out.println("예외 발생!");
 	        e.printStackTrace(); // 여기가 중요!!

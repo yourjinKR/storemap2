@@ -408,7 +408,7 @@
         #{event_bstartdate}, 
         #{event_bstopdate}, 
         0, 
-        #{event_file, jdbcType=VARCHAR}, 
+        #{event_file}, 
         #{event_postcode}
     )
 	</insert>

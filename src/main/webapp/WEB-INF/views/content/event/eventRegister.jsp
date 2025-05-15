@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/event.js"></script>
-
+<c:if test="${param.success eq 'true'}">
+    <jsp:include page="../../content/modal/eventSubmitModal.jsp"/>
+</c:if>	
 <style>
   table { border-collapse: collapse; width: 100%; }
   th, td { border: 1px solid #ddd; padding: 8px; }
@@ -12,9 +14,6 @@
   .btn-sec { background-color: #6c757d; color: white; border: none; }
   .textarea { resize: none; }
 </style>
-<%
-
-%>
 <div class="page-header">
   <h1>이벤트 등록</h1>
 </div>
@@ -34,7 +33,7 @@
               <option value="행사">행사</option>
               <option value="축제">축제</option>
               <option value="박람회">박람회</option>
-              <option value="기타">기타</option>
+              <option value="기타">직접입력으로 만들거</option>
             </select>
           </td>
         </tr>
@@ -76,9 +75,6 @@
           <th>대표 이미지</th>
           <td>
 		    <input type="file" name="eventImage" accept="image/*" id="imageInput">
-		  <div style="margin-top:10px;">
-		  	<img id="imagePreview" src="#" alt="미리보기" style="display:none; max-width:200px; border:1px solid #ccc;" />
-		  </div>
           </td>
         </tr>
         	
