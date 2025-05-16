@@ -52,25 +52,29 @@
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where review_idx = #{review_idx}
 	</select>
-	<!-- 6.리뷰 숨기기 등록 -->
+	<!-- 6.해당 점포에 동일한 리뷰를 가지고 있는지 검증 -->
+	<select id="getSame" parameterType="org.storemap.domain.ReviewVO" resultType="org.storemap.domain.ReviewVO">
+		select * from review where store_idx = #{param1} AND review_writer = #{param2}
+	</select>
+	<!-- 7.리뷰 숨기기 등록 -->
 	<update id="hideReview" parameterType="int">
 		update review set 
 			review_hidden = 1
 		where review_idx = #{review_idx}
 	</update>
-	<!-- 7.리뷰 숨기기 해제 -->
+	<!-- 8.리뷰 숨기기 해제 -->
 	<update id="unhideReview" parameterType="int">
 		update review set 
 			review_hidden = 0
 		where review_idx = #{review_idx}
 	</update>
-	<!-- 점포 좋아요 업 -->
+	<!-- 9.점포 좋아요 업 -->
 	<update id="updateFavorite" parameterType="int">
 		update review set
 			review_like_cnt = review_like_cnt + 1
 		where review_idx = #{review_idx}
 	</update>
-	<!-- 점포 좋아요 다운 -->
+	<!-- 10.점포 좋아요 다운 -->
 	<update id="deleteFavorite" parameterType="int">
 	    update review set
 	        review_like_cnt = GREATEST(review_like_cnt - 1, 0)

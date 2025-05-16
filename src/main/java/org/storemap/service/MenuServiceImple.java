@@ -67,9 +67,11 @@ public class MenuServiceImple implements MenuService{
 	public int remove(int menu_idx) {
 		log.info("remove..."+menu_idx);
 		MenuVO mvo = mapper.read(menu_idx);
-		String uuid = mvo.getMenu_image();
-		// 이미지 삭제
-		cloudinaryService.deleteFile(uuid);
+		String oldImg = mvo.getMenu_image();
+		if(!oldImg.equals("menu1.jpg")) {
+			// 이미지 삭제
+			cloudinaryService.deleteFile(oldImg);
+		}
 		// 메뉴삭제
 		int result = mapper.delete(menu_idx);
 		return result;

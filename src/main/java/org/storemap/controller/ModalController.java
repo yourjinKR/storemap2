@@ -81,7 +81,7 @@ public class ModalController {
 	@GetMapping("/storeListModal")
 	public String storeListModal(Model model) {
 		log.info("storeListModal...");
-		model.addAttribute("list",storeService.getList());
+		model.addAttribute("list",storeService.getMap());
 		return "index";
 	}
 	
@@ -90,7 +90,7 @@ public class ModalController {
 	public String storeView(@RequestParam("store_idx") int store_idx, Model model, HttpSession session) {
 		log.info("storeView..."+store_idx);
 		
-		StoreVO storeVO = storeService.get(store_idx);
+		StoreVO storeVO = storeService.map(store_idx);
         List<MenuVO> menuList = menuService.getList(store_idx);
         List<ReviewVO> reviewList = reviewService.getList(store_idx);
 		

@@ -6,11 +6,16 @@
 		<ul>
 			<c:forEach var="vo" items="${list}">
 			<c:choose>
-				<c:when test="${vo.store_hidden eq 0}">
+				<c:when test="${vo.store_hidden eq 0}"><!-- 2로 바꿔줘야 시작된 점포만 보여줌 -->
 					<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name="store_idx">
-						<!--<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_menu1.jpg.webp" alt="${vo.store_image}"/>
-						-->
-						<img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
+					<c:choose>
+						<c:when test="${vo.attach.filename eq null}">
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/store1_qrjxyj.jpg" alt="${vo.store_image}"/>
+						</c:when>
+						<c:otherwise>
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>
+						</c:otherwise>
+					</c:choose>
 						<input type="hidden" name="store_address" value="${vo.store_address}">
 						<input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
 						<input type="hidden" name="store_num" value="${vo.store_num}">

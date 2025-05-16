@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.ReviewVO;
 import org.storemap.mapper.ReviewMapper;
 
@@ -15,12 +16,23 @@ public class ReviewServiceImple implements ReviewService{
 	
 	@Autowired
 	private ReviewMapper mapper;
+	//이미지 업로드 서버
+	@Autowired
+	private CloudinaryService cloudinaryService;
 	
 	@Override
-	public int register(ReviewVO vo) {
+	public int register(MultipartFile file, ReviewVO vo) {
 		log.info("register..."+vo);
-		int result = mapper.insert(vo);
-		return result;
+		try {
+			// 파일이 있는 경우에만 이미지 업로드 처리
+			if(file != null && !file.isEmpty()) {
+				String imageUrl = cloudinaryService.uploadFile(file);
+				vo.setReview_image(imageUrl);
+			}
+			return mapper.insert(vo);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to register review", e);
+		}
 	}
 	
 	@Override
@@ -33,6 +45,13 @@ public class ReviewServiceImple implements ReviewService{
 	@Override
 	public int remove(int review_idx) {
 		log.info("remove..."+review_idx);
+		ReviewVO rvo = mapper.read(review_idx);
+		String oldImg = rvo.getReview_image();
+		if(!oldImg.equals("")) {
+			// 이미지 삭제
+			cloudinaryService.deleteFile(oldImg);
+		}
+		// 리뷰 삭제
 		int result = mapper.delete(review_idx);
 		return result;
 	}
@@ -47,6 +66,12 @@ public class ReviewServiceImple implements ReviewService{
 	public ReviewVO get(int review_idx) {
 		log.info("get..."+review_idx);
 		return mapper.read(review_idx);
+	}
+	
+	@Override
+	public ReviewVO getSame(int store_idx, String review_writer) {
+		log.info("getSame..."+store_idx+", "+review_writer);
+		return mapper.getSame(store_idx, review_writer);
 	}
 	
 	@Override

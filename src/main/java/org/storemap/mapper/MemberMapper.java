@@ -20,4 +20,7 @@ public interface MemberMapper {
 	
 	// 점주 요청 승인
 	public int approvalOwner(int member_idx);
+	
+	// 점주 취소
+	public int cancelOwner(int member_idx);
 }

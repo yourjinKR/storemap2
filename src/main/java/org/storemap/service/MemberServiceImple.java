@@ -10,8 +10,13 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Service
 public class MemberServiceImple implements MemberService{
+	
 	@Autowired
 	private MemberMapper memberMapper;
+	//이미지 업로드 서버
+	@Autowired
+	private CloudinaryService cloudinaryService;
+	
 	// 로그인
 	@Override
 	public MemberVO mLogin(String member_id, String member_pw) {
@@ -41,6 +46,11 @@ public class MemberServiceImple implements MemberService{
 	@Override
 	public int approvalOwner(int member_idx) {
 		int result = memberMapper.approvalOwner(member_idx);
+		return result;
+	}
+	@Override
+	public int cancelOwner(int member_idx) {
+		int result = memberMapper.cancelOwner(member_idx);
 		return result;
 	}
 	

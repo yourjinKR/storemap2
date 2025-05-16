@@ -20,6 +20,8 @@ document.querySelectorAll('button').forEach(btn => {
 	})
 });
 
+let store_idx = new URLSearchParams(location.search).get('store_idx');
+
 function register(){
 	if(!f.review_title.value){
 		alert("제목을 입력하세요.");
@@ -29,6 +31,36 @@ function register(){
 		alert("내용을 입력하세요.");
 		return;
 	}
-	f.action = '/store/review';
-	f.submit();
+	
+	// FormData 생성
+    const formData = new FormData();
+	formData.append("store_idx" , document.querySelector("input[name='store_idx']").value);
+	formData.append("writer_image" , document.querySelector("input[name='writer_image']").value);
+	formData.append("review_title" , document.querySelector("input[name='review_title']").value);
+	formData.append("review_writer" , document.querySelector("input[name='review_writer']").value);
+	formData.append("review_star" , document.querySelector("select[name='review_star']").value);
+	formData.append("review_content" , document.querySelector("textarea[name='review_content']").value);
+	formData.append("review_image" , document.querySelector("input[name='review_image']").value);
+	//이미지 파일
+    formData.append("file", document.querySelector("input[type='file']").files[0]);
+    
+    // 데이터 전송
+    fetch("/store/review", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+	    if (!response.ok) {
+	        throw new Error('서버오류'+response);
+	    }
+        return response.text();
+    })
+    .then(data => {
+        alert("리뷰 등록 완료.");
+        location.href = "/modal/storeView?store_idx="+document.querySelector("input[name='store_idx']").value;
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("리뷰 등록 실패.");
+    });
 };

@@ -4,9 +4,7 @@
 <div class="storeView">
 	
 	<div class="store-image">
-		<!--<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_menu1.jpg.webp" alt="가게 이미지" class="store-image"/>
-		-->
-    	<img src="/resources/img/${svo.store_image}" alt="가게 이미지" class="store-image">	
+		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_${svo.attach.filename}" alt="${svo.attach.filename}"/>
 	</div>
 	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 	<input type="hidden" name="store_idx" value="${svo.store_idx}">

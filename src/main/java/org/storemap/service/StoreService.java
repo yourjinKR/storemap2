@@ -16,8 +16,12 @@ public interface StoreService {
 	public int remove(int store_idx);
 	// 점포 목록
 	public List<StoreVO> getList();
+	// 점포 조인 목록
+	public List<StoreVO> getMap();
 	// 점포 정보
 	public StoreVO get(int store_idx);
+	// 점포 조인 정보
+	public StoreVO map(int store_idx);
 	// 회원 번호로 점포 정보 가져오기
 	public StoreVO getStore(int member_idx);
 	// 같은 회원정보를 가진 점포가 있는지 검증

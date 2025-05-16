@@ -53,6 +53,12 @@
 			member_type = 'owner'
 		where member_idx = #{member_idx}
 	</update>
+	<!-- 점주 취소 -->
+	<update id="cancelOwner" parameterType="int">
+		update member set
+			member_type = 'user'
+		where member_idx = #{member_idx}
+	</update>
 	
 </mapper>
 

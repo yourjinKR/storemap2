@@ -3,16 +3,32 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.StoreMapper">
-	<!-- 첨부파일 존재하면 이렇게
-	<select id="getList" resultType="org.storemap.domain.StoreVO">
-		select * from store
-	</select>
-	insert 대괄호밑에 + into쿼리문 위에 쓰고 시퀀스수정
-		<selectKey keyProperty="store_idx" resultType="int" order="BEFORE">
-			select store_seq.nextval from dual
-		</selectKey>
-	 -->
-	<!-- 1.점포 등록  -->
+	<resultMap id="storeMap" type="org.storemap.domain.StoreVO">
+		<id property="store_idx" column="store_idx"/>
+		<result property="member_idx" column="member_idx"/>
+		<result property="store_name" column="store_name"/>
+		<result property="store_image" column="store_image"/>
+		<result property="store_num" column="store_num"/>
+		<result property="store_email" column="store_email"/>
+		<result property="store_address" column="store_address"/>
+		<result property="store_area" column="store_area"/>
+		<result property="store_activity_time" column="store_activity_time"/>
+		<result property="store_content" column="store_content"/>
+		<result property="store_like_cnt" column="store_like_cnt"/>
+		<result property="store_hidden" column="store_hidden"/>
+		<result property="store_rnum" column="store_rnum"/>
+		<result property="store_lat" column="store_lat"/>
+		<result property="store_lng" column="store_lng"/>
+		<result property="store_regcode" column="store_regcode"/>
+		<association property="attach" resultMap="attachMap"/>
+	</resultMap>
+	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
+		<id property="attach_idx" column="attach_idx"/>
+		<result property="filename" column="filename"/>
+		<result property="uuid" column="uuid"/>
+	</resultMap>
+
+	<!-- 1.점포 생성  -->
 	<insert id="insert" parameterType="org.storemap.domain.StoreVO">
 		insert into store (
 			store_idx,
@@ -66,23 +82,36 @@
 	<select id="getStoreList" resultType="org.storemap.domain.StoreVO">
 		select * from store
 	</select>
-	<!-- 5.점포 자세히 보기  -->
+	<!-- 5.점포 전체 조인 보기 -->
+	<select id="getStoreMap" resultMap="storeMap">
+		SELECT s.*, a.filename
+		FROM store s
+		LEFT OUTER JOIN attach_file a ON s.store_image = a.uuid
+	</select>
+	<!-- 6.점포 자세히 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.StoreVO">
 		select * from store where store_idx = #{store_idx}
 	</select>
-	<!-- 6.회원 번호로 점포 정보 가져오기  -->
+	<!-- 7.점포 조인 자세히 보기 -->
+	<select id="map" parameterType="int" resultMap="storeMap">
+		SELECT s.*, a.filename
+		FROM store s
+		LEFT OUTER JOIN attach_file a ON s.store_image = a.uuid
+		WHERE s.store_idx = #{store_idx}
+	</select>
+	<!-- 8.회원 번호로 점포 정보 가져오기  -->
 	<select id="getStore" parameterType="int" resultType="org.storemap.domain.StoreVO">
 		select * from store where member_idx = #{member_idx}
 	</select>
-	<!-- 7.같은 회원정보를 가진 점포가 있는지 검증 -->
+	<!-- 9.같은 회원정보를 가진 점포가 있는지 검증 -->
 	<select id="getMember" parameterType="int" resultType="org.storemap.domain.StoreVO">
 		select member_idx from store where member_idx = #{member_idx}
 	</select>
-	<!-- 9.점포 이름 검색 -->
+	<!-- 10.점포 이름 검색 -->
 	<select id="getStoreNameList" parameterType="String" resultType="org.storemap.domain.StoreVO">
 		select * from store where store_name = #{store_name}
 	</select>
-	<!-- 10.점포 동적 검색 -->
+	<!-- 11.점포 동적 검색 -->
 	<select id="getStoreDynamicList" parameterType="hashmap" resultType="org.storemap.domain.StoreVO">
 		select * from store
 		<choose>
@@ -92,7 +121,7 @@
 		</choose>
 		order by store_idx
 	</select>
-	<!-- 11. 점포 페이지 전체 보기
+	<!-- 12. 점포 페이지 전체 보기
 	<select id="getListWithPage" resultType="org.storemap.domain.StoreVO">
 		<![CDATA[
 	 		select *
@@ -109,31 +138,31 @@
 		select count(*) from store
 	</select>
 	-->
-	<!-- 12.점포 숨기기 등록 -->
+	<!-- 13.점포 숨기기 등록 -->
 	<update id="hideStore" parameterType="int">
 		update store set 
 			store_hidden = 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 13.점포 숨기기 해제, 점포 철수 -->
+	<!-- 14.점포 숨기기 해제, 점포 철수 -->
 	<update id="unhideStore" parameterType="int">
 		update store set 
 			store_hidden = 0
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 14.점포 시작! -->
+	<!-- 15.점포 시작! -->
 	<update id="storeStart" parameterType="int">
 		update store set 
 			store_hidden = 2
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 15.점포 좋아요 업 -->
+	<!-- 16.점포 좋아요 업 -->
 	<update id="updateFavorite" parameterType="int">
 		update store set
 			store_like_cnt = store_like_cnt + 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 16.점포 좋아요 다운 -->
+	<!-- 17.점포 좋아요 다운 -->
 	<update id="deleteFavorite" parameterType="int">
 	    update store set
 	        store_like_cnt = GREATEST(store_like_cnt - 1, 0)

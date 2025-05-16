@@ -70,6 +70,13 @@ public class StoreServiceImple implements StoreService{
 	@Override
 	public int remove(int store_idx) {
 		log.info("remove..."+store_idx);
+		StoreVO svo = mapper.read(store_idx);
+		String oldImg = svo.getStore_image();
+		if(!oldImg.equals("store1.jpg")) {
+			// 이미지 삭제
+			cloudinaryService.deleteFile(oldImg);
+		}
+		// 점포 삭제
 		int result = mapper.delete(store_idx);
 		return result;
 	}
@@ -81,9 +88,21 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public List<StoreVO> getMap() {
+		log.info("getMap...");
+		return mapper.getStoreMap();
+	}
+	
+	@Override
 	public StoreVO get(int store_idx) {
 		log.info("get..."+store_idx);
 		return mapper.read(store_idx);
+	}
+	
+	@Override
+	public StoreVO map(int store_idx) {
+		log.info("map..."+store_idx);
+		return mapper.map(store_idx);
 	}
 	
 	@Override

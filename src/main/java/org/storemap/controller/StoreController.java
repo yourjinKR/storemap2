@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.MenuVO;
 import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreVO;
+import org.storemap.service.MemberServiceImple;
 import org.storemap.service.MenuServiceImple;
 import org.storemap.service.ReviewServiceImple;
 import org.storemap.service.StoreRequestServiceImple;
@@ -42,6 +43,8 @@ public class StoreController {
 	private MenuServiceImple menuService;
 	@Autowired
 	private ReviewServiceImple reviewService;
+	@Autowired
+	private MemberServiceImple memberService;
 	@Autowired
 	private StoreRequestServiceImple storeRequestService;
 	
@@ -129,7 +132,10 @@ public class StoreController {
 	@PostMapping("/storeRemove")
 	public String storeRemove(int store_idx) {
 		log.info("storeRemove..."+store_idx);
+		StoreVO vo = storeService.get(store_idx);
+		// 점포삭제 전에 외래키 엮인거 전부 삭제하기
 		storeService.remove(store_idx);
+		memberService.cancelOwner(vo.getMember_idx());
 		return "redirect:/modal/storeListModal";
 	}
 	
@@ -216,11 +222,23 @@ public class StoreController {
 		
 	// 리뷰 추가
 	@PostMapping("/review")
-	public String review(ReviewVO vo) {
+	public ResponseEntity<String> review(ReviewVO vo, MultipartFile file) {
 		log.info("review..."+vo);
-		//파일 업로드
-		reviewService.register(vo);
-		return "redirect:/modal/storeView?store_idx="+vo.getStore_idx();
+		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
+		// 리뷰추가 + 파일 업로드
+		try {
+			if(reviewService.getSame(vo.getStore_idx(), vo.getReview_writer()) != null) {
+				//이미 리뷰가 존재할시
+				return new ResponseEntity<String>("이미 리뷰가 존재합니다.!!", HttpStatus.INTERNAL_SERVER_ERROR);
+			}else {
+				//점포생성 + 이미지 업로드
+				reviewService.register(file, vo);
+				return new ResponseEntity<String>("succeed", HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			log.error("Error during review registration", e);
+			return new ResponseEntity<String>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	// 리뷰 등록 페이지 이동
 	@GetMapping("/review")
