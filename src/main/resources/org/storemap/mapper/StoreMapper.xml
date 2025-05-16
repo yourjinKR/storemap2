@@ -227,42 +227,42 @@
 	    WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
-	<!-- 키워드에 해당하는 검색어 찾기 -->
+	<!-- 키워드에 해당하는 검색어 찾기 (공백 제거 적용) -->
 	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
-		SELECT *
-		FROM (
-		    SELECT DISTINCT s.*,
-		        6371 * ACOS(
-		            COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
-		            COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
-		            SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
-		        ) AS distance,
-		        CASE
-		            WHEN s.store_address LIKE '%' || #{keyword} || '%' THEN 1
-		            WHEN s.store_name LIKE '%' || #{keyword} || '%' THEN 2
-		            WHEN EXISTS (
-		                SELECT 1 FROM menu m
-		                WHERE m.store_idx = s.store_idx
-		                  AND m.menu_name LIKE '%' || #{keyword} || '%'
-		            ) THEN 3
-		            ELSE 4
-		        END AS priority
-		    FROM store s
-		    WHERE s.store_hidden = 0
-		      AND s.store_lat IS NOT NULL
-		      AND s.store_lng IS NOT NULL
-		      AND (
-		            s.store_address LIKE '%' || #{keyword} || '%'
-		         OR s.store_name LIKE '%' || #{keyword} || '%'
-		         OR EXISTS (
-		             SELECT 1 FROM menu m
-		             WHERE m.store_idx = s.store_idx
-		               AND m.menu_name LIKE '%' || #{keyword} || '%'
-		         )
-		      )
-		    ORDER BY priority, distance
-		)
-		WHERE ROWNUM &lt;= #{amount}
+	    SELECT *
+	    FROM (
+	        SELECT DISTINCT s.*,
+	            6371 * ACOS(
+	                COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
+	                COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
+	                SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
+	            ) AS distance,
+	            CASE
+	                WHEN REPLACE(s.store_address, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%' THEN 1
+	                WHEN REPLACE(s.store_name, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%' THEN 2
+	                WHEN EXISTS (
+	                    SELECT 1 FROM menu m
+	                    WHERE m.store_idx = s.store_idx
+	                      AND REPLACE(m.menu_name, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%'
+	                ) THEN 3
+	                ELSE 4
+	            END AS priority
+	        FROM store s
+	        WHERE s.store_hidden = 0
+	          AND s.store_lat IS NOT NULL
+	          AND s.store_lng IS NOT NULL
+	          AND (
+	                REPLACE(s.store_address, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%'
+	             OR REPLACE(s.store_name, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%'
+	             OR EXISTS (
+	                 SELECT 1 FROM menu m
+	                 WHERE m.store_idx = s.store_idx
+	                   AND REPLACE(m.menu_name, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%'
+	             )
+	          )
+	        ORDER BY priority, distance
+	    )
+	    WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
 </mapper>

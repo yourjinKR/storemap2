@@ -172,6 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
         storeFailModal = document.querySelector(".search-fail#store");
         // 검색 실패 모달
         eventFailModal = document.querySelector(".search-fail#event");
+        // 검색창
+        let mapSearchForm = document.querySelector(".form#map");
 
         // 스타일 변경
         storeListModal.style.display = 'block';
@@ -242,6 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "search") {
                 let f = document.querySelector(".form#map");
                 let keyword = f.keyword.value.trim();
+
                 hideviewSideBar();
                 viewSideBarCheck = false;
                 setToggle(300);
@@ -762,11 +765,12 @@ const as = asyncService;
 
 /** 지도, 위도, 경도를 입력하면 지도 이동 */ 
 function panToLatLng(map, lat, lng) {
-    console.log('화면 이동');
-    // 좌표설정
-    let moveLatLon = new kakao.maps.LatLng(lat, lng);	
-    // 이동
-    map.panTo(moveLatLon);
+    if (lat && lng) {
+        // 좌표설정
+        let moveLatLng = new kakao.maps.LatLng(lat, lng);	
+        // 이동
+        map.panTo(moveLatLng);
+    }
 }
 
 /** 업로드할 요소 위치를 입력하여 지도를 업로드 함수 (반환값 : 해당 지도 요소) */
@@ -1015,7 +1019,7 @@ function apply2storeMap(data) {
         storeVOList.push(vo);
         storeOverlayList.push(registerOverlay(vo.store_lat, vo.store_lng, vo.store_name));
     });
-    console.log(storeVOList);
+    console.log('store vo list : ', storeVOList);
 
     let msg = "";
     // 점포 리스트 출력
@@ -1058,12 +1062,13 @@ function apply2eventMap(data) {
     let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     // eventUL.innerHTML = "";
 
+    console.log('event vo list : ', eventVOList);
+
     if(data.length == 0) {
         console.log('data 없음');
         failSearch();
         return;
     }
-
 
     let msg = "";
     // 점포 리스트 출력
@@ -1230,8 +1235,6 @@ function processAllEvents(data) {
 
         // 후처리 코드 삽입
         apply2eventMap(eventVOList);
-        console.log(eventVOList);
-        
     });
 }
 
