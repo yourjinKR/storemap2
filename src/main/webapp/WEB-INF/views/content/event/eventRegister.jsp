@@ -50,7 +50,7 @@
             <input type="date" name="event_bstartdate" id="startDate" required> ~ 
             <input type="date" name="event_bstopdate" id="endDate" required>
             <button type="button" onclick="generateDays()">일정 생성</button>
-            <br><small style="color: gray;">이벤트 및 행사는 모집일로부터 7일 이상부터 개최할 수 있습니다.</small>
+            <br><small style="color: gray;">이벤트 및 행사는 모집일로부터 7일 이후부터 개최할 수 있습니다.</small>
           </td>
         </tr>
         <tr>
@@ -74,10 +74,11 @@
         <tr>
           <th>대표 이미지</th>
           <td>
-		    <input type="file" name="eventImage" accept="image/*" id="imageInput">
+		    <input type="file" name="eventImage" accept="image/*" id="imageInput" multiple>
+		    <div id="previewContainer" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;"></div>
+    		<small style="color: gray;">이미지는 최대 4장까지 업로드할 수 있으며, 첫번째 이미지가 대표 이미지가 됩니다.</small>
           </td>
-        </tr>
-        	
+        </tr>        	
       </tbody>
     </table>
 		<input type="hidden" name="enter_idx" value="${loginUserIdx }">

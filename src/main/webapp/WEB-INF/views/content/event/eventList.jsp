@@ -148,7 +148,11 @@
 	<ul class="barod board-card d_f" id="boardCard">
 	
 	</ul>
-		<button type="button" class="eventBtn" id="goRegister">새 게시글 등록</button>
+		<c:if test="${not empty loginUserIdx}">
+			  <button type="button" class="eventBtn" id="registerBtn" onclick="location.href='/event/eventRegister'">
+			    새 게시글 등록
+			  </button>
+		</c:if>
 	<!-- page -->
 	<div class="page-wrap">
 		<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}"

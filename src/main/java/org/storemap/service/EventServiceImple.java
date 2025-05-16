@@ -2,11 +2,13 @@ package org.storemap.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventDayVO;
@@ -29,6 +31,9 @@ public class EventServiceImple implements EventService{
 	private EventDayMapper  eventDayMapper;
 	@Autowired
 	private EventDayService eventDayService;
+	@Autowired
+	private CloudinaryService cloudService;
+	
 	
 	// 메인 페이지 진행중인 이벤트
 	@Override
@@ -95,29 +100,37 @@ public class EventServiceImple implements EventService{
 	
 	@Transactional
 	@Override
-	public void registerEventWithDays(EventVO eventVO) {
-		try {
-	        // event insert
+	public void registerEventWithDays(EventVO eventVO, MultipartFile[] files) {
+	    try {
+	        String uuidData = "";
+	        for (int i = 0; i < files.length; i++) {
+	            uuidData += cloudService.uploadFile(files[i]);
+	            if (i < files.length - 1) {
+	                uuidData += ",";
+	            }
+	        }
+	        eventVO.setEvent_file(uuidData); 
+
 	        mapper.insertEvent(eventVO);
-	        // eventDay insert
+
 	        if (eventVO.getEventDay() != null) {
 	            for (EventDayVO day : eventVO.getEventDay()) {
-	            	// event_idx 값이 eventDayVO에 제대로 설정되었는지 확인
-	                day.setEvent_idx(eventVO.getEvent_idx());                
-	                int result = eventDayMapper.insertEventday(day);    
-	                // eventDay 삽입 결과 확인
+	                day.setEvent_idx(eventVO.getEvent_idx());
+	                int result = eventDayMapper.insertEventday(day);
+
 	                if (result == 0) {
-	                    log.error("eventDay 삽입 실패 - event_idx: {}, eventDay: {}" + day.getEvent_idx() + day);  // 실패 시 로그
+	                    log.error("eventDay 삽입 실패  event_idx, eventDay: " + day.getEvent_idx() + ", " + day);
 	                    throw new RuntimeException("트랜잭션 동작");
 	                } else {
-	                    log.info("eventDay 삽입 성공 - event_idx: {}, eventDay: {}" + day.getEvent_idx() + day);  // 성공 시 로그
+	                    log.info("eventDay 삽입 성공  event_idx, eventDay: " + day.getEvent_idx() + ", " + day);
 	                }
 	            }
-	        }	        
+	        }
+
 	    } catch (RuntimeException e) {
 	        System.out.println("예외 발생!");
-	        e.printStackTrace(); // 여기가 중요!!
-	        throw e;  // 예외를 다시 던져서 트랜잭션 롤백을 처리
+	        e.printStackTrace();
+	        throw e;
 	    }
 	}
 }

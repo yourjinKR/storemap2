@@ -82,6 +82,78 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			            }
 			        });
 			    }
+			    const imageInput = document.getElementById('imageInput');
+			    const previewContainer = document.getElementById('previewContainer');
+			    let selectedFiles = [];
+
+			    imageInput.addEventListener('change', function (event) {
+			      const files = Array.from(event.target.files);
+
+			      if ((selectedFiles.length + files.length) > 4) {
+			        alert("이미지는 최대 4장까지만 업로드할 수 있습니다.");
+			        imageInput.value = "";
+			        return;
+			      }
+
+			      const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+
+			      files.forEach((file) => {
+			        if (!validImageTypes.includes(file.type)) {
+			          alert(file.name + " 은 지원하지 않는 이미지 형식입니다.");
+			          return;
+			        }
+
+			        const reader = new FileReader();
+			        reader.onload = function (e) {
+			          const previewWrapper = document.createElement('div');
+			          previewWrapper.style.position = 'relative';
+
+			          const img = document.createElement('img');
+			          img.src = e.target.result;
+			          img.style.width = '120px';
+			          img.style.height = '120px';
+			          img.style.objectFit = 'cover';
+			          img.style.border = '1px solid #ccc';
+			          img.style.borderRadius = '6px';
+
+			          const deleteBtn = document.createElement('button');
+			          deleteBtn.textContent = '×';
+			          deleteBtn.type = 'button';
+			          deleteBtn.style.position = 'absolute';
+			          deleteBtn.style.top = '2px';
+			          deleteBtn.style.right = '2px';
+			          deleteBtn.style.background = 'rgba(0,0,0,0.6)';
+			          deleteBtn.style.color = '#fff';
+			          deleteBtn.style.border = 'none';
+			          deleteBtn.style.borderRadius = '50%';
+			          deleteBtn.style.width = '24px';
+			          deleteBtn.style.height = '24px';
+			          deleteBtn.style.cursor = 'pointer';
+
+			          deleteBtn.addEventListener('click', function () {
+			            previewWrapper.remove();
+			            selectedFiles = selectedFiles.filter(f => f !== file);
+			            updateInputFiles();
+			          });
+
+			          previewWrapper.appendChild(img);
+			          previewWrapper.appendChild(deleteBtn);
+			          previewContainer.appendChild(previewWrapper);
+			        };
+
+			        reader.readAsDataURL(file);
+			        selectedFiles.push(file);
+			      });
+
+			      // input 요소의 파일 목록을 실제 선택된 파일 목록으로 업데이트
+			      function updateInputFiles() {
+			        const dataTransfer = new DataTransfer();
+			        selectedFiles.forEach(file => dataTransfer.items.add(file));
+			        imageInput.files = dataTransfer.files;
+			      }
+
+			      updateInputFiles();
+			    });
 		}
 		
 	f = document.forms[0];
