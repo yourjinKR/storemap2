@@ -371,34 +371,40 @@ function removeReview() {
 
 /** 모달 여는 동적 함수 (list, type)  */
 function viewDetailModalPage(li, type) {
-    const idx = li.getAttribute(`data-${type}_idx`);
-    if (!idx) {
-        console.error(`data-${type}_idx 속성이 존재하지 않습니다.`);
-        return;
+    if (type === "store" || type === "event") {
+        const idx = li.getAttribute(`data-${type}_idx`);
+        if (!idx) {
+            console.error(`data-${type}_idx 속성이 존재하지 않습니다.`);
+            return;
+        }
+    
+        fetch(`/modal/${type}View?${type}_idx=${idx}`)
+            .then(response => response.text())
+            .then(html => {
+                // console.log(html);
+                if (unitedMapMode) {
+                    document.querySelector(`.modal-content#united`).innerHTML = html;
+                } else {
+                    document.querySelector(`.modal-content#${type}`).innerHTML = html;
+                }
+    
+                // 동적으로 input name에 맞춰서 값 가져오기 (예: store_idx, event_idx 등)
+                const input = document.querySelector(`input[name="${type}_idx"]`);
+                if (input) {
+                    window[`${type}_id`] = input.value;
+                }
+    
+                // 모달 타입마다 분기 실행
+                if (type === "store") {
+                    initializeEvents();
+                }
+                else if (type === "event") {
+                    
+                }
+                openModal();
+            })
+            .catch(error => console.error(error));
     }
-
-    fetch(`/modal/${type}View?${type}_idx=${idx}`)
-        .then(response => response.text())
-        .then(html => {
-            // console.log(html);
-            document.querySelector(`.modal-content#${type}`).innerHTML = html;
-
-            // 동적으로 input name에 맞춰서 값 가져오기 (예: store_idx, event_idx 등)
-            const input = document.querySelector(`input[name="${type}_idx"]`);
-            if (input) {
-                window[`${type}_id`] = input.value;
-            }
-
-            // 모달 타입마다 분기 실행
-            if (type === "store") {
-                initializeEvents();
-            }
-            else if (type === "event") {
-                
-            }
-            openModal();
-        })
-        .catch(error => console.error(error));
 }
 
 //점포 정보창 닫기 이벤트

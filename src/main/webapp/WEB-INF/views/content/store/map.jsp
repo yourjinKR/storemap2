@@ -14,13 +14,15 @@
 					<a href="/">로고</a>
 				</div>
 				<form class="form" id="map">
-					<input type="text" id="keyword">
+					<input type="text" id="keyword" autocomplete="off" placeholder="장소 및 이벤트 검색">
 					<button class="mapBtn" id="search">검색</button>
+					<div class="autocomplete"></div>
 				</form>
 				<!-- <div class="search-result" id="store-list">""의 검색 결과</div>  -->
 				<div id="swap-content">
-					<button class="mapBtn" id="event-mode">이벤트</button>
-					<button class="mapBtn" id="store-mode">점포</button>
+					<button class="mapBtn" id="united-mode">모두</button>
+					<button class="mapBtn" id="event-mode">이벤트만</button>
+					<button class="mapBtn" id="store-mode">점포만</button>
 					<button class="mapBtn" id="custom-position">현위치 재설정</button>
 					<button class="mapBtn" id="panto-current">현위치 이동</button>
 				</div>
@@ -38,8 +40,13 @@
 		<button class="mapBtn" id="toggle">토글</button>			
 	</div>
 	
-	<!-- 이벤트 모달 -->
-	<div class="side-bar" id="event-list">
-		<div>이벤트 리스트 모달</div> 
+	<!-- 통합 모달 -->
+	<div class="side-bar" id="united">
+		<div class="modal-header">
+			<button class="mapBtn" id="close-united">X</button>
+		</div>
+		<div class="modal-content" id="united">
+			
+		</div> 
 	</div>
 </div>

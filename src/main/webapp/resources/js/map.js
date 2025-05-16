@@ -58,6 +58,9 @@ let eventListModal = null;
 let storeFailModal = null;
 /** 이벤트 검색 실패 모달 */
 let eventFailModal = null;
+// 검색창
+let mapSearchForm = null;
+let mapSearchKeyword = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let basicLat = 37.505410898990775;
@@ -73,10 +76,12 @@ let basicMap;
 // 지도 타입
 let mapType;
 
+/** united mode */
+let unitedMapMode = true;
 /** event map */
 let eventMapMode = false;
 /** store map  */
-let storeMapMode = true;
+let storeMapMode = false;
 /** 현위치 커스텀 설정 모드 */
 let customPositionMode = false;
 /** 현위치 커스텀 설정 오버레이 */
@@ -144,6 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
         let eventHeader = document.querySelectorAll(".modal-header")[1];        
         eventHeader.style.display = 'block';
 
+        // 닫기 버튼 표시
+        let unitedHeader = document.querySelectorAll(".modal-header")[2];        
+        unitedHeader.style.display = 'block';
+
         // 기본 상태
         let basicCondition = {
             level : basicMap.getLevel(),
@@ -173,11 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // 검색 실패 모달
         eventFailModal = document.querySelector(".search-fail#event");
         // 검색창
-        let mapSearchForm = document.querySelector(".form#map");
+        mapSearchForm = document.querySelector(".form#map");
+        mapSearchKeyword = mapSearchForm.keyword.value.trim();
 
-        // 스타일 변경
+        // 검색 리스트 스타일 변경
         storeListModal.style.display = 'block';
-        eventListModal.style.display = 'none';
+        eventListModal.style.display = 'block';
     }
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
@@ -221,8 +231,8 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "toggle") {
                 toggleListSideBar();
             }
-            // 점포 사이드바 닫기 버튼
-            else if (type === "close-store") {
+            // 사이드바 닫기 버튼
+            else if (type === "close-store" || type === "close-event" || type === "close-united") {
                 viewSideBarCheck = false;
                 setToggle(300);
                 hideviewSideBar();
@@ -255,6 +265,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             else if (type === "store-mode") {
                 ctrlMapMode("store");
+            }
+            else if (type === "united-mode") {
+                ctrlMapMode("united");
             }
             else if (type === "custom-position") {
                 setMyCurrentPlace();
@@ -295,6 +308,39 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    // 검색어 자동완성
+    mapSearchForm.keyword.addEventListener("keyup", e => {
+        let autoCompleteList = document.querySelector(".autocomplete");
+        
+        const value = mapSearchForm.keyword.value;
+
+        // switch (e.keyCode) {
+        //     // UP KEY
+        //     case 38:
+        //         console.log('up');               
+        //         break;
+
+        //     // DOWN KEY
+        //     case 40:
+        //         console.log('down');
+        //         break;
+
+        //     // ENTER KEY
+        //     case 13:
+        //         console.log('enter');
+        //         break;
+
+        //     //  나머지 키
+        //     default:
+        //         console.log(e.keyCode);
+        //         break;
+        // }
+    })
+
+    function showSearchList() {
+        
+    }
 
     // 지도 이동이 완료되었을 발생하는 이벤트
 //    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
@@ -461,7 +507,7 @@ function markerMapping(eles, type) {
                 list = eventVOList;
             }
 
-            // 가게 클릭 이벤트 추가
+            // (store or event) 클릭 이벤트 추가
             ele.addEventListener('click', e => {
                 // 리스트 중에서 idx 찾기
                 list.forEach(vo => {
@@ -513,11 +559,7 @@ function addMarkerEvent(marker, type) {
         setToggle(600);
 
         // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작
-        if (storeMapMode) {
-            document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
-        } else if (eventMapMode) {
-            document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
-        }
+        document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
     });
 }
 
@@ -538,6 +580,8 @@ function emphMarker(idx) {
         list = storeVOList;
     } else if (eventMapMode) {
         list = eventVOList;
+    } else if (unitedMapMode) {
+        // 해당 부분 수정 필요함...
     }
     list.forEach(vo => {
         // idx와 일치시 이동 및 강조
@@ -1046,7 +1090,8 @@ function apply2storeMap(data) {
     markerMapping(storeLIS, "store");
 
     // 스토어 맵 모드일 경우 마커와 오버레이 표시
-    if (storeMapMode && storeVOList.length != 0) {
+    if ((storeMapMode || unitedMapMode) && storeVOList.length != 0 ) {
+
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
         showOverlay(basicMap, storeOverlayList);
@@ -1097,12 +1142,14 @@ function apply2eventMap(data) {
     markerMapping(eventLIS, "event");
 
     // 이벤트 모드일때 마커와 오버레이 요소들 표시
-    if (eventMapMode && eventVOList.length != 0) {
+    if ((eventMapMode || unitedMapMode) && eventVOList.length != 0) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
         showOverlay(basicMap, eventOverlayList);
 
-        panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+        if (eventMapMode) {
+            panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+        }
 
         completeSearch()
     }
@@ -1246,13 +1293,49 @@ function ctrlMapMode(mode) {
     else if (mode==="event") {
         swap2eventMap();
     }
+    else if (mode==="united") {
+        swap2unitedMap();
+    }
+}
+
+/** 통합 맵으로 변경 */
+function swap2unitedMap() {
+    if (!unitedMapMode) {
+        unitedMapMode = true;
+        storeMapMode = false;
+        eventMapMode = false;
+
+        // 리스트 제어
+        storeListModal.style.display = "block";
+        eventListModal.style.display = "block";
+
+        // 스토어 마커를 맵에 표시
+        showMarkers(basicMap, storeVOList);
+        // 이벤트 마커를 맵에 표시
+        showMarkers(basicMap, eventVOList);
+
+        // 스토어 마커의 오버레이 표시
+        showOverlay(basicMap, storeOverlayList);
+        // 이벤트 마커의 오버레이 표시
+        showOverlay(basicMap, eventOverlayList);
+
+        // 상세보기 사이드바 닫기
+        hideviewSideBar();
+        viewSideBarCheck = false;
+        setToggle(300);
+
+        // 사이드바를 event로 변경
+        viewSideBar = document.querySelector(".side-bar#united");
+        console.log(viewSideBar);
+    }
 }
 
 /** 이벤트 맵으로 변경 */
 function swap2eventMap() {
     if (!eventMapMode) {
-        storeMapMode = false;
         eventMapMode = true;
+        unitedMapMode = false;
+        storeMapMode = false;
     
         // 화면 삭제
         storeListModal.style.display = "none";
@@ -1261,7 +1344,7 @@ function swap2eventMap() {
         // 스토어 마커를 맵에 숨기기
         hideMarkers(storeVOList);
         // 이벤트 마커를 맵에 표시
-        setMarkers(basicMap, eventVOList);
+        showMarkers(basicMap, eventVOList);
     
         // 스토어 마커의 오버레이 숨기기
         hideOverlay(storeOverlayList);
@@ -1288,6 +1371,7 @@ function swap2storeMap() {
     if (!storeMapMode) {
         storeMapMode = true;
         eventMapMode = false;
+        unitedMapMode = false;
     
         // 화면 삭제
         eventListModal.style.display = "none";

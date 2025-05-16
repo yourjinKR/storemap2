@@ -21,3 +21,9 @@
 .search-fail {
   display: none;
 }
+
+/* active 클래스를 가진 요소에 대해 */
+.autocomplete > div.active {
+  background: #333;
+  color: #eee;
+}
