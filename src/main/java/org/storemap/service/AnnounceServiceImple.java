@@ -72,12 +72,14 @@ public class AnnounceServiceImple implements AnnounceService{
 	public AnnounceVO getNoticeView(int announce_idx) {
 		AnnounceVO vo = mapper.getNoticeView(announce_idx);
 		String uuidArr = vo.getAnnounce_image();
-		String[] arr = uuidArr.split(",");
-		List<AttachFileVO> fileList = new ArrayList<AttachFileVO>();
-		for (String uuid : arr) {
-			fileList.add(attachMapper.getAttach(uuid));
+		if(uuidArr != null) {
+			String[] arr = uuidArr.split(",");
+			List<AttachFileVO> fileList = new ArrayList<AttachFileVO>();
+			for (String uuid : arr) {
+				fileList.add(attachMapper.getAttach(uuid));
+			}
+			vo.setAttach_list(fileList);
 		}
-		vo.setAttach_list(fileList);
 		return vo;
 	}
 	
@@ -100,34 +102,41 @@ public class AnnounceServiceImple implements AnnounceService{
 	public int updateNotice(MultipartFile[] files, AnnounceVO vo) {
 		AnnounceVO oldvo = mapper.getNoticeView(vo.getAnnounce_idx());
 		String oldImg = oldvo.getAnnounce_image();
-		String[] oldArr = oldImg.split(",");
-		
 		String uuidData = vo.getAnnounce_image();
-		String[] arr = uuidData.split(",");
-		
 		String newUuid = "";
-		int fileIdx = 0;
-		for (int i = 0; i < arr.length; i++) {
-			System.out.println(arr[i]);
-			if(arr[i].equals("newFile")) {
-				newUuid += cloudinaryService.uploadFile(files[fileIdx]);
-				fileIdx++;
-			}else {
-				for (String old : oldArr) {
-					if(uuidData.indexOf(old) == -1) {
-						cloudinaryService.deleteFile(old);
-					}else {
-						newUuid += old;
+		System.out.println(oldImg);
+		System.out.println(uuidData);
+		if(uuidData != null) {
+			
+			String[] arr = uuidData.split(",");
+			int fileIdx = 0;
+			for (int i = 0; i < arr.length; i++) {
+				if(arr[i].equals("newFile")) {
+					newUuid += cloudinaryService.uploadFile(files[fileIdx]);
+					fileIdx++;
+				}else {
+					if(oldImg != null) {
+						String[] oldArr = oldImg.split(",");
+						for (String old : oldArr) {
+							if(uuidData.indexOf(old) == -1) {
+								cloudinaryService.deleteFile(old);
+							}else {
+								newUuid += old;
+							}
+						}
 					}
 				}
+				if(i < arr.length - 1) {
+					newUuid += ",";
+				}
 			}
-			if(i < arr.length - 1) {
-				newUuid += ",";
+			
+		}
+		if(oldImg != null || uuidData != null) {
+			if(!oldImg.equals(uuidData)) {
+				vo.setAnnounce_image(newUuid);
 			}
 		}
-		for (String uuid : arr) {
-		}
-		vo.setAnnounce_image(newUuid);
 		
 		return mapper.updateNotice(vo);
 	}

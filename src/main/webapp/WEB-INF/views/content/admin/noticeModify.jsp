@@ -3,9 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
-
 <script type="text/javascript" src="/resources/js/notice.js"></script>
-
+<c:if test="${ loginUser eq '' or userType ne 'admin'}">
+<script type="text/javascript">
+	alert("잘못 된 접근입니다.");
+	location.href="/admin/notice";
+</script>
+</c:if>
 <div class="notice-wrap">
 	<h3>공지사항</h3>
 	
@@ -41,4 +45,11 @@
 			<a href="noticeUpdate" class="btn write-btn">저장</a>
 		</div>
 	</form>
+	
+	<div class="saving-overlay" id="savingUI">
+		<div class="saving-box">
+			<div class="spinner"></div>
+			<div class="saving-text">저장 중...</div>
+		</div>
+	</div>
 </div>

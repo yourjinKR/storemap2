@@ -5,10 +5,11 @@ linkEle.href = NOTICE_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 const IMG_URL = "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/";
 
-let formData, fileData, quill, idx, pathName = null;
+let formData, fileData, quill, idx, pathName, imgArr = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	fileData = [];
+	imgArr = [];
 	idx = new URLSearchParams(window.location.search).get("idx");
 	pathName = window.location.pathname;
 	
@@ -79,6 +80,7 @@ function selectLocalImage() {
 	        	reader.onload = function (e) {
 	        		const range = quill.getSelection();
 	        		quill.insertEmbed(range ? range.index : 0, 'image', e.target.result);
+	        		imgArr.push([range.index,fileInput.files[0]]);
 	            };
 	            reader.readAsDataURL(fileInput.files[0]); // base64로 변환
             }
@@ -152,12 +154,19 @@ function noticeInsert() {
     for (const file of fileData) {
     	formData.append("files", file);
     }
- 
-    // FormData 확인 (디버깅용)
-    for (const entry of formData.entries()) {
-        console.log(entry[0], entry[1]);
+    
+    if(document.querySelector("input[name='announce_title']").value == ""){
+    	alert("제목을 입력해주세요");
+    	document.querySelector("input[name='announce_title']").focus();
+    	return;
     }
-
+    if(document.getElementById("quill_html").value == "<p><br></p>"){
+    	alert("공지사항을 입력해주세요");
+    	document.querySelector(".ql-editor").focus();
+    	return;
+    }
+    
+    document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/admin/noticeWrite", {
         method: "POST",
@@ -170,12 +179,10 @@ function noticeInsert() {
         return response.text();
     })
     .then(data => {
-        console.log("Success:", data);
         alert("공지사항이 성공적으로 등록되었습니다.");
         location.href = "/admin/notice"; // 성공 시 리다이렉트
     })
     .catch(error => {
-        console.error("Error:", error);
         alert("공지사항 등록 중 오류가 발생했습니다.");
     });
 }
@@ -202,7 +209,6 @@ function getNotice(){
 	fetch(`/admin/getNotice/${idx}`)
 	.then(response => response.json())
 	.then(result => {
-		console.log(result);
 		editorInit();
 		quill.clipboard.dangerouslyPasteHTML(result.announce_content);
 		if(pathName == "/admin/noticeModify"){
@@ -236,6 +242,7 @@ function updateNotice(){
     	}
     	
     	if(img.dataset['uuid'] != undefined){
+    		// 사용 예시
     		imgData += img.dataset['uuid'];
     	}else if(img.getAttribute("src") != ""){
     		imgData += "newFile";
@@ -243,9 +250,10 @@ function updateNotice(){
     	if(i < editorImg.length - 1){
     		imgData += ",";
     	}
-    	
     	img.setAttribute("src", "");
     })
+    
+    imgData = cleanString(imgData);
     
     // Quill 에디터 내용 저장
     document.querySelector("#quill_html").value = quill.root.innerHTML;
@@ -255,16 +263,24 @@ function updateNotice(){
     // FormData 생성
     const formData = new FormData(form);
 
-    // fileData 배열의 파일을 FormData에 추가
-    for (const file of fileData) {
-    	formData.append("files", file);
-    }
- 
-    // FormData 확인 (디버깅용)
-    for (const entry of formData.entries()) {
-        console.log(entry[0], entry[1]);
+    
+    imgArr.sort((a, b) => a[0] - b[0]);
+    for (const file of imgArr) {
+    	formData.append("files", file[1]);
     }
 
+    if(document.querySelector("input[name='announce_title']").value == ""){
+    	alert("제목을 입력해주세요");
+    	document.querySelector("input[name='announce_title']").focus();
+    	return;
+    }
+    if(document.getElementById("quill_html").value == "<p><br></p>"){
+    	alert("공지사항을 입력해주세요");
+    	document.querySelector(".ql-editor").focus();
+    	return;
+    }
+    
+    document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/admin/noticeUpdate", {
         method: "POST",
@@ -277,12 +293,20 @@ function updateNotice(){
         return response.text();
     })
     .then(data => {
-        console.log("Success:", data);
         alert("공지사항이 수정되었습니다.");
         location.href = `/admin/noticeView?idx=${idx}`; // 성공 시 리다이렉트
     })
     .catch(error => {
-        console.error("Error:", error);
         alert("공지사항 등록 중 오류가 발생했습니다.");
     });
+}
+
+function cleanString(str) {
+	// 1. 앞뒤의 쉼표와 공백 제거
+	let cleanedStr = str.replace(/^[, ]+|[, ]+$/g, "");
+
+	// 2. 중간의 쉼표와 공백을 하나로 축소 (여기서 중간 공백 제거)
+	cleanedStr = cleanedStr.replace(/, +/g, ",");
+
+	return cleanedStr;
 }

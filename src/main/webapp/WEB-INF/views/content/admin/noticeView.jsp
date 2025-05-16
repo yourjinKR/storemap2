@@ -31,8 +31,10 @@
 	</table>
 	
 	<div class="btn-box">
+		<c:if test="${ loginUser ne '' and userType eq 'admin'}">
 		<a href="noticeDelete">삭제</a>
 		<a href="noticeModify">수정</a>
+		</c:if>
 		<a href="noticeList">목록</a>
 	</div>
 </div>

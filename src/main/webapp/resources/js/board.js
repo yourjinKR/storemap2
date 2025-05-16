@@ -274,6 +274,7 @@ function getNotice(pageNum){
 	.then(response => response.json())
 	.then(result => {
 		let str = "";
+		let str2 = "";
 		if(result != null && result.announce.length > 0){
 			result.announce.forEach(data => {
 				str += 	`<tr data-idx="${data.announce_idx}">`;
@@ -305,12 +306,21 @@ function getNotice(pageNum){
 		}else{
 			str += `
 				<tr>
-					<td colspan="2" class="empty-data">
+					<td colspan="${userId != null ? 4 : 3}" class="empty-data" style="width: 1200px">
 						공지사항이 없습니다.
 					</td>
 				</tr>`;
 		}
 		document.querySelector("#boardList tbody").innerHTML = str;
+		str2 += `<colgroup>`
+			if(auth == "admin" && userId != null){
+				str2 += `<col width="50px">`
+			}
+		str2 += 	`<col width="90px">`
+		str2 += 	`<col width="*">`
+		str2 += 	`<col width="120px">`
+		str2 += `</colgroup>`;
+		document.querySelector("#boardList").innerHTML += str2; 
 		
 		pager(result.pager);
 		setFixedData();
