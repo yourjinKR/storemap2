@@ -81,6 +81,7 @@ function selectLocalImage() {
 	        		const range = quill.getSelection();
 	        		quill.insertEmbed(range ? range.index : 0, 'image', e.target.result);
 	        		imgArr.push([range.index,fileInput.files[0]]);
+	        		quill.setSelection(range.index + 1, 0); 
 	            };
 	            reader.readAsDataURL(fileInput.files[0]); // base64로 변환
             }
@@ -90,6 +91,12 @@ function selectLocalImage() {
 
 // 에디터 설정
 function editorInit(){
+	const isNoticeView = pathName === "/admin/noticeView";
+	
+	if(pathName == "/admin/noticeWrite" || pathName == "/admin/noticeModify"){
+		Quill.register('modules/imageResize', QuillResizeModule);
+	}
+	
 	const toolbarOptions = [
 		  ['bold', 'underline', 'strike'],        // toggled buttons
 		  ['blockquote','code-block'],
@@ -112,16 +119,27 @@ function editorInit(){
 	
 	let editor = document.querySelector("#editor");
 	
+	
 	if(editor != null){
+		
+		const modulesConfig = {
+			toolbar: isNoticeView ? false : toolbarOptions,
+		};
+
+		if (!isNoticeView) {
+			// imageResize는 /admin/noticeView 가 아닐 때만 추가
+			modulesConfig.imageResize = {
+				displaySize: true
+			};
+		}
+		
 		quill = new Quill('#editor', {
-			modules: {
-				toolbar: pathName == "/admin/noticeView" ? false : toolbarOptions
-			},
+			modules: modulesConfig,
 			theme: 'snow',
-			readOnly: pathName == "/admin/noticeView" ? true : false
+			readOnly: isNoticeView
 		});
 		
-		if(pathName != "/admin/noticeView"){
+		if(!isNoticeView){
 			quill.on('text-change', function() {
 		        document.getElementById("quill_html").value = quill.root.innerHTML;
 			});
@@ -211,6 +229,22 @@ function getNotice(){
 	.then(result => {
 		editorInit();
 		quill.clipboard.dangerouslyPasteHTML(result.announce_content);
+		setTimeout(() => {
+		    const tempContainer = document.createElement('div');
+		    tempContainer.innerHTML = result.announce_content;
+	
+		    const pastedImages = tempContainer.querySelectorAll('img');
+		    const editorImages = document.querySelectorAll('#editor img');
+	
+		    pastedImages.forEach((img, index) => {
+			    const style = img.getAttribute('style');
+			    if (style && editorImages[index]) {
+			    	editorImages[index].setAttribute('style', style);
+			    }
+		    });
+	
+		    // 필요한 경우 다른 태그들도 스타일 복원 가능
+		}, 0);
 		if(pathName == "/admin/noticeModify"){
 			document.querySelector("input[name='announce_title']").value = result.announce_title;
 		}else{
@@ -263,7 +297,6 @@ function updateNotice(){
     // FormData 생성
     const formData = new FormData(form);
 
-    
     imgArr.sort((a, b) => a[0] - b[0]);
     for (const file of imgArr) {
     	formData.append("files", file[1]);
