@@ -256,7 +256,7 @@
 	    WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
-	<!-- 키워드에 해당하는 검색어 찾기 (공백 제거 적용) -->
+	<!-- 키워드에 해당하는 검색어 찾기 + 반경 필터 추가 -->
 	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
 	    SELECT *
 	    FROM (
@@ -289,9 +289,15 @@
 	                   AND REPLACE(m.menu_name, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%'
 	             )
 	          )
-	        ORDER BY priority, distance
 	    )
-	    WHERE ROWNUM &lt;= #{amount}
+	    WHERE 
+	        6371 * ACOS(
+	            COS(RADIANS(#{lat})) * COS(RADIANS(store_lat)) *
+	            COS(RADIANS(store_lng) - RADIANS(#{lng})) +
+	            SIN(RADIANS(#{lat})) * SIN(RADIANS(store_lat))
+	        ) &lt;= #{kilometer}
+	    AND ROWNUM &lt;= #{amount}
+	    ORDER BY priority, distance
 	</select>
 	
 </mapper>

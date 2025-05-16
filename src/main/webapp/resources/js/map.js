@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('위치설정 있음');
         currentLat = currentPosition.lat;
         currentLng = currentPosition.lng;
-        basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 1};
+        basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 3};
 
         clickMarker = new kakao.maps.Marker({ 
             position: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng)
@@ -880,14 +880,48 @@ function mapSearchService(map, keyword) {
         lng : map.getCenter().getLng(),
         code : centerLoc.code,
         keyword : keyword,
-        amount : 5
+        amount : 100
+    }
+
+    if (searchCondition.level <= 2) {
+        searchCondition.kilometer = 0.5
+    } 
+    else if (searchCondition.level == 3) {
+        searchCondition.kilometer = 0.8
+    }
+    else if (searchCondition.level == 4) {
+        searchCondition.kilometer = 1.6
+    }
+    else if (searchCondition.level == 5) {
+        searchCondition.kilometer = 3.2
+    }
+    else if (searchCondition.level == 6) {
+        searchCondition.kilometer = 6.4
+    }
+    else if (searchCondition.level == 7) {
+        searchCondition.kilometer = 12.8
+    }
+    else if (searchCondition.level == 8) {
+        searchCondition.kilometer = 25.6
+    }
+    else if (searchCondition.level == 9) {
+        searchCondition.kilometer = 51.2
+    }
+    else if (searchCondition.level == 10) {
+        searchCondition.kilometer = 102.4
+    }
+    else if (searchCondition.level == 11) {
+        searchCondition.kilometer = 204.8
+    }
+    else {
+        searchCondition.kilometer = 400
     }
 
     // 점포 및 장소 검색 시작
     as.getListByAddrKeyword(searchCondition, function (data) {
         if(data.length != 0) {
             apply2storeMap(data);
-            basicMap.setLevel(5); // 임시 설정
+            // basicMap.setLevel(5); // 임시 설정
         } else {
             console.log('장소를 못찾음');
             searchPlaces(keyword);
@@ -897,7 +931,10 @@ function mapSearchService(map, keyword) {
     // 이벤트 검색 시작
     as.eventListByKeyword(searchCondition, function(data) {
         processAllEvents(data);
-    })
+    });
+
+    console.log(storeVOList);
+    console.log(eventVOList);
 }
 
 
@@ -1088,20 +1125,22 @@ function apply2storeMap(data) {
     // 가게와 마커를 메핑
     markerMapping(storeLIS, "store");
 
-    // 스토어 맵 모드일 경우 마커와 오버레이 표시
+    // 마커와 오버레이 표시
     if ((storeMapMode || unitedMapMode) && storeVOList.length != 0 ) {
 
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
         showOverlay(basicMap, storeOverlayList);
 
+        // 스토어 맵일 경우 지도 크기 조절
+        let level = getMapLevelFromMarkerLists(storeVOList);
+        basicMap.setLevel(level);
         panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
-
         completeSearch()
     }
 }
 
-/** 이벤트 정보 대입하는 임시 함수  */
+/** 검색결과를 지도에 적용하는 콜백함수 (이벤트)  */
 function apply2eventMap(data) {
     let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     // eventUL.innerHTML = "";
@@ -1140,16 +1179,18 @@ function apply2eventMap(data) {
     // 이벤트와 마커를 매핑
     markerMapping(eventLIS, "event");
 
-    // 이벤트 모드일때 마커와 오버레이 요소들 표시
+    // 마커와 오버레이 요소들 표시
     if ((eventMapMode || unitedMapMode) && eventVOList.length != 0) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
         showOverlay(basicMap, eventOverlayList);
-
+        
+        // 이벤트 맵일때 크기 조절
         if (eventMapMode) {
+            let level = getMapLevelFromMarkerLists(eventVOList);
+            basicMap.setLevel(level);
             panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
         }
-
         completeSearch()
     }
 }
@@ -1281,6 +1322,18 @@ function processAllEvents(data) {
 
         // 후처리 코드 삽입
         apply2eventMap(eventVOList);
+
+        if (unitedMapMode) {
+            if (eventVOList.length > storeVOList.length) {
+                let level = getMapLevelFromMarkerLists(eventVOList);
+                basicMap.setLevel(level);
+                panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+            } else {
+                let level = getMapLevelFromMarkerLists(storeVOList);
+                basicMap.setLevel(level);
+                panToLatLng(basicMap, storeVOList[0].event_lat, storeVOList[0].event_lng);
+            }
+        }
     });
 }
 
@@ -1326,6 +1379,17 @@ function swap2unitedMap() {
         // 사이드바를 event로 변경
         viewSideBar = document.querySelector(".side-bar#united");
         console.log(viewSideBar);
+
+        if (storeVOList.length !=0 || eventVOList.length != 0) {
+            let level = getMapLevelFromMarkerLists(eventVOList, storeVOList);
+            basicMap.setLevel(level);
+
+            if (storeVOList.length > eventVOList.length) {
+                panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
+            } else {
+                panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+            }
+        }
     }
 }
 
@@ -1356,6 +1420,8 @@ function swap2eventMap() {
         setToggle(300);
 
         if (eventVOList.length != 0) {
+            let level = getMapLevelFromMarkerLists(eventVOList);
+            basicMap.setLevel(level);
             panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
         }
 
@@ -1392,6 +1458,8 @@ function swap2storeMap() {
         setToggle(300);
 
         if(storeVOList.length != 0) {
+            let level = getMapLevelFromMarkerLists(storeVOList);
+            basicMap.setLevel(level);
             panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
         }
 
@@ -1421,4 +1489,60 @@ function getMyCurrentPlace() {
 function cancelMyCurrentPlace() {
     customPositionMode = false;
     positionOverlay.setMap(null);
+}
+
+/** 두 지점 간 거리 계산 함수 (단위: 미터) */
+function getDistance(lat1, lng1, lat2, lng2) {
+    const R = 6371000; // 지구 반지름 (단위: m)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.pow(Math.sin(dLat / 2), 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.pow(Math.sin(dLng / 2), 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
+/**
+ * 하나 이상의 리스트를 받아 전체 마커 간 최대 거리 → 확대 레벨 계산
+ * @param  {...any} lists 마커가 포함된 객체 리스트 (storeVOList, eventVOList 등)
+ * @returns 카카오맵 확대 수준 (1 ~ 12)
+ */
+function getMapLevelFromMarkerLists(...lists) {
+    const allMarkers = [];
+
+    // 모든 리스트에서 .marker가 있는 항목만 수집
+    lists.forEach(list => {
+        list.forEach(vo => {
+            if (vo.marker) {
+                allMarkers.push(vo.marker);
+            }
+        });
+    });
+
+    if (allMarkers.length <= 1) return 1;
+
+    let maxDistance = 0;
+    for (let i = 0; i < allMarkers.length - 1; i++) {
+        const m1 = allMarkers[i].getPosition();
+        for (let j = i + 1; j < allMarkers.length; j++) {
+            const m2 = allMarkers[j].getPosition();
+            const distance = getDistance(m1.getLat(), m1.getLng(), m2.getLat(), m2.getLng());
+            if (distance > maxDistance) maxDistance = distance;
+        }
+    }
+
+    // 거리별 확대 레벨 결정
+    if (maxDistance <= 200) return 1;
+    if (maxDistance <= 400) return 2;
+    if (maxDistance <= 800) return 3;
+    if (maxDistance <= 1600) return 4;
+    if (maxDistance <= 3200) return 5;
+    if (maxDistance <= 6400) return 6;
+    if (maxDistance <= 12800) return 7;
+    if (maxDistance <= 25600) return 8;
+    if (maxDistance <= 51200) return 9;
+    if (maxDistance <= 102400) return 10;
+    if (maxDistance <= 204800) return 11;
+    return 12;
 }
