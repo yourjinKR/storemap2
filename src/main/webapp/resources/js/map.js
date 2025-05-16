@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 검색
             else if (type === "search") {
                 let f = document.querySelector(".form#map");
-                let keyword = f.keyword.value;
+                let keyword = f.keyword.value.trim();
                 hideviewSideBar();
                 viewSideBarCheck = false;
                 setToggle(300);
@@ -620,7 +620,7 @@ const asyncService = (function(){
         });
     }
 
-    // 반경 내 점포 리스트
+    /** 반경 내 점포 리스트 (condition, kilometer, callback) */ 
     function getListWhithin(searchCondition, kilometer, callback){
         searchCondition.kilometer = kilometer;
         fetch(`/modal/list/within.json`, {
@@ -814,6 +814,8 @@ let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null
 
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
+    console.log(`${keyword}에 대한 검색 결과....`);
+    
     storeFailModal.style.display = "none";
     eventFailModal.style.display = "none";
 
@@ -824,16 +826,26 @@ function mapSearchService(map, keyword) {
 
     deleteAllEle();
 
+    // 검색 조건 설정
     searchCondition = {
         level : map.getLevel(),
         lat : map.getCenter().getLat(),
         lng : map.getCenter().getLng(),
         code : centerLoc.code,
-        keyword : keyword
+        keyword : keyword,
+        amount : 5
     }
 
     // 점포 및 장소 검색 시작
-    searchPlaces(keyword);
+    as.getListByAddrKeyword(searchCondition, function (data) {
+        if(data.length != 0) {
+            apply2storeMap(data);
+            basicMap.setLevel(5); // 임시 설정
+        } else {
+            console.log('장소를 못찾음');
+            searchPlaces(keyword);
+        }
+    });
 
     // 이벤트 검색 시작
     as.eventListByKeyword(searchCondition, function(data) {
@@ -841,112 +853,6 @@ function mapSearchService(map, keyword) {
     })
 }
 
-/** 키워드 분류 함수 */
-function classifyKeyword(params) {
-}
-
-/** 검색결과를 지도에 적용하는 콜백함수 (점포) */
-function apply2storeMap(data) {
-    storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
-    // storeUL.innerHTML = "";
-
-    if (data.length == 0) {
-        console.log("data 없음");
-        failSearch();
-        return;
-    }
-
-    // 데이터 등록
-    data.forEach(vo => {
-        let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx);
-        addMarkerEvent(marker, "store");
-        vo.type = "store";
-        vo.marker = marker;
-        storeVOList.push(vo);
-        storeOverlayList.push(registerOverlay(vo.store_lat, vo.store_lng, vo.store_name));
-    });
-    console.log(storeVOList);
-
-    let msg = "";
-    // 점포 리스트 출력
-    storeVOList.forEach(vo => {
-        // console.log(vo);
-        msg += 
-        // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-        `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
-            <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
-            <input type="hidden" name="store_address" value="${vo.store_address}">
-            <input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
-            <input type="hidden" name="store_num" value="${vo.store_num}">
-            <div class="store-description">
-                <div class="store-name">${vo.store_name}</div>
-                <div class="store-content">${vo.store_content}</div>
-            </div>
-            <br>
-        </li>`;
-        storeUL.innerHTML = msg;
-    });
-
-    let storeLIS = document.querySelectorAll(".store-card ul li");
-    // 가게와 마커를 메핑
-    markerMapping(storeLIS, "store");
-
-    // 스토어 맵 모드일 경우 마커와 오버레이 표시
-    if (storeMapMode && storeVOList.length != 0) {
-        storeListModal.style.display = 'block';
-        showMarkers(basicMap, storeVOList);
-        showOverlay(basicMap, storeOverlayList);
-
-        panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
-    }
-}
-
-/** 이벤트 정보 대입하는 임시 함수  */
-function apply2eventMap(data) {
-    let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
-    // eventUL.innerHTML = "";
-
-    if(data.length == 0) {
-        console.log('data 없음');
-        failSearch();
-        return;
-    }
-
-
-    let msg = "";
-    // 점포 리스트 출력
-
-    data.forEach(vo => {
-        msg += 
-        // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-        `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
-            <img src="/resources/img/store1.jpg" alt="">
-                <div class="store-description">
-                    <div class="event-title">${vo.event_title}</div>
-                    <div class="event-location">${vo.event_location}</div>
-                </div>
-            <br>
-        </li>`;
-
-        vo.type = "event";
-        
-        eventOverlayList.push(registerOverlay(vo.event_lat, vo.event_lng, vo.event_title));
-    })
-
-    eventUL.innerHTML += msg;
-
-    // 이벤트 모드일때 마커와 오버레이 요소들 표시
-    if (eventMapMode && eventVOList.length != 0) {
-        eventListModal.style.display = 'block';
-        showMarkers(basicMap, eventVOList);
-        showOverlay(basicMap, eventOverlayList);
-
-        panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
-    }
-
-    let eventLIS = document.querySelectorAll(".event-card ul li");
-    markerMapping(eventLIS, "event");
-}
 
 // ======= 키워드 검색 관련 =======
 /** 장소 검색을 요청하는 함수 */
@@ -1001,43 +907,38 @@ function placesSearchCB(data, status, pagination) {
         placeList = data;
         // console.log(placeList);
         placeInfo = placeList[0];
-
-        // 키워드 검색어 실행 시작
-        as.getListByAddrKeyword(searchCondition, function (data) {
-            // console.log(placeInfo);
-            
-            if (data.length != 0) {
-                // console.log('지역명 존재');
-                apply2storeMap(data);
-                panToLatLng(basicMap, data[0].store_lat, data[0].store_lng);
-            }
-            else if (placeInfo.category_group_name === "지하철역") {
-                // console.log('첫번째 검색어가 지하철입니다.');
-                // 지하철 서비스 실행
-                serviceSubway(searchCondition.keyword);
-            }
-            else {
-                as.getListByKeyword(searchCondition, function (data) {
-                    if (data.length != 0) {
-                        // console.log('점포명 및 메뉴명을 검색 실행');
-                        apply2storeMap(data);
-                    }
-                    else if (placeInfo.category_group_name === "음식점") {
-                        // console.log('일반 음식점은 검색 지원하지 않음');
-                        apply2storeMap(data);
-                    }
-                    else {
-                        // console.log('카카오 라이브러리에서 추천하는 장소로 이동');
-                        panToLatLng(basicMap, placeInfo.y, placeInfo.x);
-                        apply2storeMap(data);
-                    }
-                })
-            }
-        });
+        if (placeInfo.category_group_name === "지하철역") {
+            // console.log('첫번째 검색어가 지하철입니다.');
+            // 지하철 서비스 실행
+            serviceSubway(searchCondition.keyword);
+        } else {
+            as.getListByKeyword(searchCondition, function (data) {
+                if (data.length != 0) {
+                    console.log('점포명 및 메뉴명을 검색 실행');
+                    apply2storeMap(data);
+                }
+                else if (placeInfo.category_group_name != "음식점") {
+                    // console.log('일반 음식점은 검색 지원하지 않음');
+                    panToLatLng(basicMap, placeInfo.y, placeInfo.x);
+                    basicMap.setLevel(3);
+                    apply2storeMap(data);
+                }
+            })
+        }
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        apply2storeMap(data);
-        // alert('검색 결과가 존재하지 않습니다.');
+        as.getListByKeyword(searchCondition, function (data) {
+            if (data.length != 0) {
+                console.log('점포명 및 메뉴명을 검색 실행');
+                apply2storeMap(data);
+            }
+            else if (placeInfo.category_group_name != "음식점") {
+                // console.log('일반 음식점은 검색 지원하지 않음');
+                panToLatLng(basicMap, placeInfo.y, placeInfo.x);
+                basicMap.setLevel(3);
+                apply2storeMap(data);
+            }
+        });
         return;
 
     } else if (status === kakao.maps.services.Status.ERROR) {
@@ -1068,12 +969,10 @@ function subwaySearchCB(data, status, pagination) {
 /** 역(subway) 검색이 완료됐을 때 호출되는 콜백함수 (지하철 주변 점포 찾기 서비스를 바로 실행) */
 function subwayServiceCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
-        if (againSearch) {
-            // console.log(`지역명을 발견하지 못함... ${searchCondition.keyword}역으로 검색...`);
-        }
         subwayInfo = data[0];
         // 역으로 화면 이동
         panToLatLng(basicMap, subwayInfo.y, subwayInfo.x);
+        basicMap.setLevel(3);
         // 좌표 설정
         searchCondition.lat = subwayInfo.y;
         searchCondition.lng = subwayInfo.x;
@@ -1094,8 +993,120 @@ function subwayServiceCB(data, status, pagination) {
     }
 }
 
+/** 검색결과를 지도에 적용하는 콜백함수 (점포) */
+function apply2storeMap(data) {
+    storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
+    // storeUL.innerHTML = "";
+
+    if (data.length == 0) {
+        console.log("data 없음");
+        failSearch();
+        return;
+    } else if (data.length == 1) {
+        basicMap.setLevel(1);
+    }
+
+    // 데이터 등록
+    data.forEach(vo => {
+        let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx);
+        addMarkerEvent(marker, "store");
+        vo.type = "store";
+        vo.marker = marker;
+        storeVOList.push(vo);
+        storeOverlayList.push(registerOverlay(vo.store_lat, vo.store_lng, vo.store_name));
+    });
+    console.log(storeVOList);
+
+    let msg = "";
+    // 점포 리스트 출력
+    storeVOList.forEach(vo => {
+        // console.log(vo);
+        msg += 
+        // `<li data-store_idx="${vo.store_idx}" name="store_idx">
+        `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
+            <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
+            <input type="hidden" name="store_address" value="${vo.store_address}">
+            <input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
+            <input type="hidden" name="store_num" value="${vo.store_num}">
+            <div class="store-description">
+                <div class="store-name">${vo.store_name}</div>
+                <div class="store-content">${vo.store_content}</div>
+            </div>
+            <br>
+        </li>`;
+        storeUL.innerHTML = msg;
+    });
+
+    let storeLIS = document.querySelectorAll(".store-card ul li");
+    // 가게와 마커를 메핑
+    markerMapping(storeLIS, "store");
+
+    // 스토어 맵 모드일 경우 마커와 오버레이 표시
+    if (storeMapMode && storeVOList.length != 0) {
+        storeListModal.style.display = 'block';
+        showMarkers(basicMap, storeVOList);
+        showOverlay(basicMap, storeOverlayList);
+
+        panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
+
+        completeSearch()
+    }
+}
+
+/** 이벤트 정보 대입하는 임시 함수  */
+function apply2eventMap(data) {
+    let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
+    // eventUL.innerHTML = "";
+
+    if(data.length == 0) {
+        console.log('data 없음');
+        failSearch();
+        return;
+    }
+
+
+    let msg = "";
+    // 점포 리스트 출력
+
+    data.forEach(vo => {
+        msg += 
+        // `<li data-store_idx="${vo.store_idx}" name="store_idx">
+        `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
+            <img src="/resources/img/store1.jpg" alt="">
+                <div class="store-description">
+                    <div class="event-title">${vo.event_title}</div>
+                    <div class="event-location">${vo.event_location}</div>
+                </div>
+            <br>
+        </li>`;
+
+        vo.type = "event";
+        
+        eventOverlayList.push(registerOverlay(vo.event_lat, vo.event_lng, vo.event_title));
+    })
+
+    eventUL.innerHTML += msg;
+
+    let eventLIS = document.querySelectorAll(".event-card ul li");
+    // 이벤트와 마커를 매핑
+    markerMapping(eventLIS, "event");
+
+    // 이벤트 모드일때 마커와 오버레이 요소들 표시
+    if (eventMapMode && eventVOList.length != 0) {
+        eventListModal.style.display = 'block';
+        showMarkers(basicMap, eventVOList);
+        showOverlay(basicMap, eventOverlayList);
+
+        panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+
+        completeSearch()
+    }
+}
+
 /** 모든 요소를 삭제하는 함수 */
 function deleteAllEle() {
+    console.log('요소를 삭제합니다');
+
     hideMarkers(storeVOList);
     hideMarkers(eventVOList);
     hideOverlay(storeOverlayList);
@@ -1140,7 +1151,6 @@ function failSearch() {
     viewSideBarCheck = false;
     hideviewSideBar();
     setToggle(300);
-    deleteAllEle();
 }
 
 /** 주소 입력시 좌표로 변환하고 마커를 등록하는 함수 (시점 문제로 인해 내부적으로 실행) */
@@ -1222,8 +1232,6 @@ function processAllEvents(data) {
         apply2eventMap(eventVOList);
         console.log(eventVOList);
         
-
-        // 여기에 마커 이벤트 등록이나 기타 후처리를 수행
     });
 }
 

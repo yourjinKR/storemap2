@@ -204,6 +204,7 @@
                     ) &lt;= #{kilometer}  <!-- 반경 500m 이하 점포들만 필터링 -->
             ORDER BY distance
         )
+        WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
 	<!-- 키워드와 지역명이 일치하는 점포 찾기 -->
@@ -223,6 +224,7 @@
 	          AND s.store_address LIKE '%' || #{keyword} || '%'
 	        ORDER BY distance
 	    )
+	    WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
 	<!-- 키워드에 해당하는 검색어 찾기 -->
@@ -260,7 +262,7 @@
 		      )
 		    ORDER BY priority, distance
 		)
-		WHERE ROWNUM &lt;= 10
+		WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
 </mapper>
