@@ -104,8 +104,6 @@ public class AnnounceServiceImple implements AnnounceService{
 		String oldImg = oldvo.getAnnounce_image();
 		String uuidData = vo.getAnnounce_image();
 		String newUuid = "";
-		System.out.println(oldImg);
-		System.out.println(uuidData);
 		if(uuidData != null) {
 			
 			String[] arr = uuidData.split(",");
