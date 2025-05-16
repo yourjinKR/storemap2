@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         listSideBar = document.querySelector(".side-bar#list");
         //  뷰 사이드바
         viewSideBarCheck = false;
-        viewSideBar = document.querySelector(".side-bar#store");
+        viewSideBar = document.querySelector(".side-bar#united");
         // 토글 버튼
         toggleBtn = document.querySelector(".side-bar#toggle-box");
         // 스토어 리스트 모달
@@ -513,7 +513,7 @@ function markerMapping(eles, type) {
                 list.forEach(vo => {
                     if (vo.marker.getTitle() === idx) {
                         showviewSideBar();
-                        emphMarker(idx);
+                        emphMarker(idx, type);
                         setToggle(600);
                     }
                 });
@@ -544,7 +544,7 @@ function addMarkerEvent(marker, type) {
         selectMarker(marker);
         
         let title = marker.getTitle();
-        emphMarker(title);
+        emphMarker(title, type);
         let li = searchEleByTitle(title, type);
         viewDetailModalPage(li, type);
 
@@ -574,15 +574,14 @@ function selectMarker(marker) {
 }
 
 /** idx를 받으면 일치하는 마커로 이동 및 강조하는 함수 */
-function emphMarker(idx) {
+function emphMarker(idx, type) {
     let list = [];
-    if(storeMapMode) {
+    if(type === "store") {
         list = storeVOList;
-    } else if (eventMapMode) {
+    } else if (type === "event") {
         list = eventVOList;
-    } else if (unitedMapMode) {
-        // 해당 부분 수정 필요함...
     }
+
     list.forEach(vo => {
         // idx와 일치시 이동 및 강조
         if (idx === vo.marker.getTitle()) {
