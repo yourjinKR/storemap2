@@ -244,6 +244,11 @@ public class MemberController {
 		return "index";
 	}
 	
+	@GetMapping("/myPage")
+	public String getMyPage() {
+		return "index";
+	}
+	
 //	@PostMapping("/delete") // 진행중
 //	public String deleteMember(@RequestParam String pw, HttpSession session, Model model) {
 //	    String loginId = (String) session.getAttribute("loginUser");
