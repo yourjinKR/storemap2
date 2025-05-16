@@ -58,6 +58,8 @@ let eventListModal = null;
 let storeFailModal = null;
 /** 이벤트 검색 실패 모달 */
 let eventFailModal = null;
+/** 통합 검색 실패 모달 */
+let unitedFailModal = null;
 // 검색창
 let mapSearchForm = null;
 let mapSearchKeyword = null;
@@ -177,10 +179,12 @@ document.addEventListener("DOMContentLoaded", () => {
         storeListModal = document.querySelector(".storeListModal");
         // 이벤트 리스트 모달
         eventListModal = document.querySelector(".eventListModal");
-        // 검색 실패 모달
+        // 점포 검색 실패 모달
         storeFailModal = document.querySelector(".search-fail#store");
-        // 검색 실패 모달
+        // 이벤트 검색 실패 모달
         eventFailModal = document.querySelector(".search-fail#event");
+        // 통합 검색 실패 모달
+        unitedFailModal = document.querySelector(".search-fail#united");
         // 검색창
         mapSearchForm = document.querySelector(".form#map");
         mapSearchKeyword = mapSearchForm.keyword.value.trim();
@@ -921,7 +925,8 @@ function mapSearchService(map, keyword) {
     as.getListByAddrKeyword(searchCondition, function (data) {
         if(data.length != 0) {
             apply2storeMap(data);
-            // basicMap.setLevel(5); // 임시 설정
+            let level = getMapLevelFromMarkerLists(storeVOList);
+            basicMap.setLevel(level);
         } else {
             console.log('장소를 못찾음');
             searchPlaces(keyword);
@@ -930,7 +935,9 @@ function mapSearchService(map, keyword) {
 
     // 이벤트 검색 시작
     as.eventListByKeyword(searchCondition, function(data) {
-        processAllEvents(data);
+        if (data.length != 0) {
+            processAllEvents(data);
+        }
     });
 
     console.log(storeVOList);
@@ -1133,8 +1140,8 @@ function apply2storeMap(data) {
         showOverlay(basicMap, storeOverlayList);
 
         // 스토어 맵일 경우 지도 크기 조절
-        let level = getMapLevelFromMarkerLists(storeVOList);
-        basicMap.setLevel(level);
+        // let level = getMapLevelFromMarkerLists(storeVOList);
+        // basicMap.setLevel(level);
         panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
         completeSearch()
     }
@@ -1144,8 +1151,6 @@ function apply2storeMap(data) {
 function apply2eventMap(data) {
     let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     // eventUL.innerHTML = "";
-
-    console.log('event vo list : ', eventVOList);
 
     if(data.length == 0) {
         console.log('data 없음');
@@ -1180,7 +1185,7 @@ function apply2eventMap(data) {
     markerMapping(eventLIS, "event");
 
     // 마커와 오버레이 요소들 표시
-    if ((eventMapMode || unitedMapMode) && eventVOList.length != 0) {
+    if (eventMapMode || unitedMapMode) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
         showOverlay(basicMap, eventOverlayList);
@@ -1191,7 +1196,7 @@ function apply2eventMap(data) {
             basicMap.setLevel(level);
             panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
         }
-        completeSearch()
+        completeSearch();
     }
 }
 
@@ -1230,15 +1235,35 @@ function completeSearch() {
     }
 }
 
-/** 검색결과가 없거나 실패할때 호출하는 함수 */
+/** 검색결과가 없거나 실패할때 호출하는 함수 (통합 모드일 경우에는 가린다)*/
 function failSearch() {
-    // store의 검색 결과가 없을 때
-    if (storeVOList.length == 0) {
-        storeFailModal.style.display = "block";
+    console.log("fail func");
+    console.log(storeVOList.length);
+    console.log(eventVOList.length);
+    
+    // 통합 맵
+    if (unitedMapMode) {
+        if (storeVOList.length != 0 || eventVOList.length != 0) {
+            unitedFailModal.style.display = "none";
+        } else {
+            unitedFailModal.style.display = "block";
+        }
+    } 
+    // 점포 맵
+    else if (storeMapMode) {
+        if (storeVOList.length == 0) {
+            unitedFailModal.style.display = "block";
+        } else {
+            unitedFailModal.style.display = "none";
+        }
     }
-    // event의 검색 결과가 없을 때
-    if (eventVOList.length == 0) {
-        eventFailModal.style.display = "block";
+    // 이벤트 맵
+    else if (eventMapMode) {
+        if (eventVOList.length == 0) {
+            unitedFailModal.style.display = "block";
+        } else {
+            unitedFailModal.style.display = "none";
+        }
     }
     viewSideBarCheck = false;
     hideviewSideBar();
@@ -1319,9 +1344,10 @@ function processAllEvents(data) {
     Promise.all(promises).then(results => {
         // null 제거 및 (eventVOList에 추가)
         eventVOList = results.filter(vo => vo !== null);
-
+        console.log('event vo list : ', eventVOList);
         // 후처리 코드 삽입
         apply2eventMap(eventVOList);
+        failSearch();
 
         if (unitedMapMode) {
             if (eventVOList.length > storeVOList.length) {
@@ -1348,6 +1374,7 @@ function ctrlMapMode(mode) {
     else if (mode==="united") {
         swap2unitedMap();
     }
+    failSearch();
 }
 
 /** 통합 맵으로 변경 */

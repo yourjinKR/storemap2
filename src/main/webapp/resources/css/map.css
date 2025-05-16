@@ -27,3 +27,10 @@
   background: #333;
   color: #eee;
 }
+
+.event-card {
+	overflow: hidden;
+}
+.store-card {
+	overflow: hidden;
+}
