@@ -24,6 +24,9 @@
 				</c:choose>
 			</c:forEach>
 		</ul>
+		<div class="search-fail" id="store">
+			<div id="fail-content">검색 결과가 존재하지 않습니다.</div>	
+		</div>
 	</div>
 	<!-- 점포 상세보기 모달 -->
 	<div id="modal">

@@ -16,3 +16,8 @@
 
 .side-bar#event-list{left: -300px; overflow: auto;}
 .side-bar.show#event-list{opacity:1; left:300px; overflow: auto;}
+
+/* 검색결과 실패 */
+.search-fail {
+  display: none;
+}

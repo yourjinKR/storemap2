@@ -14,6 +14,9 @@
 				<br>
 			</li>
 		</ul>
+		<div class="search-fail" id="event">
+			<div id="fail-content">검색 결과가 존재하지 않습니다.</div>	
+		</div>
 	</div>
 	<!-- 이벤트 상세보기 모달 -->
 	<div id="modal">

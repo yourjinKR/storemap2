@@ -3,7 +3,6 @@ console.log("map load");
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
-// let markerSrc = 'https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-1b80-61f7-980f-717fb30ba746/raw?se=2025-05-06T09%3A29%3A17Z&sp=r&sv=2024-08-04&sr=b&scid=a705c972-fc76-5385-b439-960e39c3f3b6&skoid=7c382de0-129f-486b-9922-6e4a89c6eb7d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-06T03%3A17%3A54Z&ske=2025-05-07T03%3A17%3A54Z&sks=b&skv=2024-08-04&sig=MER4ejaYvAKWljU8WLODFQEajejq2FH7xTlqQ29sKw4%3D';
 
 // ================== 마커 크기 ==================
 const MARKER_WIDTH = 32, // 기본 마커의 너비
@@ -55,8 +54,10 @@ let toggleBtn = null;
 let storeListModal = null;
 // 이벤트 리스트바 모달
 let eventListModal = null;
-// 검색 실패 모달
-let failModal = null;
+/** 점포 검색 실패 모달 */
+let storeFailModal = null;
+/** 이벤트 검색 실패 모달 */
+let eventFailModal = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let basicLat = 37.505410898990775;
@@ -168,10 +169,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // 이벤트 리스트 모달
         eventListModal = document.querySelector(".eventListModal");
         // 검색 실패 모달
-        failModal = document.querySelector("#search-fail");
+        storeFailModal = document.querySelector(".search-fail#store");
+        // 검색 실패 모달
+        eventFailModal = document.querySelector(".search-fail#event");
 
         // 스타일 변경
-        storeListModal.style.display = 'none';
+        storeListModal.style.display = 'block';
         eventListModal.style.display = 'none';
     }
     // storeModify.jsp (영업 위치 설정 지도)
@@ -372,7 +375,7 @@ function registerMarker(lat, lng, idx) {
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
         title : idx,
         image : testIcon,
-        zIndex : 5
+        zIndex : 4
     });
     return marker;
 }
@@ -811,6 +814,9 @@ let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null
 
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
+    storeFailModal.style.display = "none";
+    eventFailModal.style.display = "none";
+
     if (!keyword) {
         alert("키워드를 입력하시오");
         return;
@@ -842,13 +848,12 @@ function classifyKeyword(params) {
 /** 검색결과를 지도에 적용하는 콜백함수 (점포) */
 function apply2storeMap(data) {
     storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
-    storeUL.innerHTML = "";
+    // storeUL.innerHTML = "";
 
     if (data.length == 0) {
         console.log("data 없음");
         failSearch();
-    } else {
-        completeSearch();
+        return;
     }
 
     // 데이터 등록
@@ -898,13 +903,15 @@ function apply2storeMap(data) {
 
 /** 이벤트 정보 대입하는 임시 함수  */
 function apply2eventMap(data) {
+    let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
+    // eventUL.innerHTML = "";
+
     if(data.length == 0) {
         console.log('data 없음');
         failSearch();
+        return;
     }
 
-    let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
-    eventUL.innerHTML = "";
 
     let msg = "";
     // 점포 리스트 출력
@@ -1017,6 +1024,7 @@ function placesSearchCB(data, status, pagination) {
                     }
                     else if (placeInfo.category_group_name === "음식점") {
                         // console.log('일반 음식점은 검색 지원하지 않음');
+                        apply2storeMap(data);
                     }
                     else {
                         // console.log('카카오 라이브러리에서 추천하는 장소로 이동');
@@ -1028,12 +1036,12 @@ function placesSearchCB(data, status, pagination) {
         });
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        failSearch();
+        apply2storeMap(data);
         // alert('검색 결과가 존재하지 않습니다.');
         return;
 
     } else if (status === kakao.maps.services.Status.ERROR) {
-        failSearch();
+        apply2storeMap(data);
         // alert('검색 결과 중 오류가 발생했습니다.');
         return;
 
@@ -1046,12 +1054,12 @@ function subwaySearchCB(data, status, pagination) {
         subwayInfo = data[0];
     } 
     else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        failSearch();
+        apply2storeMap(data);
         // alert('subway 검색 결과가 존재하지 않습니다.');
         return;
     } 
     else if (status === kakao.maps.services.Status.ERROR) {
-        failSearch();
+        apply2storeMap(data);
         // alert('subway 검색 결과 중 오류가 발생했습니다.');
         return;
     }
@@ -1075,12 +1083,12 @@ function subwayServiceCB(data, status, pagination) {
         });
     } 
     else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        failSearch();
+        apply2storeMap(data);
         // alert('subway 검색 결과가 존재하지 않습니다.');
         return;
     } 
     else if (status === kakao.maps.services.Status.ERROR) {
-        failSearch();
+        apply2storeMap(data);
         // alert('subway 검색 결과 중 오류가 발생했습니다.');
         return;
     }
@@ -1090,47 +1098,49 @@ function subwayServiceCB(data, status, pagination) {
 function deleteAllEle() {
     hideMarkers(storeVOList);
     hideMarkers(eventVOList);
-    // clearMarkers();
     hideOverlay(storeOverlayList);
     hideOverlay(eventOverlayList);
+
     storeVOList = [];
     eventVOList = [];
+
     storeOverlayList = [];
     eventOverlayList = [];
+
     placeList = [];
     placeInfo = {};
     subwayInfo = {};
+
+    document.querySelector(".store-card ul").innerHTML = "";
+    document.querySelector(".event-card ul").innerHTML = "";
 }
 
 /** 검색결과가 있을 경우 호출하는 함수 */
 function completeSearch() {
     if(storeMapMode && storeVOList.length != 0) {
         storeListModal.style.display = "block"; // 스토어 리스트 view
+        storeFailModal.style.display = "none"; // 경고 문구 hide
     }
     else if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = "block";
+        eventFailModal.style.display = "none";
     }
-
-    failModal.style.display = "none"; // 경고 문구 hide
 }
 
 /** 검색결과가 없거나 실패할때 호출하는 함수 */
 function failSearch() {
     // store의 검색 결과가 없을 때
-    if (storeVOList.length == 0 && storeMapMode) {
-        storeListModal.style.display = "none"; // 스토어 리스트 hide
-        // document.querySelector(".store-card").innerHTML = "<div>검색결과가 존재하지 않습니다...</div>";
+    if (storeVOList.length == 0) {
+        storeFailModal.style.display = "block";
     }
     // event의 검색 결과가 없을 때
-    if (eventVOList.length == 0 && eventMapMode) {
-        eventListModal.style.display = "none";
+    if (eventVOList.length == 0) {
+        eventFailModal.style.display = "block";
     }
     viewSideBarCheck = false;
     hideviewSideBar();
     setToggle(300);
     deleteAllEle();
-
-    document.querySelector("#fail-content").innerHTML = `검색어와 일치하는 결과가 없음...`;
 }
 
 /** 주소 입력시 좌표로 변환하고 마커를 등록하는 함수 (시점 문제로 인해 내부적으로 실행) */
@@ -1210,6 +1220,8 @@ function processAllEvents(data) {
 
         // 후처리 코드 삽입
         apply2eventMap(eventVOList);
+        console.log(eventVOList);
+        
 
         // 여기에 마커 이벤트 등록이나 기타 후처리를 수행
     });
@@ -1233,9 +1245,7 @@ function swap2eventMap() {
     
         // 화면 삭제
         storeListModal.style.display = "none";
-        if (eventVOList.length != 0) {
-            eventListModal.style.display = "block";
-        }
+        eventListModal.style.display = "block";
     
         // 스토어 마커를 맵에 숨기기
         hideMarkers(storeVOList);
@@ -1270,9 +1280,7 @@ function swap2storeMap() {
     
         // 화면 삭제
         eventListModal.style.display = "none";
-        if (storeVOList.length != 0) {
-            storeListModal.style.display = "block";
-        }
+        storeListModal.style.display = "block";
     
         // 이벤트 마커를 맵에 숨기기
         hideMarkers(eventVOList);
