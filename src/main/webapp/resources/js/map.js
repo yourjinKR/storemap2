@@ -106,10 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('위치설정 있음');
         currentLat = currentPosition.lat;
         currentLng = currentPosition.lng;
-        basicOption = {center: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng), level: 3};
+        basicOption = {center: new kakao.maps.LatLng(currentLat, currentLng), level: 3};
 
         clickMarker = new kakao.maps.Marker({ 
-            position: new kakao.maps.LatLng(currentPosition.lat, currentPosition.lng)
+            position: new kakao.maps.LatLng(currentLat, currentLng)
         });
 
     } else {
@@ -120,6 +120,14 @@ document.addEventListener("DOMContentLoaded", () => {
             position: new kakao.maps.LatLng(basicLat, basicLng)
         });
     }
+
+    // 클릭마커 클릭 이벤트 추가
+    kakao.maps.event.addListener(clickMarker, 'click', function() {
+        if (!customPositionMode) {
+            alert("현위치를 수정하시겠습니까?");
+            setMyCurrentPlace();
+        }
+    })
 
 	// 기본 설정값으로 지도 생성
 	let container = document.querySelector(".map");
@@ -193,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeListModal.style.display = 'block';
         eventListModal.style.display = 'block';
     }
+
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
         let f = document.forms[0];
@@ -252,7 +261,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // 현위치 이동 (임시 함수, 추후 수정)
             else if (type === "panto-current") {
                 panToLatLng(basicMap, currentLat, currentLng);
-                clickMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLng));
+                // clickMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLng));
+                // 현위치와 같을 경우
+                if(new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter() && !customPositionMode) {
+                    setMyCurrentPlace();
+                } else {
+                    console.log(clickMarker.getPosition());
+                    console.log(basicMap.getCenter());
+                    console.log('위치가 다름');
+                }
             }
             // 검색
             else if (type === "search") {
@@ -296,14 +313,14 @@ document.addEventListener("DOMContentLoaded", () => {
     
         // 클릭한 위도, 경도 정보
         let latlng = mouseEvent.latLng;
-        clickMarker.setPosition(latlng);
 
         if (mapType === "full" && customPositionMode) {
+            clickMarker.setPosition(latlng);
             positionOverlay.setPosition(latlng);
         }
 
         if (mapType === "store-loc") {
-            
+            clickMarker.setPosition(latlng);
             let f = document.querySelector("#store-modify");
             if (f) {
                 f.lat.value = latlng.getLat();
@@ -1502,10 +1519,10 @@ function setMyCurrentPlace() {
     alert("클릭하여 정확한 위치를 설정하시오");
 	customPositionMode = true;
 }
-/** 위치정보 커스텀 변경 종료 함수 */
+/** 위치정보 커스텀 변경 적용 함수 */
 function getMyCurrentPlace() {
     customPositionMode = false;
-    let latLng = positionOverlay.getPosition();
+    let latLng = clickMarker.getPosition();
     currentLat = latLng.getLat();
     currentLng = latLng.getLng();
     setPositionData(currentLat, currentLng);
@@ -1516,6 +1533,7 @@ function getMyCurrentPlace() {
 function cancelMyCurrentPlace() {
     customPositionMode = false;
     positionOverlay.setMap(null);
+    clickMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLng));
 }
 
 /** 두 지점 간 거리 계산 함수 (단위: 미터) */
