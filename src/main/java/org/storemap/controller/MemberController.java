@@ -244,7 +244,7 @@ public class MemberController {
 		return "index";
 	}
 	
-	@GetMapping("/myPage")
+	@GetMapping("/mypage")
 	public String getMyPage() {
 		return "index";
 	}
