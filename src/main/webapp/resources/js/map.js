@@ -138,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// 기본 설정값으로 지도 생성
 	let container = document.querySelector(".map");
 	basicMap = new kakao.maps.Map(container, basicOption);
+
     // 새로고침
     centerLatLng = basicMap.getCenter();
     loadAddrFromCoords(centerLatLng);
@@ -208,6 +209,22 @@ document.addEventListener("DOMContentLoaded", () => {
         // 검색 리스트 스타일 변경
         storeListModal.style.display = 'block';
         eventListModal.style.display = 'block';
+
+        // 초기 검색 시작
+        const params = new URLSearchParams(window.location.search);
+        if(params.get("keyword")) {
+            const keyword = params.get("keyword");
+            keywordInput.value = keyword
+            // 초기 검색 실행
+            searchCondition = {
+                level : basicMap.getLevel(),
+                lat : basicMap.getCenter().getLat(),
+                lng : basicMap.getCenter().getLng(),
+                code : centerLoc.code,
+                keyword : keyword
+            };
+            mapSearchService(basicMap, searchCondition.keyword);
+        }
     }
 
     // storeModify.jsp (영업 위치 설정 지도)

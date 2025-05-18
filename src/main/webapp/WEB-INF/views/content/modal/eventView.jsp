@@ -14,7 +14,7 @@
     </div>
     <!-- n일차 정보 -->
     <div>
-    	<div>n일차</div>
+    	<div>← n일차 →</div>
     	<ul>
     		<li>점포명</li>
     		<li>간단한 소개</li>
