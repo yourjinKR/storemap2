@@ -72,8 +72,8 @@
 			<jsp:include page="../content/member/delete.jsp" />
 		</c:when>
 		<%-- 마이페이지 --%>
-		<c:when test="${path eq '/member/myPage'}">
-			<jsp:include page="../content/member/myPage.jsp" />
+		<c:when test="${path eq '/member/mypage'}">
+			<jsp:include page="../content/member/mypage.jsp" />
 		</c:when>
 		<%-- 나의 좋아요 목록 --%>
 		<c:when test="${path eq '/member/myLikeList'}">

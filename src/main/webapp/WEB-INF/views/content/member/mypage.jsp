@@ -20,7 +20,10 @@
 		</ul>
 		
 		<!-- 이벤트 좋아요 -->
-		<div class="sub-tab-content event-content on mt50">
+		<div class="sub-tab-content event-content mt50 on">
+			<ul>
+				<li><a></a></li>
+			</ul>
 		</div>
 		<!-- 점포 좋아요 -->
 		<div class="sub-tab-content store-content mt50">
@@ -31,9 +34,9 @@
 		<!-- 댓글 좋아요 -->
 		<div class="sub-tab-content reply-content mt50">
 		</div>
-		</div>
 	</div>
 	<div class="tab-content reviewList-content">
 		12345
 	
+	</div>
 </div>
