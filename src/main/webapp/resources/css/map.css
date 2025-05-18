@@ -58,8 +58,12 @@
 }
 
 .autocomplete li {
-	padding: 10px 12px;
-	cursor: pointer;
+    position: relative;
+    padding: 10px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .autocomplete li:hover {
@@ -71,10 +75,11 @@
     font-weight: bold;
 }
 
-#ele-type {
-	color : gray;
+.ele-type {
+    color: #999;
+    font-size: 12px;
+    margin-left: 8px;
 }
-
 
 
 

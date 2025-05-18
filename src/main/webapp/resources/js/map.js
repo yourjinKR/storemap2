@@ -66,6 +66,9 @@ let keywordInput;
 // 자동완성
 let autoCompleteBox = null;
 let searchUL = null;
+/** 자동완성 재입력 방지 */ 
+let suppressAutocomplete = false;
+let selectedIndex = -1;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let basicLat = 37.505410898990775;
@@ -337,11 +340,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ====================== 검색어 자동완성 ====================== 
     // 상태 변수
-    let selectedIndex = -1; // 방향키로 선택 중인 항목의 인덱스
+    selectedIndex = -1; // 방향키로 선택 중인 항목의 인덱스
     let suggestionList = []; // 현재 렌더링 중인 추천 리스트
     let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
 
     keywordInput.addEventListener("input", e => {
+        
+        // if (suppressAutocomplete) {
+        //     suppressAutocomplete = false;
+        //     return;
+        // }
+
         const keyword = keywordInput.value.trim();
 
         if (keyword.length === 0) {
@@ -393,14 +402,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    // 자동완성 리스트 닫기
+    document.addEventListener("click", function (e) {
+        if (!mapSearchForm.contains(e.target)) {
+            hideAutocomplete();
+        }
+    });
+
     // 키보드 방향키/엔터 지원
     keywordInput.addEventListener("keydown", e => {
         const items = searchUL.querySelectorAll("li");
+        console.log(e.keyCode);
+        console.log(selectedIndex);
+        
+        
 
         if (items.length === 0) return;
 
         switch (e.keyCode) {
-            case 38: // ↑
+            case 38: // 위
                 e.preventDefault();
                 if (selectedIndex > 0) {
                     selectedIndex--;
@@ -408,7 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
 
-            case 40: // ↓
+            case 40: // 아래
                 e.preventDefault();
                 if (selectedIndex < items.length - 1) {
                     selectedIndex++;
@@ -417,9 +437,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
 
             case 13: // Enter
+                e.preventDefault();
+                suppressAutocomplete = true;
                 if (selectedIndex >= 0 && selectedIndex < items.length) {
-                    keywordInput.value = items[selectedIndex].textContent;
+                    const selectedItem = items[selectedIndex];
+                    const value = selectedItem.dataset.value; // 정확한 값 추출
+                    keywordInput.value = value;
                     hideAutocomplete();
+                    mapSearchService(basicMap, value);
+                } else {
+                    mapSearchService(basicMap, keywordInput.value.trim());
                 }
                 break;
         }
@@ -427,43 +454,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 리스트 클릭 이벤트
     searchUL.addEventListener("click", e => {
-        if (e.target.tagName === "LI") {
-            keywordInput.value = e.target.textContent;
-            hideAutocomplete();
-        }
+        const target = e.target.closest("li");
+        if (!target) return;
+
+        const value = target.dataset.value;
+        keywordInput.value = value;
+        hideAutocomplete();
+        mapSearchService(basicMap, value);
     });
-
-    // 추천 리스트 UI 갱신
-    function updateSuggestionList(list, type) {
-        if (list.length === 0) {
-            hideAutocomplete();
-            return;
-        }
-
-        if (type === 'event') {
-            searchUL.innerHTML += list.map(item => `<li>${item.event_title}</li>`).join("");
-        } else if (type === 'store') {
-            searchUL.innerHTML += list.map(item => `<li>${item.store_name}</li>`).join("");
-        }
-        autoCompleteBox.style.display = "block";
-        selectedIndex = -1;
-    }
-
-    // 강조 항목 업데이트
-    function updateActiveItem(items) {
-        items.forEach((item, i) => {
-            item.classList.toggle("active", i === selectedIndex);
-        });
-    }
-
-    // 자동완성 숨기기
-    function hideAutocomplete() {
-        autoCompleteBox.style.display = "none";
-        searchUL.innerHTML = "";
-        selectedIndex = -1;
-    }
-
-
 
     // 지도 이동이 완료되었을 발생하는 이벤트
 //    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
@@ -1693,4 +1691,44 @@ function setRadiusByLevel(level) {
     }
 
     return kilometer;
+}
+
+// 자동완성 관련 함수
+// 추천 리스트 UI 갱신
+function updateSuggestionList(list, type) {
+    if (list.length === 0) {
+        hideAutocomplete();
+        return;
+    }
+
+    let html = list.map(item => {
+        if (type === 'event') {
+            return `<li data-value="${item.event_title}">
+                        ${item.event_title}<span class="ele-type">이벤트</span>
+                    </li>`;
+        } else if (type === 'store') {
+            return `<li data-value="${item.store_name}">
+                        ${item.store_name}<span class="ele-type">점포</span>
+                    </li>`;
+        }
+    }).join("");
+
+    searchUL.innerHTML += html;
+    autoCompleteBox.style.display = "block";
+    selectedIndex = -1;
+}
+
+// 강조 항목 업데이트
+function updateActiveItem(items) {
+    items.forEach((item, i) => {
+        item.classList.toggle("active", i === selectedIndex);
+    });
+}
+
+// 자동완성 숨기기
+function hideAutocomplete() {
+    console.log('가린다');
+    autoCompleteBox.style.display = "none";
+    searchUL.innerHTML = "";
+    selectedIndex = -1;
 }

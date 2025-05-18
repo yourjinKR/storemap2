@@ -40,7 +40,7 @@
 				<div class="search-fail" id="united">
 					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>	
 				</div>
-				<button class="mapBtn" id="search-more">결과값 더보기</button>	
+				<!-- <button class="mapBtn" id="search-more">결과값 더보기</button> -->				
 			</div>
 		</div>
 	</div>
