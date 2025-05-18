@@ -62,7 +62,10 @@ let eventFailModal = null;
 let unitedFailModal = null;
 // 검색창
 let mapSearchForm = null;
-let mapSearchKeyword = null;
+let keywordInput;
+// 자동완성
+let autoCompleteBox = null;
+let searchUL = null;
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let basicLat = 37.505410898990775;
@@ -195,7 +198,9 @@ document.addEventListener("DOMContentLoaded", () => {
         unitedFailModal = document.querySelector(".search-fail#united");
         // 검색창
         mapSearchForm = document.querySelector(".form#map");
-        mapSearchKeyword = mapSearchForm.keyword.value.trim();
+        keywordInput = mapSearchForm.keyword;
+        autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
+        searchUL = autoCompleteBox.querySelector(".autocomplete ul");
 
         // 검색 리스트 스타일 변경
         storeListModal.style.display = 'block';
@@ -330,38 +335,135 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 검색어 자동완성
-    mapSearchForm.keyword.addEventListener("keyup", e => {
-        let autoCompleteList = document.querySelector(".autocomplete");
-        
-        const value = mapSearchForm.keyword.value;
+    // ====================== 검색어 자동완성 ====================== 
+    // 상태 변수
+    let selectedIndex = -1; // 방향키로 선택 중인 항목의 인덱스
+    let suggestionList = []; // 현재 렌더링 중인 추천 리스트
+    let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
 
-        // switch (e.keyCode) {
-        //     // UP KEY
-        //     case 38:
-        //         console.log('up');               
-        //         break;
+    keywordInput.addEventListener("input", e => {
+        const keyword = keywordInput.value.trim();
 
-        //     // DOWN KEY
-        //     case 40:
-        //         console.log('down');
-        //         break;
+        if (keyword.length === 0) {
+            hideAutocomplete();
+            return;
+        }
 
-        //     // ENTER KEY
-        //     case 13:
-        //         console.log('enter');
-        //         break;
+        // 점포 정보 불러오기 (서버에 비동기 요청)
+        fetch(`/modal/list/keyword.json`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ keyword: keyword, lat : basicMap.getCenter().getLat(), lng : basicMap.getCenter().getLng(), amount : 5, kilometer : setRadiusByLevel(basicMap.getLevel()) })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
 
-        //     //  나머지 키
-        //     default:
-        //         console.log(e.keyCode);
-        //         break;
-        // }
-    })
+            // 최대 5개까지만 표시
+            const suggestionList = data.slice(0, 5);
+            updateSuggestionList(suggestionList, 'store');
+        })
+        .catch(err => {
+            console.error("자동완성 fetch 실패", err);
+            hideAutocomplete();
+        });
 
-    function showSearchList() {
-        
+        // 이벤트 정보 불러오기 (서버에 비동기 요청)
+        fetch("/event/eventFilter/keyword" , {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ keyword: keyword, lat : basicMap.getCenter().getLat(), lng : basicMap.getCenter().getLng(), amount : 5, kilometer : 5 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            // 최대 5개까지만 표시
+            const suggestionList = data.slice(0, 5);
+            updateSuggestionList(suggestionList, 'event');
+        })
+        .catch(err => {
+            console.error("자동완성 fetch 실패", err);
+            hideAutocomplete();
+        });
+
+    });
+
+    // 키보드 방향키/엔터 지원
+    keywordInput.addEventListener("keydown", e => {
+        const items = searchUL.querySelectorAll("li");
+
+        if (items.length === 0) return;
+
+        switch (e.keyCode) {
+            case 38: // ↑
+                e.preventDefault();
+                if (selectedIndex > 0) {
+                    selectedIndex--;
+                    updateActiveItem(items);
+                }
+                break;
+
+            case 40: // ↓
+                e.preventDefault();
+                if (selectedIndex < items.length - 1) {
+                    selectedIndex++;
+                    updateActiveItem(items);
+                }
+                break;
+
+            case 13: // Enter
+                if (selectedIndex >= 0 && selectedIndex < items.length) {
+                    keywordInput.value = items[selectedIndex].textContent;
+                    hideAutocomplete();
+                }
+                break;
+        }
+    });
+
+    // 리스트 클릭 이벤트
+    searchUL.addEventListener("click", e => {
+        if (e.target.tagName === "LI") {
+            keywordInput.value = e.target.textContent;
+            hideAutocomplete();
+        }
+    });
+
+    // 추천 리스트 UI 갱신
+    function updateSuggestionList(list, type) {
+        if (list.length === 0) {
+            hideAutocomplete();
+            return;
+        }
+
+        if (type === 'event') {
+            searchUL.innerHTML += list.map(item => `<li>${item.event_title}</li>`).join("");
+        } else if (type === 'store') {
+            searchUL.innerHTML += list.map(item => `<li>${item.store_name}</li>`).join("");
+        }
+        autoCompleteBox.style.display = "block";
+        selectedIndex = -1;
     }
+
+    // 강조 항목 업데이트
+    function updateActiveItem(items) {
+        items.forEach((item, i) => {
+            item.classList.toggle("active", i === selectedIndex);
+        });
+    }
+
+    // 자동완성 숨기기
+    function hideAutocomplete() {
+        autoCompleteBox.style.display = "none";
+        searchUL.innerHTML = "";
+        selectedIndex = -1;
+    }
+
+
 
     // 지도 이동이 완료되었을 발생하는 이벤트
 //    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
@@ -901,41 +1003,8 @@ function mapSearchService(map, keyword) {
         lng : map.getCenter().getLng(),
         code : centerLoc.code,
         keyword : keyword,
-        amount : 100
-    }
-
-    if (searchCondition.level <= 2) {
-        searchCondition.kilometer = 0.5
-    } 
-    else if (searchCondition.level == 3) {
-        searchCondition.kilometer = 0.8
-    }
-    else if (searchCondition.level == 4) {
-        searchCondition.kilometer = 1.6
-    }
-    else if (searchCondition.level == 5) {
-        searchCondition.kilometer = 3.2
-    }
-    else if (searchCondition.level == 6) {
-        searchCondition.kilometer = 6.4
-    }
-    else if (searchCondition.level == 7) {
-        searchCondition.kilometer = 12.8
-    }
-    else if (searchCondition.level == 8) {
-        searchCondition.kilometer = 25.6
-    }
-    else if (searchCondition.level == 9) {
-        searchCondition.kilometer = 51.2
-    }
-    else if (searchCondition.level == 10) {
-        searchCondition.kilometer = 102.4
-    }
-    else if (searchCondition.level == 11) {
-        searchCondition.kilometer = 204.8
-    }
-    else {
-        searchCondition.kilometer = 400
+        amount : 100,
+        kilometer : setRadiusByLevel(map.getLevel())
     }
 
     // 점포 및 장소 검색 시작
@@ -1027,8 +1096,10 @@ function placesSearchCB(data, status, pagination) {
                 }
                 else if (placeInfo.category_group_name != "음식점") {
                     // console.log('일반 음식점은 검색 지원하지 않음');
-                    panToLatLng(basicMap, placeInfo.y, placeInfo.x);
-                    basicMap.setLevel(3);
+                    // panToLatLng(basicMap, placeInfo.y, placeInfo.x);
+                    // basicMap.setLevel(3);
+                    apply2storeMap(data);
+                } else {
                     apply2storeMap(data);
                 }
             })
@@ -1042,8 +1113,10 @@ function placesSearchCB(data, status, pagination) {
             }
             else if (placeInfo.category_group_name != "음식점") {
                 // console.log('일반 음식점은 검색 지원하지 않음');
-                panToLatLng(basicMap, placeInfo.y, placeInfo.x);
-                basicMap.setLevel(3);
+                // panToLatLng(basicMap, placeInfo.y, placeInfo.x);
+                // basicMap.setLevel(3);
+                apply2storeMap(data);
+            } else {
                 apply2storeMap(data);
             }
         });
@@ -1079,8 +1152,8 @@ function subwayServiceCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
         subwayInfo = data[0];
         // 역으로 화면 이동
-        panToLatLng(basicMap, subwayInfo.y, subwayInfo.x);
         basicMap.setLevel(3);
+        panToLatLng(basicMap, subwayInfo.y, subwayInfo.x);
         // 좌표 설정
         searchCondition.lat = subwayInfo.y;
         searchCondition.lng = subwayInfo.x;
@@ -1240,24 +1313,18 @@ function deleteAllEle() {
     document.querySelector(".event-card ul").innerHTML = "";
 }
 
-/** 검색결과가 있을 경우 호출하는 함수 */
+/** 검색결과가 있을 경우 모달을 호출하는 함수 */
 function completeSearch() {
     if(storeMapMode && storeVOList.length != 0) {
         storeListModal.style.display = "block"; // 스토어 리스트 view
-        storeFailModal.style.display = "none"; // 경고 문구 hide
     }
     else if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = "block";
-        eventFailModal.style.display = "none";
     }
 }
 
-/** 검색결과가 없거나 실패할때 호출하는 함수 (통합 모드일 경우에는 가린다)*/
+/** 검색결과가 없거나 실패할때 모달을 호출하는 함수 */
 function failSearch() {
-    console.log("fail func");
-    console.log(storeVOList.length);
-    console.log(eventVOList.length);
-    
     // 통합 맵
     if (unitedMapMode) {
         if (storeVOList.length != 0 || eventVOList.length != 0) {
@@ -1586,4 +1653,44 @@ function getMapLevelFromMarkerLists(...lists) {
     if (maxDistance <= 102400) return 10;
     if (maxDistance <= 204800) return 11;
     return 12;
+}
+
+/** 맵 줌 상태에 따라 반경을 구하는 함수 */
+function setRadiusByLevel(level) {
+    let kilometer;
+    if (level <= 2) {
+        kilometer = 0.5
+    } 
+    else if (level == 3) {
+        kilometer = 0.8
+    }
+    else if (level == 4) {
+        kilometer = 1.6
+    }
+    else if (level == 5) {
+        kilometer = 3.2
+    }
+    else if (level == 6) {
+        kilometer = 6.4
+    }
+    else if (level == 7) {
+        kilometer = 12.8
+    }
+    else if (level == 8) {
+        kilometer = 25.6
+    }
+    else if (level == 9) {
+        kilometer = 51.2
+    }
+    else if (level == 10) {
+        kilometer = 102.4
+    }
+    else if (level == 11) {
+        kilometer = 204.8
+    }
+    else {
+        kilometer = 400
+    }
+
+    return kilometer;
 }
