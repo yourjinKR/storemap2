@@ -12,4 +12,13 @@
       <h3>${evo.event_title}</h3>
       <div class="info-text">장소: ${evo.event_location}</div>
     </div>
+    <!-- n일차 정보 -->
+    <div>
+    	<div>n일차</div>
+    	<ul>
+    		<li>점포명</li>
+    		<li>간단한 소개</li>
+    		<li>메뉴명</li>
+    	</ul>
+    </div>
 </div>

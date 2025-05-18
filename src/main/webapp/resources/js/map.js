@@ -1548,11 +1548,7 @@ function getDistance(lat1, lng1, lat2, lng2) {
     return R * c;
 }
 
-/**
- * 하나 이상의 리스트를 받아 전체 마커 간 최대 거리 → 확대 레벨 계산
- * @param  {...any} lists 마커가 포함된 객체 리스트 (storeVOList, eventVOList 등)
- * @returns 카카오맵 확대 수준 (1 ~ 12)
- */
+/** 하나 이상의 리스트를 받아 전체 마커 간 최대 거리 확대 레벨 계산 */
 function getMapLevelFromMarkerLists(...lists) {
     const allMarkers = [];
 

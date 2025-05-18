@@ -13,13 +13,14 @@
 				<div class="logo">
 					<a href="/">로고</a>
 				</div>
+				<!-- 검색창 -->
 				<form class="form" id="map">
 					<input type="text" id="keyword" autocomplete="off" placeholder="장소 및 이벤트 검색">
 					<button class="mapBtn" id="search">검색</button>
 					<div class="autocomplete"></div>
 				</form>
-				<!-- <div class="search-result" id="store-list">""의 검색 결과</div>  -->
-				<div id="swap-content">
+				<!-- 지도 관련 편의기능 -->
+				<div id="map-navigator">
 					<button class="mapBtn" id="united-mode">모두</button>
 					<button class="mapBtn" id="event-mode">이벤트만</button>
 					<button class="mapBtn" id="store-mode">점포만</button>
