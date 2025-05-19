@@ -670,6 +670,8 @@ function clickOverlay(ele) {
 
     showListSideBar();
     showviewSideBar();
+    setToggle(600);
+    viewSideBarCheck = true;
 
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
 }
