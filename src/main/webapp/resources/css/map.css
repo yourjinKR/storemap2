@@ -16,6 +16,7 @@
 
 .side-bar#event-list{left: -300px; overflow: auto;}
 .side-bar.show#event-list{opacity:1; left:300px; overflow: auto;}
+#map-navigation{position: fixed;  z-index: 20; opacity:1; left:600px; overflow:auto; background:transparent; top:30px; height:auto; width:auto; display:block; white-space:nowrap; position:absolute; transform:translateY(-50%);}
 
 /* 검색결과 실패 */
 .search-fail {

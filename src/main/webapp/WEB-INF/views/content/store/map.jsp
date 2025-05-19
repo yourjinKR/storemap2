@@ -26,25 +26,30 @@
 					</div>
 				</form>
 				<!-- 지도 관련 편의기능 -->
-				<div id="map-navigator">
+				<div id="filter">
 					<button class="mapBtn" id="united-mode">모두</button>
 					<button class="mapBtn" id="event-mode">이벤트만</button>
 					<button class="mapBtn" id="store-mode">점포만</button>
-					<button class="mapBtn" id="custom-position">현위치 재설정</button>
-					<button class="mapBtn" id="panto-current">현위치 이동</button>
 				</div>
+
 			</div>
 			<div id="body">
 				<jsp:include page="../modal/storeListModal.jsp"/>
 				<jsp:include page="../modal/eventListModal.jsp"/>
 				<div class="search-fail" id="united">
-					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>	
+					<div id="fail-content">검색 결과가 존재하지 않습니다.</div>
 				</div>
 				<!-- <button class="mapBtn" id="search-more">결과값 더보기</button> -->				
 			</div>
 		</div>
 	</div>
 
+	<!-- 맵 관련 편의기능 내비게이션 -->
+	<div id="map-navigation">
+		<button class="mapBtn" id="custom-position">현위치 재설정</button>
+		<button class="mapBtn" id="panto-current">현위치 이동</button>
+	</div>
+	
 	<!-- 사이드바 컨트롤러 -->
 	<div class="side-bar" id="toggle-box">
 		<button class="mapBtn" id="toggle">토글</button>			

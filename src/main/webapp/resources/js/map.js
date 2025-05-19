@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 상태 변수
     selectedIndex = -1; // 방향키로 선택 중인 항목의 인덱스
     let suggestionList = []; // 현재 렌더링 중인 추천 리스트
-    let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
+    // let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
 
     keywordInput.addEventListener("input", e => {
         
@@ -1476,7 +1476,7 @@ function address2coord(vo) {
     geocoder.addressSearch(vo.event_location, callback);
 }
 
-/** 프로미스 */
+/** 이벤트 좌표 등록 프로미스 */
 function address2coordPromise(vo) {
     return new Promise((resolve, reject) => {
         let geocoder = new kakao.maps.services.Geocoder();
