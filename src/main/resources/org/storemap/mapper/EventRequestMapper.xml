@@ -3,5 +3,15 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EventRequestMapper">
-	
+	<insert id="eventRequest" parameterType="int">
+		insert into event_request (		
+			eday_idx,
+			pon,
+			store_idx
+		) values (
+			#{eday_idx},
+			0,
+			#{store_idx}
+		)
+	</insert>
 </mapper>

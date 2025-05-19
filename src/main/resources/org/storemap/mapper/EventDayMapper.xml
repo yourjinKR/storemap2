@@ -15,8 +15,16 @@
 	        eday_seq.nextVal,
 	        #{event_idx},
 	        #{store_max},
-	        TO_DATE(#{event_starttime}, 'HH24:MI'),
-	        TO_DATE(#{event_stoptime}, 'HH24:MI')
+	        TO_TIMESTAMP(#{event_starttime}, 'YYYY-MM-DD HH24:MI:SS'),
+	        TO_TIMESTAMP(#{event_stoptime}, 'YYYY-MM-DD HH24:MI:SS')
 	    )
 	</insert>
+	
+	<select id="getEventDaysByEventId" resultType="org.storemap.domain.EventDayVO" parameterType="int">
+		select * from event_day where event_idx = #{event_idx}
+	</select>
+	
+	<select id="getEventIdxByEdayIdx" resultType="int" parameterType="int">
+		select event_idx from event_day where eday_idx = #{eday_idx}
+	</select>
 </mapper>

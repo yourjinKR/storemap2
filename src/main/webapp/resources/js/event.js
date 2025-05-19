@@ -66,22 +66,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			        if (bend.value && bend.value < minEventDate) bend.value = '';
 			      }
 			    });
-			    	// 게시글 등록 성공시 modal 및 등록한 페이지로 이동
-			    const modal = document.getElementById("successModal");
-			    const viewBtn = document.getElementById("registerBtn");
-
-			    if (modal && viewBtn) {
-			        modal.style.display = "block";
-
-			        viewBtn.addEventListener("click", function () {
-			            const event_idx = "${event_idx}";
-			            if (eventId) {
-			                window.location.href = "/event/eventView?event_idx=" + event_idx;
-			            } else {
-			                alert("게시글 ID가 없습니다.");
-			            }
-			        });
-			    }
+			    	// eventRegister 이미지 관련
 			    const imageInput = document.getElementById('imageInput');
 			    const previewContainer = document.getElementById('previewContainer');
 			    let selectedFiles = [];
@@ -173,9 +158,39 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				goIndex();
 			}else if(e.currentTarget.getAttribute("id")=="goRegister"){
 				goRegister();
+			}else if(e.currentTarget.getAttribute("id")=="goEventList"){
+				goEventList();
 			}
 		})
 	});
+    // 모달 열기
+    document.getElementById('openBtn').addEventListener('click', function () {
+        document.getElementById('calendarModal').style.display = 'block';
+      });
+
+    	// 모달 닫기
+      document.getElementById('closeBtn').addEventListener('click', function () {
+        document.getElementById('calendarModal').style.display = 'none';
+      });
+
+      // 모달 바깥 클릭 시 닫기
+      window.addEventListener('click', function (event) {
+        const modal = document.getElementById('calendarModal');
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+
+      // 확인 버튼 이벤트 (예: 선택한 날짜 처리)
+      document.getElementById('confirmBtn').addEventListener('click', function () {
+        const selectedDate = document.getElementById('selectedDate').value;
+        if (selectedDate) {
+          alert("선택한 날짜: " + selectedDate);
+          document.getElementById('calendarModal').style.display = 'none';
+        } else {
+          alert("날짜를 선택해주세요.");
+        }
+      });
 });
 
 
@@ -214,24 +229,50 @@ function generateDays() {
 
 	  while (current <= endDate) {
 	    const yyyyMMdd = current.toISOString().split("T")[0];
-	    const dayIndex = index + 1;
 
 	    const div = document.createElement("div");
+	    div.classList.add("event-day");
+	    div.dataset.date = yyyyMMdd;
 	    div.style.marginBottom = "15px";
-	    div.innerHTML = `
-		최대 입점 수:
-		    <input type="number" name="eventDay[${index}].store_max" class="storeMax" required style="width: 80px;">
-		시작 시간:
-		    <input type="time" name="eventDay[${index}].event_starttime" class="startTime" required>
-		종료 시간:
-		    <input type="time" name="eventDay[${index}].event_stoptime" class="stopTime" required>
-		  </fieldset>
-	    `;
-	    container.appendChild(div);
 
+	    div.innerHTML = `
+	      <fieldset style="border:1px solid #ccc; padding:10px;">
+	        <legend><strong>${yyyyMMdd}</strong></legend>
+	        최대 입점 수:
+	        <input type="number" name="eventDay[${index}].store_max" class="storeMax" required style="width: 80px;">
+	        시작 시간:
+	        <input type="time" class="startTime" required>
+	        종료 시간:
+	        <input type="time" class="stopTime" required>
+	        <input type="hidden" name="eventDay[${index}].event_starttime" class="eventStartTime">
+	        <input type="hidden" name="eventDay[${index}].event_stoptime" class="eventStopTime">
+	      </fieldset>
+	    `;
+
+	    container.appendChild(div);
 	    current.setDate(current.getDate() + 1);
 	    index++;
 	  }
+
+	  updateDateTimeHiddenFields();  // 생성 직후에도 값 채워넣기
+	}
+	// 날짜 포맷
+function updateDateTimeHiddenFields() {
+	  const fieldsets = document.querySelectorAll('.event-day');
+
+	  fieldsets.forEach((fs) => {
+	    const eventDate = fs.dataset.date;  // YYYY-MM-DD
+	    const startTime = fs.querySelector('.startTime').value; // HH:mm
+	    const stopTime = fs.querySelector('.stopTime').value;
+
+	    if (eventDate && startTime && stopTime) {
+	      const fullStart = `${eventDate} ${startTime}:00`;
+	      const fullStop = `${eventDate} ${stopTime}:00`;
+
+	      fs.querySelector('.eventStartTime').value = fullStart;
+	      fs.querySelector('.eventStopTime').value = fullStop;
+	    }
+	  });
 	}
 
 // 일괄 등록 함수
@@ -266,16 +307,6 @@ function bulkFill() {
   alert("일괄 입력 완료!");
 }
 
-
-	
-//function register(){
-//	
-//	let a = document.querySelectorAll('input[name="eventDayList[0]"]');
-//	console.log(a.value);
-//	f.action="/event/eventRegister";
-//	f.submit();
-//}
-
 function goIndex(){
 	location.href = "/event/eventList";
 }
@@ -283,6 +314,10 @@ function goIndex(){
 function goRegister(){
 	console.log(1)
 	location.href ="/event/eventRegister"
+}
+function goEventList(){
+	console.log(1)
+	//	location.href="/event/eventList"
 }
 function logEventDayList() {
     const storeMaxInputs = document.querySelectorAll('.storeMax');
@@ -341,7 +376,7 @@ function logEventDayList() {
         alert("대표 이미지를 선택하세요.");
         return;
     }
-	
+    updateDateTimeHiddenFields()
     f.action="/event/eventRegister";
 	f.submit();
 }

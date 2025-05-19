@@ -38,7 +38,10 @@ import org.storemap.domain.PageDTO;
 import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayService;
 import org.storemap.service.EventDayServiceImple;
+import org.storemap.service.EventRequestService;
 import org.storemap.service.EventServiceImple;
+
+import com.sun.jdi.request.EventRequest;
 
 import lombok.extern.log4j.Log4j;
 
@@ -52,7 +55,8 @@ public class EventController {
 	private EventDayServiceImple eventDayService;
 	@Autowired
 	private CommentEventServiceImple commentEventService;
-	
+	@Autowired
+	private EventRequestService eventRequestService;
 	
 	@GetMapping("/eventList")
 	public String eventList() {	
@@ -118,54 +122,24 @@ public class EventController {
 	@GetMapping("/eventView")
 	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
 	    EventVO vo = eventService.getEventOneView(event_idx);
-	    model.addAttribute("vo", vo);
+	    AttachFileVO avo = new AttachFileVO();
+	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
 
+	    model.addAttribute("evo", vo);
+	    model.addAttribute("avo", avo);
+	    model.addAttribute("eventDayList", eday);
 	    log.info("eventVO..." + vo);
-
-	    int totalMax = 0;
-	    String startDate = "";
-	    String endDate = "";
-
-//	    if (vo != null) {
-//	        try {
-//	            if (vo.getEvent_list_max() != null && !vo.getEvent_list_max().isEmpty()) {
-//	                totalMax = Integer.parseInt(vo.getEvent_list_max());
-//	            }
-//	            if (vo.getEvent_bstartdate() != null) {
-//	                startDate = vo.getEvent_bstartdate().toLocalDate().toString();
-//	            }
-//	            if (vo.getEvent_bstopdate() != null) {
-//	                endDate = vo.getEvent_bstopdate().toLocalDate().toString();
-//	            }
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-//	        }
-//	        
-//	    }
-
-	    // 3. 필요한 데이터 추가로 전달
-	    model.addAttribute("totalMax", totalMax);
-	    model.addAttribute("startDate", startDate);
-	    model.addAttribute("endDate", endDate);
 	    
-	    if (!startDate.isEmpty() && !endDate.isEmpty() && totalMax > 0) {
-	        LocalDate start = LocalDate.parse(startDate);
-	        LocalDate end = LocalDate.parse(endDate);
-	        long days = ChronoUnit.DAYS.between(start, end) + 1;
-
-	        int maxPerDay = (int) Math.floor((double) totalMax / days);
-	        model.addAttribute("maxPerDay", maxPerDay); //  JSP에서 사용할 수 있도록 전달
-	    } else {
-	        model.addAttribute("maxPerDay", 0); // 예외 처리
-	    }
-	    
-	    // 댓글 목록도 같이 담기
-	    List<CommentEventVO> commentList = commentEventService.replyList(event_idx);
-	    model.addAttribute("commentList", commentList);
-	    
-	    return "index"; // 또는 "eventView"
+	    return "index";
 	}
-
+	// 이벤트 입점신청 요청
+	@PostMapping("/eventView")
+	public String eventRequest(@RequestParam int eday_idx, @RequestParam int store_idx) {
+		eventRequestService.eventRequest(eday_idx, store_idx);
+		int event_idx = eventRequestService.getEventIdxByEdayIdx(eday_idx);
+		return "redirect:/event/eventView?event_idx=" + event_idx;
+	}
+	
 
 
 	
