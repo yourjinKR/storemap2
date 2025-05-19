@@ -385,9 +385,11 @@ function viewDetailModalPage(li, type) {
                 // console.log(html);
                 if (typeof unitedMapMode === 'undefined') {
                     document.querySelector(`.modal-content#${type}`).innerHTML = html;
-                } else if (unitedMapMode) {
+                } 
+                else if (unitedMapMode) {
                     document.querySelector(`.modal-content#united`).innerHTML = html;
-                } else {
+                } 
+                else {
                     document.querySelector(`.modal-content#${type}`).innerHTML = html;
                 }
     

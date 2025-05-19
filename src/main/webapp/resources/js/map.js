@@ -1222,7 +1222,7 @@ function apply2storeMap(data) {
         msg += 
         // `<li data-store_idx="${vo.store_idx}" name="store_idx">
         `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
-            <img src="/resources/img/${vo.store_image}" alt="${vo.store_image}">
+            <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>
             <input type="hidden" name="store_address" value="${vo.store_address}">
             <input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
             <input type="hidden" name="store_num" value="${vo.store_num}">

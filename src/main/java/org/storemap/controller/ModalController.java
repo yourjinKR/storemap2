@@ -349,6 +349,7 @@ public class ModalController {
 	})
 	public ResponseEntity<List<StoreVO>> getListByAddrKeyword(@RequestBody MapDTO map){
 		log.info("getListByAddrKeyword..." + map);
+		log.info(storeService.getStoreAddrKeywordList(map));
 		return new ResponseEntity<List<StoreVO>>(storeService.getStoreAddrKeywordList(map), HttpStatus.OK);
 	}
 	
