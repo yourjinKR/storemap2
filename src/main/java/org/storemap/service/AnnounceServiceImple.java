@@ -116,6 +116,7 @@ public class AnnounceServiceImple implements AnnounceService{
 				}else {
 					if(oldImg != null) {
 						String[] oldArr = oldImg.split(",");
+						int oldIdx= 0;
 						for (String old : oldArr) {
 							if(uuidData.indexOf(old) == -1) {
 								cloudinaryService.deleteFile(old);
@@ -123,8 +124,10 @@ public class AnnounceServiceImple implements AnnounceService{
 								if(newUuid.indexOf(old) == -1) {
 									newUuid += old;
 									newUuid += ",";
+									break;
 								}
 							}
+							oldIdx++;
 						}
 					}
 				}
@@ -135,14 +138,14 @@ public class AnnounceServiceImple implements AnnounceService{
 			
 		}
 		if(oldImg != null) {
-			newUuid = newUuid.replaceAll("(^,+|,+$)", "");
+			newUuid = newUuid.replaceAll(",{2,}", ",").replaceAll("(^,+|,+$)", "");     // 앞뒤 쉼표 제거
 			if(uuidData != null) {
 				vo.setAnnounce_image(newUuid);
 			}else {
 				vo.setAnnounce_image(oldvo.getAnnounce_image());
 			}
 		}else {
-			newUuid = newUuid.replaceAll("(^,+|,+$)", "");
+			newUuid = newUuid.replaceAll(",{2,}", ",").replaceAll("(^,+|,+$)", "");     // 앞뒤 쉼표 제거
 			vo.setAnnounce_image(newUuid);
 		}
 		return mapper.updateNotice(vo);

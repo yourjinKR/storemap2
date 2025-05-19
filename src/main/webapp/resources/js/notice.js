@@ -300,7 +300,7 @@ function updateNotice(){
     	}else if(img.getAttribute("src") != ""){
     		imgData += "newFile";
     	}
-    	if(i < editorImg.length - 1){
+    	if(i < editorImg.length - 1){ 
     		imgData += ",";
     	}
     	img.setAttribute("src", "");
@@ -364,7 +364,7 @@ function updateNotice(){
     })
     .then(data => {
         alert("공지사항이 수정되었습니다.");
-        location.href = `/admin/noticeView?idx=${idx}`; // 성공 시 리다이렉트
+        //location.href = `/admin/noticeView?idx=${idx}`; // 성공 시 리다이렉트
     })
     .catch(error => {
         alert("공지사항 등록 중 오류가 발생했습니다.");
