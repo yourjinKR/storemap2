@@ -385,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            // console.log(data);
 
             // 최대 5개까지만 표시
             const suggestionList = data.slice(0, 5);
@@ -406,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            // console.log(data);
 
             // 최대 5개까지만 표시
             const suggestionList = data.slice(0, 5);
@@ -464,6 +464,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     hideAutocomplete();
                 }
                 break;
+
+            default :
+                console.log(e.keyCode);
+                hideAutocomplete();
         }
     });
 
