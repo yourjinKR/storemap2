@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 지도 기본 설정값
     let basicOption = {};
     if(currentPosition) {
-        console.log('위치설정 있음');
+        // console.log('위치설정 있음');
         currentLat = currentPosition.lat;
         currentLng = currentPosition.lng;
         basicOption = {center: new kakao.maps.LatLng(currentLat, currentLng), level: 3};
@@ -137,23 +137,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// 기본 설정값으로 지도 생성
 	let container = document.querySelector(".map");
-	basicMap = new kakao.maps.Map(container, basicOption);
+    if(container != null) {
+        basicMap = new kakao.maps.Map(container, basicOption);
+    
+        // 새로고침
+        centerLatLng = basicMap.getCenter();
+        loadAddrFromCoords(centerLatLng);
+    
+        // 클릭 마커 생성  
+        clickMarker.setMap(basicMap);
 
-    // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-    let zoomControl = new kakao.maps.ZoomControl();
-    basicMap.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+        // 맵 id별 분기
+        mapType = container.getAttribute("id");
+    }
 
-    // 새로고침
-    centerLatLng = basicMap.getCenter();
-    loadAddrFromCoords(centerLatLng);
+    // 검색창
+    mapSearchForm = document.querySelector(".form#map");
+    console.log(mapSearchForm);
+    
+    if(mapType === "full") {
+        keywordInput = mapSearchForm.keyword;
+        console.log('검색창 발견');
+    } else {
+        mapSearchForm = document.querySelector(".search-bar");
+        keywordInput = document.querySelector(".search-bar input[name='keyword']");
+        console.log('없음');
+    }
+    autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
+    autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
 
-    // 클릭 마커 생성  
-    clickMarker.setMap(basicMap);
-
-    // 맵 id별 분기
-    mapType = container.getAttribute("id");
     // map.jsp
-    if (mapType === "full") {
+    if (mapType != null && mapType === "full") {
+        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        let zoomControl = new kakao.maps.ZoomControl();
+        basicMap.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
         // 가게 상세보기 모달 사이드바 style로 변경
         let storeModal = document.querySelector("#modal");
         storeModal.classList.add("side-bar");
@@ -205,11 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
         eventFailModal = document.querySelector(".search-fail#event");
         // 통합 검색 실패 모달
         unitedFailModal = document.querySelector(".search-fail#united");
-        // 검색창
-        mapSearchForm = document.querySelector(".form#map");
-        keywordInput = mapSearchForm.keyword;
-        autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
-        autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
 
         // 검색 리스트 스타일 변경
         storeListModal.style.display = 'block';
@@ -229,10 +242,10 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.removeItem("initialKeyword");
         }
     }
-
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
         let f = document.forms[0];
+        console.log(f);
         // 위치가 설정되지 않았을 경우
         if (f.lat.value != 0 && f.lng.value != 0) {
             let latlng = new kakao.maps.LatLng(f.lat.value, f.lng.value);
@@ -241,6 +254,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // 지도 중심 위치 설정
             basicLat = f.lat.value;
             basicLng = f.lng.value;
+
+            clickMarker.setPosition(latlng);
         }
     }
     // 
@@ -336,27 +351,31 @@ document.addEventListener("DOMContentLoaded", () => {
     zIndex: 3
     });
 
-    // 지도 클릭 이벤트 (경도 위도 출력)
-    kakao.maps.event.addListener(basicMap, 'click', function(mouseEvent) {        
+    if (basicMap != null) {
+        // 지도 클릭 이벤트 (경도 위도 출력)
+        kakao.maps.event.addListener(basicMap, 'click', function(mouseEvent) {        
+        
+            // 클릭한 위도, 경도 정보
+            let latlng = mouseEvent.latLng;
     
-        // 클릭한 위도, 경도 정보
-        let latlng = mouseEvent.latLng;
-
-        if (mapType === "full" && customPositionMode) {
-            clickMarker.setPosition(latlng);
-            positionOverlay.setPosition(latlng);
-        }
-
-        if (mapType === "store-loc") {
-            clickMarker.setPosition(latlng);
-            let f = document.querySelector("#store-modify");
-            if (f) {
-                f.lat.value = latlng.getLat();
-                f.lng.value = latlng.getLng();
-                initAddrFromCoords(latlng, f);
+            if (mapType === "full" && customPositionMode) {
+                clickMarker.setPosition(latlng);
+                positionOverlay.setPosition(latlng);
             }
-        }
-    });
+    
+            if (mapType === "store-loc") {
+                clickMarker.setPosition(latlng);
+                let f = document.querySelector("#store-modify");
+                if (f) {
+                    f.lat.value = latlng.getLat();
+                    f.lng.value = latlng.getLng();
+                    initAddrFromCoords(latlng, f);
+                }
+            }
+        });
+    }
+
+
 
     // ====================== 검색어 자동완성 ====================== 
     // 상태 변수
@@ -366,16 +385,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     keywordInput.addEventListener("input", e => {
         
-        // if (suppressAutocomplete) {
-        //     suppressAutocomplete = false;
-        //     return;
-        // }
 
         const keyword = keywordInput.value.trim();
 
         if (keyword.length === 0) {
             hideAutocomplete();
             return;
+        }
+        
+        let lat;
+        let lng;
+        let kilometer;
+        // 검색어 조건 설정
+        if (basicMap != null) {
+            lat = basicMap.getCenter().getLat();
+            lng = basicMap.getCenter().getLng();
+            kilometer = setRadiusByLevel(basicMap.getLevel());
+        } else {
+            console.log('맵 없음');
+            lat = currentLat;
+            lng = currentLng;
+            kilometer = setRadiusByLevel(5);
         }
 
         // 점포 정보 불러오기 (서버에 비동기 요청)
@@ -384,7 +414,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : basicMap.getCenter().getLat(), lng : basicMap.getCenter().getLng(), amount : 5, kilometer : setRadiusByLevel(basicMap.getLevel()) })
+            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 5, kilometer : kilometer })
         })
         .then(response => response.json())
         .then(data => {
@@ -405,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : basicMap.getCenter().getLat(), lng : basicMap.getCenter().getLng(), amount : 5})
+            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 5})
         })
         .then(response => response.json())
         .then(data => {
@@ -455,17 +485,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
             case 13: // Enter
                 e.preventDefault();
+            
                 suppressAutocomplete = true;
                 if (selectedIndex >= 0 && selectedIndex < items.length) {
                     const selectedItem = items[selectedIndex];
                     const value = selectedItem.dataset.value; // 정확한 값 추출
                     keywordInput.value = value;
                     hideAutocomplete();
-                    mapSearchService(basicMap, value);
+                    if (mapType === "full") {
+                        mapSearchService(basicMap, value);
+                    } else {
+                        sessionStorage.setItem("initialKeyword", value);
+                        location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                    }
                 } else {
-                    mapSearchService(basicMap, keywordInput.value.trim());
                     hideAutocomplete();
+                    if (mapType === "full") {
+                        mapSearchService(basicMap, keywordInput.value.trim());
+                    } else {
+                        sessionStorage.setItem("initialKeyword", keywordInput.value.trim());
+                        location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                    }
                 }
+
                 break;
 
             default :

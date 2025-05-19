@@ -9,9 +9,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&text=lists,view_column_2,favorite,mail,drafts,swap_vert,menu" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=01b044026317f8b7f88dc847a9e857b8"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10f41a82abb306f90579f24750879367&libraries=services"></script>
 <script type="text/javascript" src="/resources/js/default.js"></script>
-<%-- <script type="text/javascript" src="/resources/js/map.js"></script> --%>
+<script type="text/javascript" src="/resources/js/map.js"></script>
 </head>
 <%
 	request.setAttribute("path", request.getAttribute("javax.servlet.forward.request_uri"));

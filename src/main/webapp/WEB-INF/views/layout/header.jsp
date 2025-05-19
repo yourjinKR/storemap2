@@ -4,8 +4,17 @@
 
 <div class="header d_f">
 	<h1><a href="/">로고</a></h1>
-	<div class="search-bar">
-		<input type="text" name="search" placeholder="검색어를 입력해주세요.">
+	<div class="form" id="map">
+		<div class="search-bar">
+			<input type="text" name="keyword" placeholder="검색어를 입력해주세요.">
+			<div class="autocomplete">
+				<ul id="store">
+					<li>예시</li>
+					<li>자동완성</li>
+					<li>자동완성 예시</li>
+				</ul>		
+			</div>
+		</div>	
 	</div>
 	
 	<div class="right-div d_f">

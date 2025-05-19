@@ -69,19 +69,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	sidebarLogout();
 	
 	// 헤더 검색창
-	let search = document.querySelector(".search-bar input[name='search']");
-	if (search != null) {
-		search.addEventListener("keydown", function (e) {
-			if (e.keyCode == 13) {
-				e.preventDefault();
-				const keyword = search.value.trim();
-				if (keyword.length > 0) {
-					sessionStorage.setItem("initialKeyword", keyword);
-					location.href = "/store/map";  // 주소에 파라미터 안 붙음
-				}
-			}
-		});
-	}
+	let search = document.querySelector(".search-bar input[name='keyword']");
+	// if (search != null) {
+	// 	search.addEventListener("keydown", function (e) {
+	// 		if (e.keyCode == 13) {
+	// 			e.preventDefault();
+	// 			const keyword = search.value.trim();
+	// 			if (keyword.length > 0) {
+	// 				sessionStorage.setItem("initialKeyword", keyword);
+	// 				location.href = "/store/map";  // 주소에 파라미터 안 붙음
+	// 			}
+	// 		}
+	// 	});
+	// }
 })
 
 
@@ -134,7 +134,7 @@ function pager(pageMaker){
 function getCurrentPlace(){
     // 이미 로컬스토리지에 위치정보가 있다면 함수 종료
     if (localStorage.getItem("position_data")) {
-        console.log("기존 위치 정보가 존재하므로 위치를 다시 설정하지 않습니다.");
+        // console.log("기존 위치 정보가 존재하므로 위치를 다시 설정하지 않습니다.");
         return;
     }
 
