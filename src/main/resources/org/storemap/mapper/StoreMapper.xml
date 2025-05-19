@@ -257,10 +257,10 @@
 	</select>
 	
 	<!-- 키워드에 해당하는 검색어 찾기 + 반경 필터 추가 -->
-	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
+	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultMap="storeMap">
 	    SELECT *
 	    FROM (
-	        SELECT DISTINCT s.*,
+	        SELECT DISTINCT s.*, a.filename, a.uuid, a.attach_idx,
 	            6371 * ACOS(
 	                COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
 	                COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
@@ -277,6 +277,7 @@
 	                ELSE 4
 	            END AS priority
 	        FROM store s
+	        LEFT OUTER JOIN attach_file a ON s.store_image = a.uuid
 	        WHERE s.store_hidden = 0
 	          AND s.store_lat IS NOT NULL
 	          AND s.store_lng IS NOT NULL
@@ -289,6 +290,7 @@
 	                   AND REPLACE(m.menu_name, ' ', '') LIKE '%' || REPLACE(#{keyword}, ' ', '') || '%'
 	             )
 	          )
+	        ORDER BY priority, distance
 	    )
 	    WHERE 
 	        6371 * ACOS(
@@ -297,7 +299,7 @@
 	            SIN(RADIANS(#{lat})) * SIN(RADIANS(store_lat))
 	        ) &lt;= #{kilometer}
 	    AND ROWNUM &lt;= #{amount}
-	    ORDER BY priority, distance
 	</select>
+
 	
 </mapper>
