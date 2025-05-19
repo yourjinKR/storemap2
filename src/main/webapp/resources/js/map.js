@@ -662,6 +662,8 @@ function clickOverlay(ele) {
     let id = ele.getAttribute("id");
     let idx = ele.getAttribute("idx");
     let li = searchEleByTitle(idx, id);
+
+    viewSideBar = document.querySelector(`.side-bar#${type}`);
     
     emphMarker(idx, id);
     viewDetailModalPage(li, id);
@@ -693,6 +695,7 @@ function markerMapping(eles, type) {
 
             // (store or event) 클릭 이벤트 추가
             ele.addEventListener('click', e => {
+                viewSideBar = document.querySelector(`.side-bar#${type}`);
                 // 리스트 중에서 idx 찾기
                 list.forEach(vo => {
                     if (vo.marker.getTitle() === idx) {
@@ -731,6 +734,8 @@ function addMarkerEvent(marker, type) {
         emphMarker(title, type);
         let li = searchEleByTitle(title, type);
         viewDetailModalPage(li, type);
+
+        viewSideBar = document.querySelector(`.side-bar#${type}`);
 
         if (type === "store") {
             showListSideBar();
@@ -1568,7 +1573,7 @@ function swap2unitedMap() {
         setToggle(300);
 
         // 사이드바를 event로 변경
-        viewSideBar = document.querySelector(".side-bar#united");
+        // viewSideBar = document.querySelector(".side-bar#united");
         console.log(viewSideBar);
 
         if (storeVOList.length !=0 || eventVOList.length != 0) {
