@@ -139,6 +139,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	let container = document.querySelector(".map");
 	basicMap = new kakao.maps.Map(container, basicOption);
 
+    // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+    let zoomControl = new kakao.maps.ZoomControl();
+    basicMap.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
     // 새로고침
     centerLatLng = basicMap.getCenter();
     loadAddrFromCoords(centerLatLng);
@@ -654,16 +658,19 @@ function hideOverlay(overlayList) {
     }
 }
 
-/** 오버레이 클릭 이벤트 */
+/** 오버레이 클릭 이벤트 추가 함수 */
 function clickOverlay(ele) {
     let id = ele.getAttribute("id");
     let idx = ele.getAttribute("idx");
     let li = searchEleByTitle(idx, id);
-
+    
+    emphMarker(idx, id);
     viewDetailModalPage(li, id);
 
     showListSideBar();
     showviewSideBar();
+
+
 
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
 }
@@ -1258,11 +1265,17 @@ function apply2storeMap(data) {
     let msg = "";
     // 점포 리스트 출력
     storeVOList.forEach(vo => {
+        let imgURL = ``;
+        if (vo.attach != null) {
+            imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>`;
+        } else {
+            imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="${vo.store_image}"/>`;
+        }
         // console.log(vo);
         msg += 
         // `<li data-store_idx="${vo.store_idx}" name="store_idx">
         `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
-            <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>
+            ${imgURL}
             <input type="hidden" name="store_address" value="${vo.store_address}">
             <input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
             <input type="hidden" name="store_num" value="${vo.store_num}">
