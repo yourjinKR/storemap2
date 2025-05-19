@@ -175,14 +175,15 @@ document.addEventListener("DOMContentLoaded", () => {
         unitedHeader.style.display = 'block';
 
         // 기본 상태
-        let basicCondition = {
+        searchCondition = {
             level : basicMap.getLevel(),
             lat : basicMap.getCenter().getLat(),
             lng : basicMap.getCenter().getLng(),
-        };
-        // as.getListNearest(basicCondition, 5, function(data) {
-        //     apply2storeMap(data);
-        // })
+            code : centerLoc.code,
+            // keyword : keyword,
+            amount : 100,
+            kilometer : setRadiusByLevel(basicMap.getLevel())
+        }
 
         // ==================== 요소 선언 ====================
         // 검색바
@@ -215,19 +216,17 @@ document.addEventListener("DOMContentLoaded", () => {
         eventListModal.style.display = 'block';
 
         // 초기 검색 시작
-        const params = new URLSearchParams(window.location.search);
-        if(params.get("keyword")) {
-            const keyword = params.get("keyword");
-            keywordInput.value = keyword
-            // 초기 검색 실행
-            searchCondition = {
-                level : basicMap.getLevel(),
-                lat : basicMap.getCenter().getLat(),
-                lng : basicMap.getCenter().getLng(),
-                code : centerLoc.code,
-                keyword : keyword
-            };
-            mapSearchService(basicMap, searchCondition.keyword);
+        const initialKeyword = sessionStorage.getItem("initialKeyword");
+        if (initialKeyword) {
+            // input에도 값 넣기 (선택사항)
+            keywordInput.value = initialKeyword;
+
+            // 검색 조건 구성 후 실행
+            searchCondition.keyword = initialKeyword;
+            mapSearchService(basicMap, initialKeyword);
+
+            // 재검색 방지: 세션 제거
+            sessionStorage.removeItem("initialKeyword");
         }
     }
 
@@ -406,7 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : basicMap.getCenter().getLat(), lng : basicMap.getCenter().getLng(), amount : 5, kilometer : 5 })
+            body: JSON.stringify({ keyword: keyword, lat : basicMap.getCenter().getLat(), lng : basicMap.getCenter().getLng(), amount : 5})
         })
         .then(response => response.json())
         .then(data => {
@@ -1058,15 +1057,14 @@ function mapSearchService(map, keyword) {
 
     deleteAllEle();
 
-    // 검색 조건 설정
     searchCondition = {
-        level : map.getLevel(),
-        lat : map.getCenter().getLat(),
-        lng : map.getCenter().getLng(),
+        level : basicMap.getLevel(),
+        lat : basicMap.getCenter().getLat(),
+        lng : basicMap.getCenter().getLng(),
         code : centerLoc.code,
         keyword : keyword,
         amount : 100,
-        kilometer : setRadiusByLevel(map.getLevel())
+        kilometer : setRadiusByLevel(basicMap.getLevel())
     }
 
     // 점포 및 장소 검색 시작
@@ -1257,7 +1255,7 @@ function apply2storeMap(data) {
         vo.type = "store";
         vo.marker = marker;
         storeVOList.push(vo);
-        console.log(vo);
+        // console.log(vo);
         storeOverlayList.push(registerOverlay(vo));
     });
     console.log('store vo list : ', storeVOList);
@@ -1294,7 +1292,7 @@ function apply2storeMap(data) {
 
     // 오버레이 클릭 이벤트 추가
     let overlayEles = document.querySelector(".customoverlay#store");
-    console.log(overlayEles);
+    // console.log(overlayEles);
     
     // overlayEles.forEach(ele => {
     //     console.log(ele);

@@ -71,13 +71,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// 헤더 검색창
 	let search = document.querySelector(".search-bar input[name='search']");
 	if (search != null) {
-		search.addEventListener("keydown", function(e) {
+		search.addEventListener("keydown", function (e) {
 			if (e.keyCode == 13) {
 				e.preventDefault();
 				const keyword = search.value.trim();
 				if (keyword.length > 0) {
-					// keyword를 URL에 파라미터로 전달
-					location.href = `/store/map?keyword=${encodeURIComponent(keyword)}`;
+					sessionStorage.setItem("initialKeyword", keyword);
+					location.href = "/store/map";  // 주소에 파라미터 안 붙음
 				}
 			}
 		});
