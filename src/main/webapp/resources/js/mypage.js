@@ -36,9 +36,47 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				subContent.forEach(con => con.classList.remove("on"));
 				
 				this.classList.add("on");
-				document.querySelector("."+mainTab+"-"+this.getAttribute("href")).classList.add("on");
+				document.querySelector("."+this.getAttribute("href")+"-content").classList.add("on");
+				getMyLike(this.getAttribute("href"));
 			})
 		})
 	}
+	
+	getMyLike("event");
 })
+
+function getMyLike(type){
+	fetch(`/member/getMyLike/${type}`)
+	.then(responce => responce.json())
+	.then(result => {
+		console.log(result);
+		let str = "";
+		for (let data of result) {
+			str += `<li>`;
+			str += 		`<a href="/event/eventView?event_idx=${data.event_idx}">`;
+			str += 			`<div class="img-box">`;
+			if(result.attach_list != null && result.attach_list.length > 0){
+
+			}else{
+				str += 				`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+			}
+			str += 			`</div>`;
+			str += 			`<dl>`;
+			str += 				`<dt>이벤트 타이틀 : ${data.event_title}</dt>`;
+			str += 				`<dd>이벤트 기간 : ${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</dd>	`;
+			str += 				`<dd>내용 : ${data.event_content}</dd>`;
+			str += 			`</dl>`;
+			str += 			`<div class="like-box">`;
+			str += 				`<input type="checkbox" id="likeChk${data.event_idx}" checked>`;
+			str += 				`<label for="likeChk${data.event_idx}" class="material-symbols-outlined">`;
+			str += 					`favorite`;
+			str += 				`</label>`;
+			str += 			`</div>`;
+			str += 		`</a>`;
+			str += `</li>`;
+		}
+		document.querySelector(".sub-tab-content.on ul").innerHTML = str;
+	})
+	.catch(err => console.log(err))
+}
 

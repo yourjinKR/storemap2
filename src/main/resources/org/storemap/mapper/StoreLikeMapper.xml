@@ -16,8 +16,19 @@
 		delete from store_like where store_idx = #{param1} AND member_idx = #{param2}
 	</delete>
 	<!-- 3.점포 좋아요한 목록 보기  -->
-	<select id="getStoreLikeList" parameterType="int" resultType="org.storemap.domain.StoreLikeVO">
-		select * from store_like where member_idx = #{member_idx}
+	<select id="getLikeList" parameterType="int" resultType="org.storemap.domain.StoreVO">
+		SELECT 
+		    S.STORE_IDX, 
+		    S.STORE_NAME,
+		    S.STORE_IMAGE,
+		    S.STORE_CONTENT,
+		    S.STORE_ACTIVITY_TIME,
+		    S.STORE_ADDRESS,
+		    S.MEMBER_IDX
+		FROM STORE S
+		JOIN STORE_LIKE SL 
+		ON S.STORE_IDX = SL.STORE_IDX
+		WHERE SL.MEMBER_IDX = #{member_idx}
 	</select>
 	<!-- 4.내가 좋아요한 점포번호 가져오기  -->
 	<select id="getStoreIdx" parameterType="int" resultType="org.storemap.domain.StoreLikeVO">

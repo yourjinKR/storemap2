@@ -1,15 +1,20 @@
 package org.storemap.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EnterVO;
+import org.storemap.domain.EventVO;
 import org.storemap.domain.MemberVO;
+import org.storemap.domain.ReviewVO;
+import org.storemap.domain.StoreLikeVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.MemberMapper;
@@ -253,6 +261,22 @@ public class MemberController {
 	@GetMapping("/mypage")
 	public String getMyPage() {
 		return "index";
+	}
+	
+	@GetMapping(value = "/getMyLike/{type}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getMyLike(@PathVariable("type") String dataType, HttpSession session) {
+		
+		if(dataType.equals("event")) {
+			List<EventVO> list = eventLikeService.getLikeList((int) session.getAttribute("loginUserIdx"));
+			return new ResponseEntity<List<EventVO>>(list, HttpStatus.OK);
+		}else if(dataType.equals("store")) {
+			List<StoreVO> list = storeLikeService.getLikeList((int) session.getAttribute("loginUserIdx"));
+			return new ResponseEntity<List<StoreVO>>(list, HttpStatus.OK);
+		}else {
+//			//List<ReviewVO> list = eventLikeService.getLikeList((int) session.getAttribute("loginUserIdx"));
+			return null;
+		}
 	}
 	
 //	@PostMapping("/delete") // 진행중
