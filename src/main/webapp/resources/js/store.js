@@ -75,6 +75,7 @@ function start(){
 	//이미지 파일
     formData.append("file", document.querySelector("input[type='file']").files[0]);
     
+    document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/store/storeStart", {
         method: "POST",
@@ -143,6 +144,7 @@ function register(){
 	//이미지 파일
     formData.append("file", document.querySelector("input[type='file']").files[0]);
 
+    document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/store/storeRegister", {
         method: "POST",
@@ -210,6 +212,7 @@ function modify(){
 	//이미지 파일
     formData.append("file", document.querySelector("input[type='file']").files[0]);
     
+    document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/store/storeModify", {
         method: "POST",
@@ -242,6 +245,7 @@ function menu(){
 // 점주에서 user로 격하도 시켜야됨
 function remove(){
 	if(confirm("정말 취소하시겠습니까?")){
+		document.querySelector("#savingUI").classList.add("save");
 		f.action = `/store/storeRemove?store_idx=${store_idx}`;
 	    f.submit();
 	    alert("삭제 되었습니다");

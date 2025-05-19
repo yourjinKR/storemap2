@@ -189,6 +189,7 @@ function addMenu(){
     // 이미지 파일
     formData.append("file", inputAddImage.files[0]);
 	
+    document.querySelector("#savingUI").classList.add("save");
 	ms.add(
 		formData,
 		function(result){
@@ -209,6 +210,7 @@ function updateMenu(){
     // 이미지 파일
     formData.append("file", inputModifyImage.files[0]);
     
+    document.querySelector("#savingUI").classList.add("save");
 	const vo = {
 		menu_image: inputModifyImage.value,
 		menu_name: inputModifyName.value,
@@ -224,6 +226,7 @@ function updateMenu(){
 
 //메뉴 삭제 함수
 function removeMenu(){
+	document.querySelector("#savingUI").classList.add("save");
 	ms.remove(menu_idx, function(){
 		closeModifyModal();
 		showMenuList();

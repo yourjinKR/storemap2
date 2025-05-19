@@ -41,6 +41,13 @@
 		    	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
 		    </div>
 		  </form>
+		  
+		  <div class="saving-overlay" id="savingUI">
+			<div class="saving-box">
+				<div class="spinner"></div>
+				<div class="saving-text">저장 중...</div>
+			</div>
+		</div>
 		</c:when>
 		<c:otherwise>
 			<div><label>일반 유저 계정으로만 접속 가능합니다!</label></div>

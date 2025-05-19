@@ -41,6 +41,13 @@
 			    	<button type="button" class="btn btn-sec" id="storeBtn">메인으로 이동</button>
 			    </div>
 			  </form>
+			  
+			  <div class="saving-overlay" id="savingUI">
+				<div class="saving-box">
+					<div class="spinner"></div>
+					<div class="saving-text">저장 중...</div>
+				</div>
+			</div>
 		</c:when>
 		<c:otherwise>
 			<div><label>로그인해야 리뷰작성 가능합니다!</label></div>

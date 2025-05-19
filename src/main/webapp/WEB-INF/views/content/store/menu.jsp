@@ -58,5 +58,11 @@
 		    </div>
 	    </div>
 	</div>
+	<div class="saving-overlay" id="savingUI">
+		<div class="saving-box">
+			<div class="spinner"></div>
+			<div class="saving-text">저장 중...</div>
+		</div>
+	</div>
 </div>
 <script type="text/javascript" src="/resources/js/menu.js"></script>

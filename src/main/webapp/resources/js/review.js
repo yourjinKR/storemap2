@@ -44,6 +44,7 @@ function register(){
 	//이미지 파일
     formData.append("file", document.querySelector("input[type='file']").files[0]);
     
+    document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/store/review", {
         method: "POST",
