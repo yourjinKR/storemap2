@@ -70,8 +70,8 @@ function selectLocalImage() {
                 return;
 
             }
-            
-            fileData.push(fileInput.files[0]);
+            const file = fileInput.files[0];
+            fileData.push(file);
             
             const range = quill.getSelection(); // 사용자가 선택한 에디터 범위
             
@@ -83,8 +83,21 @@ function selectLocalImage() {
 	        		imgArr.push([range.index,fileInput.files[0]]);
 	        		quill.setSelection(range.index + 1, 0); 
 	            };
-	            reader.readAsDataURL(fileInput.files[0]); // base64로 변환
             }
+            
+            // 파일을 base64로 변환하기 위한 FileReader 사용
+            const reader = new FileReader();
+
+            // 변환이 완료되면 실행되는 함수
+            reader.onload = function(event) {
+            	const range = quill.getSelection();
+            	const base64Data = event.target.result; // base64로 변환된 데이터
+            	quill.insertEmbed(range ? range.index : 0, 'image', base64Data);
+            	fileData.push({ base64: base64Data, file: file }); // 파일과 base64 데이터를 배열에 저장
+            };
+
+            // base64로 파일을 읽기
+            reader.readAsDataURL(file); // 비동기적으로 실행됩니다.
         }
     });
 }
@@ -118,7 +131,6 @@ function editorInit(){
 	];
 	
 	let editor = document.querySelector("#editor");
-	
 	
 	if(editor != null){
 		
@@ -156,7 +168,7 @@ function editorInit(){
 function noticeInsert() {
     const form = document.forms[0];
     if (!form) return;
-
+    let historyData = quill.root.innerHTML;
     let editorImg = document.querySelectorAll("#editor img");
     editorImg.forEach(img => {
     	img.setAttribute("src", "");
@@ -168,11 +180,18 @@ function noticeInsert() {
     // FormData 생성
     const formData = new FormData(form);
 
-    // fileData 배열의 파일을 FormData에 추가
-    for (const file of fileData) {
-    	formData.append("files", file);
-    }
+    quill.getContents().ops.map(op => {
+        if(op.insert.image != true && op.insert.image != undefined){
+            for(let data of fileData){
+                if(op.insert.image == data.base64){
+                    formData.append("files", data.file);
+                }
+            }
+        } 
+    });
     
+    quill.clipboard.dangerouslyPasteHTML(historyData);
+   
     if(document.querySelector("input[name='announce_title']").value == ""){
     	alert("제목을 입력해주세요");
     	document.querySelector("input[name='announce_title']").focus();
@@ -183,7 +202,6 @@ function noticeInsert() {
     	document.querySelector(".ql-editor").focus();
     	return;
     }
-    
     document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/admin/noticeWrite", {
@@ -267,9 +285,10 @@ function getNotice(){
 function updateNotice(){
 	const form = document.forms[0];
     if (!form) return;
-
+    let historyData = quill.root.innerHTML;
     let imgData = "";
     let editorImg = document.querySelectorAll("#editor img");
+    
     editorImg.forEach((img,i) => {
     	if(img.getAttribute("src") == ""){
     		img.remove();
@@ -297,11 +316,30 @@ function updateNotice(){
     // FormData 생성
     const formData = new FormData(form);
 
-    imgArr.sort((a, b) => a[0] - b[0]);
-    for (const file of imgArr) {
-    	formData.append("files", file[1]);
-    }
-
+    
+    quill.getContents().ops.map(op => {
+    	if(op.insert.image != true && op.insert.image != undefined){
+    		for(let data of fileData){
+    			if(op.insert.image == data.base64){
+    				formData.append("files", data.file);
+    			}
+    		}
+    	} 
+    });
+    
+    quill.clipboard.dangerouslyPasteHTML(historyData);
+    editorImg = document.querySelectorAll("#editor img");
+    quill.getContents().ops.map(op => {
+    	if(op.insert.image != true && op.insert.image != undefined){
+    		let imgStr = op.insert.image;
+    		let target = "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/";
+    		editorImg.forEach(img => {
+    			if(img.getAttribute("src") == op.insert.image){
+    				img.setAttribute("data-uuid",imgStr.substring(target.length, imgStr.indexOf("_")));
+    			}
+    		})
+    	} 
+    });
     if(document.querySelector("input[name='announce_title']").value == ""){
     	alert("제목을 입력해주세요");
     	document.querySelector("input[name='announce_title']").focus();
@@ -312,7 +350,6 @@ function updateNotice(){
     	document.querySelector(".ql-editor").focus();
     	return;
     }
-    
     document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
     fetch("/admin/noticeUpdate", {
