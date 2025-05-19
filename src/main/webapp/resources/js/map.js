@@ -663,15 +663,13 @@ function clickOverlay(ele) {
     let idx = ele.getAttribute("idx");
     let li = searchEleByTitle(idx, id);
 
-    viewSideBar = document.querySelector(`.side-bar#${type}`);
+    viewSideBar = document.querySelector(`.side-bar#${id}`);
     
     emphMarker(idx, id);
     viewDetailModalPage(li, id);
 
     showListSideBar();
     showviewSideBar();
-
-
 
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
 }
