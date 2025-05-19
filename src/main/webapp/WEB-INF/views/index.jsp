@@ -14,6 +14,7 @@
 </head>
 <%
 	request.setAttribute("path", request.getAttribute("javax.servlet.forward.request_uri"));
+	request.setAttribute("IMG_URL", "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/");
 %>
 <body>
 	사용자 : ${ loginUser }, 권한 : ${ userType }
