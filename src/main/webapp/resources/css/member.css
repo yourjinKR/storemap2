@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-.login-wrap{border:1px solid #d9d9d9;height:750px;box-shadow: 0 5px 5px rgba(0,0,0,0.1);margin:50px 0;}
+.login-wrap{border:1px solid #d9d9d9;height:670px;box-shadow: 0 5px 5px rgba(0,0,0,0.1);margin:50px 0;}
 .login-wrap h3{font-size:36px;font-weight:bold;width:90%;word-break: keep-all;color:#154734}
 .login-wrap > div{width:50%;}
 .login-wrap > div.right-con{background:#D9F3E5;display:flex;flex-direction: column;justify-content: center;align-items: center;text-align:center;}
