@@ -11,7 +11,7 @@ for (let hrefs of CSS_FILE_PATH) {
 	document.head.appendChild(linkEle);
 };
 let thisPlace = "";
-
+const IMG_URL = "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/";
 
 // 현위치 변수 선언
 let currentLat, currentLng, pageNum, amount, userId, auth, today = null;

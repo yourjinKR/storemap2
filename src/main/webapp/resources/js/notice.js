@@ -3,7 +3,6 @@ let linkEle = document.createElement('link');
 linkEle.rel = 'stylesheet';
 linkEle.href = NOTICE_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
-const IMG_URL = "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/";
 
 let formData, fileData, quill, idx, pathName, imgArr = null;
 
