@@ -393,16 +393,18 @@ function viewDetailModalPage(li, type) {
     
                 // 동적으로 input name에 맞춰서 값 가져오기 (예: store_idx, event_idx 등)
                 const input = document.querySelector(`input[name="${type}_idx"]`);
-                if (input) {
-                    window[`${type}_id`] = input.value;
-                }
+                // if (input) {
+                //     window[`${type}_id`] = input.value;
+                // }
     
                 // 모달 타입마다 분기 실행
                 if (type === "store") {
                     initializeEvents();
+                    store_id = input.value;
                 }
                 else if (type === "event") {
-                    
+                    initializeEvents();
+                    event_id = input.value;
                 }
                 openModal();
             })

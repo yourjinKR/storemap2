@@ -429,8 +429,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // 키보드 방향키/엔터 지원
     keywordInput.addEventListener("keydown", e => {
         const items = searchUL.querySelectorAll("li");
-        console.log(e.keyCode);
-        console.log(selectedIndex);
+        // console.log(e.keyCode);
+        // console.log(selectedIndex);
         
         
 
@@ -1744,7 +1744,7 @@ function updateActiveItem(items) {
 
 // 자동완성 숨기기
 function hideAutocomplete() {
-    console.log('가린다');
+    // console.log('가린다');
     autoCompleteBox.style.display = "none";
     searchUL.innerHTML = "";
     selectedIndex = -1;
