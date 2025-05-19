@@ -252,3 +252,21 @@ function remove(){
 	}else{
 	}
 }
+
+// 미리보기
+document.querySelector("#simage").addEventListener("change", function (e) {
+    const preview = document.querySelector("#preview");
+    const file = e.target.files[0];
+
+    if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="미리보기 이미지" style="max-width:100px; height:auto;">`;
+            preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = "";
+        preview.style.display = "none";
+    }
+});

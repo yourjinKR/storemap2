@@ -4,7 +4,14 @@
 <div class="storeView">
 	
 	<div class="store-image">
-		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_${svo.attach.filename}" alt="${svo.attach.filename}"/>
+		<c:choose>
+			<c:when test="${svo.attach.filename eq null}">
+				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+			</c:when>
+			<c:otherwise>
+				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_${svo.attach.filename}" alt="${svo.attach.filename}"/>
+			</c:otherwise>
+		</c:choose>
 	</div>
 	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 	<input type="hidden" name="store_idx" value="${svo.store_idx}">
@@ -32,7 +39,14 @@
       <div class="menu-list">
       	<c:forEach var="mvo" items="${mlist}">
       		<div class="menu-item">
-	          <img src="/resources/img/${mvo.menu_image}" alt="${mvo.menu_image}">
+      		 <c:choose>
+      		 	<c:when test="${mvo.attach.filename eq null}">
+      		 		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+      		 	</c:when>
+      		 	<c:otherwise>
+      		 		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${mvo.menu_image}_${mvo.attach.filename}" alt="${mvo.attach.filename}"/>
+      		 	</c:otherwise>
+      		 </c:choose>
 	          <div class="menu-name">${mvo.menu_name}</div>
 	          <div class="menu-price">₩${mvo.menu_price}</div>
 	        </div>
@@ -58,7 +72,16 @@
 		      	</label>
 		      	<span class="reviewLike-count reviewLike-count-${rvo.review_idx}">${rvo.review_like_cnt}</span>
 		    </div>
-		  	  <img src="/resources/img/${rvo.writer_image}" alt="${rvo.writer_image}">
+		    <div class="writer-img">
+		     <c:choose>
+		     	<c:when test="${rvo.writer_filename eq null}">
+		     		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="사진이 없습니다!"/>
+		     	</c:when>
+		     	<c:otherwise>
+		     		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${rvo.writer_image}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
+		     	</c:otherwise>
+		     </c:choose>
+		    </div>
 		        <div class="review-content">
 		          <div class="stars">${rvo.review_star}</div>
 		          <div class="review-meta">
@@ -67,8 +90,15 @@
 		          <div class=""><!-- 제목 css필요 -->
 		          	${rvo.review_title}
 		          </div>
-		          <div class=""><!-- 이미지/내용 css필요 -->
-		          	<img src="/resources/img/${rvo.review_image}" alt="${rvo.review_image}">
+		          <div class="review-img"><!-- 이미지/내용 css필요 -->
+		           <c:choose>
+		           	<c:when test="${rvo.review_filename eq null}">
+		           		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+		           	</c:when>
+		           	<c:otherwise>
+		           		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${rvo.review_image}_${rvo.review_filename}" alt="${rvo.review_filename}"/>
+		           	</c:otherwise>
+		           </c:choose>
 		          	${rvo.review_content}
 		          </div>
 		        </div>

@@ -8,7 +8,14 @@
 			<br>
 			<form id="ModifyForm" data-type="${type}" method="post">
 				<div class="profile">
-					<img alt="" src="/resources/img/profile.jpg">			
+					<c:choose>
+						<c:when test="${vo.attach.filename eq null}">
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
+						</c:when>
+						<c:otherwise>
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}"/>
+						</c:otherwise>
+					</c:choose>		
 				</div>
 				<p>
 					<button>사진 변경</button>

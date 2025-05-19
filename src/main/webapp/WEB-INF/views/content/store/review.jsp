@@ -34,6 +34,7 @@
 			
 			    <label for="rimage">사진첨부</label>
 			    <input type="file" id="rimage" name="review_image">
+			    <div id="preview"></div>
 			
 			    <div class="panel-body-btns">
 			    	<button type="button" class="btn btn-sec" id="registerBtn">리뷰 등록</button>

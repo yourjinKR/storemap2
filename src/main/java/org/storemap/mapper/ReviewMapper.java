@@ -13,6 +13,8 @@ public interface ReviewMapper {
 	public int delete(int review_idx);
 	// 리뷰 목록
 	public List<ReviewVO> getReviewList(int store_idx);
+	// 리뷰 조인 목록
+	public List<ReviewVO> getReviewMap(int store_idx);
 	// 리뷰 정보
 	public ReviewVO read(int review_idx);
 	// 해당 점포에 동일한 리뷰를 가지고 있는지 검증

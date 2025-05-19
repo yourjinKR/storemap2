@@ -10,7 +10,7 @@
 					<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name="store_idx">
 					<c:choose>
 						<c:when test="${vo.attach.filename eq null}">
-							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/store1_qrjxyj.jpg" alt="${vo.store_image}"/>
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="${vo.store_image}"/>
 						</c:when>
 						<c:otherwise>
 							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>

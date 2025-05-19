@@ -91,8 +91,8 @@ public class ModalController {
 		log.info("storeView..."+store_idx);
 		
 		StoreVO storeVO = storeService.map(store_idx);
-        List<MenuVO> menuList = menuService.getList(store_idx);
-        List<ReviewVO> reviewList = reviewService.getList(store_idx);
+        List<MenuVO> menuList = menuService.getMap(store_idx);
+        List<ReviewVO> reviewList = reviewService.getMap(store_idx);
 		
 		model.addAttribute("svo",storeVO);
 		model.addAttribute("mlist",menuList);

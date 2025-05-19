@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EnterVO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.StoreVO;
+import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.MemberMapper;
 import org.storemap.service.CommentLikeServiceImple;
 import org.storemap.service.EnterServiceImple;
@@ -50,6 +52,8 @@ public class MemberController {
 	private CommentLikeServiceImple commentLikeService;
 	@Autowired
 	private ReviewServiceImple reviewService;
+	@Autowired
+	private AttachFileMapper attachMapper;
 	
 	// 로그인 화면으로 이동
 	@GetMapping("/login")
@@ -80,12 +84,14 @@ public class MemberController {
 				StoreVO store = storeService.getStore(member.getMember_idx());
 				session.setAttribute("storeIdx", store.getStore_idx());
 			}
+			AttachFileVO avo = attachMapper.getAttach(member.getMember_image());
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
 			session.setAttribute("userName", member.getMember_name());
 			session.setAttribute("userNickName", member.getMember_nickname());
 			session.setAttribute("userType", member.getMember_type());
 			session.setAttribute("userImage", member.getMember_image());
+			session.setAttribute("userFilename", avo.getFilename());
 			
 			String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
 			if(redirectUrl != null && redirectUrl.startsWith("/")) {

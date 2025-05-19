@@ -13,6 +13,10 @@ public interface MenuMapper {
 	public int delete(int menu_idx);
 	// 메뉴 목록
 	public List<MenuVO> getMenuList(int store_idx);
-	// 메뉴 정보?
+	// 메뉴 조인 목록
+	public List<MenuVO> getMenuMap(int store_idx);
+	// 메뉴 정보
 	public MenuVO read(int menu_idx);
+	// 메뉴 조인 정보
+	public MenuVO map(int menu_idx);
 }

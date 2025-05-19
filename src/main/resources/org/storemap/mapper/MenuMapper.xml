@@ -3,6 +3,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.MenuMapper">
+	<resultMap id="menuMap" type="org.storemap.domain.MenuVO">
+		<id property="menu_idx" column="menu_idx"/>
+		<result property="store_idx" column="store_idx"/>
+		<result property="menu_image" column="menu_image"/>
+		<result property="menu_name" column="menu_name"/>
+		<result property="menu_price" column="menu_price"/>
+		<association property="attach" resultMap="attachMap"/>
+	</resultMap>
+	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
+		<id property="attach_idx" column="attach_idx"/>
+		<result property="filename" column="filename"/>
+		<result property="uuid" column="uuid"/>
+	</resultMap>
 	
 	<!-- 1.메뉴 등록  -->
 	<insert id="insert" parameterType="org.storemap.domain.MenuVO">
@@ -30,9 +43,23 @@
 	<select id="getMenuList" parameterType="int" resultType="org.storemap.domain.MenuVO">
 		select * from menu where store_idx = #{store_idx}
 	</select>
-	<!-- 5.메뉴 자세히 보기  -->
+	<!-- 5.메뉴 조인 전체 보기 -->
+	<select id="getMenuMap" parameterType="int" resultMap="menuMap">
+		SELECT m.*, a.filename
+		FROM menu m
+		LEFT OUTER JOIN attach_file a ON m.menu_image = a.uuid
+		WHERE m.store_idx = #{store_idx}
+	</select>
+	<!-- 6.메뉴 자세히 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.MenuVO">
 		select * from menu where menu_idx = #{menu_idx}
+	</select>
+	<!-- 7.메뉴 조인 자세히 보기 -->
+	<select id="map" parameterType="int" resultMap="menuMap">
+		SELECT m.*, a.filename
+		FROM menu m
+		LEFT OUTER JOIN attach_file a ON m.menu_image = a.uuid
+		WHERE m.menu_idx = #{menu_idx}
 	</select>
 	
 </mapper>

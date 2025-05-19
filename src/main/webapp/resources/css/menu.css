@@ -273,6 +273,13 @@
 	color: #333;
 }
 
+#add-preview img, #modify-preview img {
+    max-width: 100px;
+    height: auto;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+}
+
 /* 로딩중 */
 
 .saving-overlay {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.4);display: none;justify-content: center;align-items: center;z-index: 9999;}

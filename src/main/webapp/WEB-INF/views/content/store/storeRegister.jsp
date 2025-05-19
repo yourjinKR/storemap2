@@ -13,6 +13,7 @@
 		    
 		    <label for="simage">이미지</label>
 			<input type="file" id="simage" name="store_image">
+			<div id="preview"></div>
 		
 		    <label for="pnum">연락처</label>
 		    <input type="text" id="pnum" name="store_num" placeholder="000-000-0000">

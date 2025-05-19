@@ -132,7 +132,11 @@ function showMenuList(){
 	ms.getList(store_idx, jsonArray => {
 		jsonArray.forEach(json => {	
 			msg += `<li data-menu_idx="${json.menu_idx}" onclick="menuModifyPage(this)" name="mid">`;
-			msg += `	<img src="/resources/img/${json.menu_image}" alt="${json.menu_image}" class="menu-image">`;
+			if(!json.attach || !json.attach.filename){
+				msg += `	<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!" class="menu-image"/>`;
+			}else{
+				msg += `	<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${json.menu_image}_${json.attach.filename}" alt="${json.attach.filename}" class="menu-image"/>`;				
+			}
 			msg += `	<div class="menu-description">`;
 			msg += `		<div class="menu-name">${json.menu_name}</div>`;
 			msg += `		<div class="menu-price">₩${json.menu_price}</div>`;
@@ -194,6 +198,7 @@ function addMenu(){
 		formData,
 		function(result){
 			console.log("result: " + result);
+			document.querySelector("#savingUI").classList.remove("save");
 			closeAddModal();
 			showMenuList();
 		}
@@ -219,6 +224,7 @@ function updateMenu(){
 	
 	ms.update(menu_idx, formData,
 	function(){
+		document.querySelector("#savingUI").classList.remove("save");
 		closeModifyModal();
 		showMenuList();
 	});
@@ -228,8 +234,56 @@ function updateMenu(){
 function removeMenu(){
 	document.querySelector("#savingUI").classList.add("save");
 	ms.remove(menu_idx, function(){
+		document.querySelector("#savingUI").classList.remove("save");
 		closeModifyModal();
 		showMenuList();
 	});
 }
 
+//메뉴 추가 시 미리보기
+inputAddImage.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    let preview = document.querySelector("#add-preview");
+    
+    // preview 영역이 없다면 동적으로 생성
+    if (!preview) {
+        preview = document.createElement("div");
+        preview.id = "add-preview";
+        preview.style.marginTop = "10px";
+        inputAddImage.parentNode.appendChild(preview);
+    }
+
+    if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="미리보기" style="max-width:100px; height:auto; border:1px solid #ccc;">`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = "";
+    }
+});
+
+// 메뉴 수정 시 미리보기
+inputModifyImage.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    let preview = document.querySelector("#modify-preview");
+
+    // preview 영역이 없다면 동적으로 생성
+    if (!preview) {
+        preview = document.createElement("div");
+        preview.id = "modify-preview";
+        preview.style.marginTop = "10px";
+        inputModifyImage.parentNode.appendChild(preview);
+    }
+
+    if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="미리보기" style="max-width:100px; height:auto; border:1px solid #ccc;">`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = "";
+    }
+});

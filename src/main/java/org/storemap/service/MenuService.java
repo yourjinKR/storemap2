@@ -14,6 +14,10 @@ public interface MenuService {
 	public int remove(int menu_idx);
 	// 메뉴 목록
 	public List<MenuVO> getList(int store_idx);
+	// 메뉴 조인 목록
+	public List<MenuVO> getMap(int store_idx);
 	// 메뉴 정보?
 	public MenuVO get(int menu_idx);
+	// 메뉴 조인 정보
+	public MenuVO map(int menu_idx);
 }

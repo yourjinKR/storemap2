@@ -84,9 +84,21 @@ public class MenuServiceImple implements MenuService{
 	}
 	
 	@Override
+	public List<MenuVO> getMap(int store_idx) {
+		log.info("getMap..."+store_idx);
+		return mapper.getMenuMap(store_idx);
+	}
+	
+	@Override
 	public MenuVO get(int menu_idx) {
 		log.info("get..."+menu_idx);
 		return mapper.read(menu_idx);
+	}
+	
+	@Override
+	public MenuVO map(int menu_idx) {
+		log.info("map..."+menu_idx);
+		return mapper.map(menu_idx);
 	}
 	
 }

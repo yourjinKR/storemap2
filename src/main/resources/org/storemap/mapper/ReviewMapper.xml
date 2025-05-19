@@ -3,6 +3,27 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.ReviewMapper">
+	<resultMap id="reviewMap" type="org.storemap.domain.ReviewVO">
+		<id property="review_idx" column="review_idx"/>
+		<result property="store_idx" column="store_idx"/>
+		<result property="review_writer" column="review_writer"/>
+		<result property="review_star" column="review_star"/>
+		<result property="review_title" column="review_title"/>
+		<result property="review_content" column="review_content"/>
+		<result property="review_image" column="review_image"/>
+		<result property="review_like_cnt" column="review_like_cnt"/>
+		<result property="review_regdate" column="review_regdate"/>
+		<result property="review_hidden" column="review_hidden"/>
+		<result property="writer_image" column="writer_image"/>
+		<result property="review_filename" column="review_filename"/>
+		<result property="writer_filename" column="writer_filename"/>
+		<association property="attach" resultMap="attachMap"/>
+	</resultMap>
+	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
+		<id property="attach_idx" column="attach_idx"/>
+		<result property="filename" column="filename"/>
+		<result property="uuid" column="uuid"/>
+	</resultMap>
 	
 	<!-- 1.리뷰 등록  -->
 	<insert id="insert" parameterType="org.storemap.domain.ReviewVO">
@@ -48,33 +69,43 @@
 	<select id="getReviewList" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where store_idx = #{store_idx}
 	</select>
-	<!-- 5.리뷰 자세히 보기  -->
+	<!-- 5.리뷰 조인 전체 보기 -->
+	<select id="getReviewMap" parameterType="int" resultMap="reviewMap">
+		SELECT r.*, a1.filename AS review_filename, a2.filename AS writer_filename
+		FROM review r
+		LEFT OUTER JOIN attach_file a1 ON r.review_image = a1.uuid
+		LEFT OUTER JOIN attach_file a2 ON r.writer_image = a2.uuid
+		WHERE r.store_idx = #{store_idx}
+	</select>
+	<!-- 6.리뷰 자세히 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where review_idx = #{review_idx}
 	</select>
-	<!-- 6.해당 점포에 동일한 리뷰를 가지고 있는지 검증 -->
+	<!-- 7.리뷰 조인 자세히 보기 -->
+	
+	<!-- 8.해당 점포에 동일한 리뷰를 가지고 있는지 검증 -->
 	<select id="getSame" parameterType="org.storemap.domain.ReviewVO" resultType="org.storemap.domain.ReviewVO">
 		select * from review where store_idx = #{param1} AND review_writer = #{param2}
 	</select>
-	<!-- 7.리뷰 숨기기 등록 -->
+	<!-- 9.리뷰 숨기기 등록 -->
 	<update id="hideReview" parameterType="int">
 		update review set 
 			review_hidden = 1
 		where review_idx = #{review_idx}
 	</update>
-	<!-- 8.리뷰 숨기기 해제 -->
+	<!-- 10.리뷰 숨기기 해제 -->
 	<update id="unhideReview" parameterType="int">
 		update review set 
 			review_hidden = 0
 		where review_idx = #{review_idx}
 	</update>
-	<!-- 9.점포 좋아요 업 -->
+	<!-- 11.점포 좋아요 업 -->
 	<update id="updateFavorite" parameterType="int">
 		update review set
 			review_like_cnt = review_like_cnt + 1
 		where review_idx = #{review_idx}
 	</update>
-	<!-- 10.점포 좋아요 다운 -->
+	<!-- 12.점포 좋아요 다운 -->
 	<update id="deleteFavorite" parameterType="int">
 	    update review set
 	        review_like_cnt = GREATEST(review_like_cnt - 1, 0)

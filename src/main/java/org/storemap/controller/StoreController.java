@@ -145,7 +145,7 @@ public class StoreController {
 	@GetMapping("/menu")
 	public String menuPage(@RequestParam("store_idx") int store_idx, Model model) {
 		log.info("menuPage..."+store_idx);
-		model.addAttribute("list",menuService.getList(store_idx));
+		model.addAttribute("list",menuService.getMap(store_idx));
 		return "index";
 	}
 	
@@ -168,7 +168,7 @@ public class StoreController {
 			})
 	public ResponseEntity<MenuVO> menuInfo(@PathVariable("menu_idx") int menu_idx){
 		log.info("get..."+menu_idx);
-		return new ResponseEntity<MenuVO>(menuService.get(menu_idx), HttpStatus.OK);
+		return new ResponseEntity<MenuVO>(menuService.map(menu_idx), HttpStatus.OK);
 	}
 	
 	// 메뉴 추가

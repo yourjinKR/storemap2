@@ -28,7 +28,14 @@
 			<c:when test="${loginUser ne null}">
 				<a class="btn" id="hlogoutLink" href="/member/login">로그아웃</a>
 				<div class="profile">
-					<img alt="" src="/resources/img/profile.jpg">			
+					<c:choose>
+						<c:when test="${vo.attach.filename eq null}">
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
+						</c:when>
+						<c:otherwise>
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}"/>
+						</c:otherwise>
+					</c:choose>			
 				</div>
 			</c:when>
 			<c:otherwise>
