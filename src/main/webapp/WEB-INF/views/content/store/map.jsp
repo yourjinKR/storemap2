@@ -18,11 +18,11 @@
 					<input type="text" id="keyword" autocomplete="off" placeholder="장소 및 이벤트 검색">
 					<button class="mapBtn" id="search">검색</button>
 					<div class="autocomplete">
-						<ul>
+						<ul id="store">
 							<li>예시</li>
 							<li>자동완성</li>
 							<li>자동완성 예시</li>
-						</ul>
+						</ul>		
 					</div>
 				</form>
 				<!-- 지도 관련 편의기능 -->

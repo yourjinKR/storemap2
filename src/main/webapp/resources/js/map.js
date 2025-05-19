@@ -65,7 +65,7 @@ let mapSearchForm = null;
 let keywordInput;
 // 자동완성
 let autoCompleteBox = null;
-let searchUL = null;
+let autoSearchUL = null;
 /** 자동완성 재입력 방지 */ 
 let suppressAutocomplete = false;
 let selectedIndex = -1;
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mapSearchForm = document.querySelector(".form#map");
         keywordInput = mapSearchForm.keyword;
         autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
-        searchUL = autoCompleteBox.querySelector(".autocomplete ul");
+        autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
 
         // 검색 리스트 스타일 변경
         storeListModal.style.display = 'block';
@@ -428,12 +428,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 키보드 방향키/엔터 지원
     keywordInput.addEventListener("keydown", e => {
-        const items = searchUL.querySelectorAll("li");
-        // console.log(e.keyCode);
-        // console.log(selectedIndex);
-        
-        
+        const items = autoSearchUL.querySelectorAll("li");
 
+        
         if (items.length === 0) return;
 
         switch (e.keyCode) {
@@ -464,13 +461,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     mapSearchService(basicMap, value);
                 } else {
                     mapSearchService(basicMap, keywordInput.value.trim());
+                    hideAutocomplete();
                 }
                 break;
         }
     });
 
     // 리스트 클릭 이벤트
-    searchUL.addEventListener("click", e => {
+    autoSearchUL.addEventListener("click", e => {
         const target = e.target.closest("li");
         if (!target) return;
 
@@ -1336,6 +1334,7 @@ function completeSearch() {
     else if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = "block";
     }
+    hideAutocomplete();
 }
 
 /** 검색결과가 없거나 실패할때 모달을 호출하는 함수 */
@@ -1730,7 +1729,7 @@ function updateSuggestionList(list, type) {
         }
     }).join("");
 
-    searchUL.innerHTML += html;
+    autoSearchUL.innerHTML += html;
     autoCompleteBox.style.display = "block";
     selectedIndex = -1;
 }
@@ -1746,6 +1745,6 @@ function updateActiveItem(items) {
 function hideAutocomplete() {
     // console.log('가린다');
     autoCompleteBox.style.display = "none";
-    searchUL.innerHTML = "";
+    autoSearchUL.innerHTML = "";
     selectedIndex = -1;
 }
