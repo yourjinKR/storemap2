@@ -596,22 +596,46 @@ let storeOverlayList = [];
 let eventOverlayList = [];
 
 /** 커스텀 오버레이를 등록하는 함수 */
-function registerOverlay(lat, lng, name) {
-    let content = `
-    <div class="customoverlay">
-        <span class="title">${name}</span>
-    </div>`;
-    // 커스텀 오버레이를 생성합니다
-    let customOverlay = new kakao.maps.CustomOverlay({
-    // map: map,
-    position: new kakao.maps.LatLng(lat, lng),
-    content: content,
-    yAnchor: 1,
-    zIndex: 3
-    });
-    // 리스트에 추가
-    // storeOverlayList.push(customOverlay);
-    return customOverlay;
+function registerOverlay(vo) {
+    let type = vo.type;
+
+    if (type === 'store') {
+        let content = `
+        <div class="customoverlay" id="${type}" idx="${vo.store_idx}" onclick="clickOverlay(this)">
+            <span class="title">${vo.store_name}</span>
+        </div>`;
+        // 커스텀 오버레이를 생성합니다
+        let customOverlay = new kakao.maps.CustomOverlay({
+        // map: map,
+        position: new kakao.maps.LatLng(vo.store_lat, vo.store_lng),
+        content: content,
+        yAnchor: 1,
+        zIndex: 3
+        });
+        // 리스트에 추가
+        // storeOverlayList.push(customOverlay);
+        // console.log(customOverlay);
+        
+        return customOverlay;
+    } else if (type === 'event') {
+        let content = `
+        <div class="customoverlay" id="${type}" idx="${vo.event_idx}" onclick="clickOverlay(this)">
+            <span class="title">${vo.event_title}</span>
+        </div>`;
+        // 커스텀 오버레이를 생성합니다
+        let customOverlay = new kakao.maps.CustomOverlay({
+        // map: map,
+        position: new kakao.maps.LatLng(vo.event_lat, vo.event_lng),
+        content: content,
+        yAnchor: 1,
+        zIndex: 3
+        });
+        // 리스트에 추가
+        // storeOverlayList.push(customOverlay);
+        // console.log(customOverlay.getContent());
+
+        return customOverlay;
+    }
 }
 
 /** 커스텀 오버레이를 보여주는 함수 */
@@ -628,6 +652,20 @@ function hideOverlay(overlayList) {
         const element = overlayList[i];
         element.setMap(null);
     }
+}
+
+/** 오버레이 클릭 이벤트 */
+function clickOverlay(ele) {
+    let id = ele.getAttribute("id");
+    let idx = ele.getAttribute("idx");
+    let li = searchEleByTitle(idx, id);
+
+    viewDetailModalPage(li, id);
+
+    showListSideBar();
+    showviewSideBar();
+
+    document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
 }
 
 // ============================= 이벤트 추가 관련 함수 =============================
@@ -1204,6 +1242,7 @@ function apply2storeMap(data) {
         basicMap.setLevel(1);
     }
 
+    
     // 데이터 등록
     data.forEach(vo => {
         let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx);
@@ -1211,7 +1250,8 @@ function apply2storeMap(data) {
         vo.type = "store";
         vo.marker = marker;
         storeVOList.push(vo);
-        storeOverlayList.push(registerOverlay(vo.store_lat, vo.store_lng, vo.store_name));
+        console.log(vo);
+        storeOverlayList.push(registerOverlay(vo));
     });
     console.log('store vo list : ', storeVOList);
 
@@ -1238,6 +1278,17 @@ function apply2storeMap(data) {
     let storeLIS = document.querySelectorAll(".store-card ul li");
     // 가게와 마커를 메핑
     markerMapping(storeLIS, "store");
+
+    // 오버레이 클릭 이벤트 추가
+    let overlayEles = document.querySelector(".customoverlay#store");
+    console.log(overlayEles);
+    
+    // overlayEles.forEach(ele => {
+    //     console.log(ele);
+    //     ele.addEventListener('click', e => {
+    //         console.log('테스트');
+    //     })
+    // })
 
     // 마커와 오버레이 표시
     if ((storeMapMode || unitedMapMode) && storeVOList.length != 0 ) {
@@ -1282,7 +1333,7 @@ function apply2eventMap(data) {
 
         vo.type = "event";
         
-        eventOverlayList.push(registerOverlay(vo.event_lat, vo.event_lng, vo.event_title));
+        eventOverlayList.push(registerOverlay(vo));
     })
 
     eventUL.innerHTML += msg;
