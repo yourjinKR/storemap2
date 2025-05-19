@@ -104,6 +104,7 @@ public class AnnounceServiceImple implements AnnounceService{
 		String oldImg = oldvo.getAnnounce_image();
 		String uuidData = vo.getAnnounce_image();
 		String newUuid = "";
+			
 		if(uuidData != null) {
 			
 			String[] arr = uuidData.split(",");
@@ -119,7 +120,10 @@ public class AnnounceServiceImple implements AnnounceService{
 							if(uuidData.indexOf(old) == -1) {
 								cloudinaryService.deleteFile(old);
 							}else {
-								newUuid += old;
+								if(newUuid.indexOf(old) == -1) {
+									newUuid += old;
+									newUuid += ",";
+								}
 							}
 						}
 					}
@@ -130,12 +134,17 @@ public class AnnounceServiceImple implements AnnounceService{
 			}
 			
 		}
-		if(oldImg != null || uuidData != null) {
-			if(!oldImg.equals(uuidData)) {
+		if(oldImg != null) {
+			newUuid = newUuid.replaceAll("(^,+|,+$)", "");
+			if(uuidData != null) {
 				vo.setAnnounce_image(newUuid);
+			}else {
+				vo.setAnnounce_image(oldvo.getAnnounce_image());
 			}
+		}else {
+			newUuid = newUuid.replaceAll("(^,+|,+$)", "");
+			vo.setAnnounce_image(newUuid);
 		}
-		
 		return mapper.updateNotice(vo);
 	}
 }

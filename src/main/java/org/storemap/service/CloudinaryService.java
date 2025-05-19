@@ -69,21 +69,24 @@ public class CloudinaryService {
         try {
             // Cloudinary에서 파일 삭제
             AttachFileVO vo = mapper.getAttach(uuid);
-            String fileName = vo.getUuid() + "_" + vo.getFilename(); // Cloudinary에서 삭제할 파일 이름
-            log.info(fileName);
-            // Cloudinary에서 파일 삭제
-            String public_id = fileName.substring(0, fileName.indexOf("."));
-            Map<String, Object> deleteOptions = new HashMap<>();
-            deleteOptions.put("invalidate", true);
-            Map<String, Object> deleteResult = cloudinary.uploader().destroy(public_id,deleteOptions);
-
-            // 삭제 결과 확인
-            if (deleteResult.containsKey("result") && "ok".equals(deleteResult.get("result"))) {
-                // 삭제 성공, 데이터베이스에서 파일 정보도 삭제
-                mapper.deleteAttach(vo.getUuid());
-                return true;
-            } else {
-                return false;
+            if(vo != null) {
+            	String fileName = vo.getUuid() + "_" + vo.getFilename(); // Cloudinary에서 삭제할 파일 이름
+            	log.info(fileName);
+            	// Cloudinary에서 파일 삭제
+            	String public_id = fileName.substring(0, fileName.indexOf("."));
+            	Map<String, Object> deleteOptions = new HashMap<>();
+            	deleteOptions.put("invalidate", true);
+            	Map<String, Object> deleteResult = cloudinary.uploader().destroy(public_id,deleteOptions);
+            	// 삭제 결과 확인
+            	if (deleteResult.containsKey("result") && "ok".equals(deleteResult.get("result"))) {
+            		// 삭제 성공, 데이터베이스에서 파일 정보도 삭제
+            		mapper.deleteAttach(vo.getUuid());
+            		return true;
+            	} else {
+            		return false;
+            	}
+            }else {
+            	return false;
             }
 
         } catch (IOException e) {
