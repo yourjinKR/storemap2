@@ -19,4 +19,7 @@ public interface EnterMapper {
 	// 회원정보 수정
 	public int modifyEnter(EnterVO enter);
 	
+	// 기업 정보
+	public EnterVO read(int enter_idx);
+	
 }

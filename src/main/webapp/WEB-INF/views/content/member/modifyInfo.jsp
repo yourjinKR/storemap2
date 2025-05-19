@@ -18,29 +18,30 @@
 					</c:choose>		
 				</div>
 				<p>
-					<button>사진 변경</button>
+					사진 변경: 
+					<input type="file" name="member_image">
 				</p>
 				<input type="hidden" name="member_idx" value="${loginUserIdx}"/>
 				<p>
-					아이디
+					아이디: 
 					<input type="text" name="member_id" value="${member_id}" readonly="readonly"/>
 				</p>
 				<p>
-					비밀번호
+					비밀번호: 
 				 	<input type="password" name="member_pw" id="member_pw" placeholder="8~16자리 입력"/>
 					<span id="mPwValidState"></span>
 			 	</p>
 				<p>
-					비밀번호 확인 
+					비밀번호 확인 : 
 					<input type="password" name="member_pw_re" id="member_pw_re" placeholder="같은 비밀번호 입력"/>
 					<span id="mPwReValidState"></span>
 				</p>
 				<p>
-					이름
+					이름: 
 					<input type="text" name="member_name" value="${member_name}" readonly="readonly"/>
 				</p>
 				<p>
-					별명 
+					별명: 
 					<input type="text" name="member_nickname" value="${member_nickname}"/>
 					<span id="mnicknameValidState"></span>
 				</p>
@@ -54,10 +55,18 @@
 			<br>
 			<form id="ModifyForm" data-type="${type}" method="post">
 				<div class="profile">
-					<img alt="" src="/resources/img/profile.jpg">			
+					<c:choose>
+						<c:when test="${vo.attach.filename eq null}">
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
+						</c:when>
+						<c:otherwise>
+							<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}"/>
+						</c:otherwise>
+					</c:choose>				
 				</div>
 				<p>
-					<button>사진 변경</button>
+					사진 변경: 
+					<input type="file" name="enter_image">
 				</p>
 				<input type="hidden" name="enter_idx" value="${loginUserIdx}"/>
 				<p>아이디 
@@ -95,5 +104,3 @@
 	</c:choose>
 </div>
 <script type="text/javascript" src="/resources/js/modifyInfo.js"></script>
-<!-- <script type="text/javascript" src="/resources/js/registerUpload.js"></script> -->
-

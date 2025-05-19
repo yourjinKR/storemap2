@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EnterVO;
 import org.storemap.domain.EventVO;
@@ -92,14 +93,13 @@ public class MemberController {
 				StoreVO store = storeService.getStore(member.getMember_idx());
 				session.setAttribute("storeIdx", store.getStore_idx());
 			}
-			AttachFileVO avo = attachMapper.getAttach(member.getMember_image());
+			AttachFileVO amvo = attachMapper.getAttach(member.getMember_image());
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
 			session.setAttribute("userName", member.getMember_name());
 			session.setAttribute("userNickName", member.getMember_nickname());
 			session.setAttribute("userType", member.getMember_type());
 			session.setAttribute("userImage", member.getMember_image());
-			session.setAttribute("userFilename", avo.getFilename());
 			
 			String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
 			if(redirectUrl != null && redirectUrl.startsWith("/")) {
@@ -112,6 +112,7 @@ public class MemberController {
 		EnterVO enter = enterService.eLogin(id, pw);
 		if(enter != null) {
 			enter.setEnter_pw(null);
+			AttachFileVO aevo = attachMapper.getAttach(enter.getEnter_image());
 			session.setAttribute("loginUserIdx", enter.getEnter_idx());
 			session.setAttribute("loginUser", enter.getEnter_id());
 			session.setAttribute("userName", enter.getEnter_name());
@@ -162,11 +163,11 @@ public class MemberController {
 	}
 	
 	// 개인 회원정보 수정 처리
-	@PostMapping(value = "/modifyInfo/personal", produces = "application/json; charset=UTF-8")
+	@PostMapping("/modifyPersonal")
 	@ResponseBody
-	public Map<String, Object> modifyMember(@RequestBody MemberVO member, HttpSession session) {
+	public Map<String, Object> modifyMember(@RequestBody MemberVO member, HttpSession session, MultipartFile file) {
 		Map<String, Object> result = new HashMap<>();
-		int res = memberService.modifyMember(member);
+		int res = memberService.modifyMember(file, member);
 		if(res > 0) {
 			session.setAttribute("userNickName",member.getMember_nickname());
 		}
@@ -175,11 +176,11 @@ public class MemberController {
 	}
 	
 	// 단체 회원정보 수정 처리
-	@PostMapping(value = "/modifyInfo/group", produces = "application/json; charset=UTF-8")
+	@PostMapping("/modifyGroup")
 	@ResponseBody
-	public Map<String, Object> modifyEnter(@RequestBody EnterVO enter, HttpSession session) {
+	public Map<String, Object> modifyEnter(@RequestBody EnterVO enter, HttpSession session, MultipartFile file) {
 		Map<String, Object> result = new HashMap<>();
-		int res = enterService.modifyEnter(enter);
+		int res = enterService.modifyEnter(file, enter);
 		result.put("result", res);
 		System.out.println("결과 : " + res);
 		return result;
@@ -228,15 +229,13 @@ public class MemberController {
 		return result;
 	}
 	
-	// 첨부파일(진행중)
-	
 	
 	// 개인 회원가입 처리
 	@PostMapping(value = "/register", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public Map<String, Object> registerMember(@RequestBody MemberVO member) {
+	public Map<String, Object> registerMember(@RequestBody MemberVO member, MultipartFile file) {
 		Map<String, Object> result = new HashMap<>();
-		int res = memberService.insertMember(member);
+		int res = memberService.insertMember(file, member);
 		result.put("result", res);
 		return result;
 	}
@@ -244,9 +243,9 @@ public class MemberController {
 	// 단체 회원가입 처리
 	@PostMapping(value = "/register/group", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public Map<String, Object> registerEnter(@RequestBody EnterVO enter) {
+	public Map<String, Object> registerEnter(@RequestBody EnterVO enter, MultipartFile file) {
 		Map<String, Object> result = new HashMap<>();
-		int res = enterService.insertEnter(enter);
+		int res = enterService.insertEnter(file, enter);
 		result.put("result", res);
 		return result;
 	}

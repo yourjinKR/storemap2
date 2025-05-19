@@ -133,9 +133,9 @@ function showMenuList(){
 		jsonArray.forEach(json => {	
 			msg += `<li data-menu_idx="${json.menu_idx}" onclick="menuModifyPage(this)" name="mid">`;
 			if(!json.attach || !json.attach.filename){
-				msg += `	<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!" class="menu-image"/>`;
+				msg += `	<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!" class="menu-image"/>`;
 			}else{
-				msg += `	<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${json.menu_image}_${json.attach.filename}" alt="${json.attach.filename}" class="menu-image"/>`;				
+				msg += `	<img src="${IMG_URL}${json.menu_image}_${json.attach.filename}" alt="${json.attach.filename}" class="menu-image"/>`;				
 			}
 			msg += `	<div class="menu-description">`;
 			msg += `		<div class="menu-name">${json.menu_name}</div>`;

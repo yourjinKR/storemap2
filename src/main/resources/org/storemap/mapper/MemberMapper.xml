@@ -47,6 +47,10 @@
 			MEMBER_IDX = #{member_idx}
 	</update>
 	
+	<select id="read" parameterType="int" resultType="org.storemap.domain.MemberVO">
+		select * from member where member_idx = #{member_idx}
+	</select>
+	
 	<!-- 점주 요청 승인 -->
 	<update id="approvalOwner" parameterType="int">
 		update member set

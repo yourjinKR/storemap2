@@ -116,15 +116,22 @@ if(formType == 'personal') {
 			alert("모든 입력 내용을 확인해주세요");
 			return;
 		}
-		let formData = new FormData(f);
-		let jsonData = JSON.stringify(Object.fromEntries(formData.entries()));
+		let formData = new FormData();
+		formData.append("member_idx", f.member_idx.value);
+		formData.append("member_id", f.member_id.value);
+		formData.append("member_pw", f.member_pw.value);
+		formData.append("member_name", f.member_name.value);
+		formData.append("member_nickname", f.member_nickname.value);
 		
-		fetch(`/member/modifyInfo/personal`, {
+		// 이미지 파일
+		const fileInput = document.querySelector("input[name='member_image']");
+		if(fileInput.files[0]) {
+			formData.append("file", fileInput.files[0]);
+		}
+		
+		fetch(`/member/modifyPersonal`, {
 			method : 'POST',
-			headers : {
-				'Content-type' : 'application/json; charset=utf-8'
-			},
-			body : jsonData
+			body : formData
 		})
 		.then(response => response.json())
 		.then(data => {
@@ -237,16 +244,25 @@ if(formType == 'personal') {
 			alert("모든 입력 내용을 확인해주세요");
 			return;
 		}
-		let formData = new FormData(f);
-		let jsonData = JSON.stringify(Object.fromEntries(formData.entries()));
-		console.log(jsonData);
+		
+		let formData = new FormData();
+		formData.append("enter_idx", f.enter_idx.value);
+		formData.append("enter_id", f.enter_id.value);
+		formData.append("enter_pw", f.enter_pw.value);
+		formData.append("enter_name", f.enter_name.value);
+		formData.append("enter_rnum", f.enter_rnum.value);
+		formData.append("enter_loc", f.enter_loc.value);
+		formData.append("enter_num", f.enter_num.value);
+		
+		// 이미지 파일
+		const fileInput = document.querySelector("input[name='enter_image']");
+		if(fileInput.files[0]) {
+			formData.append("file", fileInput.files[0]);
+		}
 
-		fetch(`/member/modifyInfo/group`, {
+		fetch(`/member/modifyGroup`, {
 			method : 'POST',
-			headers : {
-				'Content-type' : 'application/json; charset=utf-8'
-			},
-			body : jsonData
+			body : formData
 		})
 		.then(response => response.json())
 		.then(data => {

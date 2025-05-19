@@ -6,10 +6,10 @@
 	<div class="store-image">
 		<c:choose>
 			<c:when test="${svo.attach.filename eq null}">
-				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+				<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 			</c:when>
 			<c:otherwise>
-				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${svo.store_image}_${svo.attach.filename}" alt="${svo.attach.filename}"/>
+				<img src="${IMG_URL}${svo.store_image}_${svo.attach.filename}" alt="${svo.attach.filename}"/>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -41,10 +41,10 @@
       		<div class="menu-item">
       		 <c:choose>
       		 	<c:when test="${mvo.attach.filename eq null}">
-      		 		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+      		 		<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
       		 	</c:when>
       		 	<c:otherwise>
-      		 		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${mvo.menu_image}_${mvo.attach.filename}" alt="${mvo.attach.filename}"/>
+      		 		<img src="${IMG_URL}${mvo.menu_image}_${mvo.attach.filename}" alt="${mvo.attach.filename}"/>
       		 	</c:otherwise>
       		 </c:choose>
 	          <div class="menu-name">${mvo.menu_name}</div>
@@ -75,10 +75,10 @@
 		    <div class="writer-img">
 		     <c:choose>
 		     	<c:when test="${rvo.writer_filename eq null}">
-		     		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="사진이 없습니다!"/>
+		     		<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="사진이 없습니다!"/>
 		     	</c:when>
 		     	<c:otherwise>
-		     		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${rvo.writer_image}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
+		     		<img src="${IMG_URL}${rvo.writer_image}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
 		     	</c:otherwise>
 		     </c:choose>
 		    </div>
@@ -93,10 +93,10 @@
 		          <div class="review-img"><!-- 이미지/내용 css필요 -->
 		           <c:choose>
 		           	<c:when test="${rvo.review_filename eq null}">
-		           		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+		           		<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 		           	</c:when>
 		           	<c:otherwise>
-		           		<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${rvo.review_image}_${rvo.review_filename}" alt="${rvo.review_filename}"/>
+		           		<img src="${IMG_URL}${rvo.review_image}_${rvo.review_filename}" alt="${rvo.review_filename}"/>
 		           	</c:otherwise>
 		           </c:choose>
 		          	${rvo.review_content}

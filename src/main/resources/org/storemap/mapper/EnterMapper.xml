@@ -46,4 +46,9 @@
 		WHERE
 			ENTER_IDX = #{enter_idx}
 	</update>
+	
+	<select id="read" parameterType="int" resultType="org.storemap.domain.EnterVO">
+		select * from enter where enter_idx = #{enter_idx}
+	</select>
+	
 </mapper>

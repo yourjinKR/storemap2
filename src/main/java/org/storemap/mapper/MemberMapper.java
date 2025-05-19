@@ -23,4 +23,8 @@ public interface MemberMapper {
 	
 	// 점주 취소
 	public int cancelOwner(int member_idx);
+	
+	// 회원 정보
+	public MemberVO read(int member_idx);
+		
 }

@@ -6,7 +6,7 @@
 	<div class="info d_f">
 		<div class="left-con profile">
 		<c:choose>
-			<c:when test="${sessionScope.userFilename eq null}">
+			<c:when test="">
 				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
 			</c:when>
 			<c:otherwise>
