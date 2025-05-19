@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+.login-wrap{border:1px solid #d9d9d9;height:750px;box-shadow: 0 5px 5px rgba(0,0,0,0.1);margin:50px 0;}
+.login-wrap h3{font-size:36px;font-weight:bold;width:90%;word-break: keep-all;color:#154734}
+.login-wrap > div{width:50%;}
+.login-wrap > div.right-con{background:#D9F3E5;display:flex;flex-direction: column;justify-content: center;align-items: center;text-align:center;}
+.login-wrap > div.right-con p{font-size:22px;display:block;margin:15px 0 5px;color:#154734}
+
+.btn-box {display:flex; gap:15px}
+.btn-box a{border:1px solid #fff;border-radius:30px;padding:10px 25px;transition:0.25s ease;font-size:24px;font-weight:bold;background:#2E8B57;color:#fff;box-shadow: 5px 5px 5px rgba(0,0,0,0.1)}
+.btn-box a:hover{background:#FFFFFF;color:#2E8B57;}
+
+.login-wrap > div.left-con{display:flex;flex-direction: column;justify-content: center;align-items: center;text-align:center;}
+.login-wrap > div.left-con h3{margin-bottom:30px;}
+.login-form{display:flex;flex-direction: column;justify-content: center;align-items: center;gap:15px;}
+.login-form input{border:1px solid #d9d9d9;border-radius:30px;padding:10px 20px;font-size:24px;height:50px;line-height: 50px;}
+.login-form button{color:#fff;background:#2E8B57;border:1px solid #ccc;border-radius:30px;outline:none;width:100%;padding: 10px 20px;font-size:24px;font-weight:bold}
