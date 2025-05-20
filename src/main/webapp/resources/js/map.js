@@ -384,6 +384,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
+
+        // 줌 이벤트
+        kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
+            console.log(basicMap.getLevel());
+            
+            if(basicMap.getLevel() > 4) {
+                hideOverlay(storeOverlayList);
+                hideOverlay(eventOverlayList);
+            } else {
+                showOverlay(basicMap, storeOverlayList);
+                showOverlay(basicMap, eventOverlayList);
+            }
+        });
     }
 
 
@@ -668,13 +681,14 @@ function registerOverlay(vo) {
         position: new kakao.maps.LatLng(vo.store_lat, vo.store_lng),
         content: content,
         yAnchor: 1,
-        zIndex: 3
+        zIndex: 3,
+        clickable: false
         });
         // 리스트에 추가
         // storeOverlayList.push(customOverlay);
         // console.log(customOverlay);
-        
         return customOverlay;
+
     } else if (type === 'event') {
         let content = `
         <div class="customoverlay" id="${type}" idx="${vo.event_idx}" onclick="clickOverlay(this)">
@@ -686,7 +700,8 @@ function registerOverlay(vo) {
         position: new kakao.maps.LatLng(vo.event_lat, vo.event_lng),
         content: content,
         yAnchor: 1,
-        zIndex: 3
+        zIndex: 3,
+        clickable: false
         });
         // 리스트에 추가
         // storeOverlayList.push(customOverlay);
