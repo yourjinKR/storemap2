@@ -32,20 +32,8 @@ public class MemberServiceImple implements MemberService{
 	
 	// 개인/점주 회원가입
 	@Override
-	public int insertMember(MultipartFile file, MemberVO member) {
-		try {
-			// 파일이 있는 경우에만 이미지 업로드 처리
-			if(file != null && !file.isEmpty()){
-				String imageUrl = cloudinaryService.uploadFile(file);
-				member.setMember_image(imageUrl);
-			}else {
-				// 기본 이미지 URL 설정 (Default값 나중에 수정)
-				member.setMember_image("member1.jpg");
-			}
-			return memberMapper.insertMember(member);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to register member", e);
-		}
+	public int insertMember(MemberVO member) {
+		return memberMapper.insertMember(member);
 	}
 	// id 중복확인
 	@Override
@@ -71,7 +59,7 @@ public class MemberServiceImple implements MemberService{
 				member.setMember_image(imageUrl);
 			}else {
 				// 파일 없을 경우 기존 이미지 유지
-				member.setMember_image("oldImg");
+				member.setMember_image(oldImg);
 			}
 			return memberMapper.modifyMember(member);
 		} catch (Exception e) {

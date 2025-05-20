@@ -11,7 +11,7 @@ public interface EnterService {
 	public int checkId(String member_id);
 	
 	// 회원가입
-	public int insertEnter(MultipartFile file, EnterVO enter);
+	public int insertEnter(EnterVO enter);
 	
 	// 회원정보 수정
 	public int modifyEnter(MultipartFile file, EnterVO enter);

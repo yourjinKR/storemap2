@@ -37,7 +37,13 @@ public class EnterServiceImple implements EnterService{
 	}
 	// 회원가입
 	@Override
-	public int insertEnter(MultipartFile file, EnterVO enter) {
+	public int insertEnter(EnterVO enter) {
+		return enterMapper.insertEnter(enter);
+	}
+	
+	// 회원정보 수정
+	@Override
+	public int modifyEnter(MultipartFile file, EnterVO enter) {
 		EnterVO evo = enterMapper.read(enter.getEnter_idx());
 		String oldImg = evo.getEnter_image();
 		try {
@@ -52,19 +58,12 @@ public class EnterServiceImple implements EnterService{
 				enter.setEnter_image(imageUrl);
 			}else {
 				// 파일 없을 경우 기존 이미지 유지
-				enter.setEnter_image("oldImg");
+				enter.setEnter_image(oldImg);
 			}
-			return enterMapper.insertEnter(enter);
+			return enterMapper.modifyEnter(enter);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to modify enter", e);
 		}
-	}
-	
-	// 회원정보 수정
-	@Override
-	public int modifyEnter(MultipartFile file, EnterVO enter) {
-		int result = enterMapper.modifyEnter(enter);
-		return result;
 	}
 	@Override
 	public EnterVO get(int enter_idx) {

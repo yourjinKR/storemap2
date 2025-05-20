@@ -297,9 +297,9 @@ public class MemberController {
 	// 개인 회원가입 처리
 	@PostMapping(value = "/register", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public Map<String, Object> registerMember(@RequestBody MemberVO member, MultipartFile file) {
+	public Map<String, Object> registerMember(@RequestBody MemberVO member) {
 		Map<String, Object> result = new HashMap<>();
-		int res = memberService.insertMember(file, member);
+		int res = memberService.insertMember(member);
 		result.put("result", res);
 		return result;
 	}
@@ -307,9 +307,9 @@ public class MemberController {
 	// 단체 회원가입 처리
 	@PostMapping(value = "/register/group", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public Map<String, Object> registerEnter(@RequestBody EnterVO enter, MultipartFile file) {
+	public Map<String, Object> registerEnter(@RequestBody EnterVO enter) {
 		Map<String, Object> result = new HashMap<>();
-		int res = enterService.insertEnter(file, enter);
+		int res = enterService.insertEnter(enter);
 		result.put("result", res);
 		return result;
 	}
