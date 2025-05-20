@@ -228,7 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
         storeListModal.style.display = 'block';
         eventListModal.style.display = 'block';
 
-        // 초기 검색 시작
+        // 초기 검색 기능
+        // 키워드 기반
         const initialKeyword = sessionStorage.getItem("initialKeyword");
         if (initialKeyword) {
             // input에도 값 넣기 (선택사항)
@@ -240,6 +241,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 재검색 방지: 세션 제거
             sessionStorage.removeItem("initialKeyword");
+        }
+
+        // idx 기반 점포 찾기
+        const initialStoreIDX = sessionStorage.getItem("store_idx");
+        if (initialStoreIDX) {
+            // store idx 기반 검색 비동기 함수 실행
+            as.getStoreByIdx(initialStoreIDX, function (data) {
+                apply2storeMap(data);
+            });
         }
     }
     // storeModify.jsp (영업 위치 설정 지도)
@@ -879,7 +889,26 @@ function calcToggle() {
 
 // 비동기 서비스
 const asyncService = (function(){
-    
+
+    /** idx로 점포 정보 로드하는 함수 */
+    function getStoreByIdx(idx, callback){
+        condition.amount = amount;
+        fetch(`/store/getByIdx`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({store_idx : idx})
+        })
+        .then(response => response.json())
+        .then(data => {
+            callback(data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
     /** 현위치에서 가장 가까운 점포 n개 로드하는 함수 */
     function getListNearest(condition, amount, callback){
         condition.amount = amount;
@@ -1034,7 +1063,8 @@ const asyncService = (function(){
         getMenuList : getMenuList,
         getListByKeyword : getListByKeyword,
         getListByAddrKeyword : getListByAddrKeyword,
-        eventListByKeyword : eventListByKeyword
+        eventListByKeyword : eventListByKeyword,
+        getStoreByIdx : getStoreByIdx
     };
 })();
 const as = asyncService;

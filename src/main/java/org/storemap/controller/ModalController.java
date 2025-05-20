@@ -123,6 +123,17 @@ public class ModalController {
 		return "index";
 	}
 	
+	// 점포 정보 하나 가져오기
+	@PostMapping(value = "/store/getByIdx",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+		})
+		public ResponseEntity<StoreVO> getByIdx(@RequestBody int store_idx){
+			log.info("getByIdx..." + store_idx);
+			return new ResponseEntity<StoreVO>(storeService.get(store_idx), HttpStatus.OK);
+	}	
+	
 	//점포좋아요 (토글)
 	@ResponseBody
 	@GetMapping("/storeLike/toggle")
