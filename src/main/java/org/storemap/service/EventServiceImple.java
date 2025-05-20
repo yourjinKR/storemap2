@@ -1,5 +1,6 @@
 package org.storemap.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,12 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartFile;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
+import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.EventDayMapper;
 import org.storemap.mapper.EventMapper;
 
@@ -33,17 +36,43 @@ public class EventServiceImple implements EventService{
 	private EventDayService eventDayService;
 	@Autowired
 	private CloudinaryService cloudService;
+	@Autowired
+	private AttachFileMapper attachMapper;
 	
 	
 	// 메인 페이지 진행중인 이벤트
 	@Override
 	public List<EventVO> getLiveEvent() {
-		return mapper.getLiveEvent();
+		List<EventVO> list = mapper.getLiveEvent();
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] file = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
+		return list;
 	}
 	// 메인 페이지 진행예정 이벤트
 	@Override
 	public List<EventVO> getSoonEvent() {
-		return mapper.getSoonEvent();
+		List<EventVO> list = mapper.getSoonEvent();
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] file = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
+		return list;
 	}
 	
 	// 메인페이지 선택 날짜 이벤트

@@ -53,16 +53,22 @@ function getEventList(type){
 		result.forEach((event,idx) => {
 			if(idx == 0 || idx == 5){
 				str += `<li class="swiper-slide">`;
+				str += 		`<a href="/event/eventView?event_idx=${event.event_idx}">`;
 				str += 		`<div class="card-list d_f">`;
 			}
 				str +=			`<div class="card-box">`;
-				str += 				`<div class="card-img">${event.event_file}</div>`;
+				if(event.attachFile != null && event.attachFile.length > 0){
+					str += 				`<div class="card-img"><img src="${IMG_URL}${event.attachFile[0].uuid}_${event.attachFile[0].filename}"></div>`;
+				}else{
+					str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
+				}
 				str += 					`<div class="card-text">`;
 				str += 					`${event.event_content}`;
 				str += 				`</div>`;
 				str += 			`</div>`;
 			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
+				str += 		`</a>`;
 				str += `</li>`;
 			}
 		});
@@ -102,16 +108,22 @@ function storeList(store_address){
 		result.forEach((store,idx) => {
 			if(idx == 0 || idx == 5){
 				str += `<li class="swiper-slide">`;
+				str += 		`<a href="">`;
 				str += 		`<div class="card-list d_f">`;
 			}
 			str +=			`<div class="card-box">`;
-			str += 				`<div class="card-img">${store.store_image}</div>`;
+			if(store.attach != null){
+				str += 				`<div class="card-img"><img src="${IMG_URL}${store.attach.uuid}_${store.attach.filename}"></div>`;
+			}else{
+				str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
+			}
 			str += 					`<div class="card-text">`;
 			str += 					`${store.store_name}`;
 			str += 				`</div>`;
 			str += 			`</div>`;
 			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
+				str += 		`</a>`;
 				str += `</li>`;
 			}
 		});

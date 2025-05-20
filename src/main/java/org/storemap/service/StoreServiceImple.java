@@ -1,5 +1,6 @@
 package org.storemap.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AttachFileVO;
+import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.AttachFileMapper;
@@ -23,6 +25,8 @@ public class StoreServiceImple implements StoreService{
 	//이미지 업로드 서버
 	@Autowired
 	private CloudinaryService cloudinaryService;
+	@Autowired
+	private AttachFileMapper attachMapper;
 	
 	@Override
 	public int register(MultipartFile file, StoreVO vo) {
@@ -165,12 +169,17 @@ public class StoreServiceImple implements StoreService{
 	// 메인페이지 점포 목록 랜덤
 	@Override
 	public List<StoreVO> getStoreRanList(String store_address) {
-		log.info("getStoreRanList..." );
 		String addr = store_address;
 		if(store_address.equals("전체")) {
 			addr = "";
 		}
-		return mapper.getStoreRanList(addr);
+		
+		List<StoreVO> list = mapper.getStoreRanList(addr);
+		for (StoreVO vo : list) {
+			vo.setAttach(attachMapper.getAttach(vo.getStore_image()));
+		}
+		
+		return list;
 	}
 	
 	@Override

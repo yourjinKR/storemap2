@@ -174,7 +174,7 @@
 		<![CDATA[
 			SELECT * FROM (
 			    SELECT * FROM STORE 
-			    WHERE STORE_ADDRESS LIKE '%'||#{store_address}||'%'
+			    WHERE STORE_ADDRESS LIKE '%'||#{store_address}||'%' AND STORE_HIDDEN = 0
 			    ORDER BY dbms_random.random
 			)
 			WHERE ROWNUM <= 10
