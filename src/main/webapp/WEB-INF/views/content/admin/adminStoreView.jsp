@@ -8,7 +8,7 @@
     	<c:when test="${(not empty loginUser) and (userType eq 'admin')}">
     		<div>
 		    	<form method="post">
-		            <c:forEach var="rvo" items="${reqList}">
+		            <c:forEach var="rvo" items="${storeRequestList}">
 		                <div>
 		                	<div>${rvo.member.member_name}님의 ${rvo.store.store_name}</div>
 		                    <input type="hidden" name="member_idx" value="${rvo.member.member_idx}">

@@ -79,6 +79,7 @@ public class AdminController {
 	@GetMapping("/adminMain")
 	public String adminMain(Model model) {
 		log.info("adminMainGet...");
+		model.addAttribute("storeRequestList", storeReqService.getDisReqListMap());
 		model.addAttribute("storeReportList",storeDeclService.getDeclarationMap());
 		model.addAttribute("reviewReportList",reviewDeclService.getDeclarationMap());
 		return "index";

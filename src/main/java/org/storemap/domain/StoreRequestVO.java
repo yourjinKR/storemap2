@@ -12,4 +12,5 @@ public class StoreRequestVO {
 	
 	private StoreVO store;   // 조인 대상 필드
 	private MemberVO member; // 조인 대상 필드
+	private AttachFileVO attach; // 조인 대상 필드
 }
