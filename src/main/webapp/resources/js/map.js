@@ -3,6 +3,7 @@ console.log("map load");
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
+//let markerSrc = '/resources/img/storeMarker.png';
 
 // ================== 마커 크기 ==================
 const MARKER_WIDTH = 32, // 기본 마커의 너비
@@ -634,7 +635,7 @@ function registerMarker(lat, lng, idx) {
         position: markerPosition,
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
         title : idx,
-        image : testIcon,
+        image : testIcon, // 아이콘 이미지 변경 필요
         zIndex : 4
     });
     return marker;
