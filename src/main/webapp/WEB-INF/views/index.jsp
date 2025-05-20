@@ -18,7 +18,6 @@
 	request.setAttribute("IMG_URL", "https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/");
 %>
 <body>
-	사용자 : ${ loginUser }, 권한 : ${ userType }
 	<input type="hidden" name="sessionId" value="${ loginUser }">
 	<input type="hidden" name="auth" value="${ userType }">
 	<c:choose>
@@ -28,11 +27,11 @@
 		<c:when test="${path eq '/modal/postcodeForm'}"></c:when>
 		<c:when test="${path eq '/admin/adminMain'}"></c:when>
 		<c:otherwise>
-			<jsp:include page="./layout/header.jsp" /><br>
+			<jsp:include page="./layout/header.jsp" />
 		</c:otherwise>
 	</c:choose>
 	
-	<jsp:include page="./layout/content.jsp" /><br>
+	<jsp:include page="./layout/content.jsp" />
 	
 	<c:choose>
 		<c:when test="${path eq '/store/map'}"></c:when>
