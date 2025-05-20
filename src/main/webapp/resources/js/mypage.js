@@ -160,7 +160,6 @@ function getMyLike(type){
 				})
 			})
 		}
-//		localStorage.setItem("page_data", JSON.stringify(pageData))
 	})
 	.catch(err => console.log(err))
 	
