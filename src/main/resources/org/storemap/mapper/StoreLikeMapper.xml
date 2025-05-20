@@ -21,6 +21,7 @@
 		    S.STORE_IDX, 
 		    S.STORE_NAME,
 		    S.STORE_IMAGE,
+		    S.STORE_NUM,
 		    S.STORE_CONTENT,
 		    S.STORE_ACTIVITY_TIME,
 		    S.STORE_ADDRESS,

@@ -309,9 +309,16 @@ public class MemberController {
 			List<StoreVO> list = storeLikeService.getLikeList((int) session.getAttribute("loginUserIdx"));
 			return new ResponseEntity<List<StoreVO>>(list, HttpStatus.OK);
 		}else {
-//			//List<ReviewVO> list = eventLikeService.getLikeList((int) session.getAttribute("loginUserIdx"));
-			return null;
+			List<ReviewVO> list = reviewLikeService.getLikeList((int) session.getAttribute("loginUserIdx"));
+			return new ResponseEntity<List<ReviewVO>>(list, HttpStatus.OK);
 		}
+	}
+	
+	// 내 리뷰 목록
+	@GetMapping(value = "/getMyReview",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ReviewVO>> getMyReview() {
+		return null;
 	}
 	
 //	@PostMapping("/delete") // 진행중

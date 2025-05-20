@@ -24,4 +24,6 @@ public interface LetterMapper {
 	public List<MemberVO> getAttendList(int eday_idx);
 	// 이벤트 신청 리스트
 	public EventVO getEdayList(int event_idx);
+	// 안읽은 쪽지
+	public int getLetterCnt(String member_id); 
 }

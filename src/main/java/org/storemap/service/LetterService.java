@@ -14,10 +14,10 @@ public interface LetterService {
 	public LetterVO getLetterView(Map<String, String> map);
 	// 쪽지 보내기
 	public int insertLetter(LetterVO vo);
-	
 	// 이벤트 신청 리스트
 	public List<MemberVO> getAttendList(int eday_idx);
-	
 	// 이벤트 일차 리스트
 	public EventVO getEdayList(int event_idx);
+	// 이벤트 일차 리스트
+	public int getLetterCnt(String member_id);
 }

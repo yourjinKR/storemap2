@@ -10,29 +10,18 @@
 <!-- 이벤트 좋아요 -->
 <div class="sub-tab-content event-content mt15 on">
 	<ul>
-		<li>
-			<a>
-				<div class="img-box">
-					<img src="">
-				</div>
-				<dl>
-					<dt>이벤트 타이틀</dt>
-					<dd>이벤트 기간 : </dd>	
-					<dd>내용 : </dd>
-				</dl>
-				<div class="like-box">
-					<input type="checkbox" id="likeChk01" checked>
-					<label for="likeChk01" class="material-symbols-outlined">
-			      		favorite
-			      	</label>
-				</div>
-			</a>
-		</li>
+		
 	</ul>
 </div>
 <!-- 점포 좋아요 -->
-<div class="sub-tab-content store-content mt50">
+<div class="sub-tab-content store-content mt15">
+	<ul>
+		
+	</ul>
 </div>
 <!-- 리뷰 좋아요 -->
-<div class="sub-tab-content review-content mt50">
+<div class="sub-tab-content review-content mt15">
+	<ul>
+		
+	</ul>
 </div>

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.storemap.domain.ReviewLikeVO;
+import org.storemap.domain.ReviewVO;
+import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.ReviewLikeMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -15,6 +17,8 @@ public class ReviewLikeServiceImple implements ReviewLikeService{
 	
 	@Autowired
 	private ReviewLikeMapper mapper;
+	@Autowired
+	private AttachFileMapper attachMapper;
 	
 	@Override
 	public int register(int review_idx, int member_idx) {
@@ -31,9 +35,12 @@ public class ReviewLikeServiceImple implements ReviewLikeService{
 	}
 	
 	@Override
-	public List<ReviewLikeVO> getList(int member_idx) {
-		log.info("getList..."+member_idx);
-		return mapper.getReviewLikeList(member_idx);
+	public List<ReviewVO> getLikeList(int member_idx) {
+		List<ReviewVO> list = mapper.getLikeList(member_idx);
+		for (ReviewVO vo : list) {
+			vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
+		}
+		return list;
 	}
 	
 	@Override

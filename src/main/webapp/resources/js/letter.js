@@ -124,7 +124,7 @@ function getLetter(type){
 					firstEl.innerHTML = "수신자";
 					str += `<span class="items">${letter.letter_receiver}</span>`;								
 				}
-				str += `<a href="${letter.letter_idx}" class="items t-l">${letter.letter_content}</a>`;
+				str += `<a href="${letter.letter_idx}" class="items t-l">${letter.letter_content != null ? letter.letter_content : ''}</a>`;
 				str += `<span class="items">${dateFormate(letter.letter_regdate)}</span>`;
 				if(type == "sendLetter"){
 					str += `<i class="items material-symbols-outlined drafts">drafts</i>`;
@@ -144,7 +144,7 @@ function getLetter(type){
 				}
 			})
 			document.querySelector("#listBody").innerHTML = str;
-			document.querySelector(".right-div > .icon > span").innerHTML = result.length;
+			
 			
 			
 			// 리스트 클릭 이벤트
@@ -167,6 +167,7 @@ function getLetter(type){
 			document.querySelector("#listBody").innerHTML = str;
 		}
 		changeLetterModal("list");
+		getLetterCnt();
 	})
 	.catch(err => console.log(err))
 }
@@ -190,6 +191,24 @@ function letterView(letter_idx){
 	})
 	.catch(err => console.log(err))
 }
+
+
+function getLetterCnt(){
+	// 선택 메시지 정보
+	fetch(`/modal/getLetterCnt`)
+	.then(response => response.json())
+	.then(result => {
+		if(result > 0 ){
+			document.querySelector(".right-div > .icon > span").innerHTML = result != null ? result : 0;
+			document.querySelector(".right-div > .icon > span").classList.remove("hide");
+		}else{
+			document.querySelector(".right-div > .icon > span").classList.add("hide");
+		}
+	})
+	.catch(err => console.log(err))
+}
+
+
 
 // 쪽지 전송
 function insertLetter(f){

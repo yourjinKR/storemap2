@@ -36,6 +36,11 @@ public class LetterServiceImple implements LetterService{
 		}
 		return vo;
 	}
+	// 안읽은 쪽지
+	@Override
+	public int getLetterCnt(String member_id) {
+		return mapper.getLetterCnt(member_id);
+	}
 	
 	// 쪽지 전송
 	@Transactional

@@ -398,6 +398,16 @@ public class ModalController {
 		return result;
 	}
 	
+	@GetMapping(value = "/getLetterCnt", produces = "application/json")
+	@ResponseBody
+	public int getLetterCnt(HttpSession session){
+		if(session.getAttribute("loginUser") != null){
+			return letterService.getLetterCnt((String) session.getAttribute("loginUser"));
+		}else {
+			return 0;
+		}
+	}
+	
 	// 쪽지 작성
 	@PostMapping(value="/insertLetter",
 			consumes = {MediaType.APPLICATION_JSON_VALUE}

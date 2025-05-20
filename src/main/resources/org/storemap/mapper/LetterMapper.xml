@@ -120,6 +120,11 @@
 		ORDER BY STORE_NAME
 	</select>
 	
+	<select id="getLetterCnt" resultType="int" parameterType="String">
+		SELECT COUNT(*) FROM LETTER 
+		WHERE LETTER_RECEIVER = #{member_id} 
+		AND LETTER_READ = 0
+	</select>
 	
 	<!-- 수신자 존재 여부 -->
 	<select id="getMemberSearch" parameterType="String" resultType="String">
