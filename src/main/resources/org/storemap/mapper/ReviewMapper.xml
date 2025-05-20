@@ -17,6 +17,7 @@
 		<result property="member_idx" column="member_idx"/>
 		<result property="review_filename" column="review_filename"/>
 		<result property="writer_filename" column="writer_filename"/>
+		<result property="member_image" column="member_image"/>
 		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
@@ -71,7 +72,7 @@
 	</select>
 	<!-- 5.리뷰 조인 전체 보기 -->
 	<select id="getReviewMap" parameterType="int" resultMap="reviewMap">
-		SELECT r.*, a1.filename AS review_filename, a2.filename AS writer_filename
+		SELECT r.*, a1.filename AS review_filename, a2.filename AS writer_filename, m.member_image
 		FROM review r
 		LEFT OUTER JOIN attach_file a1 ON r.review_image = a1.uuid
 		LEFT OUTER JOIN member m ON r.member_idx = m.member_idx

@@ -16,5 +16,6 @@ public class ReviewVO {
 	
 	private String review_filename;
 	private String writer_filename;
+	private String member_image;
 	private AttachFileVO attach;   // 조인 대상 필드
 }
