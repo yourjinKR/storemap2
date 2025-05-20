@@ -11,6 +11,7 @@ import org.storemap.mapper.AttachFileMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -95,5 +96,8 @@ public class CloudinaryService {
             throw new RuntimeException("파일 삭제 중 오류 발생", e);
         }
     }
-    
+
+    public List<AttachFileVO> getFilesByUuidList(List<String> uuidList) {
+        return mapper.getFilesByUuidList(uuidList);
+    }
 }

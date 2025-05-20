@@ -14,4 +14,16 @@
 			#{store_idx}
 		)
 	</insert>
+	
+	<delete id="deleteEventRequest" parameterType="int">
+		 DELETE FROM event_request
+		 WHERE eday_idx = #{edayIdx}
+		 AND store_idx = #{storeIdx}
+	</delete>
+	
+	<select id="getEventIdxByEdayIdx" resultType="int">
+	    SELECT event_idx
+	    FROM event_day
+	    WHERE eday_idx = #{edayIdx}
+	</select>
 </mapper>

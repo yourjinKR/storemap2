@@ -91,9 +91,9 @@
       <th>사진</th>
       <td>
         <div class="photo-preview">
-			<c:if test="${not empty avo.uuid}">
-		    	<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${avo.uuid}_${avo.filename}" alt="이벤트 이미지" style="max-width: 100%; height: auto;" />
-		    </c:if>
+          <c:forEach var="file" items="${fileList}">
+            <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="이벤트 이미지" style="max-width: 100%; height: auto;" />
+          </c:forEach>
         </div>
       </td>
     </tr>
@@ -110,18 +110,17 @@
       <td>${evo.event_location_detail}</td>
     </tr>
   </table>
+
   <!-- 참여 UI 영역 -->
-  <div id="participationSection">
-    <input type="button" id="openBtn" value="참여" />
-    <input type="button" id="withdrawBtn" value="철회" />
-  </div>
+  	<div id="participationSection">
+    	<input type="button" id="openBtn" value="참여" />
+	</div>
 </div>
-	<jsp:include page="../../content/modal/eventDayChoice.jsp" />
+<jsp:include page="../../content/modal/eventDayChoice.jsp" />
 
 <!-- 목록으로 돌아가기 -->
 <div class="back-button">
   <button onclick="goEventList()" id="goEventList">목록으로 돌아가기</button>
 </div>
-
 
 <script src="/resources/js/event.js"></script>

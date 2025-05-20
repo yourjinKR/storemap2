@@ -3,7 +3,12 @@ package org.storemap.controller;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,10 +36,12 @@ import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
+import org.storemap.domain.EventRequestVO;
 import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.PageDTO;
+import org.storemap.service.CloudinaryService;
 import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayService;
 import org.storemap.service.EventDayServiceImple;
@@ -57,6 +64,8 @@ public class EventController {
 	private CommentEventServiceImple commentEventService;
 	@Autowired
 	private EventRequestService eventRequestService;
+	@Autowired
+	private CloudinaryService cloudinaryService;
 	
 	@GetMapping("/eventList")
 	public String eventList() {	
@@ -118,19 +127,27 @@ public class EventController {
 	public String showEventRegister() {
 		return "index";
 	}
+	
 	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
 	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
 	    EventVO vo = eventService.getEventOneView(event_idx);
-	    AttachFileVO avo = new AttachFileVO();
 	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
+	    List<AttachFileVO> fileList = new ArrayList<>();
+	    String uuidStr = vo.getEvent_file(); 
+	    if (uuidStr != null && !uuidStr.isEmpty()) {
+	        List<String> uuidList = Arrays.stream(uuidStr.split(","))
+	                                      .map(String::trim)
+	                                      .filter(s -> !s.isEmpty())
+	                                      .collect(Collectors.toList());
 
+	        fileList = cloudinaryService.getFilesByUuidList(uuidList);
+	    }
+	    model.addAttribute("eday", eday);
 	    model.addAttribute("evo", vo);
-	    model.addAttribute("avo", avo);
-	    model.addAttribute("eventDayList", eday);
-	    log.info("eventVO..." + vo);
-	    
-	    return "index";
+	    model.addAttribute("fileList", fileList);
+
+	    return "index"; // JSP로 전달
 	}
 	// 이벤트 입점신청 요청
 	@PostMapping("/eventView")
@@ -140,7 +157,27 @@ public class EventController {
 		return "redirect:/event/eventView?event_idx=" + event_idx;
 	}
 	
+	@PostMapping("/cancelEntry")
+	@ResponseBody
+	public Map<String, Object> cancelEntry(
+	    @RequestParam("eday_idx") int edayIdx,
+	    @RequestParam("store_idx") int storeIdx) {
 
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        int eventIdx = eventRequestService.getEventIdxByEdayIdx(edayIdx);
+
+	        // 철회 처리
+	        eventRequestService.cancelEntry(edayIdx, storeIdx);
+	        
+	        response.put("success", true);
+	        response.put("eventIdx", eventIdx);
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "철회 처리에 실패했습니다.");
+	    }
+	    return response;
+	}
 
 	
 

@@ -2,6 +2,7 @@ package org.storemap.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.storemap.domain.AttachFileVO;
 
 public interface AttachFileMapper {
@@ -15,4 +16,7 @@ public interface AttachFileMapper {
 	public List<AttachFileVO> findByIdx(int attach_idx);
 	//uuid로 vo 가져오기
 	public AttachFileVO getAttach(String uuid);
+	//uuid 가져오기
+	public List<AttachFileVO> getFilesByUuidList(@Param("uuidList") List<String> uuidList);
+	
 }

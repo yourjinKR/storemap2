@@ -80,70 +80,75 @@
   to { opacity: 1; transform: translateY(0); }
 }
 </style>
+<!-- 이벤트 날짜 선택 모달 -->
 <div id="calendarModal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span id="closeBtn" class="close">&times;</span>
-    <h3>입점 신청</h3>
+    <div class="modal-content">
+        <span id="closeBtn" class="close">&times;</span>
+        <h3>입점 신청</h3>
 
-    <table border="1" style="width:100%; text-align:center;">
-      <thead>
-        <tr>
-          <th>날짜</th>
-          <th>시작 시간</th>
-          <th>종료 시간</th>
-          <th>수용 인원</th>
-          <th>신청 상태</th>
-          <th>입점 신청</th>
-        </tr>
-      </thead>
-      <tbody>
-        <c:forEach var="eday" items="${eventDayList}">
-          <tr>
-            <!-- 날짜만 분리 출력 (event_starttime에서 날짜만 출력) -->
-            <td>
-              <c:out value="${fn:substring(eday.event_starttime, 0, 10)}" />
-            </td>
+        <table border="1" style="width:100%; text-align:center;">
+            <thead>
+                <tr>
+                    <th>날짜</th>
+                    <th>시작 시간</th>
+                    <th>종료 시간</th>
+                    <th>수용 인원</th>
+                    <th>신청 상태</th>
+                    <th>입점 신청</th>
+                    <th>철회</th>  <!-- 철회 버튼을 추가할 위치 -->
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="eday" items="${eday}">
+                    <tr>
+                        <!-- 날짜만 분리 출력 (event_starttime에서 날짜만 출력) -->
+                        <td>
+                            <c:out value="${fn:substring(eday.event_starttime, 0, 10)}" />
+                        </td>
 
-            <!-- 시작 시간 전체 출력 -->
-            <td>${eday.event_starttime}</td>
+                        <!-- 시작 시간 전체 출력 -->
+                        <td>${eday.event_starttime}</td>
 
-            <!-- 종료 시간 전체 출력 -->
-            <td>${eday.event_stoptime}</td>
+                        <!-- 종료 시간 전체 출력 -->
+                        <td>${eday.event_stoptime}</td>
 
-            <td>${eday.store_max}</td>
+                        <td>${eday.store_max}</td>
 
-            <!-- 신청 상태 출력 -->
-            <td>
-              <c:choose>
-                <c:when test="${entryStatusMap[eday.eday_idx] != null}">
-                  ${entryStatusMap[eday.eday_idx]}
-                </c:when>
-                <c:otherwise>
-                  	신청 전
-                </c:otherwise>
-              </c:choose>
-            </td>
+                        <!-- 신청 상태 출력 -->
+                        <td>
+                            <c:choose>
+                                <c:when test="${entryStatusMap[eday.eday_idx] != null}">
+                                    ${entryStatusMap[eday.eday_idx]}
+                                </c:when>
+                                <c:otherwise>
+                                  	  신청 전
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
 
-            <!-- 신청 버튼 또는 상태 표시 -->
-            <td>
-              <c:choose>
-                <c:when test="${entryStatusMap[eday.eday_idx] == null}">
-                  <form action="eventView?event_idx=${eday.event_idx}" method="post" style="margin:0;">
-				  <input type="hidden" name="eday_idx" value="${eday.eday_idx}" />
-				  <input type="hidden" name="store_idx" value="${sessionScope.storeIdx}" />
-                  <button type="submit">신청</button>
-                  </form>
-                </c:when>
-                <c:otherwise>
-                  <button disabled>
-                    ${entryStatusMap[eday.eday_idx]}
-                  </button>
-                </c:otherwise>
-              </c:choose>
-            </td>
-          </tr>
-        </c:forEach>
-      </tbody>
-    </table>
-  </div>
+                        <!-- 신청 버튼 -->
+                        <td>
+                            <c:choose>
+                                <c:when test="${entryStatusMap[eday.eday_idx] == null}">
+                                    <form action="eventView?event_idx=${eday.event_idx}" method="post" style="margin:0;">
+                                        <input type="hidden" name="eday_idx" value="${eday.eday_idx}" />
+                                        <input type="hidden" name="store_idx" value="${sessionScope.storeIdx}" />
+                                        <button type="submit" class="participationBtn" data-eday-idx="${eday.eday_idx}">신청</button>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <button disabled>
+                                        ${entryStatusMap[eday.eday_idx]}
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <button class="withdrawBtn" style="display:none;" data-eday-idx="${eday.eday_idx}" onclick="withdrawEntry(this)">철회</button>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+    </div>
 </div>

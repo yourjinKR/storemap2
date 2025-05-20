@@ -21,6 +21,11 @@ public class EventRequestServiceImple implements EventRequestService{
 		}
 	
 	@Override
+	public int cancelEntry(int eday_idx, int store_idx) {
+		return mapper.cancelEntry(eday_idx, store_idx);
+	}
+	
+	@Override
 	public int getEventIdxByEdayIdx(int eday_idx) {
 		return eventDayMapper.getEventIdxByEdayIdx(eday_idx);
 	}

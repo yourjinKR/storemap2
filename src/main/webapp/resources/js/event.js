@@ -191,6 +191,48 @@ document.addEventListener("DOMContentLoaded", (event) => {
           alert("날짜를 선택해주세요.");
         }
       });
+      
+      const participationButtons = document.querySelectorAll('.participationBtn');
+
+      participationButtons.forEach(button => {
+          button.addEventListener('click', function(event) {
+              event.preventDefault(); // 폼이 자동으로 제출되는 것을 막음
+              
+              const edayIdx = this.getAttribute('data-eday-idx');
+              const withdrawBtn = document.querySelector(`.withdrawBtn[data-eday-idx='${edayIdx}']`);
+
+              // 신청 버튼을 눌렀을 때 철회 버튼 보이기
+              if (withdrawBtn) {
+                  withdrawBtn.style.display = 'inline-block';  // 철회 버튼 보이기
+              }
+          });
+      });
+
+      window.withdrawEntry = function(button) {
+    	    const edayIdx = button.getAttribute('data-eday-idx');
+    	    const storeIdx = button.getAttribute('data-store-idx');
+
+    	    // 실제 서버 요청을 동적으로 날리는 방식 (예: fetch 또는 form 생성해서 submit)
+    	    const form = document.createElement("form");
+    	    form.method = "post";
+    	    form.action = "/event/cancelEntry";
+
+    	    const input1 = document.createElement("input");
+    	    input1.type = "hidden";
+    	    input1.name = "eday_idx";
+    	    input1.value = edayIdx;
+
+    	    const input2 = document.createElement("input");
+    	    input2.type = "hidden";
+    	    input2.name = "store_idx";
+    	    input2.value = storeIdx;
+
+    	    form.appendChild(input1);
+    	    form.appendChild(input2);
+    	    document.body.appendChild(form);
+    	    form.submit();
+    	}
+      
 });
 
 
