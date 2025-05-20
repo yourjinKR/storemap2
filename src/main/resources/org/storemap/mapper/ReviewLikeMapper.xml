@@ -31,6 +31,12 @@
 		ON R.REVIEW_IDX = RL.REVIEW_IDX
 		WHERE RL.MEMBER_IDX = #{member_idx} AND REVIEW_HIDDEN = 0
 	</select>
+	<select id="getMyReview" parameterType="int" resultType="org.storemap.domain.ReviewVO">
+		SELECT * FROM REVIEW WHERE MEMBER_IDX = #{member_idx}
+	</select>
+	<select id="getMyLikeReview" parameterType="int" resultType="org.storemap.domain.ReviewVO">
+		SELECT * FROM REVIEW_LIKE WHERE MEMBER_IDX = #{member_idx}
+	</select>
 	<!-- 4.내가 좋아요한 리뷰번호 가져오기  -->
 	<select id="getReviewIdx" parameterType="int" resultType="org.storemap.domain.ReviewLikeVO">
 		select * from review_like where review_idx = #{param1} AND member_idx = #{param2}

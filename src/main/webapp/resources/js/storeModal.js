@@ -229,7 +229,7 @@ function checkInitialStoreLike() {
 
         // 좋아요 체크
         fetch(`/modal/storeLike/check?store_idx=${store_idx}&member_idx=${member_idx}`)
-            .then(response => response.json())
+            .then(response => response.text())
             .then(data => {
                 checkbox.checked = data.storeLiked;
                 // 좋아요 카운트 업데이트 (검증 목적)

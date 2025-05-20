@@ -25,6 +25,7 @@ import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EnterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MemberVO;
+import org.storemap.domain.ReviewLikeVO;
 import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreLikeVO;
 import org.storemap.domain.StoreVO;
@@ -345,8 +346,13 @@ public class MemberController {
 	// 내 리뷰 목록
 	@GetMapping(value = "/getMyReview",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ReviewVO>> getMyReview() {
-		return null;
+	public ResponseEntity<Map<String, Object>> getMyReview(HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>(); 
+		List<ReviewVO> list = reviewLikeService.getMyReview((int) session.getAttribute("loginUserIdx"));
+		List<ReviewLikeVO> likeList = reviewLikeService.getMyLikeReview((int) session.getAttribute("loginUserIdx"));
+		map.put("reviewData", list);
+		map.put("myLikeData", likeList);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
 //	@PostMapping("/delete") // 진행중

@@ -33,8 +33,8 @@
 				<%-- 일반 회원 --%>
 				<c:when test="${userType == 'user'}">
 					<li><a href="/member/modifyInfo?type=personal">개인정보 수정</a></li>
-					<li><a href="/member/myPage?type=review">내 리뷰 확인</a></li>
-					<li><a href="/member/myPage?type=like">좋아요 목록</a></li>
+					<li><a href="/member/mypage?type=reviewList">내 리뷰 확인</a></li>
+					<li><a href="/member/mypage?type=likeList">좋아요 목록</a></li>
 					<li><a href="/store/storeRegister">점포신청</a></li>
 				</c:when>
 				<%-- 점포 회원 --%>

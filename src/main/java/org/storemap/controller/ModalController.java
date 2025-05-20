@@ -137,10 +137,13 @@ public class ModalController {
 	}	
 	
 	//점포좋아요 (토글)
-	@ResponseBody
-	@GetMapping("/storeLike/toggle")
-	public ResponseEntity<Map<String, Object>> toggleFavorite(@RequestParam("store_idx") int store_idx, @RequestParam("member_idx") int member_idx) {
-		log.info("toggleFavorite..."+store_idx+", "+member_idx);
+	@GetMapping(value = "/storeLike/toggle",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> toggleFavorite(@RequestParam("store_idx") int store_idx, HttpSession session) {
+		int member_idx = 0;
+		if(session.getAttribute("loginUserIdx") != null) {
+			member_idx = (int) session.getAttribute("loginUserIdx");
+		}
 		
 		Map<String, Object> result = new HashMap<>();
 		StoreLikeVO likeVO = storeLikeService.getIdx(store_idx, member_idx);
@@ -190,10 +193,13 @@ public class ModalController {
 	}
 	
 	//리뷰좋아요 (토글)
-	@ResponseBody
-    @GetMapping("/reviewLike/toggle")
-    public ResponseEntity<Map<String, Object>> toggleReviewFavorite(@RequestParam("review_idx") int review_idx, @RequestParam("member_idx") int member_idx) {
-        log.info("toggleReviewFavorite..."+review_idx+", "+member_idx);
+	@GetMapping(value = "/reviewLike/toggle",
+		produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> toggleReviewFavorite(@RequestParam("review_idx") int review_idx, HttpSession session) {
+		int member_idx = 0;
+		if(session.getAttribute("loginUserIdx") != null) {
+			member_idx = (int) session.getAttribute("loginUserIdx");
+		}
         
         Map<String, Object> result = new HashMap<>();
         ReviewLikeVO likeVO = reviewLikeService.getIdx(review_idx, member_idx);

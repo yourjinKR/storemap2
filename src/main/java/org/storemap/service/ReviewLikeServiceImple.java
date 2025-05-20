@@ -34,12 +34,28 @@ public class ReviewLikeServiceImple implements ReviewLikeService{
 		return result;
 	}
 	
+	// 내 좋아요 목록
 	@Override
 	public List<ReviewVO> getLikeList(int member_idx) {
 		List<ReviewVO> list = mapper.getLikeList(member_idx);
 		for (ReviewVO vo : list) {
 			vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
 		}
+		return list;
+	}
+	// 내가 쓴 리뷰 목록
+	@Override
+	public List<ReviewVO> getMyReview(int member_idx) {
+		List<ReviewVO> list = mapper.getMyReview(member_idx);
+		for (ReviewVO vo : list) {
+			vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
+		}
+		return list;
+	}
+	
+	@Override
+	public List<ReviewLikeVO> getMyLikeReview(int member_idx) {
+		List<ReviewLikeVO> list = mapper.getMyLikeReview(member_idx);
 		return list;
 	}
 	
