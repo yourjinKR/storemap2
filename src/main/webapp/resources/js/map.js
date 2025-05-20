@@ -1070,15 +1070,22 @@ const asyncService = (function(){
 })();
 const as = asyncService;
 
-/** 지도, 위도, 경도를 입력하면 지도 이동 */ 
+/** 지도, 위도, 경도를 입력하면 지도 이동 */
 function panToLatLng(map, lat, lng) {
-    if (lat && lng) {
-        // 좌표설정
-        let moveLatLng = new kakao.maps.LatLng(lat, lng);	
-        // 이동
+    const isValidNumber = (n) => typeof n === 'number' && !isNaN(n);
+
+    // 대한민국 기준 위도 및 경도 범위
+    const isValidLat = isValidNumber(lat) && lat >= 33.0 && lat <= 38.7;
+    const isValidLng = isValidNumber(lng) && lng >= 124.0 && lng <= 132.0;
+
+    if (isValidLat && isValidLng) {
+        const moveLatLng = new kakao.maps.LatLng(lat, lng);
         map.panTo(moveLatLng);
+    } else {
+        console.log("대한민국 범위를 벗어난 위도/경도 값입니다:", lat, lng);
     }
 }
+
 
 /** 업로드할 요소 위치를 입력하여 지도를 업로드 함수 (반환값 : 해당 지도 요소) */
 function uploadMap(path, lat, lng) {
