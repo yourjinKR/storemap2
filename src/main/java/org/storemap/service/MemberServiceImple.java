@@ -21,7 +21,13 @@ public class MemberServiceImple implements MemberService{
 	// 로그인
 	@Override
 	public MemberVO mLogin(String member_id, String member_pw) {
-		return memberMapper.mLogin(member_id, member_pw);
+		MemberVO member = memberMapper.mLogin(member_id, member_pw);
+		// NULL 체크를 추가하여 member_image가 NULL인 경우 처리
+		if(member != null && member.getMember_image() == null) {
+			// member_image가 NULL인 경우 기본 이미지 설정
+			member.setMember_image("member1.jpg");
+		}
+		return member;
 	}
 	
 	// 개인/점주 회원가입

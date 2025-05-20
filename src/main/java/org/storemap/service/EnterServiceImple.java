@@ -21,7 +21,13 @@ public class EnterServiceImple implements EnterService{
 	// 로그인
 	@Override
 	public EnterVO eLogin(String enter_id, String enter_pw) {
-		return enterMapper.eLogin(enter_id, enter_pw);
+		EnterVO enter = enterMapper.eLogin(enter_id, enter_pw);
+		// NULL 체크를 추가하여 member_image가 NULL인 경우 처리
+		if(enter != null && enter.getEnter_image() == null) {
+			// enter_image가 NULL인 경우 기본 이미지 설정
+			enter.setEnter_image("member1.jpg");
+		}
+		return enter;
 	}
 	// 회원가입 member id 중복확인
 	@Override
@@ -38,7 +44,7 @@ public class EnterServiceImple implements EnterService{
 			// 파일이 있는 경우에만 이미지 업로드 처리
 			if(file != null && !file.isEmpty()){
 				// 이미지가 이미 있는 경우 삭제
-				if(!oldImg.equals("enter1.jpg")) {
+				if(!oldImg.equals("member1.jpg")) {
 					cloudinaryService.deleteFile(oldImg);
 				}
 				// 새 이미지 직접 업로드

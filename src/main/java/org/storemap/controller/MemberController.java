@@ -93,7 +93,21 @@ public class MemberController {
 				StoreVO store = storeService.getStore(member.getMember_idx());
 				session.setAttribute("storeIdx", store.getStore_idx());
 			}
-			AttachFileVO amvo = attachMapper.getAttach(member.getMember_image());
+			// NULL 체크를 추가하여 member_image가 NULL인 경우 처리
+			if(member.getMember_image() != null) {
+				AttachFileVO amvo = attachMapper.getAttach(member.getMember_image());
+				// amvo가 null이 아닌 경우에만 파일 이름 설정
+				if(amvo != null) {
+					session.setAttribute("userFilename", amvo.getFilename());
+				} else {
+					// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
+					session.setAttribute("userFilename", "member1.jpg");
+				}
+			} else {
+				// member_image가 NULL인 경우 기본 이미지 설정
+				member.setMember_image("member1.jpg"); // 기본 이미지 값 설정
+				session.setAttribute("userFilename", "member1.jpg");
+			}
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
 			session.setAttribute("userName", member.getMember_name());
@@ -112,7 +126,21 @@ public class MemberController {
 		EnterVO enter = enterService.eLogin(id, pw);
 		if(enter != null) {
 			enter.setEnter_pw(null);
-			AttachFileVO aevo = attachMapper.getAttach(enter.getEnter_image());
+			// NULL 체크를 추가하여 enter_image가 NULL인 경우 처리
+			if(enter.getEnter_image() != null) {
+				AttachFileVO aevo = attachMapper.getAttach(enter.getEnter_image());
+				// aevo가 null이 아닌 경우에만 파일 이름 설정
+				if(aevo != null) {
+					session.setAttribute("userFilename", aevo.getFilename());
+				} else {
+					// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
+					session.setAttribute("userFilename", "member1.jpg");
+				}
+			} else {
+				// enter_image가 NULL인 경우 기본 이미지 설정
+				enter.setEnter_image("enter1.jpg"); // 기본 이미지 값 설정
+				session.setAttribute("userFilename", "member1.jpg");
+			}
 			session.setAttribute("loginUserIdx", enter.getEnter_idx());
 			session.setAttribute("loginUser", enter.getEnter_id());
 			session.setAttribute("userName", enter.getEnter_name());

@@ -5,9 +5,8 @@
 <div class="side-bar">
 	<div class="info d_f">
 		<div class="left-con profile">
-		<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/><!--임시-->
 		<c:choose>
-			<c:when test="">
+			<c:when test="${sessionScope.userFilename eq 'member1.jpg'}">
 				<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
 			</c:when>
 			<c:otherwise>

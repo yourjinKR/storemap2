@@ -78,7 +78,7 @@
 		     		<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="사진이 없습니다!"/>
 		     	</c:when>
 		     	<c:otherwise>
-		     		<img src="${IMG_URL}${rvo.writer_image}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
+		     		<img src="${IMG_URL}${sessionScope.userImage}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
 		     	</c:otherwise>
 		     </c:choose>
 		    </div>
