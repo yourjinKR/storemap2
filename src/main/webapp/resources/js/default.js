@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	sidebarLogout();
 	
 	// 헤더 검색창
-	let search = document.querySelector(".search-bar input[name='keyword']");
+	// let search = document.querySelector(".search-bar input[name='keyword']");
 	// if (search != null) {
 	// 	search.addEventListener("keydown", function (e) {
 	// 		if (e.keyCode == 13) {

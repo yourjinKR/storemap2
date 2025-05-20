@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
             lng = basicMap.getCenter().getLng();
             kilometer = setRadiusByLevel(basicMap.getLevel());
         } else {
-            console.log('맵 없음');
+            // console.log('맵 없음');
             lat = currentLat;
             lng = currentLng;
             kilometer = setRadiusByLevel(5);
@@ -459,12 +459,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 키보드 방향키/엔터 지원
+    // 검색창 키보드 방향키/엔터 지원
+    console.log(keywordInput);
+    
     keywordInput.addEventListener("keydown", e => {
         const items = autoSearchUL.querySelectorAll("li");
-
         
-        if (items.length === 0) return;
+        // if (items.length === 0) return;
 
         switch (e.keyCode) {
             case 38: // 위
@@ -485,8 +486,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             case 13: // Enter
                 e.preventDefault();
-            
+
                 suppressAutocomplete = true;
+
                 if (selectedIndex >= 0 && selectedIndex < items.length) {
                     const selectedItem = items[selectedIndex];
                     const value = selectedItem.dataset.value; // 정확한 값 추출
@@ -498,7 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         sessionStorage.setItem("initialKeyword", value);
                         location.href = "/store/map";  // 주소에 파라미터 안 붙음
                     }
-                } else {
+                } else if (selectedIndex == -1 && items.length >= 0) {
                     hideAutocomplete();
                     if (mapType === "full") {
                         mapSearchService(basicMap, keywordInput.value.trim());
@@ -511,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
 
             default :
-                console.log(e.keyCode);
+                // console.log(e.keyCode);
                 hideAutocomplete();
         }
     });
