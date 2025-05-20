@@ -165,25 +165,61 @@ public class MemberController {
 	// 개인 회원정보 수정 처리
 	@PostMapping("/modifyPersonal")
 	@ResponseBody
-	public Map<String, Object> modifyMember(@RequestBody MemberVO member, HttpSession session, MultipartFile file) {
-		Map<String, Object> result = new HashMap<>();
-		int res = memberService.modifyMember(file, member);
-		if(res > 0) {
-			session.setAttribute("userNickName",member.getMember_nickname());
-		}
-		result.put("result", res);
-		return result;
+	public Map<String, Object> modifyMember(
+	        @RequestParam("member_idx") int member_idx,
+	        @RequestParam("member_id") String member_id,
+	        @RequestParam("member_pw") String member_pw,
+	        @RequestParam("member_name") String member_name,
+	        @RequestParam("member_nickname") String member_nickname,
+	        @RequestParam(value = "file", required = false) MultipartFile file,
+	        HttpSession session) {
+	    
+	    Map<String, Object> result = new HashMap<>();
+	    
+	    MemberVO member = new MemberVO();
+	    member.setMember_idx(member_idx);
+	    member.setMember_id(member_id);
+	    member.setMember_pw(member_pw);
+	    member.setMember_name(member_name);
+	    member.setMember_nickname(member_nickname);
+	    
+	    int res = memberService.modifyMember(file, member);
+	    if(res > 0) {
+	        session.setAttribute("userNickName", member.getMember_nickname());
+	    }
+	    result.put("result", res);
+	    return result;
 	}
 	
 	// 단체 회원정보 수정 처리
 	@PostMapping("/modifyGroup")
 	@ResponseBody
-	public Map<String, Object> modifyEnter(@RequestBody EnterVO enter, HttpSession session, MultipartFile file) {
-		Map<String, Object> result = new HashMap<>();
-		int res = enterService.modifyEnter(file, enter);
-		result.put("result", res);
-		System.out.println("결과 : " + res);
-		return result;
+	public Map<String, Object> modifyEnter(
+	        @RequestParam("enter_idx") int enter_idx,
+	        @RequestParam("enter_id") String enter_id,
+	        @RequestParam("enter_pw") String enter_pw,
+	        @RequestParam("enter_name") String enter_name,
+	        @RequestParam("enter_rnum") int enter_rnum,
+	        @RequestParam("enter_loc") String enter_loc,
+	        @RequestParam("enter_num") String enter_num,
+	        @RequestParam(value = "file", required = false) MultipartFile file,
+	        HttpSession session) {
+	    
+	    Map<String, Object> result = new HashMap<>();
+	    
+	    EnterVO enter = new EnterVO();
+	    enter.setEnter_idx(enter_idx);
+	    enter.setEnter_id(enter_id);
+	    enter.setEnter_pw(enter_pw);
+	    enter.setEnter_name(enter_name);
+	    enter.setEnter_rnum(enter_rnum);
+	    enter.setEnter_loc(enter_loc);
+	    enter.setEnter_num(enter_num);
+	    
+	    int res = enterService.modifyEnter(file, enter);
+	    result.put("result", res);
+	    System.out.println("결과 : " + res);
+	    return result;
 	}
 	
 	// 로그아웃

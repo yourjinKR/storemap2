@@ -64,8 +64,8 @@ if(formType == 'personal') {
 			pwCk = false;
 		}else if(!regExpPw.exec(target.value)){
 			// 데이터 검증 미완료
-			//invalidate(target, mPwValidState, '올바른 형식이 아닙니다.');
-			//pwCk = false;
+			invalidate(target, mPwValidState, '올바른 형식이 아닙니다.');
+			pwCk = false;
 		}else{
 			// 데이터 검증 완료
 			validated(target, mPwValidState, '사용 가능한 비밀번호입니다.');
@@ -133,18 +133,19 @@ if(formType == 'personal') {
 			method : 'POST',
 			body : formData
 		})
-		.then(response => response.json())
-		.then(data => {
-			if(data.result === 1){
+		.then(response => {
+			if(response.ok) {
 				alert("회원정보 수정이 완료되었습니다. 메인 페이지로 이동합니다.");
 				location.href=`/`;
-			} else {
-				alert("회원정보 수정이 실패했습니다.");
+				return;
 			}
+			return response.text().then(text => {
+				throw new Error(text);
+			});
 		})
 		.catch(err => {
 			console.log("오류 : ", err);
-			alert("오류");
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
 		});
 	}
 
@@ -241,8 +242,8 @@ if(formType == 'personal') {
 		console.log(pwCk, pwReCk)
 		
 		if(!pwCk || !pwReCk){
-			alert("모든 입력 내용을 확인해주세요");
-			return;
+			//alert("모든 입력 내용을 확인해주세요");
+			//return;
 		}
 		
 		let formData = new FormData();
@@ -264,18 +265,19 @@ if(formType == 'personal') {
 			method : 'POST',
 			body : formData
 		})
-		.then(response => response.json())
-		.then(data => {
-			if(data.result === 1){
+		.then(response => {
+			if(response.ok) {
 				alert("회원정보 수정이 완료되었습니다. 메인 페이지로 이동합니다.");
 				location.href=`/`;
-			} else {
-				alert("회원정보 수정이 실패했습니다.");
+				return;
 			}
+			return response.text().then(text => {
+				throw new Error(text);
+			});
 		})
 		.catch(err => {
 			console.log("오류 : ", err);
-			alert("오류");
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
 		});
 	}
 }
