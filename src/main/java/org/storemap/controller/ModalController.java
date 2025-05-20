@@ -131,7 +131,9 @@ public class ModalController {
 		})
 		public ResponseEntity<StoreVO> getByIdx(@RequestBody int store_idx){
 			log.info("getByIdx..." + store_idx);
-			return new ResponseEntity<StoreVO>(storeService.get(store_idx), HttpStatus.OK);
+			StoreVO vo = storeService.get(store_idx);
+			log.info(vo);
+			return new ResponseEntity<StoreVO>(vo, HttpStatus.OK);
 	}	
 	
 	//점포좋아요 (토글)

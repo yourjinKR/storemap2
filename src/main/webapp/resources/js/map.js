@@ -247,11 +247,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const initialStoreIDX = sessionStorage.getItem("store_idx");
         if (initialStoreIDX) {
             // store idx 기반 검색 비동기 함수 실행
-            as.getStoreByIdx(initialStoreIDX, function (data) {
-                apply2storeMap(data);
+            let IDX = 302;
+            as.getStoreByIdx(IDX, function (data) {
+                apply2storeMap([data]);
             });
         }
-    }
+}
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
         let f = document.forms[0];
@@ -892,16 +893,16 @@ const asyncService = (function(){
 
     /** idx로 점포 정보 로드하는 함수 */
     function getStoreByIdx(idx, callback){
-        condition.amount = amount;
-        fetch(`/store/getByIdx`, {
+        fetch(`/modal/store/getByIdx.json`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({store_idx : idx})
+            body: JSON.stringify(idx)
         })
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             callback(data);
         })
         .catch(err => {
