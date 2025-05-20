@@ -35,7 +35,7 @@ function register(){
 	// FormData 생성
     const formData = new FormData();
 	formData.append("store_idx" , document.querySelector("input[name='store_idx']").value);
-	formData.append("writer_image" , document.querySelector("input[name='writer_image']").value);
+	formData.append("member_idx" , document.querySelector("input[name='member_idx']").value);
 	formData.append("review_title" , document.querySelector("input[name='review_title']").value);
 	formData.append("review_writer" , document.querySelector("input[name='review_writer']").value);
 	formData.append("review_star" , document.querySelector("select[name='review_star']").value);

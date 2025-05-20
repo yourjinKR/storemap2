@@ -64,8 +64,8 @@ if(formType == 'personal') {
 			pwCk = false;
 		}else if(!regExpPw.exec(target.value)){
 			// 데이터 검증 미완료
-			invalidate(target, mPwValidState, '올바른 형식이 아닙니다.');
-			pwCk = false;
+			//invalidate(target, mPwValidState, '올바른 형식이 아닙니다.');
+			//pwCk = false;
 		}else{
 			// 데이터 검증 완료
 			validated(target, mPwValidState, '사용 가능한 비밀번호입니다.');
@@ -113,8 +113,8 @@ if(formType == 'personal') {
 		console.log(pwCk, pwReCk, nicknameCk)
 		
 		if(!pwCk || !pwReCk || !nicknameCk){
-			alert("모든 입력 내용을 확인해주세요");
-			return;
+			//alert("모든 입력 내용을 확인해주세요");
+			//return;
 		}
 		let formData = new FormData();
 		formData.append("member_idx", f.member_idx.value);

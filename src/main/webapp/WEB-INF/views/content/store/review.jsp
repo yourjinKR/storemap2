@@ -7,7 +7,7 @@
 		<c:when test="${not empty loginUser}">
 			<form method="post">
 			  	<input type="hidden" name="store_idx" value="${vo.store_idx}">
-			  	<input type="hidden" name="writer_image" value="${userImage}">
+			  	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 			  	
 			    <label for="rtitle">제목</label>
 			    <input type="text" id="rtitle" name="review_title">

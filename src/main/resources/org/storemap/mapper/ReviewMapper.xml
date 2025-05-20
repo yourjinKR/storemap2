@@ -14,7 +14,7 @@
 		<result property="review_like_cnt" column="review_like_cnt"/>
 		<result property="review_regdate" column="review_regdate"/>
 		<result property="review_hidden" column="review_hidden"/>
-		<result property="writer_image" column="writer_image"/>
+		<result property="member_idx" column="member_idx"/>
 		<result property="review_filename" column="review_filename"/>
 		<result property="writer_filename" column="writer_filename"/>
 		<association property="attach" resultMap="attachMap"/>
@@ -36,7 +36,7 @@
 			review_content,
 			review_image,
 			review_regdate,
-			writer_image
+			member_idx
 		)
 		values(
 	 		review_seq.nextval,
@@ -47,7 +47,7 @@
 	 		#{review_content},
 	 		#{review_image},
 	 		sysdate,
-	 		#{writer_image}
+	 		#{member_idx}
 	 	)
 	</insert>
 	<!-- 2.리뷰 수정  -->
@@ -57,7 +57,7 @@
 		 	review_star = #{review_star},
 		 	review_title = #{review_title},
 		 	review_content = #{review_content},
-		 	review_image = #{review_image},
+		 	member_idx = #{member_idx},
 		 	review_regdate = sysdate
 	 	where review_idx = #{review_idx}
 	</update>
@@ -74,7 +74,8 @@
 		SELECT r.*, a1.filename AS review_filename, a2.filename AS writer_filename
 		FROM review r
 		LEFT OUTER JOIN attach_file a1 ON r.review_image = a1.uuid
-		LEFT OUTER JOIN attach_file a2 ON r.writer_image = a2.uuid
+		LEFT OUTER JOIN member m ON r.member_idx = m.member_idx
+		LEFT OUTER JOIN attach_file a2 ON m.member_image = a2.uuid
 		WHERE r.store_idx = #{store_idx}
 	</select>
 	<!-- 6.리뷰 자세히 보기  -->
@@ -85,7 +86,7 @@
 	
 	<!-- 8.해당 점포에 동일한 리뷰를 가지고 있는지 검증 -->
 	<select id="getSame" parameterType="org.storemap.domain.ReviewVO" resultType="org.storemap.domain.ReviewVO">
-		select * from review where store_idx = #{param1} AND review_writer = #{param2}
+		select * from review where store_idx = #{param1} AND member_idx = #{param2}
 	</select>
 	<!-- 9.리뷰 숨기기 등록 -->
 	<update id="hideReview" parameterType="int">
