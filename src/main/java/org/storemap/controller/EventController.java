@@ -35,16 +35,19 @@ import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventDayVO;
+import org.storemap.domain.EventDeclarationVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventRequestVO;
 import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
+import org.storemap.domain.MemberVO;
 import org.storemap.domain.PageDTO;
 import org.storemap.service.CloudinaryService;
 import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayService;
 import org.storemap.service.EventDayServiceImple;
+import org.storemap.service.EventDeclarationService;
 import org.storemap.service.EventRequestService;
 import org.storemap.service.EventServiceImple;
 
@@ -61,11 +64,11 @@ public class EventController {
 	@Autowired
 	private EventDayServiceImple eventDayService;
 	@Autowired
-	private CommentEventServiceImple commentEventService;
-	@Autowired
 	private EventRequestService eventRequestService;
 	@Autowired
 	private CloudinaryService cloudinaryService;
+	@Autowired
+	private EventDeclarationService eventDeclarationService;
 	
 	@GetMapping("/eventList")
 	public String eventList() {	
@@ -128,26 +131,42 @@ public class EventController {
 		return "index";
 	}
 	
-	//이벤트 상세보기 화면으로 이동	
 	@GetMapping("/eventView")
-	public String eventView(Model model, @RequestParam("event_idx") int event_idx) {
+	public String eventView(Model model,
+	                        @RequestParam("event_idx") int event_idx,
+	                        HttpSession session) {
+
+	    // 1. 이벤트 정보 가져오기
 	    EventVO vo = eventService.getEventOneView(event_idx);
 	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
 	    List<AttachFileVO> fileList = new ArrayList<>();
-	    String uuidStr = vo.getEvent_file(); 
+
+	    String uuidStr = vo.getEvent_file();
 	    if (uuidStr != null && !uuidStr.isEmpty()) {
 	        List<String> uuidList = Arrays.stream(uuidStr.split(","))
 	                                      .map(String::trim)
 	                                      .filter(s -> !s.isEmpty())
 	                                      .collect(Collectors.toList());
-
 	        fileList = cloudinaryService.getFilesByUuidList(uuidList);
 	    }
+
+	    // 2. 모델에 기본 정보 담기
 	    model.addAttribute("eday", eday);
 	    model.addAttribute("evo", vo);
 	    model.addAttribute("fileList", fileList);
 
-	    return "index"; // JSP로 전달
+	    // 3. 세션에 event_idx 저장
+	    session.setAttribute("event_idx", event_idx);
+
+	    // 4. 로그인 여부 확인 및 처리
+	    Integer loginUserIdx = (Integer) session.getAttribute("loginUserIdx");
+	    if (loginUserIdx != null) {
+	        session.setAttribute("member_idx", loginUserIdx);
+	    } else {
+	        session.setAttribute("alertMsg", "로그인을 해야 신고 기능을 이용할 수 있습니다.");
+	    }
+
+	    return "index";
 	}
 	// 이벤트 입점신청 요청
 	@PostMapping("/eventView")
@@ -179,6 +198,25 @@ public class EventController {
 	    return response;
 	}
 
-	
+	@PostMapping("/report/submit")
+	public String submitReport(HttpSession session,
+	                           @RequestParam("declaration_category") String declarationCategory,
+	                           @RequestParam("declaration_content") String declarationContent) {
+
+	    Integer eventIdx = (Integer) session.getAttribute("event_idx");
+	    Integer memberIdx = (Integer) session.getAttribute("member_idx");
+
+
+	    EventDeclarationVO reportVO = new EventDeclarationVO();
+	    reportVO.setEvent_idx(eventIdx);
+	    reportVO.setMember_idx(memberIdx);
+	    reportVO.setDeclaration_category(declarationCategory);
+	    reportVO.setDeclaration_content(declarationContent);
+
+	    eventDeclarationService.submitReport(reportVO);
+
+	    // 이벤트 상세 페이지로 리다이렉트
+	    return "redirect:/event/eventView?event_idx=" + eventIdx;
+	}
 
 }

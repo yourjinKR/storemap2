@@ -1,5 +1,7 @@
 package org.storemap.service;
 
-public interface EventDeclarationService {
+import org.storemap.domain.EventDeclarationVO;
 
+public interface EventDeclarationService {
+	public int submitReport(EventDeclarationVO reportVO);
 }

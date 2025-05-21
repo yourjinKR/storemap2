@@ -180,17 +180,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
           modal.style.display = 'none';
         }
       });
-
-      // 확인 버튼 이벤트 (예: 선택한 날짜 처리)
-      document.getElementById('confirmBtn').addEventListener('click', function () {
-        const selectedDate = document.getElementById('selectedDate').value;
-        if (selectedDate) {
-          alert("선택한 날짜: " + selectedDate);
-          document.getElementById('calendarModal').style.display = 'none';
-        } else {
-          alert("날짜를 선택해주세요.");
-        }
-      });
       
       const participationButtons = document.querySelectorAll('.participationBtn');
 
@@ -232,7 +221,80 @@ document.addEventListener("DOMContentLoaded", (event) => {
     	    document.body.appendChild(form);
     	    form.submit();
     	}
-      
+      // 이벤트 신고 모달
+      const reportButtons = document.querySelectorAll('.report-button');
+      const modal = document.querySelector('#event-report-selection');
+      const closeBtn = modal.querySelector('.close');
+
+      // 초기에는 모달을 무조건 닫아둠
+      modal.style.display = 'none';
+
+      // 각 신고 버튼 클릭 시 모달 열기
+      reportButtons.forEach(button => {
+        button.addEventListener('click', function () {
+          const eventIdx = button.dataset.eventIdx;
+
+          // 모달 상태 확인 후 열기
+          if (!sessionStorage.getItem('modalOpenedFor_' + eventIdx)) {
+            modal.style.display = 'block';
+            sessionStorage.setItem('modalOpenedFor_' + eventIdx, 'true');
+          } else {
+            modal.style.display = 'block'; // 이미 열렸던 경우도 허용하려면 이 줄만 쓰면 됨
+          }
+
+          // 추후 추가 처리 가능
+        });
+      });
+
+      // 닫기 버튼 클릭 시 모달 닫기
+      closeBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+      });
+     
+      const btn = document.getElementById('eventReportBtn');
+      if (!btn) {
+        console.error(' 버튼 못 찾음');
+        return;
+      }
+      console.log(' 버튼 찾음');
+
+      btn.addEventListener('click', function () {
+        console.log(' 버튼 클릭됨');
+      });
+      // 이벤트 신고 제출 
+      var reportBtn = document.getElementById('eventReportBtn');
+      var isLoggedInInput = document.getElementById('isLoggedIn');
+      var isLoggedIn = isLoggedInInput && isLoggedInInput.value === "true";
+
+      if (reportBtn) {
+        reportBtn.addEventListener('click', function () {
+          // 🚫 로그인 안 돼 있으면 여기서만 alert 띄움
+          if (!isLoggedIn) {
+            alert("로그인해야 신고할 수 있습니다.");
+            return;
+          }
+
+          // ✅ 로그인 되어 있으면 신고 내용 검증 후 폼 제출
+          var categoryInput = document.querySelector('input[name="declaration_category"]:checked');
+          var contentInput = document.querySelector('textarea[name="declaration_content"]');
+
+          if (!categoryInput || !contentInput) {
+            alert('필수 입력값이 누락되었습니다.');
+            return;
+          }
+
+          var category = categoryInput.value;
+          var content = contentInput.value.trim();
+
+          if (!content) {
+            alert('신고 내용을 입력해주세요.');
+            return;
+          }
+
+          // 신고 폼 submit
+          document.querySelector('form').submit();
+        });
+      }
 });
 
 
@@ -299,7 +361,7 @@ function generateDays() {
 	  updateDateTimeHiddenFields();  // 생성 직후에도 값 채워넣기
 	}
 	// 날짜 포맷
-function updateDateTimeHiddenFields() {
+	function updateDateTimeHiddenFields() {
 	  const fieldsets = document.querySelectorAll('.event-day');
 
 	  fieldsets.forEach((fs) => {
@@ -315,6 +377,7 @@ function updateDateTimeHiddenFields() {
 	      fs.querySelector('.eventStopTime').value = fullStop;
 	    }
 	  });
+	  
 	}
 
 // 일괄 등록 함수
@@ -354,12 +417,10 @@ function goIndex(){
 }
 
 function goRegister(){
-	console.log(1)
 	location.href ="/event/eventRegister"
 }
 function goEventList(){
-	console.log(1)
-	//	location.href="/event/eventList"
+	location.href="/event/eventList"
 }
 function logEventDayList() {
     const storeMaxInputs = document.querySelectorAll('.storeMax');
@@ -422,4 +483,4 @@ function logEventDayList() {
     f.action="/event/eventRegister";
 	f.submit();
 }
-
+	
