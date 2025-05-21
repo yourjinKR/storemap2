@@ -389,14 +389,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // 줌 이벤트
         kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
             console.log(basicMap.getLevel());
-            
-            if(basicMap.getLevel() > 4) {
-                hideOverlay(storeOverlayList);
-                hideOverlay(eventOverlayList);
-            } else {
-                showOverlay(basicMap, storeOverlayList);
-                showOverlay(basicMap, eventOverlayList);
-            }
+            hideOverlay(storeOverlayList);
+            hideOverlay(eventOverlayList);
+            showOverlay(basicMap, storeOverlayList);
+            showOverlay(basicMap, eventOverlayList);
         });
     }
 
@@ -714,17 +710,21 @@ function registerOverlay(vo) {
 
 /** 커스텀 오버레이를 보여주는 함수 */
 function showOverlay(map, overlayList) {
-    for (let i = 0; i < overlayList.length; i++) {
-        const element = overlayList[i];
-        element.setMap(map);
+    if (basicMap.getLevel() <= 3) {
+        for (let i = 0; i < overlayList.length; i++) {
+            const element = overlayList[i];
+            element.setMap(map);
+        }
     }
 }
 
 /** 커스텀 오버레이를 삭제하는 함수 */
 function hideOverlay(overlayList) {
-    for (let i = 0; i < overlayList.length; i++) {
-        const element = overlayList[i];
-        element.setMap(null);
+    if (basicMap.getLevel() > 4) {
+        for (let i = 0; i < overlayList.length; i++) {
+            const element = overlayList[i];
+            element.setMap(null);
+        }
     }
 }
 
@@ -1415,7 +1415,7 @@ function apply2storeMap(data) {
         // let level = getMapLevelFromMarkerLists(storeVOList);
         // basicMap.setLevel(level);
         panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
-        completeSearch()
+        completeSearch();
     }
 }
 
