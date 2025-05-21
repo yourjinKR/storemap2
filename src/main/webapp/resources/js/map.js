@@ -422,9 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const keyword = keywordInput.value.trim();
 
         if (keyword.length === 0) {
-            console.log('키워드의 길이가 0이므로 자동완성 리스트를 닫음');
-            
-            
             return;
         }
         
@@ -495,12 +492,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 검색창 키보드 방향키/엔터 지원
+    // 자동완성 검색창 키보드 방향키 지원
     console.log(keywordInput);
     
-    keywordInput.addEventListener("keydown", e => {
+    keywordInput.addEventListener("keydown", e => {        
         const items = autoSearchUL.querySelectorAll("li");
-        
         // if (items.length === 0) return;
 
         switch (e.keyCode) {
@@ -524,9 +520,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
 
                 suppressAutocomplete = true;
-                console.log('엔터키 입력');
-                
-                hideAutocomplete();
+                //console.log('엔터키 입력');
+                // hideAutocomplete();
 
                 if (selectedIndex >= 0 && selectedIndex < items.length) {
                     const selectedItem = items[selectedIndex];
@@ -548,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         location.href = "/store/map";  // 주소에 파라미터 안 붙음
                     }
                 }
-
+                keywordInput.value = "";    
                 break;
 
             default :
@@ -1217,6 +1212,8 @@ let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null
 
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
+    // hideAutocomplete();
+
     console.log(`${keyword}에 대한 검색 결과....`);
     
     storeFailModal.style.display = "none";
@@ -1408,8 +1405,9 @@ function subwayServiceCB(data, status, pagination) {
 
 /** 검색결과를 지도에 적용하는 콜백함수 (점포) */
 function apply2storeMap(data) {
+    hideAutocomplete();
+
     storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
-    // storeUL.innerHTML = "";
 
     if (data.length == 0) {
         console.log("data 없음");
@@ -1988,7 +1986,7 @@ function updateActiveItem(items) {
 
 // 자동완성 숨기기
 function hideAutocomplete() {
-    // console.log('가린다');
+    console.log('가린다');
     autoCompleteBox.style.display = "none";
     autoSearchUL.innerHTML = "";
     selectedIndex = -1;
