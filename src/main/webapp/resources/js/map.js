@@ -2,7 +2,7 @@ console.log("map load");
 
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
-let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
+let basicMarkerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
 // let markerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
 let storeMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
 let eventMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792243/eventMarker_zespzh.png';
@@ -20,8 +20,8 @@ let markerOption = {offset: new kakao.maps.Point(16, 34), alt: "마커 이미지
 let clickedMarkerOption = {offset: new kakao.maps.Point(20, 46), alt: "클릭 마커 이미지 예제", shape: "poly", coords: "1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33"};
 
 // 마커 아이콘
-let testIcon = new kakao.maps.MarkerImage(markerSrc, markerSize, markerOption);
-let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, clickedMarkerOption);
+let testIcon = new kakao.maps.MarkerImage(basicMarkerSrc, markerSize, markerOption);
+let clickedIcon = new kakao.maps.MarkerImage(basicMarkerSrc, clickedMarkerSize, clickedMarkerOption);
 // 점포 아이콘
 let storeIcon = new kakao.maps.MarkerImage(storeMarkerSrc, markerSize, markerOption);
 let storeClickedIcon = new kakao.maps.MarkerImage(storeMarkerSrc, clickedMarkerSize, clickedMarkerOption);
@@ -1152,8 +1152,8 @@ function panToLatLng(map, lat, lng) {
     const isValidNumber = (n) => typeof n === 'number' && !isNaN(n);
 
     // 대한민국 기준 위도 및 경도 범위
-    const isValidLat = isValidNumber(lat) && lat >= 33.0 && lat <= 38.7;
-    const isValidLng = isValidNumber(lng) && lng >= 124.0 && lng <= 132.0;
+    const isValidLat = lat >= 33.0 && lat <= 43.0;
+    const isValidLng = lng >= 124.0 && lng <= 132.0;
 
     if (isValidLat && isValidLng) {
         const moveLatLng = new kakao.maps.LatLng(lat, lng);
