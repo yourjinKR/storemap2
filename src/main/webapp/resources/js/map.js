@@ -417,12 +417,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
 
     keywordInput.addEventListener("input", e => {
-        
+        hideAutocomplete();
 
         const keyword = keywordInput.value.trim();
 
         if (keyword.length === 0) {
-            hideAutocomplete();
+            console.log('키워드의 길이가 0이므로 자동완성 리스트를 닫음');
+            
+            
             return;
         }
         
@@ -454,12 +456,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // console.log(data);
 
             // 최대 5개까지만 표시
-            const suggestionList = data.slice(0, 5);
+            const suggestionList = data.slice(0, 3);
             updateSuggestionList(suggestionList, 'store');
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
-            hideAutocomplete();
+            // hideAutocomplete();
         });
 
         // 이벤트 정보 불러오기 (서버에 비동기 요청)
@@ -475,12 +477,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // console.log(data);
 
             // 최대 5개까지만 표시
-            const suggestionList = data.slice(0, 5);
+            const suggestionList = data.slice(0, 3);
             updateSuggestionList(suggestionList, 'event');
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
-            hideAutocomplete();
+            // hideAutocomplete();
         });
 
     });
@@ -488,6 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 자동완성 리스트 닫기
     document.addEventListener("click", function (e) {
         if (!mapSearchForm.contains(e.target)) {
+            // console.log('다른 곳을 클릭했음으로 닫음');
             hideAutocomplete();
         }
     });
@@ -521,12 +524,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
 
                 suppressAutocomplete = true;
+                console.log('엔터키 입력');
+                
+                hideAutocomplete();
 
                 if (selectedIndex >= 0 && selectedIndex < items.length) {
                     const selectedItem = items[selectedIndex];
                     const value = selectedItem.dataset.value; // 정확한 값 추출
                     keywordInput.value = value;
-                    hideAutocomplete();
+                    // hideAutocomplete();
                     if (mapType === "full") {
                         mapSearchService(basicMap, value);
                     } else {
@@ -534,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         location.href = "/store/map";  // 주소에 파라미터 안 붙음
                     }
                 } else if (selectedIndex == -1 && items.length >= 0) {
-                    hideAutocomplete();
+                    // hideAutocomplete();
                     if (mapType === "full") {
                         mapSearchService(basicMap, keywordInput.value.trim());
                     } else {
@@ -547,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             default :
                 // console.log(e.keyCode);
-                hideAutocomplete();
+                // hideAutocomplete();
         }
     });
 
@@ -556,6 +562,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = e.target.closest("li");
         if (!target) return;
 
+        console.log('자동완성 리스트를 킬릭하여 닫기');
+        
         const value = target.dataset.value;
         keywordInput.value = value;
         hideAutocomplete();
@@ -866,10 +874,10 @@ function selectMarker(marker, type) {
 
     // 클릭한 마커의 타입에 따른 아이콘 이미지 설정
     if (type === 'store') {
-        console.log('스토어 마커를 클릭함');
+        // console.log('스토어 마커를 클릭함');
         icon = storeClickedIcon;
     } else if (type === 'event') {
-        console.log('이벤트 마커를 클릭함');
+        // console.log('이벤트 마커를 클릭함');
         icon = eventClickedIcon;
     } else {
         icon = clickedIcon;
@@ -1564,7 +1572,7 @@ function completeSearch() {
     else if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = "block";
     }
-    hideAutocomplete();
+    // hideAutocomplete();
 }
 
 /** 검색결과가 없거나 실패할때 모달을 호출하는 함수 */
@@ -1945,7 +1953,8 @@ function setRadiusByLevel(level) {
 // 추천 리스트 UI 갱신
 function updateSuggestionList(list, type) {
     if (list.length === 0) {
-        hideAutocomplete();
+        // console.log('검색결과가 없으므로 가린다');
+        // hideAutocomplete();
         return;
     }
 
@@ -1970,6 +1979,10 @@ function updateSuggestionList(list, type) {
 function updateActiveItem(items) {
     items.forEach((item, i) => {
         item.classList.toggle("active", i === selectedIndex);
+        if(i === selectedIndex) {
+            // 수정 필요
+            // console.log(items[i].closest.innerHTML);
+        }
     });
 }
 
