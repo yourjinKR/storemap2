@@ -33,5 +33,7 @@ public interface EventMapper {
 	// 이벤트 등록
 	public int insertEvent(EventVO eventVO);
 	// 이벤트 정보 호출
-	public int getIdx(int enter_idx);
+	public List<EventVO> getIdx(int enter_idx);
+	// 이벤트 정보 호출
+	public List<EventVO> getAttendEvent(int store_idx);
 }

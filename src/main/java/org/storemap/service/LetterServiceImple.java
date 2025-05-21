@@ -64,7 +64,8 @@ public class LetterServiceImple implements LetterService{
 	// 이벤트 일차 리스트
 	@Override
 	public EventVO getEdayList(int event_idx) {
-		return mapper.getEdayList(event_idx);
+		EventVO vo = mapper.getEdayList(event_idx);
+		return vo;
 	}
 	
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventDayVO {
-	private int eday_idx, event_idx, store_max;
+	private int eday_idx, event_idx, store_max, eventRequestCount;
 	private String event_starttime, event_stoptime;
 }

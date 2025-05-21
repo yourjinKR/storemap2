@@ -131,6 +131,36 @@
 		SELECT EVENT_IDX FROM EVENT WHERE ENTER_IDX = #{enter_idx}
 	</select>
 	
+	<!-- GET ATTEND EVENT -->
+	<select id="getAttendEvent" parameterType="int" resultType="org.storemap.domain.EventVO">
+		SELECT 
+		    E.EVENT_IDX,
+		    E.EVENT_TITLE,
+		    ED.EDAY_IDX,
+		    ER.STORE_IDX,
+		    ER.PON AS pon,
+		    EN.ENTER_IDX,
+		    EN.ENTER_ID AS enter_id,
+		    EN.ENTER_NAME AS enter_name
+		FROM EVENT E
+		JOIN ENTER EN ON E.ENTER_IDX = EN.ENTER_IDX
+		JOIN EVENT_DAY ED ON E.EVENT_IDX = ED.EVENT_IDX
+		LEFT JOIN EVENT_REQUEST ER 
+		    ON ER.EDAY_IDX = ED.EDAY_IDX AND ER.STORE_IDX = 202
+		WHERE E.EVENT_IDX IN (
+		    SELECT E.EVENT_IDX
+		    FROM EVENT E
+		    JOIN EVENT_DAY ED ON E.EVENT_IDX = ED.EVENT_IDX
+		    JOIN EVENT_REQUEST ER ON ER.EDAY_IDX = ED.EDAY_IDX
+		    WHERE ER.STORE_IDX = #{store_idx} AND ER.PON = 1
+		)
+		GROUP BY 
+		    E.EVENT_IDX, E.EVENT_TITLE, 
+		    ED.EDAY_IDX, ER.STORE_IDX, ER.PON,
+		    EN.ENTER_IDX, EN.ENTER_ID, EN.ENTER_NAME
+		ORDER BY E.EVENT_IDX, ED.EDAY_IDX
+	</select>
+	
 	<select id="getFilterList" resultType="org.storemap.domain.EventVO">
 			SELECT * FROM (
 		        SELECT

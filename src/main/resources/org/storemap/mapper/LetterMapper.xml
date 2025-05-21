@@ -52,18 +52,22 @@
 		<result property="store_max" column="store_max"/>
 		<result property="event_starttime" column="event_starttime"/>
 		<result property="event_stoptime" column="event_stoptime"/>
+		<result property="eventRequestCount" column="RCNT"/>
 	</resultMap>
 	
 	<!-- 이벤트 일자 출력 -->
 	<select id="getEdayList" parameterType="int" resultMap="eventVO">
-		SELECT EDAY_IDX,EVENT_TITLE FROM EVENT 
-		JOIN (
-	        SELECT EDAY_IDX, EVENT_IDX
-	        FROM EVENT_DAY 
-	        JOIN EVENT_REQUEST
-	        USING (EDAY_IDX)) 
-		USING (EVENT_IDX)
-		WHERE EVENT_IDX = #{event_idx}
+		SELECT 
+		    E.EVENT_IDX,
+		    E.EVENT_TITLE,
+		    ED.EDAY_IDX,
+		    SUM(CASE WHEN ER.PON > 0 THEN 1 ELSE 0 END) AS RCNT
+		FROM EVENT E
+		LEFT JOIN EVENT_DAY ED ON E.EVENT_IDX = ED.EVENT_IDX 
+		LEFT JOIN EVENT_REQUEST ER ON ED.EDAY_IDX = ER.EDAY_IDX
+		WHERE E.EVENT_IDX = #{event_idx} AND ED.EDAY_IDX != 0
+		GROUP BY E.EVENT_IDX, E.EVENT_TITLE, ED.EDAY_IDX
+		ORDER BY ED.EDAY_IDX ASC
 	</select>
 	
 	<!-- MEMBER -->
@@ -119,7 +123,7 @@
 		WHERE EDAY_IDX = #{eday_idx} 
 		ORDER BY STORE_NAME
 	</select>
-	
+
 	<select id="getLetterCnt" resultType="int" parameterType="String">
 		SELECT COUNT(*) FROM LETTER 
 		WHERE LETTER_RECEIVER = #{member_id} 

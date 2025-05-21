@@ -117,8 +117,13 @@ public class EventServiceImple implements EventService{
 	
 	// 이벤트 IDX
 	@Override
-	public int getIdx(int enter_idx) {
+	public List<EventVO> getIdx(int enter_idx) {
 		return mapper.getIdx(enter_idx);
+	}
+	
+	@Override
+	public List<EventVO> getAttendEvent(int store_idx) {
+		return mapper.getAttendEvent(store_idx);
 	}
 	
 	// 이벤트 등록

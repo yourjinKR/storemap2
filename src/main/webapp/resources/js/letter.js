@@ -39,23 +39,29 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	
 	
 	
-	if(attendList != null && auth == "enter"){
+	if(attendList != null && (auth == "enter" || auth == "owner")){
 		attendList.addEventListener("change",function(){
 			if(this.value != 0){
-				// n일차 참여 점포 리스트
-				getAttendList(this.value);
+				if(auth == "enter"){
+					// n일차 참여 점포 리스트
+					getAttendList(this.value);
+				}else{
+					let arr = this.value.split("//");
+					writeReceiver.value = arr[0];
+					hideReceiver.value = arr[1];
+				}
 			}
 		})
-	}
-	
-	let div2 = document.querySelector(".letter-form td.por");
-	if(div2 != null){
-		div2.addEventListener("mouseenter",function(){
-			listDetail.classList.add("on");
-		})
-		div2.addEventListener("mouseleave",function(){
-			listDetail.classList.remove("on");
-		})
+		
+		let div2 = document.querySelector(".letter-form td.por");
+		if(div2 != null){
+			div2.addEventListener("mouseenter",function(){
+				listDetail.classList.add("on");
+			})
+			div2.addEventListener("mouseleave",function(){
+				listDetail.classList.remove("on");
+			})
+		}
 	}
 
 	if(userId != ""){
@@ -83,20 +89,19 @@ function changeLetterModal(page){
 		document.querySelector("#"+ page).classList.add("on");
 	}
 	let eventSelect = document.querySelector(".event-select");
-	if(eventSelect != null){
-		 if(document.querySelector(".letter-tab > li a.on").getAttribute("href") == "write"){
-			 getEdayList();
-			 listDetail.classList.remove("hide");
-			 eventSelect.classList.remove("hide");
-			 writeReceiver.value = "";
-			 hideReceiver.value = "";
-		 }else{
-			 eventSelect.classList.add("hide");
-			 listDetail.classList.add("hide");
-			 writeReceiver.value = "관리자";
-			 hideReceiver.value = "admin01";
-		 }
-	}
+	 if(document.querySelector(".letter-tab > li a.on").getAttribute("href") == "write"){
+		 if(auth == 'enter') getEdayList();
+		 if(auth == 'owner') getAttendEvent();
+		 if(eventSelect != null) eventSelect.classList.remove("hide");
+		 if(listDetail != null) listDetail.classList.remove("hide");
+		 writeReceiver.value = "";
+		 hideReceiver.value = "";
+	 }else{
+		 if(eventSelect != null) eventSelect.classList.add("hide");
+		 if(listDetail != null) listDetail.classList.add("hide");
+		 writeReceiver.value = "관리자";
+		 hideReceiver.value = "admin";
+	 }
 }
 
 
@@ -112,7 +117,7 @@ function getLetter(type){
 	    return JSON.parse(text);
 	})
 	.then(result => {
-		if(result){
+		if(result != null && result.length > 0){
 			let str = "";
 			let firstEl = document.querySelector("#list > .letter-list > li").firstElementChild;
 			result.forEach(letter =>{
@@ -160,6 +165,7 @@ function getLetter(type){
 			}
 			
 		}else{
+			
 			let str = "";
 			str += `<li class="empty-data">`;
 			str += 		`<p>데이터 없음</p>`;
@@ -260,8 +266,13 @@ function getEdayList(){
 	.then(result => {
 		if(result != null){
 			let str = `<option value="0">이벤트를 선택하세요</option>`;
-			result.join_eday.forEach((eday,idx) => {
-				str += `<option value="${result.join_eday[idx].eday_idx}">(${idx + 1}일차) ${result.event_title}</option>`;
+			result.forEach(event => {
+				event.join_eday.forEach((eday,idx) => {
+					
+					if(eday.eventRequestCount > 0){
+						str += `<option value="${event.join_eday[idx].eday_idx}">(${idx + 1}일차) ${event.event_title}</option>`;
+					}
+				})
 			})
 			attendList.innerHTML = str;
 		}
@@ -275,6 +286,7 @@ function getAttendList(eday){
 	.then(result => {
 		if(result != null || result.length > 0){
 			writeReceiver.value = "";
+			hideReceiver.value = "";
 			let detail = ``;
 			result.forEach((day,idx) => {
 				let storeName = day.join_request.join_store.store_name;
@@ -289,6 +301,31 @@ function getAttendList(eday){
 			})
 			
 			listDetail.innerHTML = detail;
+		}
+	})
+	.catch(err => console.log(err))
+}
+
+function getAttendEvent(){
+	let dayList = [];
+	fetch(`/modal/getAttendEvent`)
+	.then(response => response.json())
+	.then(result => {
+		console.log(result);
+		if(result != null){
+			let str = `<option value="0">이벤트를 선택하세요</option>`;
+			let idx = 0;
+			for (let i = 0; i < result.length; i++) {
+				if(i != 0 && result[i].event_idx != result[i - 1].event_idx){
+					idx = 0;
+				}
+				if(result[i].pon == 1){
+					str += `<option value="${result[i].enter_id}//${result[i].enter_name}">(${idx + 1}일차) ${result[i].event_title}</option>`;
+				}
+				idx++;
+			}
+		
+			attendList.innerHTML = str;
 		}
 	})
 	.catch(err => console.log(err))

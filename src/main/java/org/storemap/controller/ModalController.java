@@ -1,5 +1,6 @@
 package org.storemap.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -436,13 +437,7 @@ public class ModalController {
 		vo.setLetter_writer((String) session.getAttribute("loginUser"));
 		int result = letterService.insertLetter(vo);
 		log.info("result : " + result);
-//		if(result == -1) {
-//			return new ResponseEntity<String>("undefind",HttpStatus.NOT_FOUND);
-//		}else if(result == 0) {
-//			return new ResponseEntity<String>("fail",HttpStatus.BAD_REQUEST);
-//		}else {
-//			return new ResponseEntity<String>("success",HttpStatus.OK);
-//		}
+
 		return null;
 	}
 	
@@ -451,7 +446,6 @@ public class ModalController {
 	@GetMapping(value="/getAttendList/{eday}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MemberVO>> getAttendList(@PathVariable("eday") int eday,  HttpSession session) {
-		log.info(eday);
 		List<MemberVO> result = letterService.getAttendList(eday);
 		return new ResponseEntity<List<MemberVO>>(result,HttpStatus.OK);
 	}
@@ -459,14 +453,24 @@ public class ModalController {
 	@ResponseBody
 	@GetMapping(value="/getEdayList",
 	produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EventVO> getEdayList(HttpSession session) {
-		//List<EventVO> e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
-		//log.info(e_idx);
-		return null;
-		//List<EventVO> result = letterService.getEdayList(e_idx);
-//		
-//		
-//		return new ResponseEntity<EventVO>(result,HttpStatus.OK);
+	public ResponseEntity<List<EventVO>> getEdayList(HttpSession session) {
+		List<EventVO> e_idx = eventService.getIdx((int) session.getAttribute("loginUserIdx"));
+		List<EventVO> result = new ArrayList<EventVO>(); 
+		e_idx.forEach(idx -> {
+			EventVO vo = letterService.getEdayList(idx.getEvent_idx());
+			if(vo != null) {
+				result.add(vo);
+			}
+		});
+		return new ResponseEntity<List<EventVO>>(result,HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value="/getAttendEvent",
+	produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EventVO>> getAttendEvent(HttpSession session) {
+		List<EventVO> result = eventService.getAttendEvent((int) session.getAttribute("storeIdx"));
+		return new ResponseEntity<List<EventVO>>(result,HttpStatus.OK);
 	}
 	
 	// 우편번호 입력 form

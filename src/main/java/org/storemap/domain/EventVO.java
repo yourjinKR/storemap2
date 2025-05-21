@@ -21,6 +21,6 @@ public class EventVO {
 
 	// 
 	private List<EventDayVO> join_eday;
-	
-	private int approved_store, max_store, like_count, comment_count;
+	private String enter_id,enter_name;
+	private int approved_store, max_store, like_count, comment_count,pon;
 }
