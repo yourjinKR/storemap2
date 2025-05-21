@@ -228,7 +228,7 @@ public class MemberController {
 	        @RequestParam("enter_id") String enter_id,
 	        @RequestParam("enter_pw") String enter_pw,
 	        @RequestParam("enter_name") String enter_name,
-	        @RequestParam("enter_rnum") int enter_rnum,
+	        @RequestParam("enter_rnum") String enter_rnum,
 	        @RequestParam("enter_loc") String enter_loc,
 	        @RequestParam("enter_num") String enter_num,
 	        @RequestParam(value = "file", required = false) MultipartFile file,
