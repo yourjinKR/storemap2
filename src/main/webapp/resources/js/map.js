@@ -3,7 +3,9 @@ console.log("map load");
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let markerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
-//let markerSrc = '/resources/img/storeMarker.png';
+// let markerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
+let storeMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
+let eventMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792243/eventMarker_zespzh.png';
 
 // ================== 마커 크기 ==================
 const MARKER_WIDTH = 32, // 기본 마커의 너비
@@ -20,9 +22,15 @@ let clickedMarkerOption = {offset: new kakao.maps.Point(20, 46), alt: "클릭 �
 // 마커 아이콘
 let testIcon = new kakao.maps.MarkerImage(markerSrc, markerSize, markerOption);
 let clickedIcon = new kakao.maps.MarkerImage(markerSrc, clickedMarkerSize, clickedMarkerOption);
+// 점포 아이콘
+let storeIcon = new kakao.maps.MarkerImage(storeMarkerSrc, markerSize, markerOption);
+let storeClickedIcon = new kakao.maps.MarkerImage(storeMarkerSrc, clickedMarkerSize, clickedMarkerOption);
+// 이벤트 아이콘
+let eventIcon = new kakao.maps.MarkerImage(eventMarkerSrc, markerSize, markerOption);
+let eventClickedIcon = new kakao.maps.MarkerImage(eventMarkerSrc, clickedMarkerSize, clickedMarkerOption);
 
 // 클릭하여 강조된 마커
-let selectedMarker = null;
+let selectedMarker = {marker : null, type : null};
 /** 지도 클릭 이벤트 마커 */
 let clickMarker = null;
 
@@ -391,8 +399,12 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(basicMap.getLevel());
             hideOverlay(storeOverlayList);
             hideOverlay(eventOverlayList);
-            showOverlay(basicMap, storeOverlayList);
-            showOverlay(basicMap, eventOverlayList);
+            if (storeMapMode || unitedMapMode) {
+                showOverlay(basicMap, storeOverlayList);
+            }
+            else if (eventMapMode || unitedMapMode) {
+                showOverlay(basicMap, eventOverlayList);
+            }
         });
     }
 
@@ -623,7 +635,31 @@ function addMarker(map, lat, lng) {
 }
 
 // 마커 등록
-function registerMarker(lat, lng, idx) {
+function registerMarker(vo) {
+    let lat;
+    let lng;
+    let idx;
+    let icon;
+    if (vo.type === 'store') {
+        lat = vo.store_lat;
+        lng = vo.store_lng;
+        idx = vo.store_idx;
+        icon = storeIcon;
+    } else if (vo.type === 'event') {
+        console.log('이벤트 마커 등록');
+        
+        lat = vo.event_lat;
+        lng = vo.event_lng;
+        idx = vo.event_idx;
+        icon = eventIcon;
+        console.log(lat);
+        console.log(lng);
+        console.log(idx);
+        
+        
+        
+    }
+
     // 마커 위치 설정
     let markerPosition  = new kakao.maps.LatLng(lat, lng); 
     // 마커 생성
@@ -631,7 +667,7 @@ function registerMarker(lat, lng, idx) {
         position: markerPosition,
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
         title : idx,
-        image : testIcon, // 아이콘 이미지 변경 필요
+        image : icon, // 아이콘 이미지 변경 필요
         zIndex : 4
     });
     return marker;
@@ -799,7 +835,7 @@ function addMarkerEvent(marker, type) {
     kakao.maps.event.addListener(marker, 'click', function() {
         console.log("marker idx : " + marker.getTitle());
         // 마커 선택
-        selectMarker(marker);
+        selectMarker(marker, type);
         
         let title = marker.getTitle();
         emphMarker(title, type);
@@ -824,13 +860,38 @@ function addMarkerEvent(marker, type) {
 }
 
 // 마커 강조 효과
-function selectMarker(marker) {
+function selectMarker(marker, type) {
+    let icon;
+    let oldIcon;
+
+    // 클릭한 마커의 타입에 따른 아이콘 이미지 설정
+    if (type === 'store') {
+        console.log('스토어 마커를 클릭함');
+        icon = storeClickedIcon;
+    } else if (type === 'event') {
+        console.log('이벤트 마커를 클릭함');
+        icon = eventClickedIcon;
+    } else {
+        icon = clickedIcon;
+    }
+
+    // 이미 선택된 마커의 타입에 따른 아이콘 이미지 설정
+    if (selectedMarker.type === 'store') {
+        oldIcon = storeIcon;
+    }
+    else if (selectedMarker.type === 'event') {
+        oldIcon = eventIcon;
+    }
+
     // 선택된 마커가 없거나 선택된 마커가 해당 마커가 아닐 시에 실행 
     if (!selectedMarker || selectedMarker !== marker) {
-        !!selectedMarker && selectedMarker.setImage(testIcon);
-        marker.setImage(clickedIcon);
+        // 기존에 클릭된 마커의 이미지를 바꿈
+        // 기존의 마커가 어떤 타입이었는지 구분
+        !!selectedMarker.marker && selectedMarker.marker.setImage(oldIcon);
+        
+        marker.setImage(icon);
     }
-    selectedMarker = marker;
+    selectedMarker = {marker : marker, type : type};
 }
 
 /** idx를 받으면 일치하는 마커로 이동 및 강조하는 함수 */
@@ -848,7 +909,7 @@ function emphMarker(idx, type) {
             // 마커 기준으로 지도 이동
             panToLatLng(basicMap, vo.marker.getPosition().getLat(), vo.marker.getPosition().getLng());
             // 마커 강조
-            selectMarker(vo.marker);
+            selectMarker(vo.marker, vo.type);
         }
     });
 }
@@ -1353,9 +1414,9 @@ function apply2storeMap(data) {
     
     // 데이터 등록
     data.forEach(vo => {
-        let marker = registerMarker(vo.store_lat, vo.store_lng, vo.store_idx);
-        addMarkerEvent(marker, "store");
         vo.type = "store";
+        let marker = registerMarker(vo);
+        addMarkerEvent(marker, "store");
         vo.marker = marker;
         storeVOList.push(vo);
         // console.log(vo);
@@ -1445,7 +1506,7 @@ function apply2eventMap(data) {
             <br>
         </li>`;
 
-        vo.type = "event";
+        // vo.type = "event";
         
         eventOverlayList.push(registerOverlay(vo));
     })
@@ -1538,41 +1599,41 @@ function failSearch() {
 }
 
 /** 주소 입력시 좌표로 변환하고 마커를 등록하는 함수 (시점 문제로 인해 내부적으로 실행) */
-function address2coord(vo) {
-    let geocoder = new kakao.maps.services.Geocoder();
-    let callback = function(result, status) {
-        console.log(`${vo.event_location}의 주소는`);
-        if (status === kakao.maps.services.Status.OK) {
-            console.log(result[0].y);
-            console.log(result[0].x);
-            lat = result[0].y;
-            lng = result[0].x;
+// function address2coord(vo) {
+//     let geocoder = new kakao.maps.services.Geocoder();
+//     let callback = function(result, status) {
+//         console.log(`${vo.event_location}의 주소는`);
+//         if (status === kakao.maps.services.Status.OK) {
+//             console.log(result[0].y);
+//             console.log(result[0].x);
+//             lat = result[0].y;
+//             lng = result[0].x;
 
-            // 마커 등록
-            let marker = registerMarker(lat, lng, vo.event_idx);
-            // marker에 이벤트 추가
-            // addMarkerEvent(marker);
+//             // 마커 등록
+//             let marker = registerMarker(lat, lng, vo.event_idx);
+//             // marker에 이벤트 추가
+//             // addMarkerEvent(marker);
 
-            // vo에 마커 등록
-            vo.marker = marker;
+//             // vo에 마커 등록
+//             vo.marker = marker;
 
-            // 리스트에 vo 추가
-            eventVOList.push(vo);
+//             // 리스트에 vo 추가
+//             eventVOList.push(vo);
 
-            // 마커 맵에 설정
-            vo.marker.setMap(basicMap);
-        }
-        else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-            console.log('주소가 올바르지 않습니다');
-            return;
-        } 
-        else if (status === kakao.maps.services.Status.ERROR) {
-            console.log('주소가 올바르지 않습니다');
-            return;
-        }
-    };
-    geocoder.addressSearch(vo.event_location, callback);
-}
+//             // 마커 맵에 설정
+//             vo.marker.setMap(basicMap);
+//         }
+//         else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+//             console.log('주소가 올바르지 않습니다');
+//             return;
+//         } 
+//         else if (status === kakao.maps.services.Status.ERROR) {
+//             console.log('주소가 올바르지 않습니다');
+//             return;
+//         }
+//     };
+//     geocoder.addressSearch(vo.event_location, callback);
+// }
 
 /** 이벤트 좌표 등록 프로미스 */
 function address2coordPromise(vo) {
@@ -1582,17 +1643,19 @@ function address2coordPromise(vo) {
         geocoder.addressSearch(vo.event_location, function(result, status) {
 
             if (status === kakao.maps.services.Status.OK) {
-                // 마커 등록
                 let lat = result[0].y;
                 let lng = result[0].x;
-                let marker = registerMarker(lat, lng, vo.event_idx);
+                vo.event_lat = lat;
+                vo.event_lng = lng;
+                vo.type = "event";
+
+                // 마커 등록
+                let marker = registerMarker(vo);
 
                 // 마커에 이벤트 추가
                 addMarkerEvent(marker, "event");
 
                 vo.marker = marker;
-                vo.event_lat = lat;
-                vo.event_lng = lng;
                 // vo.marker.setMap(basicMap);
 
                 resolve(vo); // 변환된 vo를 반환
