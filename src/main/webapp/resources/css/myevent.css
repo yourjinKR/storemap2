@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+h3{font-size:42px;font-weight:bold;text-align:center;padding:30px 0 40px;}
+
+.main-tab {display:flex;width:100%;}
+.main-tab li {width:50%;}
+.main-tab li > a{width:100%;padding:20px 40px;display: inline-block;font-size: 24px;font-weight: bold;border:1px solid #ccc;text-align:center;}
+.main-tab li > a.on{background: #1985ff;color: #fff;}
+
+.tab-content{display:none;}
+.tab-content.on{display:block;}
+.eday-content{display:none;}
+.eday-content.on{display:block;}
+
+.tab-content h4{font-size:18px;font-weight:bold;padding-bottom:10px;border-bottom:1px solid #222;margin:50px 0 15px;}
+.tab-content > ul > li {margin-bottom:15px;}
+.tab-content > ul > li > a,
+.tab-content > ul > li > div{display:flex;border:1px solid #d9d9d9;padding:15px;}
+.tab-content > ul > li > p{padding:15px;border:1px solid #ccc;}
+.tab-content > ul > li > p.on{background:#00ffff}
+.tab-content > ul > li img{width:150px;height:150px;border:1px solid #d9d9d9;}
+.tab-content > ul > li dl{margin:0 30px;width: calc(100% - 225px);}
+.tab-content > ul > li dt{font-size:24px;font-weight:bold;margin-bottom:15px;}
+.tab-content > ul > li dd{font-size:18px;margin-bottom:10px;}
+
+.empty-data{width: 100%; border:1px solid #d9d9d9 !important; text-align:center;padding:100px 0 !important;font-size:32px !important;font-weight:bold;color:#d9d9d9;}
+
+.tab-content .eday-tab{display:flex; flex-wrap: wrap; justify-content: flex-start;gap:15px;border-bottom:1px solid #ccc;padding-bottom:15px;margin-bottom:15px;}
+.tab-content .eday-tab li{width:calc(20% - 12px);}
+.tab-content .eday-tab li > a{display:block;border:1px solid #ccc;text-align:center;padding:10px 0;font-size:18px;border-radius:10px;margin:0;}
+.tab-content .eday-tab li > a.on{background:#1985ff;color: #fff;}
+.tab-content div.request-detail{height:0;overflow: hidden;padding:0;border:none;display:block}
+.tab-content div.request-detail.on{height: auto;overflow: auto;padding:15px;border:1px solid #d9d9d9;}
+div.request-detail .eday-content p{text-align:right;margin-bottom:10px;}
+div.request-detail table{width:100%;border-right:1px solid #ccc;border-top:1px solid #ccc;}
+div.request-detail table th,
+div.request-detail table td{border-left:1px solid #ccc;border-bottom:1px solid #ccc;padding:10px;text-align:center;font-size:18px;}
+div.request-detail table th{font-weight:bold;background:#d9d9d9;}
+div.request-detail .btn-box{text-align:center;}
+.btn-box button{
+	background:none;
+	border-radius:5px;
+	padding: 5px 15px;
+	text-align:center;
+	font-weight:bold;
+	border:1px solid #d9d9d9;
+}
+.btn-box .approve-btn{background: #BBDEFB;color:#1E3A8A;}
+.btn-box .reject-btn{background: #F44336;color:#FFFFFF;}

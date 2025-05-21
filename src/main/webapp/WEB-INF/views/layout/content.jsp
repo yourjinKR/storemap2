@@ -51,6 +51,9 @@
 		<c:when test="${path eq '/event/eventView'}">
 			<jsp:include page="../content/event/eventView.jsp" />
 		</c:when>
+		<c:when test="${path eq '/event/myevent'}">
+			<jsp:include page="../content/event/myevent.jsp" />
+		</c:when>
 		
 		<%-- 로그인 --%>
 		<c:when test="${path eq '/member/login'}">

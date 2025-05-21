@@ -45,7 +45,7 @@
 				<%-- 기업 회원 --%>
 				<c:when test="${userType == 'enter'}">
 					<li><a href="/member/modifyInfo?type=group">개인정보 수정</a></li>
-					<li><a href="">이벤트 관리</a></li>
+					<li><a href="/event/myevent">이벤트 관리</a></li>
 				</c:when>
 				<c:otherwise>
 					<li><a href="/member/modifyInfo?type=personal">개인정보 수정</a></li>

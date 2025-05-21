@@ -218,5 +218,11 @@ public class EventController {
 	    // 이벤트 상세 페이지로 리다이렉트
 	    return "redirect:/event/eventView?event_idx=" + eventIdx;
 	}
+	
+	@GetMapping("/myevent")
+	public String myevent() {
+		return "index";
+	}
+	
 
 }
