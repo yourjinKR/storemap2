@@ -78,6 +78,10 @@
 	<delete id="delete" parameterType="int">
 		delete from store where store_idx = #{store_idx}
 	</delete>
+	<!-- 3.점포 삭제  -->
+	<delete id="deleteStore" parameterType="int">
+		delete from store where member_idx = #{member_idx}
+	</delete>
 	<!-- 4.점포 전체 보기  -->
 	<select id="getStoreList" resultType="org.storemap.domain.StoreVO">
 		select * from store

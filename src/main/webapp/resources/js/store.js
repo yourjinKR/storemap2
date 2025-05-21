@@ -157,12 +157,12 @@ function register(){
         return response.text();
     })
     .then(data => {
-        alert("점포 등록 완료.");
+        alert("점주 신청 완료.");
         location.href = "/"; // 성공 시 리다이렉트
     })
     .catch(error => {
         console.error("Error:", error);
-        alert("점포 등록 실패.");
+        alert("점주 신청 실패.");
     });
 
 };

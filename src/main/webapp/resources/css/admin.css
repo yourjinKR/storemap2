@@ -50,11 +50,11 @@
 .sub-tab-content.store-list ul > li > div:nth-child(2){width:40px;}  /* NO */
 .sub-tab-content.store-list ul > li > div:nth-child(3){width:100px;} /* 점포 고유번호 */
 .sub-tab-content.store-list ul > li > div:nth-child(4){width:200px;} /* 점포명 */
-.sub-tab-content.store-list ul > li > div:nth-child(5){width:120px;} /* 점포연락처 */
+.sub-tab-content.store-list ul > li > div:nth-child(5){width:160px;} /* 점포연락처 */
 .sub-tab-content.store-list ul > li > div:nth-child(6){width:80px;}  /* 업태 */
 .sub-tab-content.store-list ul > li > div:nth-child(7){width:100px;} /* 가입일 */
 .sub-tab-content.store-list ul > li > div:nth-child(8){width:100px;} /* 누적신고 수 */
-.sub-tab-content.store-list ul > li > div:nth-child(9){width:calc(100% - 780px);} /* 나머지 공간 */
+.sub-tab-content.store-list ul > li > div:nth-child(9){width:calc(100% - 820px);} /* 나머지 공간 */
 
 /* 점포 신청 리스트용 스타일 (11칸 구조) */
 .sub-tab-content.store-request ul > li > div:nth-child(1){width:40px;}   /* 체크박스 */
@@ -62,23 +62,23 @@
 .sub-tab-content.store-request ul > li > div:nth-child(3){width:80px;}   /* 신청자 */
 .sub-tab-content.store-request ul > li > div:nth-child(4){width:100px;}  /* 점포사진 */
 .sub-tab-content.store-request ul > li > div:nth-child(5){width:150px;}  /* 점포명 */
-.sub-tab-content.store-request ul > li > div:nth-child(6){width:120px;}  /* 점포 연락처 */
-.sub-tab-content.store-request ul > li > div:nth-child(7){width:150px;}  /* 점포 주소 */
+.sub-tab-content.store-request ul > li > div:nth-child(6){width:180px;}  /* 점포 연락처 */
+.sub-tab-content.store-request ul > li > div:nth-child(7){width:200px;}  /* 점포 주소 */
 .sub-tab-content.store-request ul > li > div:nth-child(8){width:120px;}  /* 사업자등록번호 */
 .sub-tab-content.store-request ul > li > div:nth-child(9){width:120px;}  /* 사업자 등록증 */
-.sub-tab-content.store-request ul > li > div:nth-child(10){width:100px;} /* 신청일시 */
-.sub-tab-content.store-request ul > li > div:nth-child(11){width:calc(100% - 1020px);} /* 버튼 영역 */
+.sub-tab-content.store-request ul > li > div:nth-child(10){width:125px;} /* 신청일시 */
+.sub-tab-content.store-request ul > li > div:nth-child(11){width:calc(100% - 1155px);} /* 버튼 영역 */
 
 /* 점포 신고용 스타일 (9칸 구조 - 점포 리스트와 동일) */
 .sub-tab-content.store-report ul > li > div:nth-child(1){width:40px;}  /* 체크박스 */
 .sub-tab-content.store-report ul > li > div:nth-child(2){width:40px;}  /* NO */
 .sub-tab-content.store-report ul > li > div:nth-child(3){width:100px;} /* 점포 고유번호 */
 .sub-tab-content.store-report ul > li > div:nth-child(4){width:200px;} /* 점포명 */
-.sub-tab-content.store-report ul > li > div:nth-child(5){width:120px;} /* 점포연락처 */
+.sub-tab-content.store-report ul > li > div:nth-child(5){width:160px;} /* 점포연락처 */
 .sub-tab-content.store-report ul > li > div:nth-child(6){width:80px;}  /* 업태 */
 .sub-tab-content.store-report ul > li > div:nth-child(7){width:100px;} /* 가입일 */
 .sub-tab-content.store-report ul > li > div:nth-child(8){width:100px;} /* 누적신고 수 */
-.sub-tab-content.store-report ul > li > div:nth-child(9){width:calc(100% - 780px);} /* 버튼 영역 */
+.sub-tab-content.store-report ul > li > div:nth-child(9){width:calc(100% - 820px);} /* 버튼 영역 */
 
 
 /* 신고 상세 내용 스타일 */
@@ -94,7 +94,14 @@
 
 /* 버튼 상자 스타일 */
 .btn-box {text-align:center;}
-.btn-box button{background:none;border-radius:5px; padding: 5px 15px;text-align:center;font-weight:bold;border:1px solid #d9d9d9;}
+.btn-box button{
+	background:none;
+	border-radius:5px;
+	padding: 5px 15px;
+	text-align:center;
+	font-weight:bold;
+	border:1px solid #d9d9d9;
+}
 .btn-box .approve-btn{background: #BBDEFB;color:#1E3A8A;}
 .btn-box .reject-btn{background: #F44336;color:#FFFFFF;}
 

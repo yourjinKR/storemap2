@@ -14,6 +14,8 @@ public interface StoreService {
 	public int modify(MultipartFile file, StoreVO vo);
 	// 점포 삭제
 	public int remove(int store_idx);
+	// 점포 삭제
+	public int removeStore(int member_idx);
 	// 점포 목록
 	public List<StoreVO> getList();
 	// 점포 조인 목록

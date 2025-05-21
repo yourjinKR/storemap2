@@ -13,6 +13,8 @@ public interface StoreMapper {
 	public int update(StoreVO vo);
 	// 점포 삭제
 	public int delete(int store_idx);
+	// 점포 삭제
+	public int deleteStore(int member_idx);
 	// 점포 목록
 	public List<StoreVO> getStoreList();
 	// 점포 조인 목록

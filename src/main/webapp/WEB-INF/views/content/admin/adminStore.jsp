@@ -55,16 +55,16 @@
 			<div></div>
 		</li>
 	</ul>
-	<form method="post">
 	<ul>
 		<c:forEach var="rvo" items="${storeRequestList}" varStatus="status">
 		<li>
-			<div><input type="checkbox" name="member_idx" value="${rvo.member.member_idx}"></div>
+			<!--<div><input type="checkbox" name="member_idx" value="${rvo.member_idx}"></div>-->
+			<div class="idx">${rvo.member_idx}</div>
 			<div>${status.count}</div>
 			<div>${rvo.member.member_name}</div>
 			<div>
 				<c:choose>
-					<c:when test="${rvo.attach.filename eq null}">
+					<c:when test="${rvo.store.store_image eq 'store1.jpg'}">
 						<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 					</c:when>
 					<c:otherwise>
@@ -77,7 +77,7 @@
 			<div>${rvo.store.store_address}</div>
 			<div>${rvo.store.store_rnum}</div>
 			<div>sample.jpg</div>
-			<div>신청일시</div>
+			<div>${rvo.regdate}</div>
 			<div>
 				<div class="btn-box">
 					<button type="button" id="storeApprovalBtn" class="approve-btn">점포 승인</button>
@@ -87,7 +87,6 @@
 		</li>
 		</c:forEach>
 	</ul>
-	</form>
 
 </div>
 <div class="sub-tab-content store-report">

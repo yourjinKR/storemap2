@@ -5,9 +5,6 @@ linkEle.href = ADMIN_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
 
-const f = document.forms[0];
-
-
 document.addEventListener("DOMContentLoaded", (event) => {
 	// 관리자단 탭변경
 	tabChange();
@@ -29,73 +26,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			})
 		})
 	}
-	
-})
-
-
-document.querySelectorAll('button').forEach(btn => {
-	btn.addEventListener('click', ()=> {
-		let type = btn.getAttribute("id");
-		
-		if(type === 'storeApprovalBtn'){
-			storeApproval();
-		}else if(type === 'storeDisallowBtn'){
-			storeDisallow();
-		}
-		else if(type === 'storeReportHideBtn'){
-			storeReportHide();
-		}
-		else if(type === 'storeReportRemoveBtn'){
-			storeReportRemove();
-		}
-		else if(type === 'reviewReportHideBtn'){
-			reviewReportHide();
-		}
-		else if(type === 'reviewReportRemoveBtn'){
-			reviewReportRemove();
-		}
-	})
+	// 버튼 이벤트 처리
+	buttonEvent();
 });
-
-function storeApproval(){
-	f.action = '/admin/adminStoreView';
-	f.submit();
-};
-function storeDisallow(){
-	if(confirm("정말 불허하시겠습니까?")){
-		f.action = '/admin/adminStoreRemove';
-	    f.submit();
-	    alert("불허 되었습니다");
-	}else{
-	}
-}
-
-function storeReportHide(){
-	f.action = '/admin/storeReportHide';
-	f.submit();
-}
-function storeReportRemove(){
-	if(confirm("신고를 취소 하시겠습니까?")){
-		f.action = '/admin/storeReportRemove';
-		f.submit();
-		alert("취소 되었습니다");
-	}else{
-	}
-}
-
-function reviewReportHide(){
-	f.action = '/admin/reviewReportHide';
-	f.submit();
-}
-function reviewReportRemove(){
-if(confirm("신고를 취소 하시겠습니까?")){
-		f.action = '/admin/reviewReportRemove';
-		f.submit();
-		alert("취소 되었습니다");
-	}else{
-	}
-}
-
 // 탭변경
 function tabChange(){
 	let mainTab, subTab = null;
@@ -115,10 +48,14 @@ function tabChange(){
 				mainContent.forEach(tab => tab.classList.remove("on"));
 				this.classList.add("on");
 				document.querySelector("."+this.getAttribute("href")+"-content").classList.add("on");
+				
+				// 버튼 이벤트 등록 함수 다시 호출
+				setTimeout(() => {
+					buttonEvent();
+				}, 100);
 			})
 		})
 	}
-	
 	// 서브 탭 변경
 	if(subTabs != null){
 		subTabs.forEach(tab => {
@@ -130,8 +67,117 @@ function tabChange(){
 				
 				this.classList.add("on");
 				document.querySelector("."+mainTab+"-"+this.getAttribute("href")).classList.add("on");
+				
+				// 버튼 이벤트 등록 함수 다시 호출
+				setTimeout(() => {
+					buttonEvent();
+				}, 100);
 			})
 		})
 	}
 }
-
+// 버튼 이벤트 함수
+function buttonEvent(){
+	// 기존 버튼 선택
+	const approvalBtns = document.querySelectorAll("#storeApprovalBtn");
+	const disallowBtns = document.querySelectorAll("#storeDisallowBtn");
+	
+	//점포 승인
+	approvalBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 member_idx 값 가져오기
+			const li = this.closest('li');
+			const memberIdx = li.querySelector('.idx').textContent;
+			
+			// 새로운 form 생성 및 제출
+			const form = document.createElement('form');
+			form.method = 'post';
+			form.action = '/admin/storeApproval';
+			
+			const input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = 'member_idx';
+			input.value = memberIdx;
+			
+			form.appendChild(input);
+			document.body.appendChild(form);
+			form.submit();
+		});
+	});
+	//점포 불허
+	disallowBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 member_idx 값 가져오기
+			const li = this.closest('li');
+			const memberIdx = li.querySelector('.idx').textContent;
+			
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 불허하시겠습니까?")) {
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/storeDisallow';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'member_idx';
+				input.value = memberIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
+	// 점포 숨기기
+	// 점포 신고 취소
+	// 리뷰 숨기기
+	// 리뷰 신고 취소
+}
+// 점주 승인
+function storeApproval(){
+	storeRequestForm.action = '/admin/storeApproval';
+	storeRequestForm.submit();
+};
+function storeDisallow(){
+	if(confirm("정말 불허하시겠습니까?")){
+		storeRequestForm.action = '/admin/storeDisallow';
+		storeRequestForm.submit();
+	    alert("불허 되었습니다");
+	}else{
+	}
+}
+// 점포 숨기기
+function storeReportHide(){
+	storeReportForm.action = '/admin/storeReportHide';
+	storeReportForm.submit();
+}
+function storeReportRemove(){
+	if(confirm("신고를 취소 하시겠습니까?")){
+		storeReportForm.action = '/admin/storeReportRemove';
+		storeReportForm.submit();
+		alert("취소 되었습니다");
+	}else{
+	}
+}
+// 리뷰 숨기기
+function reviewReportHide(){
+	reviewReportForm.action = '/admin/reviewReportHide';
+	reviewReportForm.submit();
+}
+function reviewReportRemove(){
+	if(confirm("신고를 취소 하시겠습니까?")){
+		reviewReportForm.action = '/admin/reviewReportRemove';
+		reviewReportForm.submit();
+		alert("취소 되었습니다");
+	}else{
+	}
+}

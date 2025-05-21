@@ -84,6 +84,19 @@ public class StoreServiceImple implements StoreService{
 		int result = mapper.delete(store_idx);
 		return result;
 	}
+	@Override
+	public int removeStore(int member_idx) {
+		log.info("remove..."+member_idx);
+		StoreVO svo = mapper.getStore(member_idx);
+		String oldImg = svo.getStore_image();
+		if(!oldImg.equals("store1.jpg")) {
+			// 이미지 삭제
+			cloudinaryService.deleteFile(oldImg);
+		}
+		// 점포 삭제
+		int result = mapper.deleteStore(member_idx);
+		return result;
+	}
 	
 	@Override
 	public List<StoreVO> getList() {

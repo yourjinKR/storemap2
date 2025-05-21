@@ -37,7 +37,7 @@
 		    <input type="text" id="rnum" name="store_rnum">
 		    
 		    <div class="panel-body-btns">
-		    	<button type="button" class="btn btn-sec" id="registerBtn">점포 등록</button>
+		    	<button type="button" class="btn btn-sec" id="registerBtn">점주 신청</button>
 		    	<button type="button" class="btn btn-sec" id="resetBtn">다시 작성</button>
 		    	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
 		    </div>

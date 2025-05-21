@@ -6,6 +6,7 @@
 	<resultMap id="disReqListMap" type="org.storemap.domain.StoreRequestVO">
 		<result property="member_idx" column="member_idx"/>
 		<result property="pon" column="pon"/>
+		<result property="regdate" column="regdate"/>
 		<association property="member" resultMap="memberMap"/>
 		<association property="store" resultMap="storeMap"/>
 		<association property="attach" resultMap="attachMap"/>
@@ -63,9 +64,12 @@
 	</select>
 	<!-- 5.점주 신청 요청 리스트 이름으로 불러오기 -->
 	<select id="getDisReqListMap" resultMap="disReqListMap">
-		SELECT r.member_idx, m.member_name, s.*, r.pon, a.filename
-		FROM member m, store s, store_request r, attach_file a
-		WHERE r.pon = 0 AND r.member_idx = m.member_idx AND r.member_idx = s.member_idx
+		SELECT m.member_name, s.*, r.*, a.filename
+		FROM member m
+		JOIN store_request r ON r.member_idx = m.member_idx
+		JOIN store s ON s.member_idx = r.member_idx
+		LEFT JOIN attach_file a ON a.uuid = s.store_image
+		WHERE r.pon = 0 order by r.regdate desc
 	</select>
 	
 </mapper>

@@ -75,45 +75,32 @@ public class AdminController {
 	@Autowired
 	private AnnounceServiceImple announceService;
 	
-	// 관리자 신고 모음?
+	// 관리자 신고 페이지
 	@GetMapping("/adminMain")
 	public String adminMain(Model model) {
 		log.info("adminMainGet...");
+		log.info(storeReqService.getDisReqListMap());
 		model.addAttribute("storeRequestList", storeReqService.getDisReqListMap());
 		model.addAttribute("storeReportList",storeDeclService.getDeclarationMap());
 		model.addAttribute("reviewReportList",reviewDeclService.getDeclarationMap());
 		return "index";
 	}
 	
-	@GetMapping("/adminEnterView")
-	public String adminEnterView() {
-		log.info("adminEnterViewGet...");
-		return "index";
-	}
-	@GetMapping("/adminEventView")
-	public String adminEventView() {
-		log.info("adminEventViewGet...");
-		return "index";
-	}
 	// 점포 승인
-	@PostMapping("/adminStoreView")
+	@PostMapping("/storeApproval")
 	public String storeApproval(int member_idx) {
 		log.info("storeApproval..."+member_idx);
 		storeReqService.modify(member_idx);
 		memberService.approvalOwner(member_idx);
-		return "redirect:/admin/adminStoreView";
+		return "redirect:/admin/adminMain";
 	}
-	// 점포 승인 페이지
-	@GetMapping("/adminStoreView")
-	public String adminStoreView(Model model) {
-		log.info("adminStoreViewGet...");
-		model.addAttribute("reqList", storeReqService.getDisReqListMap());
-		return "index";
-	}
-	@GetMapping("/adminMemberView")
-	public String adminMemberView() {
-		log.info("adminMemberViewGet...");
-		return "index";
+	// 점포 승인 취소
+	@PostMapping("/storeDisallow")
+	public String storeDisallow(int member_idx) {
+		log.info("storeDisallow..."+member_idx);
+		storeService.removeStore(member_idx);
+		storeReqService.remove(member_idx);
+		return "redirect:/admin/adminMain";
 	}
 	
 	// 점포 숨기기
@@ -129,6 +116,13 @@ public class AdminController {
 	public String storeReportunHide(int store_idx) {
 		log.info("storeReportunHide..."+store_idx);
 		storeService.unhide(store_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 점포 신고 취소
+	@PostMapping("/storeReportRemove")
+	public String storeReportRemove(int store_idx, int member_idx) {
+		log.info("storeReportRemove..."+store_idx+", "+member_idx);
+		storeDeclService.remove(store_idx, member_idx);
 		return "redirect:/admin/adminMain";
 	}
 	
@@ -147,21 +141,6 @@ public class AdminController {
 		reviewService.unhide(review_idx);
 		return "redirect:/admin/adminMain";
 	}
-	
-	// 점포 승인 취소
-	@PostMapping("/adminStoreRemove")
-	public String adminStoreRemove(int member_idx) {
-		log.info("adminStoreRemove..."+member_idx);
-		storeReqService.remove(member_idx);
-		return "redirect:/admin/adminStoreView";
-	}
-	// 점포 신고 취소
-	@PostMapping("/storeReportRemove")
-	public String storeReportRemove(int store_idx, int member_idx) {
-		log.info("storeReportRemove..."+store_idx+", "+member_idx);
-		storeDeclService.remove(store_idx, member_idx);
-		return "redirect:/admin/adminMain";
-	}
 	// 리뷰 신고 취소
 	@PostMapping("/reviewReportRemove")
 	public String reviewReportRemove(int review_idx, int member_idx) {
@@ -170,6 +149,7 @@ public class AdminController {
 		return "redirect:/admin/adminMain";
 	}
 	
+	/*--------------------------------------------------------------------------*/
 	
 	// 공지사항 이동
 	@GetMapping("/notice")
