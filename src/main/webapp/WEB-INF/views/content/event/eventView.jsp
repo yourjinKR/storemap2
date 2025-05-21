@@ -3,6 +3,74 @@
 <%@ page import="java.time.LocalDate, java.time.temporal.ChronoUnit" %>
 <%@ page import="org.storemap.domain.EventVO" %>
 
+<div class="readonly-form">
+  <!-- 제목 + 신고/좋아요 아이콘 -->
+  <div class="event-header">
+    <h2 class="event-title">글번호 ${evo.event_idx}</h2>
+    <h5>${evo.event_title}</h5>
+	
+	
+    <!-- 신고 및 좋아요 버튼 -->
+    <div class="eventIcon">
+      <input type="button" name="eventReport" id="eventReport-icon${evo.event_idx}">
+      <label class="material-symbols-outlined" for="eventReport-icon${evo.event_idx}">report</label>
+      <input type="checkbox" name="eventLike" id="eventLike-icon${evo.event_idx}" ${eventLiked ? 'checked' : ''}>
+      <label class="material-symbols-outlined" for="eventLike-icon${evo.event_idx}">favorite</label>
+      <span class="eventLike-count eventLike-count-${evo.event_idx}">${evo.event_like_cnt}</span>
+    </div>
+  </div>
+
+  <!-- 이벤트 정보 테이블 -->
+  <table class="event-table">
+    <tr>
+      <th>카테고리</th>
+      <td>${evo.event_category}</td>
+    </tr>
+    <tr>
+      <th>행사 기간</th>
+      <td>${evo.event_bstartdate} ~ ${evo.event_bstopdate}</td>
+    </tr>
+    <tr>
+      <th>사진</th>
+      <td>
+        <div class="photo-preview">
+          <c:forEach var="file" items="${fileList}">
+            <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="이벤트 이미지" style="max-width: 100%; height: auto;" />
+          </c:forEach>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th>이벤트 소개</th>
+      <td><pre style="white-space: pre-wrap;">${evo.event_content}</pre></td>
+    </tr>
+    <tr>
+      <th>주소</th>
+      <td>${evo.event_location}</td>
+    </tr>
+    <tr>
+      <th>상세 주소</th>
+      <td>${evo.event_location_detail}</td>
+    </tr>
+  </table>
+
+  <!-- 참여 버튼 -->
+  <div id="participationSection">
+    <input type="button" id="openBtn" value="참여" />
+  </div>
+</div>
+
+<!-- 모달 -->
+<jsp:include page="../../content/modal/eventDayChoice.jsp" />
+<jsp:include page="../../content/modal/eventReport.jsp" />
+
+<!-- 목록으로 돌아가기 버튼 -->
+<div class="back-button">
+  <button onclick="goEventList()" id="goEventList">목록으로 돌아가기</button>
+</div>
+
+<!-- 스크립트 -->
+<script src="/resources/js/event.js"></script>
 
 <style>
   .readonly-form {
@@ -73,80 +141,5 @@
   #result {
     margin-bottom: 10px;
   }
+
 </style>
-<div class="readonly-form">
-  <!-- 제목 + 신고/좋아요 아이콘 -->
-  <div class="event-header">
-    <h2 class="event-title">글번호 ${evo.event_idx}</h2>
-    <h5>${evo.event_title}</h5>
-
-    <!-- 신고 및 좋아요 버튼 -->
-	<div class="eventIcon">
-  <input type="button" name="eventReport" 
-         class="report-button" 
-         data-event-idx="${evo.event_idx}" 
-         id="eventReport-icon${evo.event_idx}">
-  <label class="material-symbols-outlined" 
-         for="eventReport-icon${evo.event_idx}">
-    report
-  </label>
-</div>
-      <input type="checkbox" name="eventLike" id="eventLike-icon${evo.event_idx}" ${eventLiked ? 'checked' : ''}>
-      <label class="material-symbols-outlined" for="eventLike-icon${evo.event_idx}">
-        favorite
-      </label>
-      <span class="eventLike-count eventLike-count-${evo.event_idx}">${evo.event_like_cnt}</span>
-    </div>
-  </div>
-
-  <!-- 이벤트 정보 테이블 -->
-  <table class="event-table">
-    <tr>
-      <th>카테고리</th>
-      <td>${evo.event_category}</td>
-    </tr>
-    <tr>
-      <th>행사 기간</th>
-      <td>${evo.event_bstartdate} ~ ${evo.event_bstopdate}</td>
-    </tr>
-    <tr>
-      <th>사진</th>
-      <td>
-        <div class="photo-preview">
-          <c:forEach var="file" items="${fileList}">
-            <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="이벤트 이미지" style="max-width: 100%; height: auto;" />
-          </c:forEach>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <th>이벤트 소개</th>
-      <td><pre style="white-space: pre-wrap;">${evo.event_content}</pre></td>
-    </tr>
-    <tr>
-      <th>주소</th>
-      <td>${evo.event_location}</td>
-    </tr>
-    <tr>
-      <th>상세 주소</th>
-      <td>${evo.event_location_detail}</td>
-    </tr>
-  </table>
-
-  <!-- 참여 버튼 -->
-  <div id="participationSection">
-    <input type="button" id="openBtn" value="참여" />
-  </div>
-
-
-<!-- 모달 -->
-<jsp:include page="../../content/modal/eventDayChoice.jsp" />
-<jsp:include page="../../content/modal/eventReport.jsp" />
-
-<!-- 목록으로 돌아가기 버튼 -->
-<div class="back-button">
-  <button onclick="goEventList()" id="goEventList">목록으로 돌아가기</button>
-</div>
-
-<!-- 스크립트 -->
-<script src="/resources/js/event.js"></script>
