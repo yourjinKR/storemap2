@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 클릭마커 클릭 이벤트 추가
     kakao.maps.event.addListener(clickMarker, 'click', function() {
         if (!customPositionMode) {
-            alert("현위치를 수정하시겠습니까?");
+            // alert("현위치를 수정하시겠습니까?");
             setMyCurrentPlace();
         }
     })
@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 줌 이벤트
         kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
-            console.log(basicMap.getLevel());
+            // console.log(basicMap.getLevel());
             hideOverlay(storeOverlayList);
             hideOverlay(eventOverlayList);
             if (storeMapMode || unitedMapMode) {
@@ -427,17 +427,19 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let lat;
         let lng;
-        let kilometer;
+        // 검색어 미리보기는 전국 단위로 확인
+        let kilometer = 999;
         // 검색어 조건 설정
-        if (basicMap != null) {
+        // map.jsp에서
+        if (basicMap != null && mapType === "full") {
             lat = basicMap.getCenter().getLat();
             lng = basicMap.getCenter().getLng();
-            kilometer = setRadiusByLevel(basicMap.getLevel());
+            // kilometer = setRadiusByLevel(basicMap.getLevel());
         } else {
             // console.log('맵 없음');
             lat = currentLat;
             lng = currentLng;
-            kilometer = setRadiusByLevel(5);
+            // kilometer = setRadiusByLevel(5);
         }
 
         // 점포 정보 불러오기 (서버에 비동기 요청)
@@ -446,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 5, kilometer : kilometer })
+            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0, kilometer : kilometer}) 
         })
         .then(response => response.json())
         .then(data => {
@@ -467,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 5})
+            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0})
         })
         .then(response => response.json())
         .then(data => {
@@ -520,21 +522,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
 
                 suppressAutocomplete = true;
-                //console.log('엔터키 입력');
-                // hideAutocomplete();
 
+                // 자동완성 검색어를 선택했을때
                 if (selectedIndex >= 0 && selectedIndex < items.length) {
                     const selectedItem = items[selectedIndex];
                     const value = selectedItem.dataset.value; // 정확한 값 추출
+                    const type = selectedItem.getAttribute("type"); // 강사님께 질문
+                    const idx = selectedItem.getAttribute("idx");
+
                     keywordInput.value = value;
                     // hideAutocomplete();
                     if (mapType === "full") {
-                        mapSearchService(basicMap, value);
+                        if (type === 'store') {
+                            as.getStoreByIdx(idx, function (data) {
+                                apply2storeMap([data]);
+                            });
+                        } else {
+                            mapSearchService(basicMap, value);
+                        }
                     } else {
-                        sessionStorage.setItem("initialKeyword", value);
-                        location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                        if (type === 'store') {
+                            as.getStoreByIdx(idx, function (data) {
+                                apply2storeMap([data]);
+                            });
+                        } else {
+                            sessionStorage.setItem("initialKeyword", value);
+                            location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                        }
                     }
-                } else if (selectedIndex == -1 && items.length >= 0) {
+                } 
+                // 자동완성 검색어를 선택하지 않을때
+                else if (selectedIndex == -1 && items.length >= 0) {
                     // hideAutocomplete();
                     if (mapType === "full") {
                         mapSearchService(basicMap, keywordInput.value.trim());
@@ -557,8 +575,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = e.target.closest("li");
         if (!target) return;
 
-        console.log('자동완성 리스트를 킬릭하여 닫기');
-        
+        const type = target.getAttribute("type");
+        const idx = target.getAttribute("idx");
+
+        // 강사님께 질문하기
+        if (type === "store") {
+            as.getStoreByIdx(idx, function (data) {
+                apply2storeMap([data]);
+            })
+            return;
+        }
+
         const value = target.dataset.value;
         keywordInput.value = value;
         hideAutocomplete();
@@ -1958,11 +1985,11 @@ function updateSuggestionList(list, type) {
 
     let html = list.map(item => {
         if (type === 'event') {
-            return `<li data-value="${item.event_title}">
+            return `<li data-value="${item.event_title}" type="${type}" idx="${item.event_idx}">
                         ${item.event_title}<span class="ele-type">이벤트</span>
                     </li>`;
         } else if (type === 'store') {
-            return `<li data-value="${item.store_name}">
+            return `<li data-value="${item.store_name}" type="${type}" idx="${item.store_idx}">
                         ${item.store_name}<span class="ele-type">점포</span>
                     </li>`;
         }
@@ -1979,14 +2006,14 @@ function updateActiveItem(items) {
         item.classList.toggle("active", i === selectedIndex);
         if(i === selectedIndex) {
             // 수정 필요
-            // console.log(items[i].closest.innerHTML);
+            // console.log(items[i]);
         }
     });
 }
 
 // 자동완성 숨기기
 function hideAutocomplete() {
-    console.log('가린다');
+    // console.log('가린다');
     autoCompleteBox.style.display = "none";
     autoSearchUL.innerHTML = "";
     selectedIndex = -1;

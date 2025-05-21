@@ -234,10 +234,9 @@
                         COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
                         COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
                         SIN(RADIANS(#{lat})) * SIN(RADIANS(s.store_lat))
-                    ) &lt;= #{kilometer}  <!-- 반경 500m 이하 점포들만 필터링 -->
+                    ) &lt;= #{kilometer}  <!-- 반경 km 이하 점포들만 필터링 -->
             ORDER BY distance
         )
-        WHERE ROWNUM &lt;= #{amount}
 	</select>
 	
 	<!-- 키워드와 지역명이 일치하는 점포 찾기 -->
@@ -302,7 +301,9 @@
 	            COS(RADIANS(store_lng) - RADIANS(#{lng})) +
 	            SIN(RADIANS(#{lat})) * SIN(RADIANS(store_lat))
 	        ) &lt;= #{kilometer}
-	    AND ROWNUM &lt;= #{amount}
+	    <if test="amount != 0">
+		    AND ROWNUM &lt;= #{amount}    
+	    </if>
 	</select>
 
 	
