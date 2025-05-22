@@ -585,6 +585,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 } 
                 // 자동완성 검색어를 선택하지 않을때
                 else if (selectedIndex == -1 && items.length >= 0) {
+                    if (items.length == 0) {
+                        alert("검색어를 입력하시오!");
+                        break;
+                    }
                     // resetAutocomplete();
                     if (mapType === "full") {
                         mapSearchService(basicMap, keywordInput.value.trim());
