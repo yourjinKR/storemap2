@@ -390,7 +390,12 @@
 	            NVL(ER.APPROVED_STORE, 0) AS APPROVED_STORE,
 	            NVL(CE.COMMENT_COUNT, 0) AS COMMENT_COUNT,
 	            NVL(EL.LIKE_COUNT, 0) AS LIKE_COUNT,
-	            NVL(ED.MAX_STORE, 0) AS MAX_STORE
+	            NVL(ED.MAX_STORE, 0) AS MAX_STORE,
+	            CASE
+	                WHEN E.EVENT_TITLE LIKE '%' || #{keyword} || '%' THEN 1
+	                WHEN E.EVENT_LOCATION LIKE '%' || #{keyword} || '%' THEN 2
+	                ELSE 3
+	            END AS PRIORITY
 	        FROM EVENT E
 	        LEFT JOIN (
 	            SELECT EVENT_IDX, COUNT(*) APPROVED_STORE
@@ -425,12 +430,13 @@
 	                OR E.EVENT_LOCATION LIKE '%' || #{keyword} || '%'
 	            )
 	        </if>
-	        ORDER BY E.EVENT_BSTARTDATE DESC
 	    )
 	    <if test="amount != 0">
 	        WHERE ROWNUM &lt;= #{amount}
 	    </if>
+	    ORDER BY PRIORITY, EVENT_BSTARTDATE DESC
 	</select>
+
 
 
 	

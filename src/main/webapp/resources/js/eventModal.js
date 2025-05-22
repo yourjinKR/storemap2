@@ -1,4 +1,6 @@
 //페이지가 로드될 때 이벤트를 초기화
+console.log('eventModal.js')
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeEvents();
 

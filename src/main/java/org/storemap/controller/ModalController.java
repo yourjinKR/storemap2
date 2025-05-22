@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.storemap.domain.AttachFileVO;
+import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.LetterVO;
 import org.storemap.domain.MapDTO;
@@ -33,8 +35,11 @@ import org.storemap.domain.ReviewVO;
 import org.storemap.domain.StoreDeclarationVO;
 import org.storemap.domain.StoreLikeVO;
 import org.storemap.domain.StoreVO;
+import org.storemap.service.CloudinaryService;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventDayServiceImple;
+import org.storemap.service.EventDeclarationService;
+import org.storemap.service.EventRequestService;
 import org.storemap.service.EventService;
 import org.storemap.service.EventServiceImple;
 import org.storemap.service.LetterServiceImple;
@@ -77,6 +82,12 @@ public class ModalController {
 	private MemberServiceImple memberService;
 	@Autowired
 	private EnterServiceImple enterService;
+	@Autowired
+	private EventRequestService eventRequestService;
+	@Autowired
+	private CloudinaryService cloudinaryService;
+	@Autowired
+	private EventDeclarationService eventDeclarationService;
 	
 	//점포 리스트 모달
 	@GetMapping("/storeListModal")
@@ -274,12 +285,64 @@ public class ModalController {
 	
 	// 이벤트 상세보기
 	@GetMapping("/eventView")
-	public String eventView(@RequestParam("event_idx") int event_idx, Model model) {
-		log.info("eventView..." + event_idx);
-		EventVO evo = eventService.getEventOneView(event_idx);
-		model.addAttribute("evo", evo);
-		log.info("evo..." + evo);
-		return "index";
+	public String eventView(Model model,
+	                        @RequestParam("event_idx") int event_idx,
+	                        HttpSession session) {
+
+	    // 이벤트 정보 조회
+	    EventVO vo = eventService.getEventOneView(event_idx);
+	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
+	    	    
+	    // event_file 컬럼에서 Cloudinary UUID와 외부 URL을 분리
+	    String eventFile = vo.getEvent_file();
+	    List<String> cloudinaryUuids = new ArrayList<>();
+	    List<String> externalUrls = new ArrayList<>();
+	    
+	    if (eventFile != null && !eventFile.isEmpty()) {
+	        String[] fileParts = eventFile.split(",");
+	        for (String part : fileParts) {
+	            part = part.trim();
+	            if (part.startsWith("http")) {
+	                externalUrls.add(part);  // 외부 URL
+	            } else {
+	                cloudinaryUuids.add(part);  // Cloudinary UUID
+	            }
+	        }
+	    }
+
+	    // Cloudinary UUID로 파일 정보 가져오기 (비어 있을 경우에도 안전)
+	    List<AttachFileVO> cloudinaryFiles = new ArrayList<>();
+	    if (!cloudinaryUuids.isEmpty()) {
+	        cloudinaryFiles = cloudinaryService.getFilesByUuidList(cloudinaryUuids);
+	    }
+	    
+	    // 모델에 데이터 전달
+	    model.addAttribute("eday", eday);
+	    model.addAttribute("evo", vo);
+	    model.addAttribute("fileList", cloudinaryFiles);    
+	    model.addAttribute("externalUrls", externalUrls);// 외부 URL 이미지 리스트
+	    
+	    // 세션 설정
+	    session.setAttribute("event_idx", event_idx);
+
+	    Integer loginUserIdx = (Integer) session.getAttribute("loginUserIdx");
+	    if (loginUserIdx != null) {
+	        session.setAttribute("member_idx", loginUserIdx);
+	    } else {
+	        session.setAttribute("alertMsg", "로그인을 해야 신고 기능을 이용할 수 있습니다.");
+	    }
+
+	    Integer storeIdx = (Integer) session.getAttribute("storeIdx");
+	    if (storeIdx != null) {
+	        List<Integer> appliedEdayIdxList = eventRequestService.getAppliedEdayIdxList(storeIdx);
+	        Map<Integer, String> entryStatusMap = new HashMap<>();
+	        for (Integer edayIdx : appliedEdayIdxList) {
+	            entryStatusMap.put(edayIdx, "신청 승인중");
+	        }
+	        model.addAttribute("entryStatusMap", entryStatusMap);
+	    }
+
+	    return "index";
 	}
 	
 	

@@ -371,6 +371,13 @@ function removeReview() {
 
 /** 모달 여는 동적 함수 (list, type)  */
 function viewDetailModalPage(li, type) {
+    // let path = null;
+    // if (type === "store") {
+    //     path = "modal";
+    // } else if (type === "event") {
+    //     path = "event";
+    // }
+
     if (type === "store" || type === "event") {
         const idx = li.getAttribute(`data-${type}_idx`);
         if (!idx) {
