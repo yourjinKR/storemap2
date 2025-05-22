@@ -130,12 +130,25 @@ public class ModalController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 		})
-		public ResponseEntity<StoreVO> getByIdx(@RequestBody int store_idx){
-			log.info("getByIdx..." + store_idx);
+		public ResponseEntity<StoreVO> getStoreByIdx(@RequestBody int store_idx){
+			log.info("getByStoreIdx..." + store_idx);
 			StoreVO vo = storeService.get(store_idx);
 			log.info(vo);
 			return new ResponseEntity<StoreVO>(vo, HttpStatus.OK);
-	}	
+	}
+	
+	// 이벤트 정보 하나 가져오기
+	@PostMapping(value = "/event/getByIdx",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+		})
+		public ResponseEntity<EventVO> getEventByIdx(@RequestBody int event_idx){
+			log.info("getByEventIdx..." + event_idx);
+			EventVO vo = eventService.getEventOneView(event_idx);
+			log.info(vo);
+			return new ResponseEntity<EventVO>(vo, HttpStatus.OK);
+	}
 	
 	//점포좋아요 (토글)
 	@GetMapping(value = "/storeLike/toggle",

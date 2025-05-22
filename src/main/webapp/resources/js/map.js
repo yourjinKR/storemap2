@@ -237,6 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeListModal.style.display = 'block';
         eventListModal.style.display = 'block';
 
+        deleteAllEle();
         // 초기 검색 기능
         // 키워드 기반
         const initialKeyword = sessionStorage.getItem("initialKeyword");
@@ -254,14 +255,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // idx 기반 점포 찾기
         const initialStoreIDX = sessionStorage.getItem("store_idx");
+        sessionStorage.removeItem("store_idx");
         if (initialStoreIDX) {
             // store idx 기반 검색 비동기 함수 실행
-            let IDX = 302;
-            as.getStoreByIdx(IDX, function (data) {
+            // let IDX = 302;
+            as.getStoreByIdx(initialStoreIDX, function (data) {
                 apply2storeMap([data]);
             });
         }
-}
+        // idx 기반 이벤트 찾기
+        const initialEventIDX = sessionStorage.getItem("event_idx");
+        sessionStorage.removeItem("event_idx");
+        if (initialEventIDX) {
+            // event idx 기반 검색 비동기 함수 실행
+            // let IDX = 302;
+            as.getEventByIdx(initialEventIDX, function (data) {
+                processAllEvents([data], "search");
+            });
+        }
+    }
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
         let f = document.forms[0];
@@ -450,53 +462,50 @@ document.addEventListener("DOMContentLoaded", () => {
             // kilometer = setRadiusByLevel(5);
         }
 
-        if(unitedMapMode || storeMapMode) {
-            // 점포 정보 불러오기 (서버에 비동기 요청)
-            fetch(`/modal/list/keyword.json`, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0, kilometer : kilometer}) 
-            })
-            .then(response => response.json())
-            .then(data => {
-                // console.log(data);
-    
-                // 최대 5개까지만 표시
-                // const suggestionList = data.slice(0, 3);
-                updateSuggestionList(data, 'store', keyword);
-            })
-            .catch(err => {
-                console.error("자동완성 fetch 실패", err);
-                // resetAutocomplete();
-            });
-        }
+        // 점포 정보 불러오기 (서버에 비동기 요청)
+        fetch(`/modal/list/keyword.json`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0, kilometer : kilometer}) 
+        })
+        .then(response => response.json())
+        .then(data => {
+            // console.log(data);
 
-        if (unitedMapMode || eventMapMode) {
-            // 이벤트 정보 불러오기 (서버에 비동기 요청)
-            fetch("/event/eventFilter/keyword" , {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0})
-            })
-            .then(response => response.json())
-            .then(data => {
-                // console.log(data);
-    
-                // processAllEvents(data, "autoComplete");
-    
-                // 최대 5개까지만 표시
-                // const suggestionList = data.slice(0, 3);
-                updateSuggestionList(data, 'event', keyword);
-            })
-            .catch(err => {
-                console.error("자동완성 fetch 실패", err);
-                // resetAutocomplete();
-            });
-        }
+            // 최대 5개까지만 표시
+            // const suggestionList = data.slice(0, 3);
+            updateSuggestionList(data, 'store', keyword);
+        })
+        .catch(err => {
+            console.error("자동완성 fetch 실패", err);
+            // resetAutocomplete();
+        });
+
+        // 이벤트 정보 불러오기 (서버에 비동기 요청)
+        fetch("/event/eventFilter/keyword" , {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0})
+        })
+        .then(response => response.json())
+        .then(data => {
+            // console.log(data);
+
+            // processAllEvents(data, "autoComplete");
+
+            // 최대 5개까지만 표시
+            // const suggestionList = data.slice(0, 3);
+            updateSuggestionList(data, 'event', keyword);
+        })
+        .catch(err => {
+            console.error("자동완성 fetch 실패", err);
+            // resetAutocomplete();
+        });
+
 
     });
 
@@ -512,7 +521,10 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(keywordInput);
     
     keywordInput.addEventListener("keydown", e => {        
-        const items = autoSearchUL.querySelectorAll("li");
+        //const items = autoSearchUL.querySelectorAll("li");
+        const items = Array.from(autoSearchUL.querySelectorAll("li")).filter(li => {
+            return window.getComputedStyle(li).display === "block";
+        });
         // if (items.length === 0) return;
 
         switch (e.keyCode) {
@@ -534,6 +546,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             case 13: // Enter
                 e.preventDefault();
+                deleteAllEle();
 
                 suppressAutocomplete = true;
 
@@ -552,7 +565,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                 apply2storeMap([data]);
                             });
                         } else {
-                            mapSearchService(basicMap, value);
+                            as.getEventByIdx(idx, function (data) {
+                                processAllEvents([data], "search");
+                            });
                         }
                     } else {
                         if (type === 'store') {
@@ -586,20 +601,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 리스트 클릭 이벤트
     autoSearchUL.addEventListener("click", e => {
+        deleteAllEle();
+
         const target = e.target.closest("li");
         if (!target) return;
 
         const type = target.getAttribute("type");
         const idx = target.getAttribute("idx");
 
-        // 강사님께 질문하기
-        if (type === "store") {
-            as.getStoreByIdx(idx, function (data) {
-                apply2storeMap([data]);
-            })
-            return;
-        } else if (type === "event") {
-            
+        // map.jsp
+        if (mapType === "full") {
+            if (type === "store") {
+                as.getStoreByIdx(idx, function (data) {
+                    apply2storeMap([data]);
+                })
+                return;
+            } else if (type === "event") {
+                as.getEventByIdx(idx, function (data) {
+                    processAllEvents([data], "search");
+                })
+                return;
+            }
+        } 
+        // header
+        else {
+            if (type === "store") {
+                sessionStorage.setItem("store_idx", idx);
+                location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                return;
+            } else if (type === "event") {
+                sessionStorage.setItem("event_idx", idx);
+                location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                return;
+            }
         }
 
         const value = target.dataset.value;
@@ -1007,6 +1041,24 @@ function calcToggle() {
 
 // 비동기 서비스
 const asyncService = (function(){
+    function getEventByIdx(idx, callback) {
+        fetch(`/modal/event/getByIdx.json`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(idx)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            
+            callback(data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
 
     /** idx로 점포 정보 로드하는 함수 */
     function getStoreByIdx(idx, callback){
@@ -1019,7 +1071,6 @@ const asyncService = (function(){
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             callback(data);
         })
         .catch(err => {
@@ -1182,7 +1233,8 @@ const asyncService = (function(){
         getListByKeyword : getListByKeyword,
         getListByAddrKeyword : getListByAddrKeyword,
         eventListByKeyword : eventListByKeyword,
-        getStoreByIdx : getStoreByIdx
+        getStoreByIdx : getStoreByIdx,
+        getEventByIdx : getEventByIdx
     };
 })();
 const as = asyncService;
@@ -1524,6 +1576,8 @@ function apply2storeMap(data) {
 
 /** 검색결과를 지도에 적용하는 콜백함수 (이벤트)  */
 function apply2eventMap(data) {
+    resetAutocomplete();
+
     let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     // eventUL.innerHTML = "";
 
@@ -1577,6 +1631,9 @@ function apply2eventMap(data) {
 
 /** 모든 요소를 삭제하는 함수 */
 function deleteAllEle() {
+    if (mapType != "full") {
+        return;
+    }
     console.log('요소를 삭제합니다');
 
     hideMarkers(storeVOList);
@@ -1776,6 +1833,9 @@ function swap2unitedMap() {
                 panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
             }
         }
+
+        // 검색어 자동완성 설정
+        ctrlAutoComplete();
     }
 }
 
@@ -1813,6 +1873,9 @@ function swap2eventMap() {
 
         // 사이드바를 event로 변경
         viewSideBar = document.querySelector(".side-bar#event");
+
+        // 검색어 자동완성 설정
+        ctrlAutoComplete();
     }
 
 }
@@ -1851,6 +1914,9 @@ function swap2storeMap() {
 
         // 사이드바를 store로 재설정
         viewSideBar = document.querySelector(".side-bar#store");
+
+        // 검색어 자동완성 설정
+        ctrlAutoComplete();
     }
 }
 
@@ -1892,17 +1958,14 @@ function getDistance(lat1, lng1, lat2, lng2) {
 
 // 현위치를 기준으로 List 정렬
 function sortEventVOListByDistance(lat, lng, list) {
-    console.log(lat);
-    console.log(lng);
+    if(list.length == 0) {return;}
     
-    console.log('event vo list : ', eventVOList);
     console.log('정렬시작');
     list.sort((a, b) => {
         const distA = getDistance(lat, lng, parseFloat(a.event_lat), parseFloat(a.event_lng));
         const distB = getDistance(lat, lng, parseFloat(b.event_lat), parseFloat(b.event_lng));
         return distA - distB;
     });
-    console.log('event vo list : ', eventVOList);
 }
 
 /** 하나 이상의 리스트를 받아 전체 마커 간 최대 거리 확대 레벨 계산 */
@@ -2005,6 +2068,8 @@ function updateSuggestionList(list, type, keyword) {
 
         const li = document.createElement("li");
 
+        li.classList.add(`${type}-ele`);
+
         li.setAttribute("type", type);
         if(type === "store") {
             li.setAttribute("idx", item.store_idx);
@@ -2018,6 +2083,7 @@ function updateSuggestionList(list, type, keyword) {
         autoSearchUL.appendChild(li);
     });
 
+    ctrlAutoComplete();
     autoCompleteBox.style.display = "block";
     selectedIndex = -1;
 }
@@ -2045,4 +2111,33 @@ function resetAutocomplete() {
 function hideAutocomplete() {
     autoCompleteBox.style.display = "none";
     selectedIndex = -1;
+}
+
+/** 맵 모드에 따라 자동완성 리스트 조절 함수 */
+function ctrlAutoComplete() {
+    const storeList = document.querySelectorAll(".store-ele");
+    const eventList = document.querySelectorAll(".event-ele");
+    
+    if (storeMapMode) {
+        storeList.forEach(store => {
+            store.style.display = 'block';
+        });
+        eventList.forEach(event => {
+            event.style.display = 'none';
+        })
+    } else if (eventMapMode) {
+        eventList.forEach(event => {
+            event.style.display = 'block';
+        })
+        storeList.forEach(store => {
+            store.style.display = 'none';
+        });
+    } else if (unitedMapMode) {
+        eventList.forEach(event => {
+            event.style.display = 'block';
+        })
+        storeList.forEach(store => {
+            store.style.display = 'block';
+        });
+    }
 }

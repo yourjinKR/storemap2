@@ -8,10 +8,7 @@
 		<div class="search-bar">
 			<input type="text" name="keyword" placeholder="검색어를 입력해주세요.">
 			<div class="autocomplete">
-				<ul id="store">
-					<li>예시</li>
-					<li>자동완성</li>
-					<li>자동완성 예시</li>
+				<ul>
 				</ul>		
 			</div>
 		</div>	
