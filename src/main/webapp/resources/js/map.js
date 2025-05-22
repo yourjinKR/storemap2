@@ -423,6 +423,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 검색창에 값 입력
     keywordInput.addEventListener("input", e => {
+        console.log('값입력');
+        
         resetAutocomplete();
 
         const keyword = keywordInput.value.trim();
@@ -462,7 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 최대 5개까지만 표시
             // const suggestionList = data.slice(0, 3);
-            updateSuggestionList(data, 'store');
+            updateSuggestionList(data, 'store', keyword);
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
@@ -485,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 최대 5개까지만 표시
             // const suggestionList = data.slice(0, 3);
-            updateSuggestionList(data, 'event');
+            updateSuggestionList(data, 'event', keyword);
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
@@ -593,7 +595,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             return;
         } else if (type === "event") {
-            
+
         }
 
         const value = target.dataset.value;
@@ -1711,7 +1713,7 @@ function processAllEvents(data, type) {
             const suggestionList = eventVOList.slice(0, 3);
             eventVOList = [];
             // console.log('auto', eventVOList);
-            updateSuggestionList(suggestionList, 'event');
+            updateSuggestionList(suggestionList, 'event', keyword);
         }
     });
 }
@@ -1981,29 +1983,33 @@ function setRadiusByLevel(level) {
 
 // 자동완성 관련 함수
 /** 추천 리스트 UI 갱신 */ 
-function updateSuggestionList(list, type) {
+function updateSuggestionList(list, type, keyword) {
     if (list.length === 0) {
-        // console.log('검색결과가 없으므로 가린다');
-        // resetAutocomplete();
+        // hideAutocomplete();
         return;
     }
 
-    let html = list.map(item => {
-        if (type === 'event') {
-            return `<li data-value="${item.event_title}" type="${type}" idx="${item.event_idx}">
-                        ${item.event_title}<span class="ele-type">이벤트</span>
-                    </li>`;
-        } else if (type === 'store') {
-            return `<li data-value="${item.store_name}" type="${type}" idx="${item.store_idx}">
-                        ${item.store_name}<span class="ele-type">점포</span>
-                    </li>`;
-        }
-    }).join("");
+    // autoSearchUL.innerHTML = ""; // 초기화
 
-    autoSearchUL.innerHTML += html;
+    list.forEach(item => {
+        let text = type === 'event' ? item.event_title : item.store_name;
+
+        // keyword 강조
+        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape
+        const regex = new RegExp(`(${safeKeyword})`, "gi");
+        const highlighted = text.replace(regex, "<strong>$1</strong>").replace(/\n/g, "").trim();
+
+        const li = document.createElement("li");
+        li.dataset.value = text;
+        li.innerHTML = `<span class="highlighted-text">${highlighted}</span>
+                        <span class="ele-type">${type === 'event' ? "이벤트" : "점포"}</span>`;
+        autoSearchUL.appendChild(li);
+    });
+
     autoCompleteBox.style.display = "block";
     selectedIndex = -1;
 }
+
 
 /** 강조 항목 업데이트 */ 
 function updateActiveItem(items) {
