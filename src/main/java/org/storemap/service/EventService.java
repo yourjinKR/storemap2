@@ -40,10 +40,7 @@ public interface EventService {
     // 좋아요 감소
     public void decrementLike(int eventIdx);
     // 좋아요 수 조회
-    public int getLikeCount(int eventIdx);
-    // 승인된 점포 리스트 조회
-//    public List<ApprovedStoreViewDTO> getApprovedStoresGroupedByDay(int eventIdx);
-    
+    public int getLikeCount(int eventIdx);  
 	// 이벤트 리스트
 	public List<EventVO> getEventList(int enter_idx);
 	

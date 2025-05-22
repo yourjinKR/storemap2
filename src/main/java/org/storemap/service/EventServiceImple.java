@@ -219,25 +219,6 @@ public class EventServiceImple implements EventService{
     public int getLikeCount(int eventIdx) {
         return mapper.getLikeCount(eventIdx);
     }
-    
-//    @Override
-//    public List<ApprovedStoreViewDTO> getApprovedStoresGroupedByDay(int eventIdx) {
-//        List<EventDayVO> eventDays = eventDayService.getEventDaysByEventId(eventIdx);
-//        List<ApprovedStoreViewDTO> result = new ArrayList<>();
-//
-//        for (EventDayVO day : eventDays) {
-//            List<StoreVO> approvedStores = mapper.getApprovedStoresByEdayIdx(day.getEday_idx());
-//
-//            ApprovedStoreViewDTO dto = new ApprovedStoreViewDTO();
-//            dto.setEventDay(day);
-//            dto.setStores(approvedStores);
-//
-//            result.add(dto);
-//        }
-//
-//        return result;
-//    }
-    
 
 	@Override
 	public List<EventVO> getEventList(int enter_idx) {

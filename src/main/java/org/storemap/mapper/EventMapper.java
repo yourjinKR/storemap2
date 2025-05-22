@@ -7,7 +7,6 @@ import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
-import org.storemap.domain.StoreVO;
 
 public interface EventMapper {
 	// 메인 페이지 진행중인 이벤트
@@ -44,8 +43,6 @@ public interface EventMapper {
     public void decrementLike(@Param("eventIdx") int eventIdx);
     // 좋아요 수 조회
     public int getLikeCount(@Param("eventIdx") int eventIdx);
-    // 승인된 점포 리스트 조회
-//    public List<StoreVO> getApprovedStoresByEdayIdx(int edayIdx);
 	// 이벤트 리스트
 	public List<EventVO> getEventList(int enter_idx);
 }

@@ -144,7 +144,7 @@ public class EventController {
 	    // 이벤트 정보 조회
 	    EventVO vo = eventService.getEventOneView(event_idx);
 	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
-
+	    	    
 	    // event_file 컬럼에서 Cloudinary UUID와 외부 URL을 분리
 	    String eventFile = vo.getEvent_file();
 	    List<String> cloudinaryUuids = new ArrayList<>();

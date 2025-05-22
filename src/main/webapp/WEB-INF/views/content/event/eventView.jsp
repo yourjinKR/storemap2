@@ -63,7 +63,7 @@
       <td>${evo.event_location}</td>
     </tr>
   </table>
-
+	
   <div id="participationSection">
     <input type="button" id="openBtn" value="참여" />
   </div>
