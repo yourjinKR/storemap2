@@ -16,7 +16,7 @@ public interface EventRequestService {
 	// 입점 신청 리스트
 	public List<EventRequestVO> getEdayRequest(int eday_idx);
 	// 입점 승인
-	public int updateRequest(int eday_idx, int store_idx);
+	public int updateRequest(String enter_id, int eday_idx, int store_idx);
 	// 입점 반려
-	public int deleteRequest(int eday_idx, int store_idx);
+	public int deleteRequest(String enter_id, int eday_idx, int store_idx);
 }

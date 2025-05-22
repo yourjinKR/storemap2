@@ -145,9 +145,25 @@ function updateRequest(eday_idx, store_idx){
 	fetch(`/event/updateRequest/${eday_idx}/${store_idx}`, {
 		method : 'POST'
 	})
-	.then(response => response.json())
+	.then(response => response.text())
 	.then(result => {
-		
+		if(result == "success"){
+			alert("승인이 완료되었습니다.");
+			getEdayRequest(eday_idx);
+		}
+	})
+	.catch(err => console.log(err))
+}
+function deleteRequest(eday_idx, store_idx){
+	fetch(`/event/deleteRequest/${eday_idx}/${store_idx}`, {
+		method : 'DELETE'
+	})
+	.then(response => response.text())
+	.then(result => {
+		if(result == "success"){
+			alert("승인이 반려되었습니다.");
+			getEdayRequest(eday_idx);
+		}
 	})
 	.catch(err => console.log(err))
 }
@@ -180,7 +196,11 @@ function btnAction(){
 	for (let btn of btns) {
 		btn.addEventListener("click",function(e){
 			e.preventDefault();
-			updateRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx'])
+			if(this.getAttribute("class") == "approve-btn"){
+				updateRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx']);
+			}else{
+				deleteRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx']);
+			}
 		})
 	}
 }

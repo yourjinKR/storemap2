@@ -8,9 +8,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.storemap.domain.EventRequestVO;
+import org.storemap.domain.LetterVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.EventDayMapper;
 import org.storemap.mapper.EventRequestMapper;
+import org.storemap.mapper.LetterMapper;
 import org.storemap.mapper.MenuMapper;
 import org.storemap.mapper.StoreDeclarationMapper;
 import org.storemap.mapper.StoreMapper;
@@ -30,6 +32,10 @@ public class EventRequestServiceImple implements EventRequestService{
     private StoreDeclarationMapper sdMapper;
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private LetterMapper letterMapper;
+    @Autowired
+    private MemberService memberMapper;
 	
 	@Override
 		public int eventRequest(int eday_idx, int store_idx) {
@@ -68,14 +74,34 @@ public class EventRequestServiceImple implements EventRequestService{
 	}
 	// 입점 승인
 	@Override
-	public int updateRequest(int eday_idx, int store_idx) {
-		mapper.updateRequest(eday_idx, store_idx);
-		return 0;
+	public int updateRequest(String enter_id, int eday_idx, int store_idx) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("eday_idx", eday_idx);
+		map.put("store_idx", store_idx);
+		int result = mapper.updateRequest(map);
+		if(result == 1) {
+			LetterVO vo = new LetterVO();
+			vo.setLetter_writer(enter_id);
+			vo.setLetter_content("입점 승인되었습니다.");
+			vo.setLetter_receiver(memberMapper.get(storeMapper.read(store_idx).getMember_idx()).getMember_id());
+			letterMapper.insertLetter(vo);
+		}
+		return result;
 	}
 	// 입점 거절
 	@Override
-	public int deleteRequest(int eday_idx, int store_idx) {
-		mapper.deleteRequest(eday_idx, store_idx);
-		return 0;
+	public int deleteRequest(String enter_id, int eday_idx, int store_idx) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("edayIdx", eday_idx);
+		map.put("storeIdx", store_idx);
+		int result = mapper.cancelEntry(map);
+		if(result == 1) {
+			LetterVO vo = new LetterVO();
+			vo.setLetter_writer(enter_id);
+			vo.setLetter_content("입점 반려되었습니다.");
+			vo.setLetter_receiver(memberMapper.get(storeMapper.read(store_idx).getMember_idx()).getMember_id());
+			letterMapper.insertLetter(vo);
+		}
+		return result;
 	}
 }

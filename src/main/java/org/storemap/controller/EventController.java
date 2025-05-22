@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -316,12 +317,25 @@ public class EventController {
 		return new ResponseEntity<List<EventRequestVO>>(list, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/updateRequest/{eday_idx}/{store_idx}",
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<EventRequestVO>> updateRequest(
+	// 이벤트 관리 점포 승인
+	@PostMapping(value = "/updateRequest/{eday_idx}/{store_idx}")
+	public ResponseEntity<String> updateRequest(
 			@PathVariable("eday_idx") int eday_idx,
-			@PathVariable("store_idx") int store_idx) {
-			eventRequestService.updateRequest(eday_idx, store_idx);
-		return null;
+			@PathVariable("store_idx") int store_idx,
+			HttpSession session) {
+			String enter_id = (String) session.getAttribute("loginUser");
+			int result = eventRequestService.updateRequest(enter_id, eday_idx, store_idx);
+		return new ResponseEntity<String>("success", HttpStatus.OK);
+	}
+	
+	// 이벤트 관리 점포 반려
+	@DeleteMapping(value = "/deleteRequest/{eday_idx}/{store_idx}")
+	public ResponseEntity<String> deleteRequest(
+			@PathVariable("eday_idx") int eday_idx,
+			@PathVariable("store_idx") int store_idx,
+			HttpSession session) {
+		String enter_id = (String) session.getAttribute("loginUser");
+		int result = eventRequestService.deleteRequest(enter_id, eday_idx, store_idx);
+		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
 }
