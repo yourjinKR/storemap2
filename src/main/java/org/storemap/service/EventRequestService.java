@@ -2,6 +2,8 @@ package org.storemap.service;
 
 import java.util.List;
 
+import org.storemap.domain.EventRequestVO;
+
 public interface EventRequestService {
 	// 입점 신청 요청
 	public int eventRequest(int eday_idx, int store_idx);
@@ -11,4 +13,10 @@ public interface EventRequestService {
 	public int getEventIdxByEdayIdx(int eday_idx);
 	
 	public List<Integer> getAppliedEdayIdxList(int storeIdx);
+	// 입점 신청 리스트
+	public List<EventRequestVO> getEdayRequest(int eday_idx);
+	// 입점 승인
+	public int updateRequest(int eday_idx, int store_idx);
+	// 입점 반려
+	public int deleteRequest(int eday_idx, int store_idx);
 }

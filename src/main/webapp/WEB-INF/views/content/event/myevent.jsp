@@ -11,27 +11,10 @@
 	<h3>이벤트 관리</h3>
 	
 	<ul class="main-tab">
-		<li><a href="event">등록된 이벤트</a></li>
 		<li><a href="request" class="on">이벤트 승인</a></li>
+		<li><a href="event">등록된 이벤트</a></li>
 	</ul>
 	
-	<div class="tab-content event-content ">
-		<h4>진행 예정 중인 이벤트</h4>
-		<ul>
-			<li>
-				<a href="/event/eventView?event_idx=1">
-					<div class="img-box">
-						<img alt="" src="">
-					</div>
-					<dl>
-						<dt>이벤트 타이틀 :</dt>
-						<dd>이벤트 기간 : </dd>	
-						<dd>내용 : </dd>
-					</dl>
-				</a>
-			</li>
-		</ul>
-	</div>
 	<div class="tab-content request-content mt15 on">
 		<ul>
 			<li>
@@ -150,6 +133,24 @@
 					<div class="eday-content event1-eday8"></div>
 					<div class="eday-content event1-eday9"></div>
 				</div>
+			</li>
+		</ul>
+	</div>
+	
+	<div class="tab-content event-content ">
+		<h4>진행 예정 중인 이벤트</h4>
+		<ul>
+			<li>
+				<a href="/event/eventView?event_idx=1">
+					<div class="img-box">
+						<img alt="" src="">
+					</div>
+					<dl>
+						<dt>이벤트 타이틀 :</dt>
+						<dd>이벤트 기간 : </dd>	
+						<dd>내용 : </dd>
+					</dl>
+				</a>
 			</li>
 		</ul>
 	</div>

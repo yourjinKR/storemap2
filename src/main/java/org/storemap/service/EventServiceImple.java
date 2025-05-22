@@ -239,4 +239,12 @@ public class EventServiceImple implements EventService{
 //    }
     
 
+	@Override
+	public List<EventVO> getEventList(int enter_idx) {
+		List<EventVO> list = mapper.getEventList(enter_idx);
+		for (EventVO vo : list) {
+			vo.setEventDay(eventDayService.getEventDaysByEventId(vo.getEvent_idx()));
+		}
+		return list;
+	}
 }

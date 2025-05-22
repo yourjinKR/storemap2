@@ -1,5 +1,7 @@
 package org.storemap.domain;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +15,6 @@ public class StoreVO {
 	private double store_lat, store_lng;
 	
 	private AttachFileVO attach;   // 조인 대상 필드
+	private List<MenuVO> join_menu;   // 조인 대상 필드
+	private int report_cnt;
 }

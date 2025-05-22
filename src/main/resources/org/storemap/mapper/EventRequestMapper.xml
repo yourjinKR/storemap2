@@ -32,4 +32,8 @@
         FROM event_request
         WHERE store_idx = #{store_idx}
     </select>
+		
+	<select id="getEdayRequest" parameterType="int" resultType="org.storemap.domain.EventRequestVO">
+		SELECT * FROM EVENT_REQUEST WHERE EDAY_IDX = #{eday_idx} AND PON = 0 ORDER BY REGDATE
+	</select>
 </mapper>

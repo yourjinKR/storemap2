@@ -46,4 +46,6 @@ public interface EventMapper {
     public int getLikeCount(@Param("eventIdx") int eventIdx);
     // 승인된 점포 리스트 조회
 //    public List<StoreVO> getApprovedStoresByEdayIdx(int edayIdx);
+	// 이벤트 리스트
+	public List<EventVO> getEventList(int enter_idx);
 }

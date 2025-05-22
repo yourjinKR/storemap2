@@ -48,4 +48,10 @@
 		WHERE d.store_idx = s.store_idx AND d.member_idx = m.member_idx
 	</select>
 	
+	<select id="getCount" parameterType="int" resultType="int">
+		SELECT COUNT(*) 
+		FROM STORE_DECLARATION 
+		WHERE STORE_IDX = #{store_idx}
+	</select>
+	
 </mapper>

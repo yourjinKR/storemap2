@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.storemap.domain.ApprovedStoreViewDTO;
+import org.storemap.domain.AnnounceResponseDTO;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
@@ -43,6 +44,7 @@ import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventRequestVO;
 import org.storemap.domain.EventResponseDTO;
 import org.storemap.domain.EventVO;
+import org.storemap.domain.FilterVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.MemberVO;
 import org.storemap.domain.PageDTO;
@@ -296,5 +298,30 @@ public class EventController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                .body(Map.of("message", "서버 오류: 좋아요 수 조회 실패"));
 	    }
+	}
+
+	// 이벤트 승인요청 리스트
+	@GetMapping(value = "/getEventRequest",
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EventVO>> getEventRequest(HttpSession session) {
+		List<EventVO> list = eventService.getEventList((int) session.getAttribute("loginUserIdx"));
+		return new ResponseEntity<List<EventVO>>(list, HttpStatus.OK);
+	}
+	
+	// 일차별 승인 요청 점포
+	@GetMapping(value = "/getEdayRequest/{eday_idx}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EventRequestVO>> getEdayRequest(@PathVariable("eday_idx") int eday_idx) {
+		List<EventRequestVO> list = eventRequestService.getEdayRequest(eday_idx);
+		return new ResponseEntity<List<EventRequestVO>>(list, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/updateRequest/{eday_idx}/{store_idx}",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EventRequestVO>> updateRequest(
+			@PathVariable("eday_idx") int eday_idx,
+			@PathVariable("store_idx") int store_idx) {
+			eventRequestService.updateRequest(eday_idx, store_idx);
+		return null;
 	}
 }

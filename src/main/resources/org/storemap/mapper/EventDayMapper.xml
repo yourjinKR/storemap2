@@ -21,7 +21,7 @@
 	</insert>
 	
 	<select id="getEventDaysByEventId" resultType="org.storemap.domain.EventDayVO" parameterType="int">
-		select * from event_day where event_idx = #{event_idx}
+		select * from event_day where event_idx = #{event_idx} ORDER BY EDAY_IDX
 	</select>
 	
 	<select id="getEventIdxByEdayIdx" resultType="int" parameterType="int">

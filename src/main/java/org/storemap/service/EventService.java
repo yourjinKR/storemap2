@@ -44,4 +44,7 @@ public interface EventService {
     // 승인된 점포 리스트 조회
 //    public List<ApprovedStoreViewDTO> getApprovedStoresGroupedByDay(int eventIdx);
     
+	// 이벤트 리스트
+	public List<EventVO> getEventList(int enter_idx);
+	
 }

@@ -349,6 +349,10 @@
 		WHERE EVENT_IDX = #{event_idx}
 	</select>
 	
+	<select id="getEventList" parameterType="int" resultType="org.storemap.domain.EventVO">
+		SELECT * FROM EVENT WHERE ENTER_IDX = #{enter_idx}
+	</select>
+	
 	<!-- 키워드 검색 -->
 	<select id="getEventListByKeyword" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.EventVO">
 	    SELECT *
