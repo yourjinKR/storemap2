@@ -1777,7 +1777,7 @@ function processAllEvents(data, type) {
             const suggestionList = eventVOList.slice(0, 3);
             eventVOList = [];
             // console.log('auto', eventVOList);
-            updateSuggestionList(suggestionList, 'event', keyword);
+            // updateSuggestionList(suggestionList, 'event', keyword);
         }
     });
 }
@@ -2054,9 +2054,11 @@ function setRadiusByLevel(level) {
 // 자동완성 관련 함수
 /** 추천 리스트 UI 갱신 */ 
 function updateSuggestionList(list, type, keyword) {
-    if (list.length === 0) {
-        // hideAutocomplete();
-        return;
+    // console.log(`"${type}"에서 "${keyword}"를 검색`);
+
+    let oldList = document.querySelectorAll(`.${type}-ele`);
+    if(oldList != null) {
+        oldList.forEach(el => el.remove());
     }
 
     // autoSearchUL.innerHTML = ""; // 초기화
