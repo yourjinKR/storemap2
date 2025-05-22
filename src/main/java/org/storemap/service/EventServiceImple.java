@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.multipart.MultipartFile;
+import org.storemap.domain.ApprovedStoreViewDTO;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
@@ -17,6 +18,7 @@ import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
+import org.storemap.domain.StoreVO;
 import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.EventDayMapper;
 import org.storemap.mapper.EventMapper;
@@ -83,9 +85,44 @@ public class EventServiceImple implements EventService{
 	
 	// 이벤트 상세보기 페이지
 	@Override
-	public EventVO getEventOneView(int event_idx) {
-		log.info("getEventOneView" + event_idx);
-		return mapper.getEventOneView(event_idx);
+	public EventVO getEventOneView(int eventIdx) {
+	    log.info("getEventOneView: " + eventIdx);
+	    
+	    // 기본 이벤트 정보 조회
+	    EventVO event = mapper.getEventOneView(eventIdx);
+	    if (event == null) {
+	        log.warn("이벤트 정보를 찾을 수 없습니다. eventIdx=" + eventIdx);
+	        return null;
+	    }
+
+	    String eventFile = event.getEvent_file();
+	    List<String> cloudinaryUuids = new ArrayList<>();
+	    List<String> externalUrls = new ArrayList<>();
+
+	    // event_file에서 Cloudinary UUID와 외부 URL 분리
+	    if (eventFile != null && !eventFile.isEmpty()) {
+	        String[] fileParts = eventFile.split(",");
+	        for (String part : fileParts) {
+	            part = part.trim();
+	            if (part.startsWith("http")) {
+	                externalUrls.add(part);  // 외부 URL
+	            } else {
+	                cloudinaryUuids.add(part);  // Cloudinary UUID
+	            }
+	        }
+	    }
+
+	    // Cloudinary UUID를 AttachFileVO 객체로 변환
+	    List<AttachFileVO> cloudinaryFiles = new ArrayList<>();
+	    if (!cloudinaryUuids.isEmpty()) {
+	        cloudinaryFiles = cloudService.getFilesByUuidList(cloudinaryUuids);
+	    }
+
+	    // 임시 필드로 데이터 저장 (DB에는 저장되지 않음)
+	    event.setCloudinaryFiles(cloudinaryFiles);
+	    event.setExternalUrls(externalUrls);
+
+	    return event;
 	}
 	
 	// 이벤트 리스트 갯수
@@ -167,4 +204,39 @@ public class EventServiceImple implements EventService{
 	        throw e;
 	    }
 	}
+	
+    @Override
+    public void incrementLike(int eventIdx) {
+        mapper.incrementLike(eventIdx);
+    }
+    
+    @Override
+    public void decrementLike(int eventIdx) {
+        mapper.decrementLike(eventIdx);
+    }
+
+    @Override
+    public int getLikeCount(int eventIdx) {
+        return mapper.getLikeCount(eventIdx);
+    }
+    
+//    @Override
+//    public List<ApprovedStoreViewDTO> getApprovedStoresGroupedByDay(int eventIdx) {
+//        List<EventDayVO> eventDays = eventDayService.getEventDaysByEventId(eventIdx);
+//        List<ApprovedStoreViewDTO> result = new ArrayList<>();
+//
+//        for (EventDayVO day : eventDays) {
+//            List<StoreVO> approvedStores = mapper.getApprovedStoresByEdayIdx(day.getEday_idx());
+//
+//            ApprovedStoreViewDTO dto = new ApprovedStoreViewDTO();
+//            dto.setEventDay(day);
+//            dto.setStores(approvedStores);
+//
+//            result.add(dto);
+//        }
+//
+//        return result;
+//    }
+    
+
 }

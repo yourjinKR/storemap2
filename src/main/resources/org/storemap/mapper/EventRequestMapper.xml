@@ -15,7 +15,7 @@
 		)
 	</insert>
 	
-	<delete id="deleteEventRequest" parameterType="int">
+	<delete id="cancelEntry" parameterType="map">
 		 DELETE FROM event_request
 		 WHERE eday_idx = #{edayIdx}
 		 AND store_idx = #{storeIdx}
@@ -26,4 +26,10 @@
 	    FROM event_day
 	    WHERE eday_idx = #{edayIdx}
 	</select>
+	
+	<select id="selectAppliedEdayIdxList" resultType="int">
+        SELECT eday_idx
+        FROM event_request
+        WHERE store_idx = #{store_idx}
+    </select>
 </mapper>

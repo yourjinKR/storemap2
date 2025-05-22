@@ -6,8 +6,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.storemap.domain.ApprovedStoreViewDTO;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.CommentEventVO;
 import org.storemap.domain.Criteria;
@@ -122,7 +125,7 @@ public class EventController {
 	        return "errorPage";
 	    }
 
-	    return "redirect:/event/eventRegister"; // 성공 시 등록 페이지로 리다이렉트
+	    return "redirect:/event/eventRegister";
 	}
 	
 	//이벤트 등록 화면 보여주는 컨트롤러
@@ -136,34 +139,57 @@ public class EventController {
 	                        @RequestParam("event_idx") int event_idx,
 	                        HttpSession session) {
 
-	    // 1. 이벤트 정보 가져오기
+	    // 이벤트 정보 조회
 	    EventVO vo = eventService.getEventOneView(event_idx);
 	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
-	    List<AttachFileVO> fileList = new ArrayList<>();
 
-	    String uuidStr = vo.getEvent_file();
-	    if (uuidStr != null && !uuidStr.isEmpty()) {
-	        List<String> uuidList = Arrays.stream(uuidStr.split(","))
-	                                      .map(String::trim)
-	                                      .filter(s -> !s.isEmpty())
-	                                      .collect(Collectors.toList());
-	        fileList = cloudinaryService.getFilesByUuidList(uuidList);
+	    // event_file 컬럼에서 Cloudinary UUID와 외부 URL을 분리
+	    String eventFile = vo.getEvent_file();
+	    List<String> cloudinaryUuids = new ArrayList<>();
+	    List<String> externalUrls = new ArrayList<>();
+	    
+	    if (eventFile != null && !eventFile.isEmpty()) {
+	        String[] fileParts = eventFile.split(",");
+	        for (String part : fileParts) {
+	            part = part.trim();
+	            if (part.startsWith("http")) {
+	                externalUrls.add(part);  // 외부 URL
+	            } else {
+	                cloudinaryUuids.add(part);  // Cloudinary UUID
+	            }
+	        }
 	    }
 
-	    // 2. 모델에 기본 정보 담기
+	    // Cloudinary UUID로 파일 정보 가져오기 (비어 있을 경우에도 안전)
+	    List<AttachFileVO> cloudinaryFiles = new ArrayList<>();
+	    if (!cloudinaryUuids.isEmpty()) {
+	        cloudinaryFiles = cloudinaryService.getFilesByUuidList(cloudinaryUuids);
+	    }
+	    
+	    // 모델에 데이터 전달
 	    model.addAttribute("eday", eday);
 	    model.addAttribute("evo", vo);
-	    model.addAttribute("fileList", fileList);
-
-	    // 3. 세션에 event_idx 저장
+	    model.addAttribute("fileList", cloudinaryFiles);    
+	    model.addAttribute("externalUrls", externalUrls);// 외부 URL 이미지 리스트
+	    
+	    // 세션 설정
 	    session.setAttribute("event_idx", event_idx);
 
-	    // 4. 로그인 여부 확인 및 처리
 	    Integer loginUserIdx = (Integer) session.getAttribute("loginUserIdx");
 	    if (loginUserIdx != null) {
 	        session.setAttribute("member_idx", loginUserIdx);
 	    } else {
 	        session.setAttribute("alertMsg", "로그인을 해야 신고 기능을 이용할 수 있습니다.");
+	    }
+
+	    Integer storeIdx = (Integer) session.getAttribute("storeIdx");
+	    if (storeIdx != null) {
+	        List<Integer> appliedEdayIdxList = eventRequestService.getAppliedEdayIdxList(storeIdx);
+	        Map<Integer, String> entryStatusMap = new HashMap<>();
+	        for (Integer edayIdx : appliedEdayIdxList) {
+	            entryStatusMap.put(edayIdx, "신청 승인중");
+	        }
+	        model.addAttribute("entryStatusMap", entryStatusMap);
 	    }
 
 	    return "index";
@@ -176,7 +202,8 @@ public class EventController {
 		return "redirect:/event/eventView?event_idx=" + event_idx;
 	}
 	
-	@PostMapping("/cancelEntry")
+	//이벤트 입점 신청 철회
+	@PostMapping(value = "/cancelEntry", produces = "application/json")
 	@ResponseBody
 	public Map<String, Object> cancelEntry(
 	    @RequestParam("eday_idx") int edayIdx,
@@ -185,19 +212,19 @@ public class EventController {
 	    Map<String, Object> response = new HashMap<>();
 	    try {
 	        int eventIdx = eventRequestService.getEventIdxByEdayIdx(edayIdx);
-
-	        // 철회 처리
 	        eventRequestService.cancelEntry(edayIdx, storeIdx);
-	        
+
 	        response.put("success", true);
 	        response.put("eventIdx", eventIdx);
 	    } catch (Exception e) {
-	        response.put("success", false);
+	    	e.printStackTrace();
+	    	response.put("success", false);
 	        response.put("message", "철회 처리에 실패했습니다.");
 	    }
 	    return response;
 	}
-
+	
+	// 이벤트 신고제출
 	@PostMapping("/report/submit")
 	public String submitReport(HttpSession session,
 	                           @RequestParam("declaration_category") String declarationCategory,
@@ -223,6 +250,51 @@ public class EventController {
 	public String myevent() {
 		return "index";
 	}
-	
+	// 이벤트 좋아요 기능
+	@PostMapping(value = "/like", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> likeEvent(@RequestBody Map<String, Object> payload, HttpSession session) {
+	    Integer loginUserIdx = (Integer) session.getAttribute("member_idx");
+	    if (loginUserIdx == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                .body(Map.of("message", "로그인이 필요합니다."));
+	    }
 
+	    Object rawIdx = payload.get("event_idx");
+	    Integer eventIdx = null;
+	    try {
+	        if (rawIdx instanceof Number) {
+	            eventIdx = ((Number) rawIdx).intValue();
+	        } else if (rawIdx instanceof String) {
+	            eventIdx = Integer.parseInt((String) rawIdx);
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body(Map.of("message", "이벤트 ID 파싱 오류"));
+	    }
+
+	    if (eventIdx == null) {
+	        return ResponseEntity.badRequest().body(Map.of("message", "이벤트 ID가 유효하지 않습니다."));
+	    }
+
+	    String action = String.valueOf(payload.get("action"));
+
+	    try {
+	        if ("like".equals(action)) {
+	            eventService.incrementLike(eventIdx);
+	        } else {
+	            eventService.decrementLike(eventIdx);
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(Map.of("message", "서버 오류: 좋아요 처리 실패"));
+	    }
+
+	    try {
+	        int likeCount = eventService.getLikeCount(eventIdx);
+	        return ResponseEntity.ok(Map.of("likeCount", likeCount));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(Map.of("message", "서버 오류: 좋아요 수 조회 실패"));
+	    }
+	}
 }

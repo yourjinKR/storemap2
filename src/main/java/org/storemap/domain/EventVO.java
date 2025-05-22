@@ -18,7 +18,11 @@ public class EventVO {
 	// 게시글 등록 시 필요한 필드
 	private List<EventDayVO> eventDay;
 	private List<AttachFileVO> attachFile;
-
+	
+	// url 비교용 필드
+    private List<AttachFileVO> cloudinaryFiles;
+    private List<String> externalUrls;
+	
 	// 
 	private List<EventDayVO> join_eday;
 	private String enter_id,enter_name;

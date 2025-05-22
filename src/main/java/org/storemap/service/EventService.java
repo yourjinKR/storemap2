@@ -3,6 +3,7 @@ package org.storemap.service;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.storemap.domain.ApprovedStoreViewDTO;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
@@ -34,5 +35,13 @@ public interface EventService {
 	public List<EventVO> getAttendEvent(int store_idx);
 	// 이벤트, 이벤트데이 트랜잭션 처리
 	public void registerEventWithDays(EventVO eventVO, MultipartFile[] files);
-	
+	// 좋아요 증가
+    public void incrementLike(int eventIdx);
+    // 좋아요 감소
+    public void decrementLike(int eventIdx);
+    // 좋아요 수 조회
+    public int getLikeCount(int eventIdx);
+    // 승인된 점포 리스트 조회
+//    public List<ApprovedStoreViewDTO> getApprovedStoresGroupedByDay(int eventIdx);
+    
 }

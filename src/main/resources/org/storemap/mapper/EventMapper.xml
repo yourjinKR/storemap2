@@ -451,4 +451,26 @@
     )
 	</insert>
 	
+	<update id="incrementLike">
+	    UPDATE event
+	    SET event_like_cnt = event_like_cnt + 1
+	    WHERE event_idx = #{eventIdx}
+  	</update>
+
+  	<update id="decrementLike">
+	    UPDATE event
+	    SET event_like_cnt = CASE
+	        WHEN event_like_cnt > 0 THEN event_like_cnt - 1
+	        ELSE 0
+	      END
+	    WHERE event_idx = #{eventIdx}
+  	</update>
+
+  	<select id="getLikeCount" resultType="int">
+	    SELECT event_like_cnt
+	    FROM event
+	    WHERE event_idx = #{eventIdx}
+  	</select>
+	
+	
 </mapper>

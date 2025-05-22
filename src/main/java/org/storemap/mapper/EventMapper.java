@@ -2,10 +2,12 @@ package org.storemap.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
+import org.storemap.domain.StoreVO;
 
 public interface EventMapper {
 	// 메인 페이지 진행중인 이벤트
@@ -36,4 +38,12 @@ public interface EventMapper {
 	public List<EventVO> getIdx(int enter_idx);
 	// 이벤트 정보 호출
 	public List<EventVO> getAttendEvent(int store_idx);
+	// 좋아요 수 증가
+    public void incrementLike(@Param("eventIdx") int eventIdx);
+    // 좋아요 수 감소
+    public void decrementLike(@Param("eventIdx") int eventIdx);
+    // 좋아요 수 조회
+    public int getLikeCount(@Param("eventIdx") int eventIdx);
+    // 승인된 점포 리스트 조회
+//    public List<StoreVO> getApprovedStoresByEdayIdx(int edayIdx);
 }

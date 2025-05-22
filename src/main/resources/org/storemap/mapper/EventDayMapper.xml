@@ -27,4 +27,5 @@
 	<select id="getEventIdxByEdayIdx" resultType="int" parameterType="int">
 		select event_idx from event_day where eday_idx = #{eday_idx}
 	</select>
+	
 </mapper>

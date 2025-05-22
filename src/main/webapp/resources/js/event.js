@@ -192,7 +192,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
       participationButtons.forEach(button => {
           button.addEventListener('click', function(event) {
-              event.preventDefault(); // 폼이 자동으로 제출되는 것을 막음
               
               const edayIdx = this.getAttribute('data-eday-idx');
               const withdrawBtn = document.querySelector(`.withdrawBtn[data-eday-idx='${edayIdx}']`);
@@ -205,28 +204,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
 
       window.withdrawEntry = function(button) {
-    	    const edayIdx = button.getAttribute('data-eday-idx');
-    	    const storeIdx = button.getAttribute('data-store-idx');
+    	    const edayIdx = button.getAttribute("data-eday-idx");
+    	    const storeIdx = button.getAttribute("data-store-idx");
 
-    	    // 실제 서버 요청을 동적으로 날리는 방식 (예: fetch 또는 form 생성해서 submit)
-    	    const form = document.createElement("form");
-    	    form.method = "post";
-    	    form.action = "/event/cancelEntry";
-
-    	    const input1 = document.createElement("input");
-    	    input1.type = "hidden";
-    	    input1.name = "eday_idx";
-    	    input1.value = edayIdx;
-
-    	    const input2 = document.createElement("input");
-    	    input2.type = "hidden";
-    	    input2.name = "store_idx";
-    	    input2.value = storeIdx;
-
-    	    form.appendChild(input1);
-    	    form.appendChild(input2);
-    	    document.body.appendChild(form);
-    	    form.submit();
+    	    fetch("/event/cancelEntry", {
+    	        method: "POST",
+    	        headers: {
+    	            "Content-Type": "application/x-www-form-urlencoded"
+    	        },
+    	        body: `eday_idx=${edayIdx}&store_idx=${storeIdx}`
+    	    })
+    	    .then(response => {
+    	        console.log('서버 응답:', response);  // 응답을 로깅해서 확인
+    	        return response.json();
+    	    })
+    	    .then(data => {
+    	        console.log('서버 데이터:', data);  // 서버 데이터 출력
+    	        if (data.success) {
+    	            alert("입점 신청이 철회되었습니다.");
+    	            window.location.href = `/event/eventView?event_idx=${data.eventIdx}`;
+    	        } else {
+    	            alert("철회 처리에 실패했습니다.");
+    	        }
+    	    })
+    	    .catch(error => {
+    	        console.error('서버 요청 중 오류:', error);  // 오류 메시지를 로깅
+    	        alert("서버 요청 중 오류가 발생했습니다.");
+    	    });
     	}
       // 이벤트 신고 모달
       const reportButtons = document.querySelectorAll('.report-button');
@@ -275,9 +279,67 @@ document.addEventListener("DOMContentLoaded", (event) => {
           alert('신고 내용을 입력해주세요.');
           return;
         }
-
+        alert("신고가 접수 되었습니다.")
         reportForm.submit();
       });
+      
+      // 이벤트 좋아요 기능
+      const heartIcons = document.querySelectorAll('.eventLike-checkbox');
+      heartIcons.forEach(icon => {
+          icon.addEventListener('change', function () {
+              // 클릭된 체크박스의 id에서 eventIdx를 추출
+              const eventIdx = this.id.replace('eventLike-icon', '');
+
+              if (!eventIdx) {
+                  return;
+              }
+
+              const isLiked = this.checked;
+
+              // 서버에 좋아요 요청 보내기
+              fetch('/event/like', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  credentials: 'same-origin',  // 세션 쿠키 포함
+                  body: JSON.stringify({
+                      event_idx: eventIdx,
+                      action: isLiked ? 'like' : 'unlike'
+                  })
+              })
+              .then(response => {
+                  if (response.status === 401) {
+                      // 401 에러 발생 시 알림을 띄우고, 더 이상 진행하지 않음
+                      alert('로그인이 필요합니다.');
+                      return; // 네트워크 오류로 처리되지 않게 하고 종료
+                  }
+
+                  if (!response.ok) {
+                      return Promise.reject('서버 오류');
+                  }
+
+                  return response.json();
+              })
+              .then(data => {
+                  if (data && data.likeCount !== undefined) {
+                      const likeCountElement = document.querySelector(`.eventLike-count-${eventIdx}`);
+                      if (likeCountElement) {
+                          likeCountElement.textContent = data.likeCount;
+                      }
+                  } else {
+                      console.error('Invalid response data:', data);
+                  }
+              })
+              .catch(error => {
+                  // 오류를 명시적으로 콘솔에 기록하지 않음
+                  if (error !== '서버 오류') {
+                      console.error('Error:', error);
+                  }
+              });
+          });
+      });
+
 });
 
 

@@ -1,5 +1,7 @@
 package org.storemap.service;
 
+import java.util.List;
+
 public interface EventRequestService {
 	// 입점 신청 요청
 	public int eventRequest(int eday_idx, int store_idx);
@@ -7,4 +9,6 @@ public interface EventRequestService {
 	public int cancelEntry(int eday_idx, int store_idx);
 	// event_idx 받아오는 메소드
 	public int getEventIdxByEdayIdx(int eday_idx);
+	
+	public List<Integer> getAppliedEdayIdxList(int storeIdx);
 }

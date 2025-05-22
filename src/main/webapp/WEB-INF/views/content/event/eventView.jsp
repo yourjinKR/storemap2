@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.time.LocalDate, java.time.temporal.ChronoUnit" %>
 <%@ page import="org.storemap.domain.EventVO" %>
+<!-- 스크립트 -->
+<script src="/resources/js/event.js"></script>
 
 <div class="readonly-form">
   <!-- 제목 + 신고/좋아요 아이콘 -->
@@ -12,11 +15,11 @@
 	
     <!-- 신고 및 좋아요 버튼 -->
     <div class="eventIcon">
-      <input type="button" name="eventReport" id="eventReport-icon${evo.event_idx}">
+	  <input type="button" class="report-button" name="eventReport" id="eventReport-icon${evo.event_idx}">
       <label class="material-symbols-outlined" for="eventReport-icon${evo.event_idx}">report</label>
-      <input type="checkbox" name="eventLike" id="eventLike-icon${evo.event_idx}" ${eventLiked ? 'checked' : ''}>
-      <label class="material-symbols-outlined" for="eventLike-icon${evo.event_idx}">favorite</label>
-      <span class="eventLike-count eventLike-count-${evo.event_idx}">${evo.event_like_cnt}</span>
+		<input type="checkbox" name="eventLike" id="eventLike-icon${evo.event_idx}" ${eventLiked ? 'checked' : ''} class="eventLike-checkbox">
+		<label class="material-symbols-outlined" for="eventLike-icon${evo.event_idx}">favorite</label>
+		<span class="eventLike-count eventLike-count-${evo.event_idx}">${evo.event_like_cnt}</span>
     </div>
   </div>
 
@@ -30,16 +33,27 @@
       <th>행사 기간</th>
       <td>${evo.event_bstartdate} ~ ${evo.event_bstopdate}</td>
     </tr>
-    <tr>
-      <th>사진</th>
-      <td>
-        <div class="photo-preview">
-          <c:forEach var="file" items="${fileList}">
-            <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="이벤트 이미지" style="max-width: 100%; height: auto;" />
-          </c:forEach>
-        </div>
-      </td>
-    </tr>
+	<tr>
+	  <th>사진</th>
+	  <td>
+	    <div class="photo-preview" style="display: flex; gap: 10px; flex-wrap: wrap;">
+	      <!-- Cloudinary 이미지 출력 -->
+	      <c:forEach var="file" items="${evo.cloudinaryFiles}">
+	        <img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" 
+	             alt="Cloudinary 이미지" 
+	             style="width: 23%; height: auto;" />
+	      </c:forEach>
+	
+	      <!-- 외부 URL 이미지 출력 -->
+	      <c:forEach var="url" items="${evo.externalUrls}">
+	        <img src="${url}" 
+	             alt="외부 이미지" 
+	             style="width: 23%; height: auto;" 
+	             class="expandable-img" />
+	      </c:forEach>
+	    </div>
+	  </td>
+	</tr>
     <tr>
       <th>이벤트 소개</th>
       <td><pre style="white-space: pre-wrap;">${evo.event_content}</pre></td>
@@ -48,19 +62,15 @@
       <th>주소</th>
       <td>${evo.event_location}</td>
     </tr>
-    <tr>
-      <th>상세 주소</th>
-      <td>${evo.event_location_detail}</td>
-    </tr>
   </table>
 
-  <!-- 참여 버튼 -->
   <div id="participationSection">
     <input type="button" id="openBtn" value="참여" />
   </div>
 </div>
 
 <!-- 모달 -->
+
 <jsp:include page="../../content/modal/eventDayChoice.jsp" />
 <jsp:include page="../../content/modal/eventReport.jsp" />
 
@@ -68,9 +78,6 @@
 <div class="back-button">
   <button onclick="goEventList()" id="goEventList">목록으로 돌아가기</button>
 </div>
-
-<!-- 스크립트 -->
-<script src="/resources/js/event.js"></script>
 
 <style>
   .readonly-form {
