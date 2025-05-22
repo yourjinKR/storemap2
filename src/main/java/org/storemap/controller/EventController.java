@@ -338,4 +338,18 @@ public class EventController {
 		int result = eventRequestService.deleteRequest(enter_id, eday_idx, store_idx);
 		return new ResponseEntity<String>("success", HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/getMyEvent",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EventVO>> getMyEvent(HttpSession session){
+		List<EventVO> list = eventService.getMyEvent((int) session.getAttribute("loginUserIdx"));
+		return new ResponseEntity<List<EventVO>>(list, HttpStatus.OK);
+	} 
+	@GetMapping(value = "/getMyEventEnd",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EventVO>> getMyEventEnd(HttpSession session){
+		List<EventVO> list = eventService.getMyEventEnd((int) session.getAttribute("loginUserIdx"));
+		return new ResponseEntity<List<EventVO>>(list, HttpStatus.OK);
+	} 
+	
 }

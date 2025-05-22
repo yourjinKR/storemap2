@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.storemap.domain.EventRequestVO;
 import org.storemap.domain.LetterVO;
 import org.storemap.domain.StoreVO;
+import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.EventDayMapper;
 import org.storemap.mapper.EventRequestMapper;
 import org.storemap.mapper.LetterMapper;
@@ -36,6 +37,8 @@ public class EventRequestServiceImple implements EventRequestService{
     private LetterMapper letterMapper;
     @Autowired
     private MemberService memberMapper;
+    @Autowired
+    private AttachFileMapper attachMapper;
 	
 	@Override
 		public int eventRequest(int eday_idx, int store_idx) {

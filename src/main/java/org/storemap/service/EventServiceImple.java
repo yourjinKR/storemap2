@@ -228,4 +228,39 @@ public class EventServiceImple implements EventService{
 		}
 		return list;
 	}
+	
+	// MY EVNET 진행/예정
+	@Override
+	public List<EventVO> getMyEvent(int enter_idx) {
+		List<EventVO> list = mapper.getMyEvent(enter_idx);
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] file = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
+		return list;
+	}
+	// MY EVNET 종료
+	@Override
+	public List<EventVO> getMyEventEnd(int enter_idx) {
+		List<EventVO> list = mapper.getMyEventEnd(enter_idx);
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] file = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
+		return list;
+	}
 }

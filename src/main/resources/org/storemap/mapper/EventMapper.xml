@@ -40,6 +40,25 @@
 			WHERE ROWNUM <= 8
 		]]>
 	</select>
+	
+	<!-- MY EVENT 진행/예정 -->
+	<select id="getMyEvent" parameterType="int" resultType="org.storemap.domain.EventVO">
+		<![CDATA[
+			SELECT * FROM EVENT 
+			WHERE 
+				ENTER_IDX = #{enter_idx} 
+				AND EVENT_BSTOPDATE >= TRUNC(SYSDATE)
+		]]>
+	</select>
+	<!-- MY EVENT 종료 -->
+	<select id="getMyEventEnd" parameterType="int" resultType="org.storemap.domain.EventVO">
+		<![CDATA[
+			SELECT * FROM EVENT 
+			WHERE 
+				ENTER_IDX = #{enter_idx} 
+				AND EVENT_BSTOPDATE < TRUNC(SYSDATE)
+		]]>
+	</select>
 
 	<!-- 이벤트 상세보기 -->
 	<select id="getEventOneView" resultType="org.storemap.domain.EventVO" parameterType="int">

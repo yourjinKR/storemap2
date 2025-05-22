@@ -3,13 +3,14 @@ let linkEle = document.createElement('link');
 linkEle.rel = 'stylesheet';
 linkEle.href = MYEVENT_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
-let reqCon = null;
+let reqCon, myEventCon = null;
 document.addEventListener("DOMContentLoaded", (event) => {
 	let mainTab, subTab = null;
 	let mainTabs = document.querySelectorAll(".main-tab > li > a");
 	let selectMainTab = document.querySelector(".main-tab > li > a.on");
 	let subTabs = document.querySelectorAll(".sub-tab > li > a");
 	reqCon = document.querySelector(".request-content");
+	myEventCon = document.querySelector(".event-content");
 	if(selectMainTab != null) {
 		mainTab = selectMainTab.getAttribute("href");
 	}
@@ -26,10 +27,102 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			})
 		})
 	}
-	
+	getMyEvent();
 	getEventRequest();
 })
 
+// 이벤트 리스트
+function getMyEvent(){
+	fetch(`/event/getMyEvent`)
+	.then(response => response.json())
+	.then(result => {
+		let str = "";
+		str += `<h4>진행 예정 중인 이벤트</h4>`;
+		str += `<ul>`;
+		if(result != null && result.length > 0){
+			for (let data of result) {
+				str +=	`<li>`;
+				str += 		`<div class="img-box">`;
+				if(data.attachFile != null && data.attachFile.length > 0){
+					for (let attach of data.attachFile) {
+						if(attach != null){
+							str +=`<img src="${IMG_URL}${attach.uuid}_${attach.filename}">`;
+						}else{
+							str +=`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+						}
+					}
+				}else{
+					str +=		   `<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+				}
+				str += 		`</div>`;
+				str += 		`<dl>`;
+				str += 			`<dt>이벤트 타이틀 : ${data.event_title}</dt>`;
+				str += 			`<dd>모집 기간 : ${dateFormate(data.event_rstartdate)} ~ ${dateFormate(data.event_rstopdate)}</dd>	`;
+				str += 			`<dd>이벤트 기간 : ${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</dd>`;
+				str += 		`</dl>`;
+				str += 		`<div class="btn-box col">`;
+				str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">이동</a>`;
+				str += 			`<a href="/event/eventRegister?event_idx=${data.event_idx}">수정</a>`;
+				str += 		`</div>`;
+				str +=	`</li>`;
+			}
+		}else{
+			str += `<li class="empty-data t-c">`;
+			str += 		`이벤트가 없습니다.`;
+			str += `</li>`;
+		}
+		str += `</ul>`;
+		myEventCon.innerHTML = str;
+		getMyEventEnd();
+	})
+	.catch(err => console.log(err))
+}
+function getMyEventEnd(){
+	fetch(`/event/getMyEventEnd`)
+	.then(response => response.json())
+	.then(result => {
+		let str = "";
+		str += `<h4>종료된 이벤트</h4>`;
+		str += `<ul>`;
+		if(result != null && result.length > 0){
+			for (let data of result) {
+				str +=	`<li>`;
+				str += 		`<div class="img-box">`;
+				if(data.attachFile != null && data.attachFile.length > 0){
+					for (let attach of data.attachFile) {
+						if(attach != null){
+							str +=`<img src="${IMG_URL}${attach.uuid}_${attach.filename}">`;
+						}else{
+							str +=`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+						}
+					}
+				}else{
+					str +=		   `<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+				}
+				str += 		`</div>`;
+				str += 		`<dl>`;
+				str += 			`<dt>이벤트 타이틀 : ${data.event_title}</dt>`;
+				str += 			`<dd>모집 기간 : ${dateFormate(data.event_rstartdate)} ~ ${dateFormate(data.event_rstopdate)}</dd>	`;
+				str += 			`<dd>이벤트 기간 : ${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</dd>`;
+				str += 		`</dl>`;
+				str += 		`<div class="btn-box col">`;
+				str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">이동</a>`;
+				str += 		`</div>`;
+				str +=	`</li>`;
+			}
+		}else{
+			str += `<li class="empty-data">`;
+			str += 		`<p>이벤트가 없습니다.</p>`;
+			str += `</li>`;
+		}
+		str += `</ul>`;
+		
+		myEventCon.innerHTML += str;
+	})
+	.catch(err => console.log(err))
+}
+
+//이벤트 승인 요청 리스트
 function getEventRequest(){
 	fetch(`/event/getEventRequest`)
 	.then(response => response.json())
@@ -99,6 +192,7 @@ function getEventRequest(){
 	.catch(err => console.log(err))
 }
 
+// eday별 요청 점포 리스트
 function getEdayRequest(eday_idx){
 	fetch(`/event/getEdayRequest/${eday_idx}`)
 	.then(response => response.json())
@@ -141,6 +235,7 @@ function getEdayRequest(eday_idx){
 	.catch(err => console.log(err))
 }
 
+// 입점 승인
 function updateRequest(eday_idx, store_idx){
 	fetch(`/event/updateRequest/${eday_idx}/${store_idx}`, {
 		method : 'POST'
@@ -154,6 +249,8 @@ function updateRequest(eday_idx, store_idx){
 	})
 	.catch(err => console.log(err))
 }
+
+// 입점 반려
 function deleteRequest(eday_idx, store_idx){
 	fetch(`/event/deleteRequest/${eday_idx}/${store_idx}`, {
 		method : 'DELETE'
@@ -197,9 +294,13 @@ function btnAction(){
 		btn.addEventListener("click",function(e){
 			e.preventDefault();
 			if(this.getAttribute("class") == "approve-btn"){
-				updateRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx']);
+				if(confirm("승인하시겠습니까?")){
+					updateRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx']);
+				}
 			}else{
-				deleteRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx']);
+				if(confirm("반려하시겠습니까?")){
+					deleteRequest(this.closest("table").dataset['idx'], this.closest("tr").dataset['idx']);
+				}
 			}
 		})
 	}
