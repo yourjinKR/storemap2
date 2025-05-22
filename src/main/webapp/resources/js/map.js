@@ -455,8 +455,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // console.log(data);
 
             // 최대 5개까지만 표시
-            const suggestionList = data.slice(0, 3);
-            updateSuggestionList(suggestionList, 'store');
+            // const suggestionList = data.slice(0, 3);
+            updateSuggestionList(data, 'store');
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
@@ -475,9 +475,11 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             // console.log(data);
 
+            // processAllEvents(data, "autoComplete");
+
             // 최대 5개까지만 표시
-            const suggestionList = data.slice(0, 3);
-            updateSuggestionList(suggestionList, 'event');
+            // const suggestionList = data.slice(0, 3);
+            updateSuggestionList(data, 'event');
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
@@ -676,18 +678,10 @@ function registerMarker(vo) {
         idx = vo.store_idx;
         icon = storeIcon;
     } else if (vo.type === 'event') {
-        console.log('이벤트 마커 등록');
-        
         lat = vo.event_lat;
         lng = vo.event_lng;
         idx = vo.event_idx;
         icon = eventIcon;
-        console.log(lat);
-        console.log(lng);
-        console.log(idx);
-        
-        
-        
     }
 
     // 마커 위치 설정
@@ -707,7 +701,7 @@ function registerMarker(vo) {
 function setMarkers(map, list) {
     for (var i = 0; i < list.length; i++) {
         list[i].marker.setMap(map);
-    }            
+    }
 }
 
 /** 배열 비우기 */ 
@@ -814,7 +808,7 @@ function clickOverlay(ele) {
 }
 
 // ============================= 이벤트 추가 관련 함수 =============================
-/** 점포 클릭 이벤트 추가 및 마커 매핑 함수 (ele, type) */ 
+/** 점포 및 이벤트 클릭 이벤트 추가 및 마커 매핑 함수 (ele, type) */ 
 function markerMapping(eles, type) {
     if (eles != null ) {
         eles.forEach(ele => {
@@ -829,9 +823,11 @@ function markerMapping(eles, type) {
             } else if (type === "event") {
                 list = eventVOList;
             }
+            
 
             // (store or event) 클릭 이벤트 추가
             ele.addEventListener('click', e => {
+                hideviewSideBar();
                 viewSideBar = document.querySelector(`.side-bar#${type}`);
                 // 리스트 중에서 idx 찾기
                 list.forEach(vo => {
@@ -872,14 +868,14 @@ function addMarkerEvent(marker, type) {
         let li = searchEleByTitle(title, type);
         viewDetailModalPage(li, type);
 
+        showListSideBar();
+        hideviewSideBar();
         viewSideBar = document.querySelector(`.side-bar#${type}`);
 
         if (type === "store") {
-            showListSideBar();
             showviewSideBar();
         }
         else if (type === "event") {
-            showListSideBar();
             showviewSideBar();
         }
         setToggle(600);
@@ -1240,16 +1236,15 @@ let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
     // hideAutocomplete();
+    if (!keyword) {
+        alert("키워드를 입력하시오");
+        return;
+    }
 
     console.log(`${keyword}에 대한 검색 결과....`);
     
     storeFailModal.style.display = "none";
     eventFailModal.style.display = "none";
-
-    if (!keyword) {
-        alert("키워드를 입력하시오");
-        return;
-    }
 
     deleteAllEle();
 
@@ -1278,7 +1273,7 @@ function mapSearchService(map, keyword) {
     // 이벤트 검색 시작
     as.eventListByKeyword(searchCondition, function(data) {
         if (data.length != 0) {
-            processAllEvents(data);
+            processAllEvents(data, "search");
         }
     });
 
@@ -1669,7 +1664,7 @@ function failSearch() {
 // }
 
 /** 이벤트 좌표 등록 프로미스 */
-function address2coordPromise(vo) {
+function address2coordPromise(vo, funcType) {
     return new Promise((resolve, reject) => {
         let geocoder = new kakao.maps.services.Geocoder();
 
@@ -1681,15 +1676,19 @@ function address2coordPromise(vo) {
                 vo.event_lat = lat;
                 vo.event_lng = lng;
                 vo.type = "event";
-
-                // 마커 등록
+                
                 let marker = registerMarker(vo);
-
-                // 마커에 이벤트 추가
-                addMarkerEvent(marker, "event");
-
-                vo.marker = marker;
-                // vo.marker.setMap(basicMap);
+                
+                if (funcType === "search") {
+                    //console.log("search 테스트");
+                    // 마커 등록
+                    vo.marker = marker;
+    
+                    // 마커에 이벤트 추가
+                    addMarkerEvent(marker, "event");
+                } else {
+                    vo.marker = null;
+                }
 
                 resolve(vo); // 변환된 vo를 반환
             } 
@@ -1700,28 +1699,48 @@ function address2coordPromise(vo) {
     });
 }
 
-// 전체 좌표 변환 후 후처리 함수
-function processAllEvents(data) {
-    const promises = data.map(vo => address2coordPromise(vo));
+/** 전체 좌표 변환 후 후처리 함수
+ * @param type "search" or "autoComplete"
+ */
+function processAllEvents(data, type) {
+    console.log(`함수를 ${type} 방식으로 실행`);
+    
+    const promises = data.map(vo => address2coordPromise(vo, type));
 
     Promise.all(promises).then(results => {
         // null 제거 및 (eventVOList에 추가)
         eventVOList = results.filter(vo => vo !== null);
-        console.log('event vo list : ', eventVOList);
-        // 후처리 코드 삽입
-        apply2eventMap(eventVOList);
-        failSearch();
+        
+        // 위치 정렬
+        if(mapType === "full") {
+            sortEventVOListByDistance(basicMap.getCenter().getLat(), basicMap.getCenter().getLng(), eventVOList);
+        } else {
+            sortEventVOListByDistance(currentLat, currentLng, eventVOList);
+        }
 
-        if (unitedMapMode) {
-            if (eventVOList.length > storeVOList.length) {
-                let level = getMapLevelFromMarkerLists(eventVOList);
-                basicMap.setLevel(level);
-                panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
-            } else {
-                let level = getMapLevelFromMarkerLists(storeVOList);
-                basicMap.setLevel(level);
-                panToLatLng(basicMap, storeVOList[0].event_lat, storeVOList[0].event_lng);
-            }
+        if (type === "search") {
+            // 키워드 검색
+            // console.log('event vo list : ', eventVOList);
+            apply2eventMap(eventVOList);
+            failSearch();
+
+            if (unitedMapMode) {
+                if (eventVOList.length > storeVOList.length) {
+                    let level = getMapLevelFromMarkerLists(eventVOList);
+                    basicMap.setLevel(level);
+                    panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+                } else {
+                    let level = getMapLevelFromMarkerLists(storeVOList);
+                    basicMap.setLevel(level);
+                    panToLatLng(basicMap, storeVOList[0].event_lat, storeVOList[0].event_lng);
+                }
+            } 
+        } else if (type === "autoComplete") {
+            // 자동완성
+            const suggestionList = eventVOList.slice(0, 3);
+            eventVOList = [];
+            // console.log('auto', eventVOList);
+            updateSuggestionList(suggestionList, 'event');
         }
     });
 }
@@ -1894,6 +1913,21 @@ function getDistance(lat1, lng1, lat2, lng2) {
     return R * c;
 }
 
+// 현위치를 기준으로 List 정렬
+function sortEventVOListByDistance(lat, lng, list) {
+    console.log(lat);
+    console.log(lng);
+    
+    console.log('event vo list : ', eventVOList);
+    console.log('정렬시작');
+    list.sort((a, b) => {
+        const distA = getDistance(lat, lng, parseFloat(a.event_lat), parseFloat(a.event_lng));
+        const distB = getDistance(lat, lng, parseFloat(b.event_lat), parseFloat(b.event_lng));
+        return distA - distB;
+    });
+    console.log('event vo list : ', eventVOList);
+}
+
 /** 하나 이상의 리스트를 받아 전체 마커 간 최대 거리 확대 레벨 계산 */
 function getMapLevelFromMarkerLists(...lists) {
     const allMarkers = [];
@@ -2007,6 +2041,7 @@ function updateActiveItem(items) {
         if(i === selectedIndex) {
             // 수정 필요
             // console.log(items[i]);
+            item.scrollIntoView({behavior: "auto", block: "nearest"});
         }
     });
 }
