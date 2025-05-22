@@ -7,7 +7,8 @@
 	<li><a href="list" class="on">점포 리스트</a></li>
 	<li><a href="request">점포 신청 리스트</a></li>
 	<li><a href="report">신고</a></li>
-</ul>	
+</ul>
+<!-- 점포 리스트 탭 -->
 <div class="sub-tab-content store-list on">
 	<ul>
 		<li>
@@ -39,6 +40,7 @@
 	</ul>
 	
 </div>
+<!-- 점주 요청 탭 -->
 <div class="sub-tab-content store-request">
 	<ul>
 		<li>
@@ -89,105 +91,95 @@
 	</ul>
 
 </div>
+<!-- 점포 신고 탭 -->
 <div class="sub-tab-content store-report">
 	<ul>
 		<li>
 			<div><input type="checkbox"></div>
 			<div>NO</div>
-			<div>점포 고유번호</div>
+			<div>점포사진</div>
 			<div>점포명</div>
-			<div>점포연락처</div>
-			<div>업태</div>
-			<div>가입일</div>
+			<div>점포 연락처</div>
+			<div>점포 주소</div>
+			<div>신고된 날짜</div>
 			<div>누적신고 수</div>
 			<div></div>
 		</li>
 	</ul>
 	<ul>
-		<% for(int i = 1; i<=10; i++){ %>
+		<c:forEach var="srvo" items="${storeReportList}" varStatus="status">
 		<li>
-			<div><input type="checkbox" name="chk<%= i %>"></div>
-			<div><%= i %></div>
-			<div>00000</div>
+			<!--<div><input type="checkbox" name="store_idx" value="${srvo.store.store_idx}"></div>-->
+			<div class="idx">${srvo.store.store_idx}</div>
+			<div>${status.count}</div>
 			<div>
-				<!-- href -> idx -->
-				<a href="<%= i %>" class="detail-btn">점포<%= i %>호</a>
+				<c:choose>
+					<c:when test="${srvo.store.store_image eq 'store1.jpg'}">
+						<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+					</c:when>
+					<c:otherwise>
+						<img src="${IMG_URL}${srvo.store.store_image}_${srvo.attach.filename}" alt="${srvo.attach.filename}"/>
+					</c:otherwise>
+				</c:choose>
 			</div>
-			<div>010-0000-000</div>
-			<div>포장마차</div>
-			<div>0000-00-00</div>
-			<div>신고 수 : 0</div>
+			<div>
+				<a href="${srvo.store.store_idx}" class="detail-btn">${srvo.store.store_name}</a>
+			</div>
+			<div>${srvo.store.store_num}</div>
+			<div>${srvo.store.store_address}</div>
+			<div>${srvo.regdate}</div>
+			<div>${srvo.declaration_count}</div>
 			<div>
 				<div class="btn-box">
-					<button class="approve-btn" type="button">숨김</button>
-					<button class="reject-btn" type="button">삭제</button>
+					<input type="hidden" name="store_idx" value="${srvo.store_idx}">
+		    		<input type="hidden" name="member_idx" value="${srvo.member_idx}">
+					<button type="button" id="storeReportHideBtn" class="approve-btn">숨기기</button>
+					<button type="button" id="storeReportRemoveBtn" class="reject-btn">신고 삭제</button>
 				</div>
 			</div>
 		</li>
-		<li class="report-detail" id="idx<%= i %>">
+		</c:forEach>
+		<!--
+		<li class="report-detail" id="idx${srvo.store.store_idx}">
 			<ul>
 				<li>
 					<div>NO</div>
 					<div>신고자</div>
+					<div>카테고리</div>
 					<div>신고내용</div>
+					<div>신고날짜</div>
 				</li>
 			</ul>
 			<ul>
 				<% for(int j = 1; j<=5; j++){ %>
 				<li>
 					<div><%= j %></div>
-					<div>user01</div>
-					<div>신고내용신고내용신고내용</div>
+					<div>${srvo.member.member_name}</div>
+					<div>${srvo.declaration_category}</div>
+					<div>${srvo.declaration_content}</div>
+					<div>${srvo.declaration_regdate}?</div>
 				</li>
 				<% } %>
 			</ul>
-		</li>
-		<% } %>
+		</li>-->
 	</ul>
 </div>
 
 <%-- 
-	<c:choose>
-    	<c:when test="${(not empty loginUser) and (userType eq 'admin')}">
-    		<div>
-		    	<form method="post">
-		    		<h3>점포 신고 관리</h3>
-		                <c:forEach var="srvo" items="${storeReportList}">
-		                <hr>
-		                    <div>
-		                    	<div>신고된 점포: ${srvo.store.store_name}</div>
-		                    	<div>신고자 이름: ${srvo.member.member_name}</div>
-		                    	<div>신고 카테고리: ${srvo.declaration_category}</div>
-		                    	<div>신고 사유: ${srvo.declaration_content}</div>
-		                    	<input type="hidden" name="store_idx" value="${srvo.store_idx}">
-		                    	<input type="hidden" name="member_idx" value="${srvo.member_idx}">
-		                    	<button type="button" id="storeReportHideBtn">숨기기</button>
-		                    	<button type="button" id="storeReportRemoveBtn">신고 삭제</button>
-		                    </div>
-		                </c:forEach>
-		                
-		            <br><br><hr><br><br>
-		            
-		            <h3>리뷰 신고 관리</h3>
-		            	<c:forEach var="rrvo" items="${reviewReportList}">
-		            	<hr>
-		            		<div>
-		            			<div>신고된 점포: ${rrvo.review.review_title}</div>
-		                    	<div>신고자 이름: ${rrvo.member.member_name}</div>
-		                    	<div>신고 카테고리: ${rrvo.declaration_category}</div>
-		                    	<div>신고 사유: ${srvo.declaration_content}</div>
-		                    	<input type="hidden" name="review_idx" value="${rrvo.review_idx}">
-		                    	<input type="hidden" name="member_idx" value="${rrvo.member_idx}">
-		                    	<button type="button" id="reviewReportHideBtn">숨기기</button>
-		                    	<button type="button" id="reviewReportRemoveBtn">신고 삭제</button>
-		            		</div>
-		            	</c:forEach>
-		        </form>
-		    </div>
-    	</c:when>
-    	<c:otherwise>
-    		<div><label>관리자 계정으로만 접속 가능합니다!</label></div>
-    	</c:otherwise>
-    </c:choose>
-<script type="text/javascript" src="/resources/js/admin.js"></script> 
+   	<form method="post">
+           <h3>리뷰 신고 관리</h3>
+           	<c:forEach var="rrvo" items="${reviewReportList}">
+           	<hr>
+           		<div>
+           			<div>신고된 점포: ${rrvo.review.review_title}</div>
+                   	<div>신고자 이름: ${rrvo.member.member_name}</div>
+                   	<div>신고 카테고리: ${rrvo.declaration_category}</div>
+                   	<div>신고 사유: ${srvo.declaration_content}</div>
+                   	<input type="hidden" name="review_idx" value="${rrvo.review_idx}">
+                   	<input type="hidden" name="member_idx" value="${rrvo.member_idx}">
+                   	<button type="button" id="reviewReportHideBtn">숨기기</button>
+                  	<button type="button" id="reviewReportRemoveBtn">신고 삭제</button>
+           		</div>
+           	</c:forEach>
+       </form>
 --%>

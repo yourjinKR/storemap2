@@ -8,16 +8,37 @@
 		<result property="member_idx" column="member_idx"/>
 		<result property="declaration_category" column="declaration_category"/>
 		<result property="declaration_content" column="declaration_content"/>
+		<result property="regdate" column="regdate"/>
 		<association property="store" resultMap="storeMap"/>
 		<association property="member" resultMap="memberMap"/>
+		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="storeMap" type="org.storemap.domain.StoreVO">
 		<id property="store_idx" column="store_idx"/>
+		<result property="member_idx" column="member_idx"/>
 		<result property="store_name" column="store_name"/>
+		<result property="store_image" column="store_image"/>
+		<result property="store_num" column="store_num"/>
+		<result property="store_email" column="store_email"/>
+		<result property="store_address" column="store_address"/>
+		<result property="store_area" column="store_area"/>
+		<result property="store_activity_time" column="store_activity_time"/>
+		<result property="store_content" column="store_content"/>
+		<result property="store_like_cnt" column="store_like_cnt"/>
+		<result property="store_hidden" column="store_hidden"/>
+		<result property="store_rnum" column="store_rnum"/>
+		<result property="store_lat" column="store_lat"/>
+		<result property="store_lng" column="store_lng"/>
+		<result property="store_regcode" column="store_regcode"/>
 	</resultMap>
 	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
 		<id property="member_idx" column="member_idx"/>
 		<result property="member_name" column="member_name"/>
+	</resultMap>
+	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
+		<id property="attach_idx" column="attach_idx"/>
+		<result property="filename" column="filename"/>
+		<result property="uuid" column="uuid"/>
 	</resultMap>
 
 	<!-- 1.점포 신고 등록  -->
@@ -43,9 +64,39 @@
 	</select>
 	<!-- 5.점포 조인 신고 목록 -->
 	<select id="getStoreDeclarationMap" resultMap="storeDeclarationMap">
-		SELECT s.store_idx, s.store_name, m.member_idx, m.member_name, d.declaration_category, d.declaration_content
-		FROM store s, member m, store_declaration d
-		WHERE d.store_idx = s.store_idx AND d.member_idx = m.member_idx
+		SELECT s.store_idx,
+			   s.member_idx,
+			   s.store_name,
+			   s.store_image,
+			   s.store_num,
+			   s.store_email,
+			   s.store_address,
+			   s.store_area,
+			   s.store_activity_time,
+			   s.store_hidden,
+			   s.store_rnum,
+			   a.filename,
+			   d.store_idx,
+			   d.regdate,
+			   COUNT(*) AS declaration_count
+		FROM store_declaration d
+		JOIN store s ON d.store_idx = s.store_idx
+		LEFT JOIN attach_file a ON s.store_image = a.uuid
+		GROUP BY d.store_idx,
+				 d.regdate,
+				 a.filename,
+				 s.store_idx,
+				 s.member_idx,
+				 s.store_name,
+				 s.store_image,
+				 s.store_num,
+				 s.store_email,
+				 s.store_address,
+				 s.store_area,
+				 s.store_activity_time,
+				 s.store_hidden,
+				 s.store_rnum
+		ORDER BY d.regdate DESC
 	</select>
 	
 	<select id="getCount" parameterType="int" resultType="int">
