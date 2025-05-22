@@ -158,6 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 맵 id별 분기
         mapType = container.getAttribute("id");
+
+        // 최대크기 지정
+        basicMap.setMaxLevel(13);
     }
 
     // 검색창
@@ -408,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 줌 이벤트
         kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
-            // console.log(basicMap.getLevel());
+            console.log(basicMap.getLevel());
             hideOverlay(storeOverlayList);
             hideOverlay(eventOverlayList);
             if (storeMapMode || unitedMapMode) {
@@ -435,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 검색창에 값 입력
     keywordInput.addEventListener("input", e => {
-        console.log('값입력');
+        // console.log('값입력');
         
         resetAutocomplete();
 
@@ -2103,6 +2106,8 @@ function updateActiveItem(items) {
 
 /** 자동완성 초기화 */ 
 function resetAutocomplete() {
+    console.log("초기화");
+    
     hideAutocomplete();
     autoSearchUL.innerHTML = "";
 }
