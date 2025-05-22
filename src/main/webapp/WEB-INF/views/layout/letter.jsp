@@ -23,9 +23,7 @@
 	<div class="js-tab-content" id="view">
 		<jsp:include page="../content/modal/letterView.jsp"/>
 	</div>
-	<c:if test="${not empty userType and userType ne 'user'}">
-		<div class="js-tab-content" id="write">
-			<jsp:include page="../content/modal/letterWrite.jsp"/>
-		</div>
-	</c:if>
+	<div class="js-tab-content" id="write">
+		<jsp:include page="../content/modal/letterWrite.jsp"/>
+	</div>
 </div>

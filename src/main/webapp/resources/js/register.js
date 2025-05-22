@@ -5,6 +5,7 @@ if(formType === 'personal') {
 	let f = null;
 	let mIdValidState, mPwValidState, mPwReValidState, mnameReValidState, mnicknameValidState= null;
 	let regExpId, regExpPw, regExpName, regExpNickName = null;
+	let {idCk, pwCk, pwReCk, nameCk, nicknameCk} = false; // 검증
 	document.addEventListener("DOMContentLoaded", (event) => {
 		f = document.getElementById('registerForm');
 		mIdValidState = document.querySelector("#mIdValidState");
@@ -12,7 +13,6 @@ if(formType === 'personal') {
 		mPwReValidState = document.querySelector("#mPwReValidState");
 		mnameReValidState = document.querySelector("#mnameReValidState");
 		mnicknameValidState = document.querySelector("#mnicknameValidState");
-		let {idCk, pwCk, pwReCk, nameCk, nicknameCk} = false; // 검증
 		
 // ---------- 정규식 ----------------
 		regExpId = /^[a-z]+[0-9a-z]{3,12}$/;	// 아이디 검증 정규식
@@ -205,6 +205,7 @@ if(formType === 'personal') {
 	let IdValidState, PwValidState, PwReValidState, nameReValidState, rnumValidState, locValidState, numValidState = null;
 	let regExpId, regExpPw, regExpName, regExpRnum, regExpLoc, regExpNum = null;
 	let f = null;
+	let {idCk, pwCk, pwReCk, nameCk, rnumCk, locCk, numCk} = false; // 검증
 	document.addEventListener("DOMContentLoaded", (event) => {
 		f = document.getElementById('registerForm');
 		IdValidState = document.querySelector("#IdValidState");
@@ -214,7 +215,6 @@ if(formType === 'personal') {
 		rnumValidState = document.querySelector("#rnumValidState");
 		locValidState = document.querySelector("#locValidState");
 		numValidState = document.querySelector("#numValidState");
-		let {idCk, pwCk, pwReCk, nameCk, rnumCk, locCk, numCk} = false; // 검증
 		
 		regExpId = /^[a-z]+[0-9a-z]{3,12}$/;	// 아이디 검증 정규식
 		regExpPw = /^[0-9a-zA-Z]{8,16}$/;		// 비밀번호 검증 정규식

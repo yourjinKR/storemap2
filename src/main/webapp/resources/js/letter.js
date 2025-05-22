@@ -44,17 +44,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			if(this.value != 0){
 				if(auth == "enter"){
 					// n일차 참여 점포 리스트
-					getAttendList(this.value);
+					getAttendList(this.value, document.querySelector(`option[value='${this.value}']`).innerHTML);
 				}else{
-					let arr = this.value.split("//");
-					writeReceiver.value = arr[0];
-					hideReceiver.value = arr[1];
+					let arr = this.value.split("_");
+					writeReceiver.value = arr[1];
+					hideReceiver.value = arr[0];
+					console.log(document.querySelector(`option[value='${this.value}']`).innerHTML);
+					document.querySelector("#write .letter-content").value =
+						document.querySelector(`option[value='${this.value}']`).innerHTML+'\n';
 				}
 			}
 		})
 		
 		let div2 = document.querySelector(".letter-form td.por");
-		if(div2 != null){
+		if(div2 != null && auth == "enter"){
 			div2.addEventListener("mouseenter",function(){
 				listDetail.classList.add("on");
 			})
@@ -84,6 +87,7 @@ function modalClose(){
 // 쪽지 modal 탭변경
 function changeLetterModal(page){
 	let content = document.querySelectorAll(".js-tab-content");
+	document.querySelector("#write .letter-content").value = "";
 	if(content.length > 0){
 		content.forEach(con => con.classList.remove("on"));
 		document.querySelector("#"+ page).classList.add("on");
@@ -218,6 +222,10 @@ function getLetterCnt(){
 
 // 쪽지 전송
 function insertLetter(f){
+	if(auth == 'admin'){
+		hideReceiver.value = writeReceiver.value;
+	}
+	
 	if(hideReceiver.value == ""){
 		alert("받는 사람을 입력해주세요.");
 		return;
@@ -227,7 +235,6 @@ function insertLetter(f){
 		return;
 	}
 
-	
 	fetch(`/modal/insertLetter`,{
 		method : "post",
 		headers:{
@@ -254,6 +261,7 @@ function insertLetter(f){
 			hideReceiver.value = "";
 		}
 		getLetter("received");
+		document.querySelector(".received").click();
 	})
 	.catch(err => console.log(err))
 }
@@ -280,7 +288,7 @@ function getEdayList(){
 	.catch(err => console.log(err))
 }
 // 이벤트 참석 리스트
-function getAttendList(eday){
+function getAttendList(eday, eday_name){
 	fetch(`/modal/getAttendList/${eday}`)
 	.then(response => response.json())
 	.then(result => {
@@ -301,6 +309,7 @@ function getAttendList(eday){
 			})
 			
 			listDetail.innerHTML = detail;
+			document.querySelector("#write .letter-content").value = `${eday_name}\n`;
 		}
 	})
 	.catch(err => console.log(err))
@@ -320,7 +329,7 @@ function getAttendEvent(){
 					idx = 0;
 				}
 				if(result[i].pon == 1){
-					str += `<option value="${result[i].enter_id}//${result[i].enter_name}">(${idx + 1}일차) ${result[i].event_title}</option>`;
+					str += `<option value="${result[i].enter_id}_${result[i].enter_name}_${idx + 1}">(${idx + 1}일차) ${result[i].event_title}</option>`;
 				}
 				idx++;
 			}

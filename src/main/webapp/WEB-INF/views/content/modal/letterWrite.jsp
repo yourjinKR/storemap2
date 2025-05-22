@@ -12,7 +12,7 @@
 			<tr>
 				<th><label>받는 사람 : </label></th>
 				<td class="por">
-					<input type="text" name="receiver_text" class="letter-receiver" readonly="readonly">
+					<input type="text" name="receiver_text" class="letter-receiver" ${userType eq 'admin' ? '' : 'readonly="readonly"'}>
 					<input type="hidden" name="letter_receiver" class="hidden-receiver" readonly="readonly">
 					<c:if test="${not empty userType and userType eq 'enter'}">
 					<ul class="list-detail">
