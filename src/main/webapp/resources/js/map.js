@@ -411,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 줌 이벤트
         kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
-            console.log(basicMap.getLevel());
+            // console.log(basicMap.getLevel());
             hideOverlay(storeOverlayList);
             hideOverlay(eventOverlayList);
             if (storeMapMode || unitedMapMode) {
@@ -574,18 +574,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     } else {
                         if (type === 'store') {
-                            as.getStoreByIdx(idx, function (data) {
-                                apply2storeMap([data]);
-                            });
+                            sessionStorage.setItem("store_idx", idx);
+                            location.href = "/store/map";  // 주소에 파라미터 안 붙음
                         } else {
-                            sessionStorage.setItem("initialKeyword", value);
+                            sessionStorage.setItem("event_idx", idx);
                             location.href = "/store/map";  // 주소에 파라미터 안 붙음
                         }
                     }
                 } 
                 // 자동완성 검색어를 선택하지 않을때
                 else if (selectedIndex == -1 && items.length >= 0) {
-                    if (items.length == 0) {
+                    if (!keywordInput.value) {
                         alert("검색어를 입력하시오!");
                         break;
                     }
@@ -1105,7 +1104,7 @@ const asyncService = (function(){
     }
 
     /** 반경 내 점포 리스트 (condition, kilometer, callback) */ 
-    function getListWhithin(searchCondition, kilometer, callback){
+    function getStoreListWhithin(searchCondition, kilometer, callback){
         searchCondition.kilometer = kilometer;
         fetch(`/modal/list/within.json`, {
             method: 'POST',
@@ -1232,7 +1231,7 @@ const asyncService = (function(){
     // 함수 객체 리턴
     return {
         getListNearest : getListNearest,
-        getListWhithin : getListWhithin, 
+        getStoreListWhithin : getStoreListWhithin, 
         getListByReg : getListByReg,
         getListByLoc : getListByLoc,
         getStore : getStore,
@@ -1482,7 +1481,7 @@ function subwayServiceCB(data, status, pagination) {
         searchCondition.lat = subwayInfo.y;
         searchCondition.lng = subwayInfo.x;
         // 역 근처 점포 출력
-        as.getListWhithin(searchCondition, 0.5, function (data) {
+        as.getStoreListWhithin(searchCondition, 0.5, function (data) {
             apply2storeMap(data);
         });
     } 
