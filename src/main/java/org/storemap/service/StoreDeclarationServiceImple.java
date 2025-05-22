@@ -31,6 +31,13 @@ public class StoreDeclarationServiceImple implements StoreDeclarationService{
 	}
 	
 	@Override
+	public int removeAll(int store_idx) {
+		log.info("removeAll...");
+		int result = mapper.deleteAll(store_idx);
+		return result;
+	}
+	
+	@Override
 	public List<StoreDeclarationVO> getList() {
 		log.info("getList...");
 		return mapper.getStoreDeclarationList();
@@ -46,6 +53,12 @@ public class StoreDeclarationServiceImple implements StoreDeclarationService{
 	public List<StoreDeclarationVO> getDeclarationMap() {
 		log.info("getDeclarationMap...");
 		return mapper.getStoreDeclarationMap();
+	}
+	
+	@Override
+	public List<StoreDeclarationVO> getDeclarationDetailMap() {
+		log.info("getDeclarationDetailMap...");
+		return mapper.getStoreDeclarationDetailMap();
 	}
 	
 }

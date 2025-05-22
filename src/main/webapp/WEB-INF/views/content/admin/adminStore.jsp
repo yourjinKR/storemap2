@@ -123,7 +123,7 @@
 				</c:choose>
 			</div>
 			<div>
-				<a href="${srvo.store.store_idx}" class="detail-btn">${srvo.store.store_name}</a>
+				<a href="${srvo.store.store_idx}" class="detail-btn">${srvo.store.store_name}(${srvo.declaration_count})</a>
 			</div>
 			<div>${srvo.store.store_num}</div>
 			<div>${srvo.store.store_address}</div>
@@ -131,37 +131,38 @@
 			<div>${srvo.declaration_count}</div>
 			<div>
 				<div class="btn-box">
-					<input type="hidden" name="store_idx" value="${srvo.store_idx}">
-		    		<input type="hidden" name="member_idx" value="${srvo.member_idx}">
 					<button type="button" id="storeReportHideBtn" class="approve-btn">숨기기</button>
-					<button type="button" id="storeReportRemoveBtn" class="reject-btn">신고 삭제</button>
+					<button type="button" id="storeReportRemoveAllBtn" class="reject-btn">전체 신고 삭제</button>
 				</div>
 			</div>
 		</li>
-		</c:forEach>
-		<!--
 		<li class="report-detail" id="idx${srvo.store.store_idx}">
 			<ul>
 				<li>
-					<div>NO</div>
 					<div>신고자</div>
 					<div>카테고리</div>
 					<div>신고내용</div>
 					<div>신고날짜</div>
+					<div></div>
 				</li>
 			</ul>
 			<ul>
-				<% for(int j = 1; j<=5; j++){ %>
-				<li>
-					<div><%= j %></div>
-					<div>${srvo.member.member_name}</div>
-					<div>${srvo.declaration_category}</div>
-					<div>${srvo.declaration_content}</div>
-					<div>${srvo.declaration_regdate}?</div>
+				<c:forEach var="srdvo" items="${storeReportDetailList}">
+				<li data-store-idx="${srdvo.store_idx}">
+					<div>${srdvo.member.member_name}</div>
+					<div>${srdvo.declaration_category}</div>
+					<div>${srdvo.declaration_content}</div>
+					<div>${srdvo.regdate}</div>
+					<div>
+						<div class="btn-box">
+							<button type="button" id="storeReportRemoveBtn" class="reject-btn">신고 삭제${srdvo.member_idx}</button>
+						</div>
+					</div>
 				</li>
-				<% } %>
+				</c:forEach>
 			</ul>
-		</li>-->
+		</li>
+		</c:forEach>
 	</ul>
 </div>
 

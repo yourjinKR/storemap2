@@ -15,13 +15,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		btns.forEach(btn => {
 			btn.addEventListener("click",function(e){
 				e.preventDefault();
-				let target = document.querySelector("#idx"+this.getAttribute("href"));
+				let storeIdx = this.getAttribute("href");
+				let target = document.querySelector("#idx"+storeIdx);
+				
 				if(target.classList.contains("on")){
-					
 					target.classList.remove("on");
 				}else{
 					details.forEach(el => el.classList.remove("on"));
 					target.classList.add("on");
+					
+					// 해당 점포의 신고 상세만 표시
+					storeReportDetails(storeIdx, target);
 				}
 			})
 		})
@@ -79,11 +83,14 @@ function tabChange(){
 // 버튼 이벤트 함수
 function buttonEvent(){
 	// 기존 버튼 선택
-	const approvalBtns = document.querySelectorAll("#storeApprovalBtn");
-	const disallowBtns = document.querySelectorAll("#storeDisallowBtn");
+	const StoreApprovalBtns = document.querySelectorAll("#storeApprovalBtn");
+	const StoreDisallowBtns = document.querySelectorAll("#storeDisallowBtn");
+	const StoreReportHideBtns = document.querySelectorAll("#storeReportHideBtn");
+	const StoreReportRemoveAllBtns = document.querySelectorAll("#storeReportRemoveAllBtn");
+	const StoreReportRemoveBtns = document.querySelectorAll("#storeReportRemoveBtn");
 	
 	//점포 승인
-	approvalBtns.forEach(btn => {
+	StoreApprovalBtns.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
 		const newBtn = btn.cloneNode(true);
 		btn.parentNode.replaceChild(newBtn, btn);
@@ -109,7 +116,7 @@ function buttonEvent(){
 		});
 	});
 	//점포 불허
-	disallowBtns.forEach(btn => {
+	StoreDisallowBtns.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
 		const newBtn = btn.cloneNode(true);
 		btn.parentNode.replaceChild(newBtn, btn);
@@ -138,36 +145,121 @@ function buttonEvent(){
 		});
 	});
 	// 점포 숨기기
+	StoreReportHideBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 store_idx 값 가져오기
+			const li = this.closest('li');
+			const storeIdx = li.querySelector('.idx').textContent;
+			
+			// 새로운 form 생성 및 제출
+			const form = document.createElement('form');
+			form.method = 'post';
+			form.action = '/admin/storeReportHide';
+			
+			const input = document.createElement('input');
+			input.type = 'hidden';
+			input.name = 'store_idx';
+			input.value = storeIdx;
+			
+			form.appendChild(input);
+			document.body.appendChild(form);
+			form.submit();
+		});
+	});
+	// 점포 신고 전체 취소
+	StoreReportRemoveAllBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 store_idx 값 가져오기
+			const li = this.closest('li');
+			const storeIdx = li.querySelector('.idx').textContent;
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 삭제하시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/storeReportRemoveAll';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'store_idx';
+				input.value = storeIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
 	// 점포 신고 취소
+	StoreReportRemoveBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 store_idx와 member_idx 값 가져오기
+			const li = this.closest('li');
+			const storeIdx = li.getAttribute('data-store-idx');
+			// 버튼 텍스트에서 member_idx 추출 (예: "신고 삭제123" -> "123")
+			const buttonText = this.textContent;
+			const memberIdx = buttonText.replace('신고 삭제', '');
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 삭제하시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/storeReportRemove';
+				
+				const input1 = document.createElement('input');
+				input1.type = 'hidden';
+				input1.name = 'store_idx';
+				input1.value = storeIdx;
+				
+				const input2 = document.createElement('input');
+				input2.type = 'hidden';
+				input2.name = 'member_idx';
+				input2.value = memberIdx;
+				
+				form.appendChild(input1);
+				form.appendChild(input2);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
 	// 리뷰 숨기기
 	// 리뷰 신고 취소
 }
-// 점주 승인
-function storeApproval(){
-	storeRequestForm.action = '/admin/storeApproval';
-	storeRequestForm.submit();
-};
-function storeDisallow(){
-	if(confirm("정말 불허하시겠습니까?")){
-		storeRequestForm.action = '/admin/storeDisallow';
-		storeRequestForm.submit();
-	    alert("불허 되었습니다");
-	}else{
+//신고 상세 필터링 함수
+function storeReportDetails(storeIdx, targetElement) {
+	// 데이터가 들어있는 두 번째 ul을 찾기
+	let dataUl = targetElement.querySelector('ul:nth-child(2)');
+	
+	if(dataUl) {
+		// 데이터 행들만 필터링 (헤더는 첫 번째 ul에 있으므로 제외)
+		let detailRows = dataUl.querySelectorAll('li');
+		
+		detailRows.forEach(row => {
+			// 각 행에서 store_idx 데이터 속성 확인
+			let rowStoreIdx = row.getAttribute('data-store-idx');
+			
+			if(rowStoreIdx && rowStoreIdx === storeIdx) {
+				row.style.display = 'flex'; // 해당 점포의 신고만 표시
+			} else {
+				row.style.display = 'none'; // 다른 점포의 신고는 숨김
+			}
+		});
 	}
 }
-// 점포 숨기기
-function storeReportHide(){
-	storeReportForm.action = '/admin/storeReportHide';
-	storeReportForm.submit();
-}
-function storeReportRemove(){
-	if(confirm("신고를 취소 하시겠습니까?")){
-		storeReportForm.action = '/admin/storeReportRemove';
-		storeReportForm.submit();
-		alert("취소 되었습니다");
-	}else{
-	}
-}
+
 // 리뷰 숨기기
 function reviewReportHide(){
 	reviewReportForm.action = '/admin/reviewReportHide';

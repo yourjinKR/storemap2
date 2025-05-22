@@ -9,6 +9,7 @@
 		<result property="declaration_category" column="declaration_category"/>
 		<result property="declaration_content" column="declaration_content"/>
 		<result property="regdate" column="regdate"/>
+		<result property="declaration_count" column="declaration_count"/>
 		<association property="store" resultMap="storeMap"/>
 		<association property="member" resultMap="memberMap"/>
 		<association property="attach" resultMap="attachMap"/>
@@ -54,15 +55,19 @@
 	<delete id="delete" parameterType="int">
 		delete from store_declaration where store_idx = #{param1} AND member_idx = #{param2}
 	</delete>
-	<!-- 3.점포 신고 목록  -->
+	<!-- 3.점포 신고 전체 삭제 -->
+	<delete id="deleteAll" parameterType="int">
+		delete from store_declaration where store_idx = #{store_idx}
+	</delete>
+	<!-- 4.점포 신고 목록  -->
 	<select id="getStoreDeclarationList" resultType="org.storemap.domain.StoreDeclarationVO">
 		select * from store_declaration
 	</select>
-	<!-- 4.점포 신고 보기  -->
+	<!-- 5.점포 신고 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.StoreDeclarationVO">
 		select * from store_declaration where store_idx = #{store_idx} AND member_idx = #{member_idx}
 	</select>
-	<!-- 5.점포 조인 신고 목록 -->
+	<!-- 6.점포 조인 신고 목록 -->
 	<select id="getStoreDeclarationMap" resultMap="storeDeclarationMap">
 		SELECT s.store_idx,
 			   s.member_idx,
@@ -96,6 +101,13 @@
 				 s.store_activity_time,
 				 s.store_hidden,
 				 s.store_rnum
+		ORDER BY d.regdate DESC
+	</select>
+	<!-- 7.점포 조인 신고 디테일 목록 -->
+	<select id="getStoreDeclarationDetailMap" resultMap="storeDeclarationMap">
+		SELECT m.member_name, d.*
+		FROM store_declaration d
+		JOIN member m ON d.member_idx = m.member_idx
 		ORDER BY d.regdate DESC
 	</select>
 	

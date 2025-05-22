@@ -81,6 +81,7 @@ public class AdminController {
 		log.info("adminMainGet...");
 		model.addAttribute("storeRequestList", storeReqService.getDisReqListMap());
 		model.addAttribute("storeReportList",storeDeclService.getDeclarationMap());
+		model.addAttribute("storeReportDetailList",storeDeclService.getDeclarationDetailMap());
 		model.addAttribute("reviewReportList",reviewDeclService.getDeclarationMap());
 		return "index";
 	}
@@ -104,10 +105,10 @@ public class AdminController {
 	
 	// 점포 숨기기
 	@PostMapping("/storeReportHide")
-	public String storeReportHide(int store_idx, int member_idx) {
+	public String storeReportHide(int store_idx) {
 		log.info("storeReportHide..."+store_idx);
 		storeService.hide(store_idx);
-		storeDeclService.remove(store_idx, member_idx);
+		storeDeclService.removeAll(store_idx);
 		return "redirect:/admin/adminMain";
 	}
 	// 점포 숨기기 해제
@@ -122,6 +123,13 @@ public class AdminController {
 	public String storeReportRemove(int store_idx, int member_idx) {
 		log.info("storeReportRemove..."+store_idx+", "+member_idx);
 		storeDeclService.remove(store_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 점포 신고 전체 취소
+	@PostMapping("/storeReportRemoveAll")
+	public String storeReportRemoveAll(int store_idx) {
+		log.info("storeReportRemoveAll..."+store_idx);
+		storeDeclService.removeAll(store_idx);
 		return "redirect:/admin/adminMain";
 	}
 	
