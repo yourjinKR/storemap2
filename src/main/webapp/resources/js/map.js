@@ -450,49 +450,53 @@ document.addEventListener("DOMContentLoaded", () => {
             // kilometer = setRadiusByLevel(5);
         }
 
-        // 점포 정보 불러오기 (서버에 비동기 요청)
-        fetch(`/modal/list/keyword.json`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0, kilometer : kilometer}) 
-        })
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data);
+        if(unitedMapMode || storeMapMode) {
+            // 점포 정보 불러오기 (서버에 비동기 요청)
+            fetch(`/modal/list/keyword.json`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0, kilometer : kilometer}) 
+            })
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+    
+                // 최대 5개까지만 표시
+                // const suggestionList = data.slice(0, 3);
+                updateSuggestionList(data, 'store', keyword);
+            })
+            .catch(err => {
+                console.error("자동완성 fetch 실패", err);
+                // resetAutocomplete();
+            });
+        }
 
-            // 최대 5개까지만 표시
-            // const suggestionList = data.slice(0, 3);
-            updateSuggestionList(data, 'store', keyword);
-        })
-        .catch(err => {
-            console.error("자동완성 fetch 실패", err);
-            // resetAutocomplete();
-        });
-
-        // 이벤트 정보 불러오기 (서버에 비동기 요청)
-        fetch("/event/eventFilter/keyword" , {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0})
-        })
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data);
-
-            // processAllEvents(data, "autoComplete");
-
-            // 최대 5개까지만 표시
-            // const suggestionList = data.slice(0, 3);
-            updateSuggestionList(data, 'event', keyword);
-        })
-        .catch(err => {
-            console.error("자동완성 fetch 실패", err);
-            // resetAutocomplete();
-        });
+        if (unitedMapMode || eventMapMode) {
+            // 이벤트 정보 불러오기 (서버에 비동기 요청)
+            fetch("/event/eventFilter/keyword" , {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0})
+            })
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+    
+                // processAllEvents(data, "autoComplete");
+    
+                // 최대 5개까지만 표시
+                // const suggestionList = data.slice(0, 3);
+                updateSuggestionList(data, 'event', keyword);
+            })
+            .catch(err => {
+                console.error("자동완성 fetch 실패", err);
+                // resetAutocomplete();
+            });
+        }
 
     });
 
@@ -595,7 +599,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             return;
         } else if (type === "event") {
-
+            
         }
 
         const value = target.dataset.value;
@@ -2000,6 +2004,14 @@ function updateSuggestionList(list, type, keyword) {
         const highlighted = text.replace(regex, "<strong>$1</strong>").replace(/\n/g, "").trim();
 
         const li = document.createElement("li");
+
+        li.setAttribute("type", type);
+        if(type === "store") {
+            li.setAttribute("idx", item.store_idx);
+        } else if (type === "event") {
+            li.setAttribute("idx", item.event_idx);
+        }
+        
         li.dataset.value = text;
         li.innerHTML = `<span class="highlighted-text">${highlighted}</span>
                         <span class="ele-type">${type === 'event' ? "이벤트" : "점포"}</span>`;
