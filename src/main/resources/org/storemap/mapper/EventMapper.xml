@@ -430,12 +430,24 @@
 	                OR E.EVENT_LOCATION LIKE '%' || #{keyword} || '%'
 	            )
 	        </if>
+	        AND E.EVENT_BSTOPDATE &gt;= TRUNC(SYSDATE)
 	    )
 	    <if test="amount != 0">
 	        WHERE ROWNUM &lt;= #{amount}
 	    </if>
 	    ORDER BY PRIORITY, EVENT_BSTARTDATE DESC
 	</select>
+
+	
+	<!-- 진행중, 진행예정 이벤트 불러오기 -->
+	<select id="getEventListWithoutEnd" resultType="org.storemap.domain.EventVO">
+	    SELECT *
+	    FROM EVENT
+	    WHERE EVENT_BSTOPDATE >= TRUNC(SYSDATE)
+	      AND EVENT_HIDDEN = 0
+	    ORDER BY EVENT_BSTARTDATE ASC
+	</select>
+
 
 
 
@@ -501,5 +513,5 @@
 	    WHERE event_idx = #{eventIdx}
   	</select>
 	
-	
+
 </mapper>

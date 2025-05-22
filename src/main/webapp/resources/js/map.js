@@ -3,7 +3,6 @@ console.log("map load");
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let basicMarkerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
-// let markerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
 let storeMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
 let eventMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792243/eventMarker_zespzh.png';
 
@@ -339,13 +338,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // 현위치 이동 (임시 함수, 추후 수정)
             else if (type === "panto-current") {
                 panToLatLng(basicMap, currentLat, currentLng);
-                // clickMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLng));
-                // 현위치와 같을 경우
+                console.log(clickMarker.getPosition());
+                console.log(basicMap.getCenter());
+
                 if(new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter() && !customPositionMode) {
                     setMyCurrentPlace();
                 } else {
-                    console.log(clickMarker.getPosition());
-                    console.log(basicMap.getCenter());
                     console.log('위치가 다름');
                 }
             }
@@ -410,14 +408,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // 줌 이벤트
-        kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
+        kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {            
             // console.log(basicMap.getLevel());
             hideOverlay(storeOverlayList);
             hideOverlay(eventOverlayList);
             if (storeMapMode || unitedMapMode) {
                 showOverlay(basicMap, storeOverlayList);
             }
-            else if (eventMapMode || unitedMapMode) {
+            if (eventMapMode || unitedMapMode) {
                 showOverlay(basicMap, eventOverlayList);
             }
         });
@@ -834,7 +832,7 @@ function showOverlay(map, overlayList) {
 
 /** 커스텀 오버레이를 삭제하는 함수 */
 function hideOverlay(overlayList) {
-    if (basicMap.getLevel() > 4) {
+    if (basicMap.getLevel() > 3) {
         for (let i = 0; i < overlayList.length; i++) {
             const element = overlayList[i];
             element.setMap(null);
@@ -877,7 +875,6 @@ function markerMapping(eles, type) {
             } else if (type === "event") {
                 list = eventVOList;
             }
-            
 
             // (store or event) 클릭 이벤트 추가
             ele.addEventListener('click', e => {
