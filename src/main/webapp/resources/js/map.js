@@ -416,8 +416,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let suggestionList = []; // 현재 렌더링 중인 추천 리스트
     // let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
 
+    // 검색창이 포커스될때
+    keywordInput.addEventListener("focus", e => {
+        autoCompleteBox.style.display = "block";
+    });
+
+    // 검색창에 값 입력
     keywordInput.addEventListener("input", e => {
-        hideAutocomplete();
+        resetAutocomplete();
 
         const keyword = keywordInput.value.trim();
 
@@ -460,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
-            // hideAutocomplete();
+            // resetAutocomplete();
         });
 
         // 이벤트 정보 불러오기 (서버에 비동기 요청)
@@ -483,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(err => {
             console.error("자동완성 fetch 실패", err);
-            // hideAutocomplete();
+            // resetAutocomplete();
         });
 
     });
@@ -533,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const idx = selectedItem.getAttribute("idx");
 
                     keywordInput.value = value;
-                    // hideAutocomplete();
+                    // resetAutocomplete();
                     if (mapType === "full") {
                         if (type === 'store') {
                             as.getStoreByIdx(idx, function (data) {
@@ -555,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } 
                 // 자동완성 검색어를 선택하지 않을때
                 else if (selectedIndex == -1 && items.length >= 0) {
-                    // hideAutocomplete();
+                    // resetAutocomplete();
                     if (mapType === "full") {
                         mapSearchService(basicMap, keywordInput.value.trim());
                     } else {
@@ -568,7 +574,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             default :
                 // console.log(e.keyCode);
-                // hideAutocomplete();
+                // resetAutocomplete();
         }
     });
 
@@ -586,11 +592,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 apply2storeMap([data]);
             })
             return;
+        } else if (type === "event") {
+            
         }
 
         const value = target.dataset.value;
         keywordInput.value = value;
-        hideAutocomplete();
+        resetAutocomplete();
         mapSearchService(basicMap, value);
     });
 
@@ -1235,7 +1243,7 @@ let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null
 
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
-    // hideAutocomplete();
+    // resetAutocomplete();
     if (!keyword) {
         alert("키워드를 입력하시오");
         return;
@@ -1427,7 +1435,7 @@ function subwayServiceCB(data, status, pagination) {
 
 /** 검색결과를 지도에 적용하는 콜백함수 (점포) */
 function apply2storeMap(data) {
-    hideAutocomplete();
+    resetAutocomplete();
 
     storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
 
@@ -1592,7 +1600,7 @@ function completeSearch() {
     else if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = "block";
     }
-    // hideAutocomplete();
+    // resetAutocomplete();
 }
 
 /** 검색결과가 없거나 실패할때 모달을 호출하는 함수 */
@@ -1625,43 +1633,6 @@ function failSearch() {
     hideviewSideBar();
     setToggle(300);
 }
-
-/** 주소 입력시 좌표로 변환하고 마커를 등록하는 함수 (시점 문제로 인해 내부적으로 실행) */
-// function address2coord(vo) {
-//     let geocoder = new kakao.maps.services.Geocoder();
-//     let callback = function(result, status) {
-//         console.log(`${vo.event_location}의 주소는`);
-//         if (status === kakao.maps.services.Status.OK) {
-//             console.log(result[0].y);
-//             console.log(result[0].x);
-//             lat = result[0].y;
-//             lng = result[0].x;
-
-//             // 마커 등록
-//             let marker = registerMarker(lat, lng, vo.event_idx);
-//             // marker에 이벤트 추가
-//             // addMarkerEvent(marker);
-
-//             // vo에 마커 등록
-//             vo.marker = marker;
-
-//             // 리스트에 vo 추가
-//             eventVOList.push(vo);
-
-//             // 마커 맵에 설정
-//             vo.marker.setMap(basicMap);
-//         }
-//         else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-//             console.log('주소가 올바르지 않습니다');
-//             return;
-//         } 
-//         else if (status === kakao.maps.services.Status.ERROR) {
-//             console.log('주소가 올바르지 않습니다');
-//             return;
-//         }
-//     };
-//     geocoder.addressSearch(vo.event_location, callback);
-// }
 
 /** 이벤트 좌표 등록 프로미스 */
 function address2coordPromise(vo, funcType) {
@@ -2009,11 +1980,11 @@ function setRadiusByLevel(level) {
 }
 
 // 자동완성 관련 함수
-// 추천 리스트 UI 갱신
+/** 추천 리스트 UI 갱신 */ 
 function updateSuggestionList(list, type) {
     if (list.length === 0) {
         // console.log('검색결과가 없으므로 가린다');
-        // hideAutocomplete();
+        // resetAutocomplete();
         return;
     }
 
@@ -2034,7 +2005,7 @@ function updateSuggestionList(list, type) {
     selectedIndex = -1;
 }
 
-// 강조 항목 업데이트
+/** 강조 항목 업데이트 */ 
 function updateActiveItem(items) {
     items.forEach((item, i) => {
         item.classList.toggle("active", i === selectedIndex);
@@ -2046,10 +2017,14 @@ function updateActiveItem(items) {
     });
 }
 
-// 자동완성 숨기기
-function hideAutocomplete() {
-    // console.log('가린다');
-    autoCompleteBox.style.display = "none";
+/** 자동완성 초기화 */ 
+function resetAutocomplete() {
+    hideAutocomplete();
     autoSearchUL.innerHTML = "";
+}
+
+/** 자동완성 닫기 */
+function hideAutocomplete() {
+    autoCompleteBox.style.display = "none";
     selectedIndex = -1;
 }
