@@ -148,7 +148,7 @@
 	<ul class="barod board-card d_f" id="boardCard">
 	
 	</ul>
-		<c:if test="${not empty loginUserIdx}">
+		<c:if test="${not empty loginUserIdx and loginUserType eq 'enter'}">
 			  <button type="button" class="eventBtn" id="registerBtn" onclick="location.href='/event/eventRegister'">
 			    새 게시글 등록
 			  </button>
