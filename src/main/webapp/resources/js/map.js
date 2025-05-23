@@ -92,11 +92,11 @@ let basicMap;
 // 지도 타입
 let mapType;
 
-/** united mode */
+/** 통합 검색 */
 let unitedMapMode = true;
-/** event map */
+/** 이벤트 검색 */
 let eventMapMode = false;
-/** store map  */
+/** 점포 검색  */
 let storeMapMode = false;
 /** 현위치 커스텀 설정 모드 */
 let customPositionMode = false;
@@ -337,14 +337,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // 현위치 이동 (임시 함수, 추후 수정)
             else if (type === "panto-current") {
+                basicMap.setLevel(3);
                 panToLatLng(basicMap, currentLat, currentLng);
-                console.log(clickMarker.getPosition());
-                console.log(basicMap.getCenter());
+                // console.log(clickMarker.getPosition());
+                // console.log(basicMap.getCenter());
 
-                if(new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter() && !customPositionMode) {
+                if(new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter()) {
                     setMyCurrentPlace();
-                } else {
-                    console.log('위치가 다름');
                 }
             }
             // 검색
@@ -355,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 hideviewSideBar();
                 viewSideBarCheck = false;
                 setToggle(300);
+
                 mapSearchService(basicMap, keyword);
             }
             else if (type === "event-mode") {
@@ -408,15 +408,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // 줌 이벤트
-        kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {            
-            // console.log(basicMap.getLevel());
-            hideOverlay(storeOverlayList);
-            hideOverlay(eventOverlayList);
-            if (storeMapMode || unitedMapMode) {
-                showOverlay(basicMap, storeOverlayList);
-            }
-            if (eventMapMode || unitedMapMode) {
-                showOverlay(basicMap, eventOverlayList);
+        kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
+            const level = basicMap.getLevel();
+
+            if (level > 3) {
+                hideOverlay(storeOverlayList);
+                hideOverlay(eventOverlayList);
+            } else {
+                if (storeMapMode || unitedMapMode) {
+                    showOverlay(basicMap, storeOverlayList);
+                }
+                if (eventMapMode || unitedMapMode) {
+                    showOverlay(basicMap, eventOverlayList);
+                }
             }
         });
     }
@@ -822,7 +826,7 @@ function registerOverlay(vo) {
 
 /** 커스텀 오버레이를 보여주는 함수 */
 function showOverlay(map, overlayList) {
-    if (basicMap.getLevel() <= 3) {
+    if (basicMap.getLevel() < 4) {
         for (let i = 0; i < overlayList.length; i++) {
             const element = overlayList[i];
             element.setMap(map);
@@ -832,11 +836,9 @@ function showOverlay(map, overlayList) {
 
 /** 커스텀 오버레이를 삭제하는 함수 */
 function hideOverlay(overlayList) {
-    if (basicMap.getLevel() > 3) {
-        for (let i = 0; i < overlayList.length; i++) {
-            const element = overlayList[i];
-            element.setMap(null);
-        }
+    for (let i = 0; i < overlayList.length; i++) {
+        const element = overlayList[i];
+        element.setMap(null);
     }
 }
 
