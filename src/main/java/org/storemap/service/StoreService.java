@@ -18,6 +18,8 @@ public interface StoreService {
 	public int removeStore(int member_idx);
 	// 점포 목록
 	public List<StoreVO> getList();
+	// 숨긴 점포 목록
+	public List<StoreVO> getHiddenList();
 	// 점포 조인 목록
 	public List<StoreVO> getMap();
 	// 점포 정보

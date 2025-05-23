@@ -105,6 +105,12 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
+	public List<StoreVO> getHiddenList() {
+		log.info("getHiddenList...");
+		return mapper.getStoreHiddenList();
+	}
+	
+	@Override
 	public List<StoreVO> getMap() {
 		log.info("getMap...");
 		return mapper.getStoreMap();

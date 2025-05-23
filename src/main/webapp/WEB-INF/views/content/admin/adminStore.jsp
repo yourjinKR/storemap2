@@ -4,39 +4,50 @@
 
 
 <ul class="sub-tab">
-	<li><a href="list" class="on">점포 리스트</a></li>
-	<li><a href="request">점포 신청 리스트</a></li>
+	<li><a href="list" class="on">숨긴 점포</a></li>
+	<li><a href="request">점주 요청</a></li>
 	<li><a href="report">신고</a></li>
 </ul>
-<!-- 점포 리스트 탭 -->
+<!-- 숨긴 점포 탭 -->
 <div class="sub-tab-content store-list on">
 	<ul>
 		<li>
 			<div><input type="checkbox"></div>
 			<div>NO</div>
-			<div>점포 고유번호</div>
+			<div>점포사진</div>
 			<div>점포명</div>
-			<div>점포연락처</div>
-			<div>업태</div>
-			<div>가입일</div>
-			<div>누적신고 수</div>
+			<div>점포 연락처</div>
+			<div>점포 주소</div>
+			<div>사업자등록번호</div>
 			<div></div>
 		</li>
 	</ul>
 	<ul>
-		<% for(int i = 1; i<=10; i++){ %>
+		<c:forEach var="svo" items="${storeHiddenList}" varStatus="status">
 		<li>
-			<div><input type="checkbox" name="chk<%= i %>"></div>
-			<div><%= i %></div>
-			<div>00000</div>
-			<div>점포<%= i %>호</div>
-			<div>010-0000-000</div>
-			<div>포장마차</div>
-			<div>0000-00-00</div>
-			<div>신고 수 : 0</div>
-			<div></div>
+			<div class="idx">${svo.store_idx}</div>
+			<div>${status.count}</div>
+			<div>
+				<c:choose>
+					<c:when test="${svo.store_image eq 'store1.jpg'}">
+						<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+					</c:when>
+					<c:otherwise>
+						<img src="${IMG_URL}${svo.store_image}_${svo.attach.filename}" alt="${svo.attach.filename}"/>
+					</c:otherwise>
+				</c:choose>
+			</div>
+			<div>${svo.store_name}</div>
+			<div>${svo.store_num}</div>
+			<div>${svo.store_address}</div>
+			<div>${svo.store_rnum}</div>
+			<div>
+				<div class="btn-box">
+					<button type="button" id="storeReportunHideBtn" class="approve-btn">숨기기 해제</button>
+				</div>
+			</div>
 		</li>
-		<% } %>
+		</c:forEach>
 	</ul>
 	
 </div>

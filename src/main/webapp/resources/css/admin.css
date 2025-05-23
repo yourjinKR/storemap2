@@ -45,18 +45,17 @@
 .sub-tab-content > ul:first-child > li > div:last-child{border-right:1px solid #222;}
 
 
-/* 점포 리스트용 스타일 (9칸 구조) */
+/* 숨긴 점포용 스타일 */
 .sub-tab-content.store-list ul > li > div:nth-child(1){width:40px;}  /* 체크박스 */
 .sub-tab-content.store-list ul > li > div:nth-child(2){width:40px;}  /* NO */
-.sub-tab-content.store-list ul > li > div:nth-child(3){width:100px;} /* 점포 고유번호 */
-.sub-tab-content.store-list ul > li > div:nth-child(4){width:200px;} /* 점포명 */
-.sub-tab-content.store-list ul > li > div:nth-child(5){width:160px;} /* 점포연락처 */
-.sub-tab-content.store-list ul > li > div:nth-child(6){width:80px;}  /* 업태 */
-.sub-tab-content.store-list ul > li > div:nth-child(7){width:100px;} /* 가입일 */
-.sub-tab-content.store-list ul > li > div:nth-child(8){width:100px;} /* 누적신고 수 */
-.sub-tab-content.store-list ul > li > div:nth-child(9){width:calc(100% - 820px);} /* 나머지 공간 */
+.sub-tab-content.store-list ul > li > div:nth-child(3){width:200px;} /* 점포사진 */
+.sub-tab-content.store-list ul > li > div:nth-child(4){width:150px;} /* 점포명 */
+.sub-tab-content.store-list ul > li > div:nth-child(5){width:180px;} /* 점포연락처 */
+.sub-tab-content.store-list ul > li > div:nth-child(6){width:200px;}  /* 점포 주소 */
+.sub-tab-content.store-list ul > li > div:nth-child(7){width:120px;} /* 사업자등록번호 */
+.sub-tab-content.store-list ul > li > div:nth-child(8){width:calc(100% - 930px);} /* 버튼 영역 */
 
-/* 점포 신청 리스트용 스타일 (11칸 구조) */
+/* 점주 요청용 스타일 */
 .sub-tab-content.store-request ul > li > div:nth-child(1){width:40px;}   /* 체크박스 */
 .sub-tab-content.store-request ul > li > div:nth-child(2){width:40px;}   /* NO */
 .sub-tab-content.store-request ul > li > div:nth-child(3){width:80px;}   /* 신청자 */
@@ -69,7 +68,7 @@
 .sub-tab-content.store-request ul > li > div:nth-child(10){width:125px;} /* 신청일시 */
 .sub-tab-content.store-request ul > li > div:nth-child(11){width:calc(100% - 1255px);} /* 버튼 영역 */
 
-/* 점포 신고용 스타일 (9칸 구조 - 점포 리스트와 동일) */
+/* 점포 신고용 스타일 */
 .sub-tab-content.store-report ul > li > div:nth-child(1){width:80px;}  /* 체크박스 */
 .sub-tab-content.store-report ul > li > div:nth-child(2){width:150px;}  /* NO */
 .sub-tab-content.store-report ul > li > div:nth-child(3){width:200px;} /* 점포사진 */

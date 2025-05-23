@@ -17,6 +17,8 @@ public interface StoreMapper {
 	public int deleteStore(int member_idx);
 	// 점포 목록
 	public List<StoreVO> getStoreList();
+	// 숨긴 점포 목록
+	public List<StoreVO> getStoreHiddenList();
 	// 점포 조인 목록
 	public List<StoreVO> getStoreMap();
 	// 점포 정보
