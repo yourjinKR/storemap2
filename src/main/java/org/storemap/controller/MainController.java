@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.StoreVO;
 import org.storemap.service.AnnounceServiceImple;
@@ -40,6 +41,15 @@ public class MainController {
 	})
 	public ResponseEntity<List<EventVO>> getLiveEvent(){
 		return new ResponseEntity<List<EventVO>>(eventService.getLiveEvent(), HttpStatus.OK);
+	}
+	
+	// 메인 이벤트 진행중인 리스트
+	@GetMapping(value = "/getMainSlide",
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+	})
+	public ResponseEntity<List<AttachFileVO>> getMainSlide(){
+		return new ResponseEntity<List<AttachFileVO>>(eventService.getMainSlide(), HttpStatus.OK);
 	}
 	
 	// 메인 이벤트 진행예정 리스트

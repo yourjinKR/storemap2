@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
 .main-slide {height: 400px;}
+.main-slide .img-box{height:400px;width:1200px;overflow: hidden}
 
 .list-top{border-bottom: 1px solid #222;display:flex; justify-content: space-between; align-items: center}
 .list-top h3{font-size:24px;font-weight: bold;padding-bottom: 10px;margin-bottom:10px}

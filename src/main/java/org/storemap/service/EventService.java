@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.ApprovedStoreViewDTO;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventFilterVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
 
 public interface EventService {
+	// 메인 슬라이드
+	public List<AttachFileVO> getMainSlide();
 	// 메인 페이지 진행중인 이벤트
 	public List<EventVO> getLiveEvent();
 	// 메인 페이지 진행예정 이벤트

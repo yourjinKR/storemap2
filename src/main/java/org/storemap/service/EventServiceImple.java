@@ -41,6 +41,27 @@ public class EventServiceImple implements EventService{
 	@Autowired
 	private AttachFileMapper attachMapper;
 	
+	// 메인 슬라이드
+	public List<AttachFileVO> getMainSlide(){
+		List<EventVO> list = mapper.getMainSlide();
+		List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+		for (EventVO vo : list) {
+			AttachFileVO attach = new AttachFileVO();
+			String[] file = vo.getEvent_file().split(",");
+			int idxof = file[1].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+			if(idxof == -1) {
+				attach = attachMapper.getAttach(file[1]);
+			}else {
+				attach.setFilename(file[1]);
+			}
+			
+			if(attach != null) {
+				attachList.add(attach);
+			}
+		}
+		
+		return attachList;
+	}
 	
 	// 메인 페이지 진행중인 이벤트
 	@Override
@@ -50,7 +71,15 @@ public class EventServiceImple implements EventService{
 			if(vo.getEvent_file() != null) {
 				String[] file = vo.getEvent_file().split(",");
 				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
-				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				
+				AttachFileVO attach = new AttachFileVO();
+				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+				if(idxof == -1) {
+					attach = attachMapper.getAttach(file[0]);
+				}else {
+					attach.setFilename(file[0]);
+				}
+				
 				if(attach != null) {
 					attachList.add(attach);
 				}
@@ -67,7 +96,14 @@ public class EventServiceImple implements EventService{
 			if(vo.getEvent_file() != null) {
 				String[] file = vo.getEvent_file().split(",");
 				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
-				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				AttachFileVO attach = new AttachFileVO();
+				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+				if(idxof == -1) {
+					attach = attachMapper.getAttach(file[0]);
+				}else {
+					attach.setFilename(file[0]);
+				}
+				
 				if(attach != null) {
 					attachList.add(attach);
 				}

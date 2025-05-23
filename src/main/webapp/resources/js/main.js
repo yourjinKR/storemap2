@@ -6,14 +6,7 @@ document.head.appendChild(linkEle);
 
 
 document.addEventListener("DOMContentLoaded", (event) => {
-	// 메인 배너 슬라이드
-	var swiper = new Swiper(".mySwiper", {
-		spaceBetween : 30,
-		pagination : {
-			el : ".swiper-pagination",
-			clickable : true,
-		},
-	});	
+
 	
 	// 메인 점포 리스트 변경
 	let selected = encodeURIComponent("전체");
@@ -28,11 +21,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	storeList(selected); // 점   포 랜덤
 	calendarInit();		 // 캘린더 렌더
 	
-
+	getMainSlide();
 	getEventList("Live");
 	getEventList("Soon");
 });
 
+function getMainSlide(){
+	fetch(`/main/getMainSlide`)
+	.then(response => response.json())
+	.then(result =>{
+		let str = "";
+		for (let data of result) {
+			str += `<div class="swiper-slide">`;
+			str += 		`<div class="img-box">`;
+			if(data.filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+				str += 		`<img src="${data.filename}">`;
+			}else{
+				str += 		`<img src="${IMG_URL}${data.uuid}_${data.filename}">`;
+			}
+			str += 		`</div>`;
+			str += `</div>`;
+		}
+		
+		// 메인 배너 슬라이드
+		var swiper = new Swiper(".main-slide .mySwiper", {
+			spaceBetween : 30,
+			pagination : {
+				el : ".swiper-pagination",
+				clickable : true,
+			},
+		});	
+		
+		let mainSlide = document.querySelector(".main-slide .swiper-wrapper");
+		if(mainSlide != null){
+			mainSlide.innerHTML = str;
+		}
+	})
+	.catch(err => console.log(err));
+}
 
 // 
 function placeSelect(){
@@ -53,22 +79,26 @@ function getEventList(type){
 		result.forEach((event,idx) => {
 			if(idx == 0 || idx == 5){
 				str += `<li class="swiper-slide">`;
-				str += 		`<a href="/event/eventView?event_idx=${event.event_idx}">`;
 				str += 		`<div class="card-list d_f">`;
 			}
 				str +=			`<div class="card-box">`;
+				str += 			`<a href="/event/eventView?event_idx=${event.event_idx}">`;
 				if(event.attachFile != null && event.attachFile.length > 0){
-					str += 				`<div class="card-img"><img src="${IMG_URL}${event.attachFile[0].uuid}_${event.attachFile[0].filename}"></div>`;
+					if(event.attachFile[0].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+						str += 			`<div class="card-img"><img src="${event.attachFile[0].filename}"></div>`;						
+					}else{
+						str += 			`<div class="card-img"><img src="${IMG_URL}${event.attachFile[0].uuid}_${event.attachFile[0].filename}"></div>`;
+					}
 				}else{
 					str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
 				}
 				str += 					`<div class="card-text">`;
-				str += 					`${event.event_content}`;
-				str += 				`</div>`;
+				str += 						`${event.event_content}`;
+				str += 					`</div>`;
+				str += 			`</a>`;
 				str += 			`</div>`;
 			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
-				str += 		`</a>`;
 				str += `</li>`;
 			}
 		});
@@ -108,22 +138,26 @@ function storeList(store_address){
 		result.forEach((store,idx) => {
 			if(idx == 0 || idx == 5){
 				str += `<li class="swiper-slide">`;
-				str += 		`<a href="">`;
 				str += 		`<div class="card-list d_f">`;
 			}
 			str +=			`<div class="card-box">`;
+			str += 				`<a href="${store.store_idx}">`;
 			if(store.attach != null){
-				str += 				`<div class="card-img"><img src="${IMG_URL}${store.attach.uuid}_${store.attach.filename}"></div>`;
+				if(store.attach.filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+					str += 				`<div class="card-img"><img src="${store.attach.filename}"></div>`;
+				}else{
+					str += 				`<div class="card-img"><img src="${IMG_URL}${store.attach.uuid}_${store.attach.filename}"></div>`;
+				}
 			}else{
 				str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
 			}
 			str += 					`<div class="card-text">`;
-			str += 					`${store.store_name}`;
-			str += 				`</div>`;
+			str += 						`${store.store_name}`;
+			str += 					`</div>`;
+			str += 				`</a>`;
 			str += 			`</div>`;
 			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
-				str += 		`</a>`;
 				str += `</li>`;
 			}
 		});
@@ -143,6 +177,19 @@ function storeList(store_address){
 		if(result.length <= 4){
 			storeList.destroy();
 		}
+		
+		let storeHref = document.querySelectorAll(".list-store .card-list > .card-box > a");
+		if(storeHref != null && storeHref.length > 0){
+			storeHref.forEach(target => {
+				target.addEventListener("click",function(e){
+					e.preventDefault();
+					sessionStorage.setItem('store_idx', this.getAttribute("href"));
+					location.href = "/store/map";
+				})
+			})
+		}
+		
+		
 	})
 	.catch(err => console.log(err));
 }
@@ -160,9 +207,8 @@ function eventListEndDate(dateStr){
 			result.forEach((json,idx) => {
 				let date = new Date(json.event_bstopdate);
 				let replydate = date.getFullYear()+ "-" + String(date.getMonth() + 1).padStart(2, '0')+ "-" + String(date.getDate()).padStart(2, '0');
-				
 				str += 	`<li>`;
-				str += 		`<a class="d_f">`;
+				str += 		`<a href="/event/eventView?event_idx=${json.event_idx}" class="d_f">`;
 				str += 			`<p>${json.event_content}</p>`;
 				str += 			`<span>종료 날짜 : ${replydate}</span>`;
 				str += 		`</a>`;
