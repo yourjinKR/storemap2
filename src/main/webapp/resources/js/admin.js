@@ -53,12 +53,15 @@ function tabChange(){
 				this.classList.add("on");
 				document.querySelector("."+this.getAttribute("href")+"-content").classList.add("on");
 				mainTab = selectMainTab.getAttribute("href");
-				// 버튼 이벤트 등록 함수 다시 호출
+				
+				// 탭 변경시 현재 탭정보 초기화
 				mainTabs = document.querySelectorAll(".main-tab > li > a");
 				selectMainTab = document.querySelector(".main-tab > li > a.on");
 				if(selectMainTab != null) {
 					mainTab = selectMainTab.getAttribute("href");
 				}
+				
+				// 버튼 이벤트 등록 함수 다시 호출
 				setTimeout(() => {
 					buttonEvent();
 				}, 100);
@@ -122,7 +125,7 @@ function buttonEvent(){
 	const StoreReportRemoveBtns = document.querySelectorAll("#storeReportRemoveBtn");
 	// 기업 버튼 선택
 	
-	// 이벤트 버튼 서택
+	// 이벤트 버튼 선택
 	
 	// 리뷰 숨기기
 	ReviewReportHideBtns.forEach(btn => {

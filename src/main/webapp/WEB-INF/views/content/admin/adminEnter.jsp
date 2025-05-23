@@ -11,4 +11,10 @@
 	<ul>
 		
 	</ul>
+	<ul>
+		<c:forEach var="elvo" items="${enterRequestList}" varStatus="status">
+			<li>
+			</li>
+		</c:forEach>
+	</ul>
 </div>

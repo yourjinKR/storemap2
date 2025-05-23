@@ -84,9 +84,8 @@
 .sub-tab-content.store-request ul > li > div:nth-child(6){width:180px;}  /* 점포 연락처 */
 .sub-tab-content.store-request ul > li > div:nth-child(7){width:200px;}  /* 점포 주소 */
 .sub-tab-content.store-request ul > li > div:nth-child(8){width:120px;}  /* 사업자등록번호 */
-.sub-tab-content.store-request ul > li > div:nth-child(9){width:120px;}  /* 사업자 등록증 */
-.sub-tab-content.store-request ul > li > div:nth-child(10){width:125px;} /* 신청일시 */
-.sub-tab-content.store-request ul > li > div:nth-child(11){width:calc(100% - 1255px);} /* 버튼 영역 */
+.sub-tab-content.store-request ul > li > div:nth-child(9){width:125px;} /* 신청일시 */
+.sub-tab-content.store-request ul > li > div:nth-child(10){width:calc(100% - 1135px);} /* 버튼 영역 */
 
 /* 점포 신고용 스타일 */
 .sub-tab-content.store-report ul > li > div:nth-child(1){width:80px;}  /* idx */

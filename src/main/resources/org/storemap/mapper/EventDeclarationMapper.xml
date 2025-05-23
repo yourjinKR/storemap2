@@ -11,6 +11,7 @@
 		<result property="regdate" column="regdate"/>
 		<result property="declaration_count" column="declaration_count"/>
 		<association property="event" resultMap="eventMap"/>
+		<association property="enter" resultMap="enterMap"/>
 		<association property="member" resultMap="memberMap"/>
 		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
@@ -30,6 +31,10 @@
 		<result property="event_hidden" column="event_hidden"/>
 		<result property="event_file" column="event_file"/>
 		<result property="event_location" column="event_location"/>
+	</resultMap>
+	<resultMap id="enterMap" type="org.storemap.domain.EnterVO">
+		<id property="enter_idx" column="enter_idx"/>
+		<result property="enter_name" column="enter_name"/>
 	</resultMap>
 	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
 		<id property="member_idx" column="member_idx"/>
@@ -85,11 +90,14 @@
 			   a.filename,
 			   d.event_idx,
 			   d.regdate,
+			   t.enter_name,
 			   COUNT(*) AS declaration_count
 		FROM event_declaration d
 		JOIN event e ON d.event_idx = e.event_idx
+		JOIN enter t ON e.enter_idx = t.enter_idx
 		LEFT JOIN attach_file a ON e.event_file = a.uuid
 		GROUP BY d.event_idx,
+				 t.enter_name,
 				 d.regdate,
 				 a.filename,
 				 e.event_idx,

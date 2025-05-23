@@ -63,34 +63,32 @@
 			<div>점포 연락처</div>
 			<div>점포 주소</div>
 			<div>사업자등록번호</div>
-			<div>사업자 등록증</div>
 			<div>신청일시</div>
 			<div></div>
 		</li>
 	</ul>
 	<ul>
-		<c:forEach var="rvo" items="${storeRequestList}" varStatus="status">
+		<c:forEach var="slvo" items="${storeRequestList}" varStatus="status">
 		<li>
 			<!--<div><input type="checkbox" name="member_idx" value="${rvo.member_idx}"></div>-->
-			<div class="idx">${rvo.member_idx}</div>
+			<div class="idx">${slvo.member_idx}</div>
 			<div>${status.count}</div>
-			<div>${rvo.member.member_name}</div>
+			<div>${slvo.member.member_name}</div>
 			<div>
 				<c:choose>
-					<c:when test="${rvo.store.store_image eq 'store1.jpg'}">
+					<c:when test="${slvo.store.store_image eq 'store1.jpg'}">
 						<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 					</c:when>
 					<c:otherwise>
-						<img src="${IMG_URL}${rvo.store.store_image}_${rvo.attach.filename}" alt="${rvo.attach.filename}"/>
+						<img src="${IMG_URL}${slvo.store.store_image}_${slvo.attach.filename}" alt="${slvo.attach.filename}"/>
 					</c:otherwise>
 				</c:choose>
 			</div>
-			<div>${rvo.store.store_name}</div>
-			<div>${rvo.store.store_num}</div>
-			<div>${rvo.store.store_address}</div>
-			<div>${rvo.store.store_rnum}</div>
-			<div>sample.jpg</div>
-			<div>${rvo.regdate}</div>
+			<div>${slvo.store.store_name}</div>
+			<div>${slvo.store.store_num}</div>
+			<div>${slvo.store.store_address}</div>
+			<div>${slvo.store.store_rnum}</div>
+			<div>${slvo.regdate}</div>
 			<div>
 				<div class="btn-box">
 					<button type="button" id="storeApprovalBtn" class="approve-btn">점포 승인</button>

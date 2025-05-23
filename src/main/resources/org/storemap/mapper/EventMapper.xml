@@ -22,6 +22,10 @@
 		<result property="event_location" column="event_location"/>
 		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
+	<resultMap id="enterMap" type="org.storemap.domain.EnterVO">
+		<id property="enter_idx" column="enter_idx"/>
+		<result property="enter_name" column="enter_name"/>
+	</resultMap>
 	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
 		<id property="attach_idx" column="attach_idx"/>
 		<result property="filename" column="filename"/>
@@ -561,8 +565,9 @@
 	
 	<!-- 숨긴 이벤트 전체 보기 -->
 	<select id="getEventHiddenList" resultMap="eventMap">
-		SELECT e.*, a.filename
+		SELECT t.enter_name, e.*, a.filename
 		FROM event e
+		JOIN enter t ON e.enter_idx = t.enter_idx
 		LEFT OUTER JOIN attach_file a ON e.event_file = a.uuid
 		WHERE event_hidden = 1
 	</select>
