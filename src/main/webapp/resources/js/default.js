@@ -1,6 +1,7 @@
 const CSS_FILE_PATH = [
 		'/resources/css/reset.css',
 		'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
+		'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap',
 		'/resources/css/default.css',
 		'/resources/css/common.css'
 		];

@@ -157,19 +157,25 @@ function cardBoard(result){
 			}else{
 				str += 		`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 			}
-			str += 		`<span class="event-date">${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</span>`;
 			str += 		`</div>`;
 			str += 		`<div class="card-text">`;
-			str += 			`<p>${data.event_content}</p>`;
-			str += 			`<div class="icon-box">
-								<span class="material-symbols-outlined">
-									mode_comment
-								</span> ${data.comment_count}
-								<span class="material-symbols-outlined">
-									favorite
-								</span> ${data.like_count}
-							</div>`;
+			str += 			`<div class="event-title">${data.event_title}</div>`;
+			str += 			`<div>`;
+			str +=	 			`<span class="event-date">${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</span>`;
+			str += 				`<div class="icon-box">
+									<span class="material-symbols-outlined">
+										mode_comment
+									</span> ${data.comment_count}
+									<span class="material-symbols-outlined">
+										favorite
+									</span> ${data.like_count}
+								</div>`;
+			str += 			`</div>`;
 			str += 		`</div>`;
+			str += 		`<div class="event-content">
+							<h4>${data.event_title}</h4>
+							<p>${data.event_content}</p>
+						</div>`;
 			str += `</a>`;
 			str += `</li>`;
 		})

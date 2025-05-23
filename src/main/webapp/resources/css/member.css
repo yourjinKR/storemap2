@@ -1,22 +1,23 @@
 @charset "UTF-8";
 
+.right-nav{display:none}
 .wrap{width:100%;}
 .header, .footer{display:none;}
 .login-wrap{border:1px solid #d9d9d9;height:100vh;box-shadow: 0 5px 5px rgba(0,0,0,0.1);}
-.login-wrap h3{font-size:36px;font-weight:bold;width:100%;word-break: keep-all;color:#154734;max-width:75%}
+.login-wrap h3{font-size:36px;font-weight:bold;width:100%;word-break: keep-all;color:var(--font-color);max-width:75%}
 .login-wrap > div{width:50%;}
-.login-wrap > div.right-con{background:#D9F3E5;display:flex;flex-direction: column;justify-content: center;align-items: center;text-align:center;}
-.login-wrap > div.right-con p{font-size:22px;display:block;margin:35px 0 25px;color:#154734}
+.login-wrap > div.right-con{background:var(--point-color);display:flex;flex-direction: column;justify-content: center;align-items: center;text-align:center;}
+.login-wrap > div.right-con p{font-size:22px;display:block;margin:35px 0 25px;color:#4A2F1B}
 
 .btn-box {display:flex; gap:15px;margin:0 20px;}
-.btn-box a{border:1px solid #fff;border-radius:30px;padding:15px 25px;transition:0.25s ease;font-size:24px;font-weight:bold;background:#2E8B57;color:#fff;box-shadow: 5px 5px 5px rgba(0,0,0,0.1);word-break:keep-all;text-align:center;}
+.btn-box a{border:1px solid #fff;border-radius:30px;padding:15px 25px;transition:0.25s ease;font-size:24px;font-weight:bold;background:var(--point-color2);color:var(--font-color);box-shadow: 5px 5px 5px rgba(0,0,0,0.1);word-break:keep-all;text-align:center;}
 .btn-box a:hover{background:#FFFFFF;color:#2E8B57;}
 
 .login-wrap > div.left-con{display:flex;flex-direction: column;justify-content: center;align-items: center;text-align:center;}
 .login-wrap > div.left-con h3{margin-bottom:20px;}
 .login-form{display:flex;flex-direction: column;justify-content: center;align-items: center;gap:15px;}
 .login-form input{border:1px solid #d9d9d9;border-radius:30px;padding:10px 20px;font-size:24px;height:50px;line-height: 50px;}
-.login-form button{color:#fff;background:#2E8B57;border:1px solid #ccc;border-radius:30px;outline:none;width:100%;padding: 10px 20px;font-size:24px;font-weight:bold}
+.login-form button{color:#222;background:var(--point-color2);border:1px solid #ccc;border-radius:30px;outline:none;width:100%;padding: 10px 20px;font-size:24px;font-weight:bold}
 
 .member-wrap{display:flex;justify-content: center;align-items: center;background:#D9F3E5;height:100vh;}
 .member-wrap > div{background:#F7FCF9;border:1px solid #92C9A4;border-radius:10px;padding:30px;}

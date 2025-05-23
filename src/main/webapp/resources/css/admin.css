@@ -129,7 +129,7 @@
 .sub-tab{display:flex;}
 
 .sub-tab a{display:inline-block;border-radius:10px 10px 0 0;border:1px solid #ccc;border-bottom:none;padding:15px;}
-.sub-tab a.on{background:#1985ff;color:#fff;font-weight:bold;}
+.sub-tab a.on{background:var(--point-color2);color:var(--font-color);font-weight:bold;}
 
 .sub-tab-content{display:none;}
 .sub-tab-content.on{display:block;}

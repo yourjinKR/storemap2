@@ -56,7 +56,15 @@
 .d_f{display: flex;}
 
 *{box-sizing: border-box;}
+body{font-family: 'Noto Sans KR', sans-serif;}
 img{display: block;width:100%;}
 caption{opacity: 0;font-size: 0;}
 input[type="text"]:read-only:focus,
 textarea:read-only:focus{outline:none}
+
+:root {
+  --main-color: #3498db;
+  --point-color: #FFF3C6;
+  --point-color2: #FEDA3E;
+  --font-color: #4A2F1B;
+}

@@ -13,9 +13,9 @@
 /* 이벤트 캘린더 */
 .event-calendar {gap:15px}
 .event-calendar .left-con{width: 35%;height: 415px;padding:5px; border: 1px solid #222;}
-.event-calendar .right-con{padding:0 30px;width:65%;border:15px solid #707070;border-radius:10px}
-.event-calendar .right-con h3{border-bottom: 1px solid #222; padding:15px 0; font-size: 24px;font-weight: bold;}
-.event-calendar .right-con li{border-bottom: 1px solid #222;padding:10px 0;}
+.event-calendar .right-con{padding:0;width:65%;border:1px solid #707070;border-radius:10px;overflow: hidden;}
+.event-calendar .right-con h3{border-bottom:1px solid d9d9d9; padding:15px 30px; font-size: 24px;font-weight: bold;background-color:var(--point-color);margin-bottom:10px;}
+.event-calendar .right-con li{border-bottom: 1px solid #222;padding:10px 0; margin:0 30px;}
 .event-calendar .right-con li a{justify-content: space-between;}
 .event-calendar .right-con li p{white-space: nowrap;width: 75%; text-overflow: ellipsis;overflow:hidden;border-right: 1px solid #222;}
 
@@ -115,7 +115,7 @@
     border-radius:50%;
 }
 
-.current.today {background: #1985ff; color:#fff !important;}
+.current.today {background-color: var(--point-color2);}
 
 .sec_cal .cal_wrap .dates {
     display: flex;
