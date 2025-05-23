@@ -60,5 +60,9 @@ public interface EventService {
 	public int modifyEventBasicInfo(EventVO eventVO);
 	// 수정 페이지에 idx가져가기
 	public EventVO getEventByIdx(int event_idx);
+	
+	public void updateEventFile(int event_idx, String event_file);
+	// cloudinary에서 사용
+	public int modifyEventFileOnly(EventVO eventVO);
 		
 }

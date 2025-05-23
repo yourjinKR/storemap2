@@ -601,4 +601,22 @@
 	    FROM event
 	    WHERE event_idx = #{event_idx}
 	</select>
+		
+	<update id="updateEventFile">
+	    UPDATE event
+	    SET event_file = #{event_file}
+	    WHERE event_idx = #{event_idx}
+	</update>
+	
+	<select id="getEventFileByIdx" resultType="String">
+	    SELECT event_file
+	    FROM event
+	    WHERE event_idx = #{event_idx}
+	</select>
+	
+	<update id="updateEventFileOnly" parameterType="org.storemap.domain.EventVO">
+	    UPDATE event
+	    SET event_file = #{event_file}
+	    WHERE event_idx = #{event_idx}
+	</update>
 </mapper>

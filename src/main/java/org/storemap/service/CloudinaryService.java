@@ -5,11 +5,15 @@ import lombok.extern.log4j.Log4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AttachFileVO;
+import org.storemap.domain.EventVO;
 import org.storemap.mapper.AttachFileMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +28,8 @@ public class CloudinaryService {
     @Autowired
 	private AttachFileMapper mapper;
     
+    @Autowired
+    private EventService eventService;
     
     @Autowired
     public CloudinaryService(Cloudinary cloudinary) {
@@ -100,4 +106,42 @@ public class CloudinaryService {
     public List<AttachFileVO> getFilesByUuidList(List<String> uuidList) {
         return mapper.getFilesByUuidList(uuidList);
     }
+    
+    @Transactional
+    public void updateEventImagesWithDeleteAndNewFiles(int event_idx, List<String> deleteUuids, List<MultipartFile> newFiles) {
+        // 1. 삭제할 UUID 파일 삭제 (Cloudinary + DB)
+        if (deleteUuids != null && !deleteUuids.isEmpty()) {
+            for (String uuid : deleteUuids) {
+                deleteFile(uuid);
+            }
+        }
+
+        // 2. 기존 이벤트 정보 가져오기
+        EventVO event = eventService.getEventByIdx(event_idx);
+        List<String> currentUuids = new ArrayList<>();
+        if (event.getEvent_file() != null && !(event.getEvent_file().trim().length() > 0)) {
+            currentUuids.addAll(Arrays.asList(event.getEvent_file().split(",")));
+        }
+
+        // 3. 삭제 UUID 리스트는 기존 UUID 목록에서 제거
+        if (deleteUuids != null) {
+            currentUuids.removeAll(deleteUuids);
+        }
+
+        // 4. 새 파일 업로드 및 UUID 추가
+        for (MultipartFile file : newFiles) {
+            if (!file.isEmpty()) {
+                String newUuid = uploadFile(file);
+                currentUuids.add(newUuid);
+            }
+        }
+
+        // 5. event_file 컬럼 업데이트
+        String joinedUuids = String.join(",", currentUuids);
+        event.setEvent_file(joinedUuids);
+
+        // 6. DB 업데이트 (event_file 컬럼만)
+        eventService.modifyEventFileOnly(event);
+    }
+
 }

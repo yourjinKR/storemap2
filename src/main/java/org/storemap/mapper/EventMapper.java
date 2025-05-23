@@ -65,7 +65,11 @@ public interface EventMapper {
 	public int updateEventBasicInfo(EventVO eventVO);
 	
 	public EventVO getEventByIdx(int event_idx);
-
-	
+	// 이미지 UUID 컬럼 수정
+	public void updateEventFile(@Param("eventIdx") int eventIdx, @Param("eventFile") String eventFile);
+	// 이미지 UUID 조회 (기존 이미지 삭제용)
+	public String getEventFileByIdx(int eventIdx);
+	// cloudinary에서 사용
+	public int updateEventFileOnly(EventVO eventVO);
 	
 }

@@ -356,5 +356,15 @@ public class EventServiceImple implements EventService{
 	public EventVO getEventByIdx(int event_idx) {		
 		return mapper.getEventByIdx(event_idx);
 	}
+	
+    @Override
+    public void updateEventFile(int event_idx, String event_file) {
+        mapper.updateEventFile(event_idx, event_file);
+    }
+    
+    @Override
+    public int modifyEventFileOnly(EventVO eventVO) {
+        return mapper.updateEventFileOnly(eventVO);
+    }
 }
 

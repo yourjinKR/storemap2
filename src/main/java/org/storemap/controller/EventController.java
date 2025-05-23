@@ -361,8 +361,21 @@ public class EventController {
 	}
 
 	@PostMapping("/eventModify")
-	public String modifyEvent(EventVO eventVO) {
-	    eventService.modifyEventBasicInfo(eventVO);
-	    return "redirect:/event/eventView?event_idx=" + eventVO.getEvent_idx();
+	public String modifyEvent(
+	    EventVO evo,
+	    @RequestParam(value = "deleteUuids", required = false) List<String> deleteUuids,
+	    @RequestParam(value = "eventImages", required = false) List<MultipartFile> newFiles) {
+
+	    // 1. 기본 텍스트 필드 수정
+	    eventService.modifyEventBasicInfo(evo);
+
+	    // 2. 이미지 파일 관련 수정 처리
+	    if ((deleteUuids != null && !deleteUuids.isEmpty()) || 
+	        (newFiles != null && !newFiles.isEmpty() && newFiles.get(0).getSize() > 0)) {
+	        cloudinaryService.updateEventImagesWithDeleteAndNewFiles(evo.getEvent_idx(), deleteUuids, newFiles);
+	    }
+
+	    // 3. 수정 완료 후 상세 페이지로 리다이렉트
+	    return "redirect:/event/eventView?event_idx=" + evo.getEvent_idx();
 	}
 }

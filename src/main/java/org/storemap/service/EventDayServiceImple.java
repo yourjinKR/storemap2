@@ -19,9 +19,16 @@ public class EventDayServiceImple implements EventDayService{
 		public int insertEventDay(EventDayVO eventDayVO) {
 			return mapper.insertEventday(eventDayVO);
 		}
+	
+	
 	@Override
 	public List<EventDayVO> getEventDaysByEventId(int event_idx) {
 		return mapper.getEventDaysByEventId(event_idx);
+	}
+	
+	@Override
+	public int getEventIdxByEdayIdx(int eday_idx) {		
+		return mapper.getEventIdxByEdayIdx(eday_idx);
 	}
 	
 }

@@ -9,6 +9,6 @@ public interface EventDayService {
 	
 	public List<EventDayVO> getEventDaysByEventId(int event_idx);
 	
-
+	public int getEventIdxByEdayIdx(int eday_idx);
 	
 }
