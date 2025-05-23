@@ -428,10 +428,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ====================== 검색어 자동완성 ====================== 
-    // 상태 변수
-    selectedIndex = -1; // 방향키로 선택 중인 항목의 인덱스
+    // 방향키로 선택 중인 항목의 인덱스
+    selectedIndex = -1;
+    /** 최근 실행한 검색어 (이전 기록을 기억) */
+    let subKeyword = null;
+    /** 자동완성을 취소했을때 돌아갈 키워드 */
+    let orgKeyword =null;
+
     let suggestionList = []; // 현재 렌더링 중인 추천 리스트
-    // let foodList = ['붕어빵', '잉어빵', '닭꼬치', '컵밥', '타코야끼', '토스트', '닭강정', '떡볶이', '커피', '핫도그', '아이스크림'];
 
     // 검색창이 포커스될때
     keywordInput.addEventListener("focus", e => {
@@ -538,18 +542,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (selectedIndex > 0) {
                     selectedIndex--;
                     updateActiveItem(items);
+                    // input에 값 적용
+                    keywordInput.value = items[selectedIndex].dataset.value;
+                } 
+                // 자동완성 리스트에 벗어나기
+                else if (selectedIndex == 0) {
+                    if (orgKeyword != null) {
+                        keywordInput.value = orgKeyword;
+                    }
+                    resetAutocomplete();
                 }
                 break;
 
             case 40: // 아래
                 e.preventDefault();
                 if (selectedIndex < items.length - 1) {
+                    // 자동완성 첫 진입시 기존의 키워드를 기억
+                    if (selectedIndex == -1) {
+                        orgKeyword = keywordInput.value;
+                    }
                     selectedIndex++;
                     updateActiveItem(items);
+                    // input에 값 적용
+                    keywordInput.value = items[selectedIndex].dataset.value;
                 }
                 break;
 
             case 13: // Enter
+                // 검색 키워드 기억
+                // subKeyword = keywordInput.value;
                 e.preventDefault();
                 deleteAllEle();
 
@@ -612,6 +633,8 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteAllEle();
 
         const target = e.target.closest("li");
+        // subKeyword = target.dataset.value;
+        
         if (!target) return;
 
         const type = target.getAttribute("type");
