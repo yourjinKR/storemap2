@@ -146,15 +146,31 @@ function cardBoard(result){
 	if(result != null && result.event.length > 0){
 		result.event.forEach(data => {
 			str += 	`<li class="card-box" data-idx="${data.event_idx}">`;
-			str += 		`<div class="card-img por">idx : ${data.event_idx}<br> 지역 : ${data.event_location}<br> 제목 : ${data.event_title}`;
-			str += 		`<img alt="" src="/resources/img/${data.event_file}">`;
+			str += 	`<a href="/event/eventView?event_idx=${data.event_idx}">`;
+			str += 		`<div class="card-img por"><span class="loc">${locationFormat(data.event_location)}</span>`;
+			if(data.attachFile != null && data.attachFile.length > 0){
+				if(data.attachFile[0].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+					str += 	`<img src="${data.attachFile[0].filename}">`;						
+				}else{
+					str += 	`<img src="${IMG_URL}${data.attachFile[0].uuid}_${data.attachFile[0].filename}">`;
+				}
+			}else{
+				str += 		`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+			}
 			str += 		`<span class="event-date">${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</span>`;
 			str += 		`</div>`;
 			str += 		`<div class="card-text">`;
-			str += 			`좋아요 : ${data.like_count} `;
-			str += 			`댓글 : ${data.comment_count}<br>`;
-			str += 			`${data.event_content}`;
+			str += 			`<p>${data.event_content}</p>`;
+			str += 			`<div class="icon-box">
+								<span class="material-symbols-outlined">
+									mode_comment
+									</span> ${data.comment_count}
+								<span class="material-symbols-outlined">
+									favorite
+								</span> : ${data.like_count}
+							</div>`;
 			str += 		`</div>`;
+			str += `</a>`;
 			str += `</li>`;
 		})
 	}else{
@@ -165,6 +181,29 @@ function cardBoard(result){
 	document.querySelector("#boardCard").innerHTML = str;
 }
 
+function locationFormat(loc){
+	let result = "기타";
+	let arr = loc.split(" ");
+	switch (arr[0]) {
+		case "서울특별시": result = "서울"; break;
+		case "경기도": result = "경기"; break;
+		case "인천광역시": result = "인천"; break;
+		case "강원특별자치도": result = "강원"; break;
+		case "충청남도": result = "충남"; break;
+		case "대전광역시": result = "대전"; break;
+		case "충청북도": result = "충북"; break;
+		case "부산광역시": result = "부산"; break;
+		case "울산광역시": result = "울산"; break;
+		case "대구광역시": result = "대구"; break;
+		case "경상북도": result = "경북"; break;
+		case "경상남도": result = "경남"; break;
+		case "전라남도": result = "전남"; break;
+		case "광주광역시": result = "광주"; break;
+		case "전북남도": result = "전북"; break;
+		case "제주특별자치도": result = "제주"; break;
+	}
+	return result; 
+}
 
 // 이벤트 리스트 형태 게시판
 function listBoard(result){

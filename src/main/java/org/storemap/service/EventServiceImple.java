@@ -171,8 +171,26 @@ public class EventServiceImple implements EventService{
 	@Transactional
 	@Override
 	public List<EventVO> getFilterList(EventDTO edto){
-		List<EventVO> list = null;
-		list = mapper.getFilterList(edto);
+		List<EventVO> list = mapper.getFilterList(edto);
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] file = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				
+				AttachFileVO attach = new AttachFileVO();
+				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+				if(idxof == -1) {
+					attach = attachMapper.getAttach(file[0]);
+				}else {
+					attach.setFilename(file[0]);
+				}
+				
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
 		return list;
 	}
 	

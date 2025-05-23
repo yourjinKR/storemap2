@@ -93,7 +93,7 @@ function getEventList(type){
 					str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
 				}
 				str += 					`<div class="card-text">`;
-				str += 						`${event.event_content}`;
+				str += 						`<p>${event.event_content}</p>`;
 				str += 					`</div>`;
 				str += 			`</a>`;
 				str += 			`</div>`;
@@ -152,7 +152,7 @@ function storeList(store_address){
 				str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
 			}
 			str += 					`<div class="card-text">`;
-			str += 						`${store.store_name}`;
+			str += 						`<p>${store.store_name}</p>`;
 			str += 					`</div>`;
 			str += 				`</a>`;
 			str += 			`</div>`;
