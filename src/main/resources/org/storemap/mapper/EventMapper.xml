@@ -3,6 +3,32 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EventMapper">
+	<!-- 숨긴 이벤트용 맵핑 -->
+	<resultMap id="eventMap" type="org.storemap.domain.EventVO">
+		<id property="event_idx" column="event_idx"/>
+		<result property="enter_idx" column="enter_idx"/>
+		<result property="event_title" column="event_title"/>
+		<result property="event_category" column="event_category"/>
+		<result property="event_postcode" column="event_postcode"/>
+		<result property="event_location_detail" column="event_location_detail"/>
+		<result property="event_content" column="event_content"/>
+		<result property="event_like_cnt" column="event_like_cnt"/>
+		<result property="event_rstartdate" column="event_rstartdate"/>
+		<result property="event_rstopdate" column="event_rstopdate"/>
+		<result property="event_bstatdate" column="event_bstatdate"/>
+		<result property="event_bstopdate" column="event_bstopdate"/>
+		<result property="event_hidden" column="event_hidden"/>
+		<result property="event_file" column="event_file"/>
+		<result property="event_location" column="event_location"/>
+		<association property="attach" resultMap="attachMap"/>
+	</resultMap>
+	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
+		<id property="attach_idx" column="attach_idx"/>
+		<result property="filename" column="filename"/>
+		<result property="uuid" column="uuid"/>
+	</resultMap>
+	
+	
 	<!-- 메인 슬라이드 -->
 	<select id="getMainSlide" resultType="org.storemap.domain.EventVO">
 		    <![CDATA[
@@ -22,6 +48,7 @@
 			WHERE ROWNUM <= 5
 			]]>
 	</select>
+	
 	<!-- 메인페이지 랜덤 -->
 	<select id="getLiveEvent" resultType="org.storemap.domain.EventVO">
 		<![CDATA[
@@ -532,5 +559,24 @@
 	    WHERE event_idx = #{eventIdx}
   	</select>
 	
+	<!-- 숨긴 이벤트 전체 보기 -->
+	<select id="getEventHiddenList" resultMap="eventMap">
+		SELECT e.*, a.filename
+		FROM event e
+		LEFT OUTER JOIN attach_file a ON e.event_file = a.uuid
+		WHERE event_hidden = 1
+	</select>
+	<!-- 이벤트 숨기기 등록 -->
+	<update id="hideEvent" parameterType="int">
+		update event set 
+			event_hidden = 1
+		where event_idx = #{event_idx}
+	</update>
+	<!-- 이벤트 숨기기 해제 -->
+	<update id="unhideEvent" parameterType="int">
+		update event set 
+			event_hidden = 0
+		where event_idx = #{event_idx}
+	</update>
 
 </mapper>

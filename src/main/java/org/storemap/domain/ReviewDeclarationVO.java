@@ -17,4 +17,5 @@ public class ReviewDeclarationVO {
 	private ReviewVO review;   // 조인 대상 필드
 	private MemberVO member; // 조인 대상 필드
 	private AttachFileVO attach; // 조인 대상 필드
+	private int declaration_count; // 누적 신고 수
 }

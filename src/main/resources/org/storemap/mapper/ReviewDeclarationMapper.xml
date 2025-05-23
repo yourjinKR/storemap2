@@ -8,16 +8,33 @@
 		<result property="member_idx" column="member_idx"/>
 		<result property="declaration_category" column="declaration_category"/>
 		<result property="declaration_content" column="declaration_content"/>
+		<result property="regdate" column="regdate"/>
+		<result property="declaration_count" column="declaration_count"/>
 		<association property="review" resultMap="reviewMap"/>
 		<association property="member" resultMap="memberMap"/>
+		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="reviewMap" type="org.storemap.domain.ReviewVO">
 		<id property="review_idx" column="review_idx"/>
+		<result property="store_idx" column="store_idx"/>
+		<result property="review_writer" column="review_writer"/>
+		<result property="review_star" column="review_star"/>
 		<result property="review_title" column="review_title"/>
+		<result property="review_content" column="review_content"/>
+		<result property="review_image" column="review_image"/>
+		<result property="review_like_cnt" column="review_like_cnt"/>
+		<result property="review_regdate" column="review_regdate"/>
+		<result property="review_hidden" column="review_hidden"/>
+		<result property="member_idx" column="member_idx"/>
 	</resultMap>
 	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
 		<id property="member_idx" column="member_idx"/>
 		<result property="member_name" column="member_name"/>
+	</resultMap>
+	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
+		<id property="attach_idx" column="attach_idx"/>
+		<result property="filename" column="filename"/>
+		<result property="uuid" column="uuid"/>
 	</resultMap>
 	
 	<!-- 1.리뷰 신고 등록  -->
@@ -33,19 +50,58 @@
 	<delete id="delete" parameterType="int">
 		delete from review_declaration where review_idx = #{param1} AND member_idx = #{param2}
 	</delete>
-	<!-- 3.리뷰 신고 목록  -->
+	<!-- 3.점포 신고 전체 삭제 -->
+	<delete id="deleteAll" parameterType="int">
+		delete from review_declaration where review_idx = #{review_idx}
+	</delete>
+	<!-- 4.리뷰 신고 목록  -->
 	<select id="getReviewDeclarationList" resultType="org.storemap.domain.ReviewDeclarationVO">
 		select * from review_declaration
 	</select>
-	<!-- 4.리뷰 신고 보기  -->
+	<!-- 5.리뷰 신고 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewDeclarationVO">
 		select * from review_declaration where review_idx = #{review_idx} AND member_idx = #{member_idx}
 	</select>
-	<!-- 5.리뷰 조인 신고 목록 -->
+	<!-- 6.리뷰 조인 신고 목록 -->
 	<select id="getReviewDeclarationMap" resultMap="reviewDeclarationMap">
-		SELECT r.review_idx, r.review_title, m.member_idx, m.member_name, d.declaration_category, d.declaration_content
-		FROM review r, member m, review_declaration d
-		WHERE d.review_idx = r.review_idx AND d.member_idx = m.member_idx
+		SELECT r.review_idx,
+			   r.store_idx,
+			   r.review_writer,
+			   r.review_star,
+			   r.review_title,
+			   r.review_image,
+			   r.review_like_cnt,
+			   r.review_regdate,
+			   r.review_hidden,
+			   r.member_idx,
+			   a.filename,
+			   d.review_idx,
+			   d.regdate,
+			   COUNT(*) AS declaration_count
+		FROM review_declaration d
+		JOIN review r ON d.review_idx = r.review_idx
+		LEFT JOIN attach_file a ON r.review_image = a.uuid
+		GROUP BY d.review_idx,
+				 d.regdate,
+				 a.filename,
+				 r.review_idx,
+				 r.store_idx,
+				 r.review_writer,
+				 r.review_star,
+				 r.review_title,
+				 r.review_image,
+				 r.review_like_cnt,
+				 r.review_regdate,
+				 r.review_hidden,
+				 r.member_idx
+		ORDER BY d.regdate DESC;
+	</select>
+	<!-- 7.리뷰 조인 신고 디테일 목록 -->
+	<select id="getReviewDeclarationDetailMap" resultMap="reviewDeclarationMap">
+		SELECT m.member_name, d.*
+		FROM review_declaration d
+		JOIN member m ON d.member_idx = m.member_idx
+		ORDER BY d.regdate DESC
 	</select>
 	
 </mapper>

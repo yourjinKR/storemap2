@@ -31,6 +31,13 @@ public class ReviewDeclarationServiceImple implements ReviewDeclarationService{
 	}
 	
 	@Override
+	public int removeAll(int review_idx) {
+		log.info("removeAll...");
+		int result = mapper.deleteAll(review_idx);
+		return result;
+	}
+	
+	@Override
 	public List<ReviewDeclarationVO> getList() {
 		log.info("getList...");
 		return mapper.getReviewDeclarationList();
@@ -46,6 +53,12 @@ public class ReviewDeclarationServiceImple implements ReviewDeclarationService{
 	public List<ReviewDeclarationVO> getDeclarationMap() {
 		log.info("getDeclarationMap...");
 		return mapper.getReviewDeclarationMap();
+	}
+	
+	@Override
+	public List<ReviewDeclarationVO> getDeclarationDetailMap() {
+		log.info("getDeclarationDetailMap...");
+		return mapper.getReviewDeclarationDetailMap();
 	}
 	
 }

@@ -3,5 +3,29 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EnterRequestMapper">
-
+	<resultMap id="disReqListMap" type="org.storemap.domain.EnterRequestVO">
+		<result property="enter_idx" column="enter_idx"/>
+		<result property="pon" column="pon"/>
+		<result property="regdate" column="regdate"/>
+		<association property="enter" resultMap="enterMap"/>
+	</resultMap>
+	<resultMap id="enterMap" type="org.storemap.domain.EnterVO">
+		<id property="enter_idx" column="enter_idx"/>
+		<result property="enter_id" column="enter_id"/>
+		<result property="enter_pw" column="enter_pw"/>
+		<result property="enter_name" column="enter_name"/>
+		<result property="enter_rnum" column="enter_rnum"/>
+		<result property="enter_loc" column="enter_loc"/>
+		<result property="enter_num" column="enter_num"/>
+	</resultMap>
+	
+	
+	<select id="getDisReqListMap" resultMap="disReqListMap">
+		SELECT r.*, e.enter_idx, e.enter_id, e.enter_pw, e.enter_name, e.enter_rnum, e.enter_loc, e.enter_num, 
+		FROM enter e
+		JOIN enter_request r ON r.enter_idx = e.enter_idx
+		WHERE r.pon = 0
+		order by r.regdate desc
+	</select>
+	
 </mapper>

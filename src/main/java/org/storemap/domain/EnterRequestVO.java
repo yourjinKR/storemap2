@@ -1,5 +1,7 @@
 package org.storemap.domain;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,5 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnterRequestVO {
-	private int member_idx, pon;
+	private int enter_idx, pon;
+	private Date regdate;
+	
+	private EnterVO enter; // 조인 대상 필드
+	
 }

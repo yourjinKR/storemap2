@@ -51,4 +51,11 @@ public interface EventService {
 	// MY EVNET 종료
 	public List<EventVO> getMyEventEnd(int enter_idx);
 	
+	// 숨긴 이벤트 목록
+	public List<EventVO> getHiddenList();
+	// 이벤트 숨기기 등록
+	public int hide(int event_idx);
+	// 이벤트 숨기기 해제
+	public int unhide(int event_idx);
+	
 }

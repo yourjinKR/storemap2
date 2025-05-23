@@ -11,5 +11,4 @@ public class EnterVO {
 	private int enter_idx;
 	private String enter_image, enter_id, enter_pw, enter_name, enter_loc, enter_num, enter_rnum;
 	
-	
 }

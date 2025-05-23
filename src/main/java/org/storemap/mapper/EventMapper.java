@@ -52,4 +52,11 @@ public interface EventMapper {
 	// MY EVNET 종료
 	public List<EventVO> getMyEventEnd(int enter_idx);
 	
+	// 숨긴 이벤트 목록
+	public List<EventVO> getEventHiddenList();
+	// 이벤트 숨기기 등록
+	public int hideEvent(int event_idx);
+	// 이벤트 숨기기 해제
+	public int unhideEvent(int event_idx);
+	
 }

@@ -299,4 +299,24 @@ public class EventServiceImple implements EventService{
 		}
 		return list;
 	}
+	// 숨긴 이벤트 목록 보기
+	@Override
+	public List<EventVO> getHiddenList() {
+		log.info("getHiddenList...");
+		return mapper.getEventHiddenList();
+	}
+	// 이벤트 숨기기
+	@Override
+	public int hide(int event_idx) {
+		log.info("hide..."+event_idx);
+		int result = mapper.hideEvent(event_idx);
+		return result;
+	}
+	// 이벤트 숨김해제
+	@Override
+	public int unhide(int event_idx) {
+		log.info("unhide..."+event_idx);
+		int result = mapper.unhideEvent(event_idx);
+		return result;
+	}
 }
