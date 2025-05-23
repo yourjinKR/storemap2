@@ -464,7 +464,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 검색창이 포커스될때
     keywordInput.addEventListener("focus", e => {
-        autoCompleteBox.style.display = "block";
+        // <li> 자식 요소가 하나라도 있는 경우에만 display
+        if (autoCompleteBox.querySelectorAll("li").length > 0) {
+            autoCompleteBox.style.display = "block";
+        }
     });
 
     // 검색창에 값 입력
@@ -821,6 +824,7 @@ function registerOverlay(vo) {
     let type = vo.type;
 
     if (type === 'store') {
+        // 오버레이 내용 설정
         let content = `
         <div class="customoverlay" id="${type}" idx="${vo.store_idx}" onclick="clickOverlay(this)">
             <span class="title">${vo.store_name}</span>
@@ -898,8 +902,56 @@ function clickOverlay(ele) {
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
 }
 
+/** 오버레이를 찾는 함수 */
+function findOverlay(idx, type) {
+    if (type === 'store') {        
+        if (basicMap.getLevel() > 3) {
+            hideOverlay(storeOverlayList);
+            hideOverlay(eventOverlayList);
+        }
+        storeVOList.forEach(vo => {
+            if (vo.store_idx == idx) {
+                vo.overlay.setMap(basicMap);
+            }
+        })
+    }
+    else if (type === 'event') {     
+        if (basicMap.getLevel() > 3) {
+            hideOverlay(storeOverlayList);
+            hideOverlay(eventOverlayList);
+        }
+        eventVOList.forEach(vo => {
+            if (vo.event_idx == idx) {
+                vo.overlay.setMap(basicMap);
+            }
+        })
+    }
+}
+
+/** 오버레이와 매핑 */
+function overlayMapping(eles, type) {
+    let list = [];
+    if (type === 'store') {
+        list = storeVOList;
+    }
+
+    
+    
+
+    eles.forEach(ele => {
+        // 클릭 이벤트 추가
+        ele.addEventListener("click", e => {
+            console.log("idx 값 갖고 올 수 있는 지 확인");
+            list.forEach(vo => {
+                
+            });
+        })
+    });
+}
+
+
 // ============================= 이벤트 추가 관련 함수 =============================
-/** 점포 및 이벤트 클릭 이벤트 추가 및 마커 매핑 함수 (ele, type) */ 
+/** li요소 클릭 이벤트 추가, 마커 매핑 함수 (ele, type) */ 
 function markerMapping(eles, type) {
     if (eles != null ) {
         eles.forEach(ele => {
@@ -908,11 +960,11 @@ function markerMapping(eles, type) {
             let idx = ele.getAttribute(`data-${type}_idx`);
 
             // type 분기
-            let list = [];
+            let voList = [];
             if (type === "store") {
-                list = storeVOList;
+                voList = storeVOList;
             } else if (type === "event") {
-                list = eventVOList;
+                voList = eventVOList;
             }
 
             // (store or event) 클릭 이벤트 추가
@@ -920,11 +972,13 @@ function markerMapping(eles, type) {
                 hideviewSideBar();
                 viewSideBar = document.querySelector(`.side-bar#${type}`);
                 // 리스트 중에서 idx 찾기
-                list.forEach(vo => {
+                voList.forEach(vo => {
                     if (vo.marker.getTitle() === idx) {
                         showviewSideBar();
                         emphMarker(idx, type);
                         setToggle(600);
+                        // 오버레이 표시
+                        findOverlay(idx, type);
                     }
                 });
                 viewSideBarCheck = true;
@@ -953,9 +1007,9 @@ function addMarkerEvent(marker, type) {
         // 마커 선택
         selectMarker(marker, type);
         
-        let title = marker.getTitle();
-        emphMarker(title, type);
-        let li = searchEleByTitle(title, type);
+        let idx = marker.getTitle();
+        emphMarker(idx, type);
+        let li = searchEleByTitle(idx, type);
         viewDetailModalPage(li, type);
 
         showListSideBar();
@@ -972,6 +1026,9 @@ function addMarkerEvent(marker, type) {
 
         // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작
         document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
+
+        // 오버레이 강조
+        findOverlay(idx, type);
     });
 }
 
@@ -1557,13 +1614,18 @@ function apply2storeMap(data) {
     // 데이터 등록
     data.forEach(vo => {
         vo.type = "store";
+
         let marker = registerMarker(vo);
         addMarkerEvent(marker, "store");
         vo.marker = marker;
+        
+        let overlay = registerOverlay(vo);
+        storeOverlayList.push(overlay);
+        vo.overlay = overlay;
+
         storeVOList.push(vo);
-        // console.log(vo);
-        storeOverlayList.push(registerOverlay(vo));
     });
+
     console.log('store vo list : ', storeVOList);
 
     let msg = "";
@@ -1595,6 +1657,7 @@ function apply2storeMap(data) {
     let storeLIS = document.querySelectorAll(".store-card ul li");
     // 가게와 마커를 메핑
     markerMapping(storeLIS, "store");
+    // overlayMapping(eventLIS, "store");
 
     // 오버레이 클릭 이벤트 추가
     let overlayEles = document.querySelector(".customoverlay#store");
@@ -1684,7 +1747,9 @@ function apply2eventMap(data) {
 
         // vo.type = "event";
         
-        eventOverlayList.push(registerOverlay(vo));
+        let overlay = registerOverlay(vo);
+        eventOverlayList.push(overlay);
+        vo.overlay = overlay;
     })
 
     eventUL.innerHTML += msg;
@@ -2133,6 +2198,7 @@ function setRadiusByLevel(level) {
 function updateSuggestionList(list, type, keyword) {
     // console.log(`"${type}"에서 "${keyword}"를 검색`);
 
+    // 기존에 있었던 리스트 삭제
     let oldList = document.querySelectorAll(`.${type}-ele`);
     if(oldList != null) {
         oldList.forEach(el => el.remove());
@@ -2166,7 +2232,11 @@ function updateSuggestionList(list, type, keyword) {
     });
 
     ctrlAutoComplete();
-    autoCompleteBox.style.display = "block";
+
+    if (list.length != 0) {
+        autoCompleteBox.style.display = "block";
+    }
+
     selectedIndex = -1;
 }
 
