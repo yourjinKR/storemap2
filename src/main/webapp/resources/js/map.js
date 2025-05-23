@@ -259,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const initialStoreIDX = sessionStorage.getItem("store_idx");
         sessionStorage.removeItem("store_idx");
         if (initialStoreIDX) {
+            showListSideBar();
             // store idx 기반 검색 비동기 함수 실행
             // let IDX = 302;
             as.getStoreByIdx(initialStoreIDX, function (data) {
@@ -269,6 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const initialEventIDX = sessionStorage.getItem("event_idx");
         sessionStorage.removeItem("event_idx");
         if (initialEventIDX) {
+            showListSideBar();
             // event idx 기반 검색 비동기 함수 실행
             // let IDX = 302;
             as.getEventByIdx(initialEventIDX, function (data) {
@@ -350,10 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "search") {
                 let f = document.querySelector(".form#map");
                 let keyword = f.keyword.value.trim();
-
-                hideviewSideBar();
-                viewSideBarCheck = false;
-                setToggle(300);
 
                 mapSearchService(basicMap, keyword);
             }
@@ -1020,6 +1018,7 @@ function emphMarker(idx, type) {
 /** 리스트 사이드바 여는 함수 */
 function showListSideBar() {
     listSideBar.classList.add("show");
+    setToggle(300);
 }
 /** 리스트 사이드바 닫는 함수 */
 function hideListSideBar() {
@@ -1329,6 +1328,11 @@ let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null
 
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
+    showListSideBar();
+    hideviewSideBar();
+    viewSideBarCheck = false;
+    setToggle(300);
+
     // resetAutocomplete();
     if (!keyword) {
         alert("키워드를 입력하시오");

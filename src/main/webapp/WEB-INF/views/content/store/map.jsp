@@ -7,7 +7,7 @@
 <div>
 	<div class="map" id="full" style="width: 100%; height: 900px;"></div>
 	<!-- 리스트 사이드바 -->
-	<div class="side-bar show" id="list">
+	<div class="side-bar" id="list">
 		<div id="content">
 			<div class="header" id="list">
 				<div class="logo">
