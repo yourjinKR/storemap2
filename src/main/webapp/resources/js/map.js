@@ -254,7 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
             // 재검색 방지: 세션 제거
             sessionStorage.removeItem("initialKeyword");
         }
-
         // idx 기반 점포 찾기
         const initialStoreIDX = sessionStorage.getItem("store_idx");
         sessionStorage.removeItem("store_idx");
@@ -276,6 +275,13 @@ document.addEventListener("DOMContentLoaded", () => {
             as.getEventByIdx(initialEventIDX, function (data) {
                 processAllEvents([data], "search");
             });
+        }
+
+        // 초기검색어가 없을 경우 실행하는 기본 검색
+        if (!initialKeyword && !initialStoreIDX && !initialEventIDX) {
+            as.getListNearest(searchCondition, 5, function (data) {
+                apply2storeMap(data);
+            })
         }
     }
     // storeModify.jsp (영업 위치 설정 지도)
@@ -1786,7 +1792,7 @@ function processAllEvents(data, type) {
 
         if (type === "search") {
             // 키워드 검색
-            // console.log('event vo list : ', eventVOList);
+            console.log('event vo list : ', eventVOList);
             apply2eventMap(eventVOList);
             failSearch();
 
