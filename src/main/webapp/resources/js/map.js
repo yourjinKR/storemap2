@@ -3,8 +3,8 @@ console.log("map load");
 // 마커 아이콘 설정 kakao.maps.MarkerImage(src, size[, options])
 // ================== 마커 src ==================
 let basicMarkerSrc = 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_location_on_48px-256.png';
-let storeMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792237/storeMarker_oyglhs.png';
-let eventMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747792243/eventMarker_zespzh.png';
+let storeMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747982083/ChatGPT_Image_2025%EB%85%84_5%EC%9B%94_23%EC%9D%BC_%EC%98%A4%ED%9B%84_03_34_29_wilfln.png';
+let eventMarkerSrc = 'https://res.cloudinary.com/dbdkdnohv/image/upload/v1747980394/ChatGPT_Image_2025%EB%85%84_5%EC%9B%94_23%EC%9D%BC_%EC%98%A4%ED%9B%84_02_51_56_fgkomx.png';
 
 // ================== 마커 크기 ==================
 const MARKER_WIDTH = 32, // 기본 마커의 너비
@@ -1665,6 +1665,10 @@ function apply2eventMap(data) {
             } else if (vo.externalUrls.length != 0) {
                 fileList = vo.externalUrls;
             }
+        }
+
+        if (fileList.length == 0) {
+            fileList.push("https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg");
         }
 
         msg += 
