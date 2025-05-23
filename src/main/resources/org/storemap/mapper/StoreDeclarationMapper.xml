@@ -48,7 +48,8 @@
 	 		#{store_idx},
 	 		#{member_idx},
 	 		#{declaration_category},
-	 		#{declaration_content}
+	 		#{declaration_content},
+	 		sysdate
 	 	)
 	</insert>
 	<!-- 2.점포 신고 삭제  -->

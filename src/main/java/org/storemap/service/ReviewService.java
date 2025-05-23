@@ -14,12 +14,14 @@ public interface ReviewService {
 	public int remove(int review_idx);
 	// 리뷰 목록
 	public List<ReviewVO> getList(int store_idx);
+	// 숨긴 리뷰 목록
+	public List<ReviewVO> getHiddenList();
 	// 리뷰 조인 목록
 	public List<ReviewVO> getMap(int store_idx);
 	// 리뷰 정보
 	public ReviewVO get(int review_idx);
 	// 해당 점포에 동일한 리뷰를 가지고 있는지 검증
-	public ReviewVO getSame(int store_idx, String review_writer);
+	public ReviewVO getSame(int store_idx, int member_idx);
 	// 리뷰 숨기기 등록
 	public int hide(int review_idx);
 	// 리뷰 숨기기 해제

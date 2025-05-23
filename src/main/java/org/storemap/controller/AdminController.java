@@ -79,17 +79,55 @@ public class AdminController {
 	@GetMapping("/adminMain")
 	public String adminMain(Model model) {
 		log.info("adminMainGet...");
+		// 유저리뷰
+		model.addAttribute("reviewHiddenList", reviewService.getHiddenList());
+		model.addAttribute("reviewReportList", reviewDeclService.getDeclarationMap());
+		model.addAttribute("reviewReportDetailList", reviewDeclService.getDeclarationDetailMap());
+		// 점포
 		model.addAttribute("storeHiddenList", storeService.getHiddenList());
 		model.addAttribute("storeRequestList", storeReqService.getDisReqListMap());
-		model.addAttribute("storeReportList",storeDeclService.getDeclarationMap());
-		model.addAttribute("storeReportDetailList",storeDeclService.getDeclarationDetailMap());
-		
-		
-		model.addAttribute("reviewReportList",reviewDeclService.getDeclarationMap());
+		model.addAttribute("storeReportList", storeDeclService.getDeclarationMap());
+		model.addAttribute("storeReportDetailList", storeDeclService.getDeclarationDetailMap());
+		// 기업
+		model.addAttribute("enterRequestList", enterReqService.getDisReqListMap());
+		// 이벤트
+		model.addAttribute("eventHiddenList", eventService.getHiddenList());
+		model.addAttribute("eventReportList", eventDeclService.getDeclarationMap());
+		model.addAttribute("eventReportDetailList", eventDeclService.getDeclarationDetailMap());
 		return "index";
 	}
 	
-	// 점포 승인
+	// 리뷰 숨기기
+	@PostMapping("/reviewReportHide")
+	public String reviewReportHide(int review_idx, int member_idx) {
+		log.info("reviewReportHide..."+review_idx);
+		reviewService.hide(review_idx);
+		reviewDeclService.remove(review_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 리뷰 숨기기 해제
+	@PostMapping("/reviewReportunHide")
+	public String reviewReportunHide(int review_idx) {
+		log.info("reviedwReportunHide..."+review_idx);
+		reviewService.unhide(review_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 리뷰 신고 취소
+	@PostMapping("/reviewReportRemove")
+	public String reviewReportRemove(int review_idx, int member_idx) {
+		log.info("reviewReportRemove..."+review_idx+", "+member_idx);
+		reviewDeclService.remove(review_idx, member_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 리뷰 신고 전체 취소
+	@PostMapping("/reviewReportRemoveAll")
+	public String reviewReportRemoveAll(int review_idx) {
+		log.info("storeReportRemoveAll..."+review_idx);
+		reviewDeclService.removeAll(review_idx);
+		return "redirect:/admin/adminMain";
+	}
+	
+	// 점주 승인
 	@PostMapping("/storeApproval")
 	public String storeApproval(int member_idx) {
 		log.info("storeApproval..."+member_idx);
@@ -97,7 +135,7 @@ public class AdminController {
 		memberService.approvalOwner(member_idx);
 		return "redirect:/admin/adminMain";
 	}
-	// 점포 승인 취소
+	// 점주 승인 취소
 	@PostMapping("/storeDisallow")
 	public String storeDisallow(int member_idx) {
 		log.info("storeDisallow..."+member_idx);
@@ -105,7 +143,6 @@ public class AdminController {
 		storeReqService.remove(member_idx);
 		return "redirect:/admin/adminMain";
 	}
-	
 	// 점포 숨기기
 	@PostMapping("/storeReportHide")
 	public String storeReportHide(int store_idx) {
@@ -136,26 +173,50 @@ public class AdminController {
 		return "redirect:/admin/adminMain";
 	}
 	
-	// 리뷰 숨기기
-	@PostMapping("/reviewReportHide")
-	public String reviewReportHide(int review_idx, int member_idx) {
-		log.info("reviewReportHide..."+review_idx);
-		reviewService.hide(review_idx);
-		reviewDeclService.remove(review_idx, member_idx);
+	// 기업 승인
+	@PostMapping("/enterApproval")
+	public String enterApproval(int enter_idx) {
+		log.info("enterApproval..."+enter_idx);
+		enterReqService.modify(enter_idx);
+		//memberService.approvalOwner(enter_idx);
 		return "redirect:/admin/adminMain";
 	}
-	// 리뷰 숨기기 해제
-	@PostMapping("/reviewReportunHide")
-	public String reviewReportunHide(int review_idx) {
-		log.info("reviedwReportunHide..."+review_idx);
-		reviewService.unhide(review_idx);
+	// 기업 승인 취소
+	@PostMapping("/enterDisallow")
+	public String enterDisallow(int enter_idx) {
+		log.info("enterDisallow..."+enter_idx);
+		//enterService.removeStore(enter_idx);
+		enterReqService.remove(enter_idx);
 		return "redirect:/admin/adminMain";
 	}
-	// 리뷰 신고 취소
-	@PostMapping("/reviewReportRemove")
-	public String reviewReportRemove(int review_idx, int member_idx) {
-		log.info("reviewReportRemove..."+review_idx+", "+member_idx);
-		reviewDeclService.remove(review_idx, member_idx);
+	
+	// 이벤트 숨기기
+	@PostMapping("/eventReportHide")
+	public String eventReportHide(int event_idx, int enter_idx) {
+		log.info("eventReportHide..."+event_idx);
+		eventService.hide(event_idx);
+		eventDeclService.remove(event_idx, enter_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 이벤트 숨기기 해제
+	@PostMapping("/eventReportunHide")
+	public String eventReportunHide(int event_idx) {
+		log.info("eventReportunHide..."+event_idx);
+		eventService.unhide(event_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 이벤트 신고 취소
+	@PostMapping("/eventReportRemove")
+	public String eventReportRemove(int event_idx, int enter_idx) {
+		log.info("eventReportRemove..."+event_idx+", "+enter_idx);
+		eventDeclService.remove(event_idx, enter_idx);
+		return "redirect:/admin/adminMain";
+	}
+	// 이벤트 신고 전체 취소
+	@PostMapping("/eventReportRemoveAll")
+	public String eventReportRemoveAll(int event_idx) {
+		log.info("eventReportRemoveAll..."+event_idx);
+		eventDeclService.removeAll(event_idx);
 		return "redirect:/admin/adminMain";
 	}
 	

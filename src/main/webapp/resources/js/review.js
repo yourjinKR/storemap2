@@ -42,7 +42,10 @@ function register(){
 	formData.append("review_content" , document.querySelector("textarea[name='review_content']").value);
 	formData.append("review_image" , document.querySelector("input[name='review_image']").value);
 	//이미지 파일
-    formData.append("file", document.querySelector("input[type='file']").files[0]);
+	const fileInput =  document.querySelector("input[type='file']");
+    if (fileInput.files[0]) {
+		formData.append("file", fileInput.files[0]);
+	}
     
     document.querySelector("#savingUI").classList.add("save");
     // 데이터 전송
@@ -57,10 +60,12 @@ function register(){
         return response.text();
     })
     .then(data => {
+    	document.querySelector("#savingUI").classList.remove("save");
         alert("리뷰 등록 완료.");
         location.href = "/modal/storeView?store_idx="+document.querySelector("input[name='store_idx']").value;
     })
     .catch(error => {
+    	document.querySelector("#savingUI").classList.remove("save");
         console.error("Error:", error);
         alert("리뷰 등록 실패.");
     });

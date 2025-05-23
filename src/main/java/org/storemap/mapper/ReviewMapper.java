@@ -13,12 +13,14 @@ public interface ReviewMapper {
 	public int delete(int review_idx);
 	// 리뷰 목록
 	public List<ReviewVO> getReviewList(int store_idx);
+	// 숨긴 리뷰 목록
+	public List<ReviewVO> getReviewHiddenList();
 	// 리뷰 조인 목록
 	public List<ReviewVO> getReviewMap(int store_idx);
 	// 리뷰 정보
 	public ReviewVO read(int review_idx);
 	// 해당 점포에 동일한 리뷰를 가지고 있는지 검증
-	public ReviewVO getSame(int store_idx, String review_writer);
+	public ReviewVO getSame(int store_idx, int member_idx);
 	// 리뷰 숨기기 등록
 	public int hideReview(int review_idx);
 	// 리뷰 숨기기 해제

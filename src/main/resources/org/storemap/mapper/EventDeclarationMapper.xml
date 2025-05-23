@@ -47,22 +47,73 @@
         event_idx,
         member_idx,
         declaration_category,
-        declaration_content
+        declaration_content,
+        regdate
     )
     VALUES (
         #{event_idx},
         #{member_idx},
         #{declaration_category},
-        #{declaration_content}
+        #{declaration_content},
+	 	sysdate
     )
 	</insert>
 	<!-- 2.이벤트 신고 삭제  -->
-	
+	<delete id="delete" parameterType="int">
+		delete from event_declaration where event_idx = #{param1} AND member_idx = #{param2}
+	</delete>
 	<!-- 3.이벤트 신고 전체 삭제 -->
-	
+	<delete id="deleteAll" parameterType="int">
+		delete from event_declaration where event_idx = #{event_idx}
+	</delete>
 	<!-- 4.이벤트 신고 목록 -->
-	
+	<select id="getEventDeclarationMap" resultMap="eventDeclarationMap">
+		SELECT e.event_idx,
+			   e.enter_idx,
+			   e.event_title,
+			   e.event_category,
+			   e.event_postcode,
+			   e.event_location_detail,
+			   e.event_like_cnt,
+			   e.event_rstartdate,
+			   e.event_rstopdate,
+			   e.event_bstartdate,
+			   e.event_bstopdate,
+			   e.event_hidden,
+			   e.event_file,
+			   e.event_location,
+			   a.filename,
+			   d.event_idx,
+			   d.regdate,
+			   COUNT(*) AS declaration_count
+		FROM event_declaration d
+		JOIN event e ON d.event_idx = e.event_idx
+		LEFT JOIN attach_file a ON e.event_file = a.uuid
+		GROUP BY d.event_idx,
+				 d.regdate,
+				 a.filename,
+				 e.event_idx,
+				 e.enter_idx,
+				 e.event_title,
+				 e.event_category,
+				 e.event_postcode,
+				 e.event_location_detail,
+				 e.event_like_cnt,
+				 e.event_rstartdate,
+				 e.event_rstopdate,
+				 e.event_bstartdate,
+				 e.event_bstopdate,
+				 e.event_hidden,
+				 e.event_file,
+				 e.event_location
+		ORDER BY d.regdate DESC
+	</select>
 	<!-- 5.이벤트 신고 디테일 목록 -->
-	
+	<select id="getEventDeclarationDetailMap" resultMap="eventDeclarationMap">
+		SELECT m.member_name, d.*
+		FROM event_declaration d
+		JOIN member m ON d.member_idx = m.member_idx
+		ORDER BY d.regdate DESC
+	</select>
 	
 </mapper>

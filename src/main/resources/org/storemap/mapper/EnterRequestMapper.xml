@@ -19,13 +19,32 @@
 		<result property="enter_num" column="enter_num"/>
 	</resultMap>
 	
-	
+	<!-- 1.기업 등록 요청 등록  -->
+	<insert id="insert" parameterType="int">
+		insert into enter_request (
+			enter_idx
+		)
+		values(
+	 		#{enter_idx}
+	 	)
+	</insert>
+	<!-- 2.기업 등록 요청 수락 -->
+	<update id="update" parameterType="int">
+		update enter_request set
+		pon = 1
+		where enter_idx = #{enter_idx}
+	</update>
+	<!-- 3.기업 등록 요청 삭제  -->
+	<delete id="delete" parameterType="int">
+		delete from enter_request where enter_idx = #{enter_idx}
+	</delete>
+	<!-- 4.기업 등록 요청 목록 -->
 	<select id="getDisReqListMap" resultMap="disReqListMap">
-		SELECT r.*, e.enter_idx, e.enter_id, e.enter_pw, e.enter_name, e.enter_rnum, e.enter_loc, e.enter_num, 
+		SELECT r.*, e.enter_idx, e.enter_id, e.enter_pw, e.enter_name, e.enter_rnum, e.enter_loc, e.enter_num 
 		FROM enter e
 		JOIN enter_request r ON r.enter_idx = e.enter_idx
 		WHERE r.pon = 0
-		order by r.regdate desc
+		ORDER BY r.regdate DESC
 	</select>
 	
 </mapper>

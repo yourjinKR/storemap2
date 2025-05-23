@@ -4,15 +4,15 @@
 
 
 <ul class="sub-tab">
-	<li><a href="list" class="on">숨긴 점포</a></li>
+	<li><a href="hide" class="on">숨긴 점포</a></li>
 	<li><a href="request">점주 요청</a></li>
 	<li><a href="report">신고</a></li>
 </ul>
 <!-- 숨긴 점포 탭 -->
-<div class="sub-tab-content store-list on">
+<div class="sub-tab-content store-hide on">
 	<ul>
 		<li>
-			<div><input type="checkbox"></div>
+			<div>idx</div>
 			<div>NO</div>
 			<div>점포사진</div>
 			<div>점포명</div>
@@ -55,7 +55,7 @@
 <div class="sub-tab-content store-request">
 	<ul>
 		<li>
-			<div><input type="checkbox"></div>
+			<div>idx</div>
 			<div>NO</div>
 			<div>신청자</div>
 			<div>점포사진</div>
@@ -106,7 +106,7 @@
 <div class="sub-tab-content store-report">
 	<ul>
 		<li>
-			<div><input type="checkbox"></div>
+			<div>idx</div>
 			<div>NO</div>
 			<div>점포사진</div>
 			<div>점포명</div>
@@ -176,22 +176,3 @@
 		</c:forEach>
 	</ul>
 </div>
-
-<%-- 
-   	<form method="post">
-           <h3>리뷰 신고 관리</h3>
-           	<c:forEach var="rrvo" items="${reviewReportList}">
-           	<hr>
-           		<div>
-           			<div>신고된 점포: ${rrvo.review.review_title}</div>
-                   	<div>신고자 이름: ${rrvo.member.member_name}</div>
-                   	<div>신고 카테고리: ${rrvo.declaration_category}</div>
-                   	<div>신고 사유: ${srvo.declaration_content}</div>
-                   	<input type="hidden" name="review_idx" value="${rrvo.review_idx}">
-                   	<input type="hidden" name="member_idx" value="${rrvo.member_idx}">
-                   	<button type="button" id="reviewReportHideBtn">숨기기</button>
-                  	<button type="button" id="reviewReportRemoveBtn">신고 삭제</button>
-           		</div>
-           	</c:forEach>
-       </form>
---%>

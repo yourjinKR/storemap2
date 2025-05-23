@@ -70,7 +70,14 @@
 	<select id="getReviewList" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where store_idx = #{store_idx}
 	</select>
-	<!-- 5.리뷰 조인 전체 보기 -->
+	<!-- 5.숨긴 리뷰 전체 보기 -->
+	<select id="getReviewHiddenList" resultMap="reviewMap">
+		SELECT r.*, a.filename
+		FROM review r
+		LEFT OUTER JOIN attach_file a ON r.review_image = a.uuid
+		WHERE review_hidden = 1
+	</select>
+	<!-- 6.리뷰 조인 전체 보기 -->
 	<select id="getReviewMap" parameterType="int" resultMap="reviewMap">
 		SELECT r.*, a1.filename AS review_filename, a2.filename AS writer_filename, m.member_image
 		FROM review r
@@ -79,14 +86,14 @@
 		LEFT OUTER JOIN attach_file a2 ON m.member_image = a2.uuid
 		WHERE r.store_idx = #{store_idx}
 	</select>
-	<!-- 6.리뷰 자세히 보기  -->
+	<!-- 7.리뷰 자세히 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where review_idx = #{review_idx}
 	</select>
-	<!-- 7.리뷰 조인 자세히 보기 -->
+	<!-- 리뷰 조인 자세히 보기 필요하나요? -->
 	
 	<!-- 8.해당 점포에 동일한 리뷰를 가지고 있는지 검증 -->
-	<select id="getSame" parameterType="org.storemap.domain.ReviewVO" resultType="org.storemap.domain.ReviewVO">
+	<select id="getSame" parameterType="int" resultType="org.storemap.domain.ReviewVO">
 		select * from review where store_idx = #{param1} AND member_idx = #{param2}
 	</select>
 	<!-- 9.리뷰 숨기기 등록 -->

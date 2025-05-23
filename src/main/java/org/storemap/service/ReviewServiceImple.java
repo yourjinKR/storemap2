@@ -63,6 +63,12 @@ public class ReviewServiceImple implements ReviewService{
 	}
 	
 	@Override
+	public List<ReviewVO> getHiddenList() {
+		log.info("getHiddenList...");
+		return mapper.getReviewHiddenList();
+	}
+	
+	@Override
 	public List<ReviewVO> getMap(int store_idx) {
 		log.info("getMap..."+store_idx);
 		return mapper.getReviewMap(store_idx);
@@ -75,9 +81,9 @@ public class ReviewServiceImple implements ReviewService{
 	}
 	
 	@Override
-	public ReviewVO getSame(int store_idx, String review_writer) {
-		log.info("getSame..."+store_idx+", "+review_writer);
-		return mapper.getSame(store_idx, review_writer);
+	public ReviewVO getSame(int store_idx, int member_idx) {
+		log.info("getSame..."+store_idx+", "+member_idx);
+		return mapper.getSame(store_idx, member_idx);
 	}
 	
 	@Override

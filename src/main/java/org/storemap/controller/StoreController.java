@@ -227,7 +227,7 @@ public class StoreController {
 		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
 		// 리뷰추가 + 파일 업로드
 		try {
-			if(reviewService.getSame(vo.getStore_idx(), vo.getReview_writer()) != null) {
+			if(reviewService.getSame(vo.getStore_idx(), vo.getMember_idx()) != null) {
 				//이미 리뷰가 존재할시
 				return new ResponseEntity<String>("이미 리뷰가 존재합니다.!!", HttpStatus.INTERNAL_SERVER_ERROR);
 			}else {
