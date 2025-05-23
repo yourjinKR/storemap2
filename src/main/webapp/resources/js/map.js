@@ -1639,10 +1639,38 @@ function apply2eventMap(data) {
     // 점포 리스트 출력
 
     data.forEach(vo => {
+        let fileList = [];
+
+        // 파일 지정 방식
+        // getEventListKeyword
+        if (vo.attachFile != null) {
+            vo.attachFile.forEach(file => {
+                if(file.uuid != null) {
+                    let imgSrc = `https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}`;
+                    fileList.push(imgSrc);
+                } else {
+                    let imgSrc = file.filename;
+                    fileList.push(imgSrc);
+                }
+            });
+        }
+        // getEventByIdx
+        else if (vo.cloudinaryFiles != null && vo.externalUrls != null) {
+            console.log('파일처리 구분');
+            if (vo.cloudinaryFiles.length != 0) {
+                vo.cloudinaryFiles.forEach(file => {
+                    let imgSrc = `https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}`;
+                    fileList.push(imgSrc);
+                });
+            } else if (vo.externalUrls.length != 0) {
+                fileList = vo.externalUrls;
+            }
+        }
+
         msg += 
         // `<li data-store_idx="${vo.store_idx}" name="store_idx">
         `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
-            <img src="${poster}" alt="event_${vo.event_idx}">
+            <img src="${fileList[0]}" alt="event_${vo.event_idx}">
                 <div class="store-description">
                     <div class="event-title">${vo.event_title}</div>
                     <div class="event-location">${vo.event_location}</div>
