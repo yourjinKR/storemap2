@@ -143,6 +143,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
+    // 제한할 범위 설정 (예: 대한민국 전체)
+    const boundLimit = new kakao.maps.LatLngBounds(
+        new kakao.maps.LatLng(33.0, 124.0),  // 남서쪽
+        new kakao.maps.LatLng(39.5, 132.0)   // 북동쪽
+    );
+
 	// 기본 설정값으로 지도 생성
 	let container = document.querySelector(".map");
     if(container != null) {
@@ -159,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mapType = container.getAttribute("id");
 
         // 최대크기 지정
-        basicMap.setMaxLevel(13);
+        basicMap.setMaxLevel(12);
     }
 
     // 검색창
@@ -678,15 +684,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 지도 이동이 완료되었을 발생하는 이벤트
-//    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
-//        
-//        // 지도 중심좌표를 저장 
-//        centerLatLng = basicMap.getCenter(); 
-//        // 중심 좌표를 기준으로 행정구역 저장
-//        loadAddrFromCoords(centerLatLng);
-//        // console.log(centerLoc);
-//        
-//    });
+    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
+    const center = basicMap.getCenter();
+    
+    // 중심 좌표가 제한된 범위를 벗어나면
+    if (!boundLimit.contain(center)) {
+        // 가장 가까운 지점으로 중심을 재조정
+        const lat = Math.min(Math.max(center.getLat(), boundLimit.getSouthWest().getLat()), boundLimit.getNorthEast().getLat());
+        const lng = Math.min(Math.max(center.getLng(), boundLimit.getSouthWest().getLng()), boundLimit.getNorthEast().getLng());
+
+        const newCenter = new kakao.maps.LatLng(lat, lng);
+        basicMap.setCenter(newCenter);
+    }
+    });
 
     /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */ 
     function searchAddrFromCoords(latlng) {
