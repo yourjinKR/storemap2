@@ -30,7 +30,8 @@
 	</div>
 	
 	<table class="barod board-list" id="boardList">
-		
+		<colgroup>
+		</colgroup>
 		<thead>
 			<tr>
 				<c:if test="${userType eq 'admin'}">

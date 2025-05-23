@@ -57,10 +57,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			sideBar.classList.remove("show");
 		})
 	}
+	
+	let btnTop = document.querySelector(".topScroll");
+	if(btnTop != null){
+		btnTop.addEventListener("click", function(e){
+			e.preventDefault();
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		})
+	}
 
 	// 위치 정보 실행 (1회)
 	getCurrentPlace();
-
 
 	// 헤더 로그아웃
 	headerLogout();

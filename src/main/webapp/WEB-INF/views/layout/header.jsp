@@ -58,6 +58,14 @@
 	</div>	
 </div>
 
+<div class="right-nav">
+	<ul>
+		<li><a href="/event/eventList">이벤트</a></li>
+		<li><a href="/admin/notice">공지사항</a></li>
+		<li><a class="topScroll">TOP ▲</a></li>
+	</ul>
+</div>
+
 <jsp:include page="./sideBar.jsp"/>
 <jsp:include page="./letter.jsp"/>
 

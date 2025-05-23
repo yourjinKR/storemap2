@@ -164,10 +164,10 @@ function cardBoard(result){
 			str += 			`<div class="icon-box">
 								<span class="material-symbols-outlined">
 									mode_comment
-									</span> ${data.comment_count}
+								</span> ${data.comment_count}
 								<span class="material-symbols-outlined">
 									favorite
-								</span> : ${data.like_count}
+								</span> ${data.like_count}
 							</div>`;
 			str += 		`</div>`;
 			str += `</a>`;
@@ -314,6 +314,7 @@ function getNotice(pageNum){
 	.then(result => {
 		let str = "";
 		let str2 = "";
+		document.querySelector("#boardList colgroup").innerHTML = "";
 		if(result != null && result.announce.length > 0){
 			result.announce.forEach(data => {
 				str += 	`<tr data-idx="${data.announce_idx}">`;
@@ -351,15 +352,13 @@ function getNotice(pageNum){
 				</tr>`;
 		}
 		document.querySelector("#boardList tbody").innerHTML = str;
-		str2 += `<colgroup>`
 			if(auth == "admin" && userId != null){
 				str2 += `<col width="50px">`
 			}
 		str2 += 	`<col width="90px">`
 		str2 += 	`<col width="*">`
 		str2 += 	`<col width="120px">`
-		str2 += `</colgroup>`;
-		document.querySelector("#boardList").innerHTML += str2; 
+		document.querySelector("#boardList colgroup").innerHTML += str2; 
 		
 		pager(result.pager);
 		setFixedData();

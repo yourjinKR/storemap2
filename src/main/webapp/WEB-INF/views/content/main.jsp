@@ -21,98 +21,99 @@
 	</div>
 </div>
 
-<!-- 달력 -->
-<div class="event-calendar d_f">
-	<div class="left-con">
-		<div class="sec_cal">
-			<div class="cal_nav">
-				<a class="nav-btn go-prev">prev</a>
-				<div class="nav-btn go-now year-month"></div>
-				<a class="nav-btn go-next">next</a>
-			</div>
-			<div class="cal_wrap">
-				<div class="days">
-					<div class="day">SUN</div>
-					<div class="day">MON</div>
-					<div class="day">TUE</div>
-					<div class="day">WED</div>
-					<div class="day">THU</div>
-					<div class="day">FRI</div>
-					<div class="day">SAT</div>
+<div class="inner">
+	<!-- 달력 -->
+	<div class="event-calendar d_f">
+		<div class="left-con">
+			<div class="sec_cal">
+				<div class="cal_nav">
+					<a class="nav-btn go-prev">prev</a>
+					<div class="nav-btn go-now year-month"></div>
+					<a class="nav-btn go-next">next</a>
 				</div>
-				<div class="dates"></div>
+				<div class="cal_wrap">
+					<div class="days">
+						<div class="day">SUN</div>
+						<div class="day">MON</div>
+						<div class="day">TUE</div>
+						<div class="day">WED</div>
+						<div class="day">THU</div>
+						<div class="day">FRI</div>
+						<div class="day">SAT</div>
+					</div>
+					<div class="dates"></div>
+				</div>
 			</div>
 		</div>
+		<!-- 선택 날짜 이벤트 리스트 종료 순 -->
+		<div class="right-con">
+			<h3>진행중인 이벤트</h3>
+			<ul class="event-list">
+	
+			</ul>
+		</div>
 	</div>
-	<!-- 선택 날짜 이벤트 리스트 종료 순 -->
-	<div class="right-con">
-		<h3>진행중인 이벤트</h3>
-		<ul class="event-list">
-
+	
+	<!-- 진행 /예정 중인 이벤트 -->
+	<div class="board-card por mt50 list-event" id="eventLive">
+		<div class="list-top mb30">
+			<h3>진행중인 이벤트</h3>
+			<a href="/event/eventList">+ 더보기</a>
+		</div>
+		<ul class="swiper-wrapper">
+	
 		</ul>
+		<div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
 	</div>
-</div>
-
-<!-- 진행 /예정 중인 이벤트 -->
-<div class="board-card por mt50 list-event" id="eventLive">
-	<div class="list-top mb30">
-		<h3>진행중인 이벤트</h3>
-		<a href="/event/eventList">+ 더보기</a>
+	
+	<div class="board-card por mt50 list-event" id="eventSoon">
+		<div class="list-top mb30">
+			<h3>진행예정 이벤트</h3>
+			<a href="/event/eventList">+ 더보기</a>
+		</div>
+		<ul class="swiper-wrapper">
+	
+		</ul>
+		<div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
 	</div>
-	<ul class="swiper-wrapper">
-
-	</ul>
-	<div class="swiper-button-next"></div>
-	<div class="swiper-button-prev"></div>
-</div>
-
-<div class="board-card por mt50 list-event" id="eventSoon">
-	<div class="list-top mb30">
-		<h3>진행예정 이벤트</h3>
-		<a href="/event/eventList">+ 더보기</a>
-	</div>
-	<ul class="swiper-wrapper">
-
-	</ul>
-	<div class="swiper-button-next"></div>
-	<div class="swiper-button-prev"></div>
-</div>
-
-<!-- 점포 리스트 -->
-<div class="board-card por mt50 list-store">
-	<div class="list-top mb30">
-		<div class="d_f">
-			<h3>점포 리스트</h3>
-			<div class="d_f mt15px">
-				<div class="select-box mb15">
-					<label for="place-select">지역 : </label> 
-					<select id="place-select">
-						<option value="전체">전체</option>
-						<option value="서울">서울</option>
-						<option value="경기">경기</option>
-						<option value="인천">인천</option>
-						<option value="강원">강원</option>
-						<option value="충청남도">충남</option>
-						<option value="대전">대전</option>
-						<option value="충청북도">충북</option>
-						<option value="부산">부산</option>
-						<option value="울산">울산</option>
-						<option value="대구">대구</option>
-						<option value="경상북도">경북</option>
-						<option value="경상남도">경남</option>
-						<option value="전라남도">전남</option>
-						<option value="광주">광주</option>
-						<option value="전라북도">전북</option>
-						<option value="제주">제주</option>
-					</select>
+	
+	<!-- 점포 리스트 -->
+	<div class="board-card por mt50 list-store">
+		<div class="list-top mb30">
+			<div class="d_f">
+				<h3>점포 리스트</h3>
+				<div class="d_f mt15px">
+					<div class="select-box mb15">
+						<label for="place-select">지역 : </label> 
+						<select id="place-select">
+							<option value="전체">전체</option>
+							<option value="서울">서울</option>
+							<option value="경기">경기</option>
+							<option value="인천">인천</option>
+							<option value="강원">강원</option>
+							<option value="충청남도">충남</option>
+							<option value="대전">대전</option>
+							<option value="충청북도">충북</option>
+							<option value="부산">부산</option>
+							<option value="울산">울산</option>
+							<option value="대구">대구</option>
+							<option value="경상북도">경북</option>
+							<option value="경상남도">경남</option>
+							<option value="전라남도">전남</option>
+							<option value="광주">광주</option>
+							<option value="전라북도">전북</option>
+							<option value="제주">제주</option>
+						</select>
+					</div>
 				</div>
 			</div>
+			<!-- <a href="">+ 더보기</a> -->
 		</div>
-		<!-- <a href="">+ 더보기</a> -->
+		<!-- 슬라이드 영역 -->
+		<ul class="swiper-wrapper"></ul>
+		<div class="swiper-button-next"></div>
+		<div class="swiper-button-prev"></div>
 	</div>
-	<!-- 슬라이드 영역 -->
-	<ul class="swiper-wrapper"></ul>
-	<div class="swiper-button-next"></div>
-	<div class="swiper-button-prev"></div>
 </div>
-
