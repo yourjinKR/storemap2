@@ -130,16 +130,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			        selectedFiles.push(file);
 			      });
 
-			      // input 요소의 파일 목록을 실제 선택된 파일 목록으로 업데이트
-			      function updateInputFiles() {
-			        const dataTransfer = new DataTransfer();
-			        selectedFiles.forEach(file => dataTransfer.items.add(file));
-			        imageInput.files = dataTransfer.files;
-			      }
-
-			      updateInputFiles();
 			    });
-		}
+}
 		
 	f = document.forms[0];
 	console.log(document.querySelectorAll('button.eventBtn'));
@@ -339,6 +331,34 @@ document.addEventListener("DOMContentLoaded", (event) => {
               });
           });
       });
+      
+      new Swiper('.swiper-container', {
+          loop: false,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          slidesPerView: 1,
+        });
+      
+
+      function removeExistingImage(uuid, button) {
+        // preview에서 제거
+        const wrapper = button.closest('.image-preview');
+        wrapper.remove();
+
+        // 삭제 UUID 목록에 hidden input 추가
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'deleteUuids';
+        hiddenInput.value = uuid;
+
+        document.getElementById('deleteUuidsContainer').appendChild(hiddenInput);
+      }
 
 });
 
@@ -528,4 +548,4 @@ function logEventDayList() {
     f.action="/event/eventRegister";
 	f.submit();
 }
-	
+

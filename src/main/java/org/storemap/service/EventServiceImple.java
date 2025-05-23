@@ -41,6 +41,7 @@ public class EventServiceImple implements EventService{
 	@Autowired
 	private AttachFileMapper attachMapper;
 	
+	
 	// 메인 슬라이드
 	public List<AttachFileVO> getMainSlide(){
 		List<EventVO> list = mapper.getMainSlide();
@@ -71,15 +72,7 @@ public class EventServiceImple implements EventService{
 			if(vo.getEvent_file() != null) {
 				String[] file = vo.getEvent_file().split(",");
 				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
-				
-				AttachFileVO attach = new AttachFileVO();
-				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
-				if(idxof == -1) {
-					attach = attachMapper.getAttach(file[0]);
-				}else {
-					attach.setFilename(file[0]);
-				}
-				
+				AttachFileVO attach = attachMapper.getAttach(file[0]);
 				if(attach != null) {
 					attachList.add(attach);
 				}
@@ -96,14 +89,7 @@ public class EventServiceImple implements EventService{
 			if(vo.getEvent_file() != null) {
 				String[] file = vo.getEvent_file().split(",");
 				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
-				AttachFileVO attach = new AttachFileVO();
-				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
-				if(idxof == -1) {
-					attach = attachMapper.getAttach(file[0]);
-				}else {
-					attach.setFilename(file[0]);
-				}
-				
+				AttachFileVO attach = attachMapper.getAttach(file[0]);
 				if(attach != null) {
 					attachList.add(attach);
 				}
@@ -339,6 +325,7 @@ public class EventServiceImple implements EventService{
 		}
 		return list;
 	}
+	
 	// 숨긴 이벤트 목록 보기
 	@Override
 	public List<EventVO> getHiddenList() {
@@ -359,4 +346,15 @@ public class EventServiceImple implements EventService{
 		int result = mapper.unhideEvent(event_idx);
 		return result;
 	}
+	// 이벤트 업데이트
+	@Override
+	public int modifyEventBasicInfo(EventVO eventVO) {
+		return mapper.updateEventBasicInfo(eventVO);
+	}
+	// 업데이트 페이지에 idx가져가기
+	@Override
+	public EventVO getEventByIdx(int event_idx) {		
+		return mapper.getEventByIdx(event_idx);
+	}
 }
+

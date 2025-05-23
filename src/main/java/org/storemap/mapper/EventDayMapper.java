@@ -11,4 +11,5 @@ public interface EventDayMapper {
 	public List<EventDayVO> getEventDaysByEventId(@Param("event_idx") int event_idx);
 	
 	public int getEventIdxByEdayIdx(int eday_idx);
+	
 }

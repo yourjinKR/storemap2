@@ -1,9 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="java.time.LocalDate, java.time.temporal.ChronoUnit" %>
 <%@ page import="org.storemap.domain.EventVO" %>
 <!-- 스크립트 -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="/resources/js/event.js"></script>
 
 <div class="readonly-form">
@@ -63,8 +65,30 @@
       <td>${evo.event_location}</td>
     </tr>
   </table>
-	
-  <div id="participationSection">
+
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    <c:forEach var="eday" items="${eday}">
+      <div class="swiper-slide">
+        <h3>${eday.event_starttime} ~ ${eday.event_stoptime}</h3>
+        <c:forEach var="req" items="${requestMap.get(eday.eday_idx)}">
+          <div class="store-box">
+            <h4>${req.join_store.store_name}</h4>
+            <p>${req.join_store.store_content}</p>
+          </div>
+        </c:forEach>
+      </div>
+    </c:forEach>
+  </div>
+
+  <!-- 네비게이션 버튼 -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  <!-- 페이지네이션 -->
+  <div class="swiper-pagination"></div>
+</div>
+ 
+<div id="participationSection">
     <input type="button" id="openBtn" value="참여" />
   </div>
 </div>

@@ -62,7 +62,7 @@ function getMyEvent(){
 				str += 		`</dl>`;
 				str += 		`<div class="btn-box col">`;
 				str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">이동</a>`;
-				str += 			`<a href="/event/eventRegister?event_idx=${data.event_idx}">수정</a>`;
+				str += 			`<a href="/event/eventModify?event_idx=${data.event_idx}">수정</a>`;
 				str += 		`</div>`;
 				str +=	`</li>`;
 			}

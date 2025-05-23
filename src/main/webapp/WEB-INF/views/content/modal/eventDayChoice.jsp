@@ -106,11 +106,10 @@
                         <td>${eday.event_stoptime}</td>
                         <td>${eday.store_max}</td>
 
-                        <!-- 신청 상태 -->
                         <td>
                             <c:choose>
                                 <c:when test="${entryStatusMap[eday.eday_idx] != null}">
-                                    ${entryStatusMap[eday.eday_idx]} <!-- 신청 승인중 -->
+                                    ${entryStatusMap[eday.eday_idx]} 
                                 </c:when>
                                 	<c:otherwise>
                                     	신청 전
@@ -118,7 +117,7 @@
                             </c:choose>
                         </td>
 
-                        <!-- 입점 신청 버튼 -->
+ 
                         <td>
                             <c:choose>
                                 <c:when test="${entryStatusMap[eday.eday_idx] == null}">
@@ -134,7 +133,7 @@
                             </c:choose>
                         </td>
 
-                        <!-- 철회 버튼 -->
+            
 						<td>
 						    <c:choose>
 						        <c:when test="${entryStatusMap[eday.eday_idx] != null}">
@@ -146,7 +145,7 @@
 						            </button>
 						        </c:when>
 						        <c:otherwise>
-						            <!-- 철회 버튼 없음 -->
+				
 						        </c:otherwise>
 						    </c:choose>
 						</td>

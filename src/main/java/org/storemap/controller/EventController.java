@@ -352,4 +352,17 @@ public class EventController {
 		return new ResponseEntity<List<EventVO>>(list, HttpStatus.OK);
 	} 
 	
+	@GetMapping("/eventModify")
+	public String showEventModifyPage(@RequestParam("event_idx") int eventIdx,
+										 Model model) {
+	    EventVO evo = eventService.getEventByIdx(eventIdx);
+	    model.addAttribute("evo", evo);
+	    return "index";
+	}
+
+	@PostMapping("/eventModify")
+	public String modifyEvent(EventVO eventVO) {
+	    eventService.modifyEventBasicInfo(eventVO);
+	    return "redirect:/event/eventView?event_idx=" + eventVO.getEvent_idx();
+	}
 }

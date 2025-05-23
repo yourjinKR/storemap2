@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.storemap.mapper.EventRequestMapper">
-	<insert id="eventRequest" parameterType="int">
+	<insert id="eventRequest" parameterType="map">
 		insert into event_request (		
 			eday_idx,
 			pon,
@@ -40,4 +40,25 @@
     <update id="updateRequest" parameterType="map">
     	UPDATE EVENT_REQUEST SET PON = 1 WHERE STORE_IDX = #{store_idx} AND EDAY_IDX = #{eday_idx} 
     </update>
+	
+	  <resultMap id="EventRequestMap" type="org.storemap.domain.EventRequestVO">
+	    <id property="eday_idx" column="eday_idx"/>
+	    <result property="pon" column="pon"/>
+	    <result property="store_idx" column="store_idx"/>
+	    <result property="regdate" column="regdate"/>
+	    
+	    <association property="join_store" javaType="org.storemap.domain.StoreVO">
+	      <result property="store_name" column="store_name"/>
+	      <result property="store_content" column="store_content"/>
+	    </association>
+	  </resultMap>
+
+	  <select id="getRequestsByEdayIdx" resultMap="EventRequestMap">
+	    SELECT er.eday_idx, er.pon, er.store_idx, er.regdate,
+	           s.store_name, s.store_content
+	    FROM event_request er
+	    JOIN store s ON er.store_idx = s.store_idx
+	    WHERE er.eday_idx = #{eday_idx}
+	  </select>
+	
 </mapper>

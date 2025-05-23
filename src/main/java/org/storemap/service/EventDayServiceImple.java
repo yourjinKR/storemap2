@@ -23,4 +23,5 @@ public class EventDayServiceImple implements EventDayService{
 	public List<EventDayVO> getEventDaysByEventId(int event_idx) {
 		return mapper.getEventDaysByEventId(event_idx);
 	}
+	
 }

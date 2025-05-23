@@ -43,19 +43,22 @@ public interface EventService {
     // 좋아요 감소
     public void decrementLike(int eventIdx);
     // 좋아요 수 조회
-    public int getLikeCount(int eventIdx);  
+    public int getLikeCount(int eventIdx);
 	// 이벤트 리스트
 	public List<EventVO> getEventList(int enter_idx);
 	// MY EVNET 진행/예정
 	public List<EventVO> getMyEvent(int enter_idx);
 	// MY EVNET 종료
 	public List<EventVO> getMyEventEnd(int enter_idx);
-	
 	// 숨긴 이벤트 목록
 	public List<EventVO> getHiddenList();
 	// 이벤트 숨기기 등록
 	public int hide(int event_idx);
 	// 이벤트 숨기기 해제
 	public int unhide(int event_idx);
-	
+	// 이벤트 수정
+	public int modifyEventBasicInfo(EventVO eventVO);
+	// 수정 페이지에 idx가져가기
+	public EventVO getEventByIdx(int event_idx);
+		
 }

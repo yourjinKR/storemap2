@@ -578,5 +578,22 @@
 			event_hidden = 0
 		where event_idx = #{event_idx}
 	</update>
-
+  	 	
+    <select id="selectEventByIdx" resultType="org.storemap.domain.EventVO" parameterType="int">
+        SELECT * FROM event WHERE event_idx = #{event_idx}
+    </select> 
+    
+    <update id="updateEventBasicInfo" parameterType="org.storemap.domain.EventVO">
+        UPDATE event
+        SET event_title = #{event_title},
+            event_content = #{event_content},
+            event_location = #{event_location}
+        WHERE event_idx = #{event_idx}
+    </update>
+    
+    <select id="getEventByIdx" resultType="org.storemap.domain.EventVO" parameterType="int">
+	    SELECT *			
+	    FROM event
+	    WHERE event_idx = #{event_idx}
+	</select>
 </mapper>

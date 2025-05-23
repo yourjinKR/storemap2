@@ -7,5 +7,8 @@ import org.storemap.domain.EventDayVO;
 public interface EventDayService {
 	public int insertEventDay(EventDayVO eventDayVO);
 	
-	public List<EventDayVO> getEventDaysByEventId(int event_idx); 
+	public List<EventDayVO> getEventDaysByEventId(int event_idx);
+	
+
+	
 }

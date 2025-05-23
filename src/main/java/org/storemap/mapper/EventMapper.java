@@ -16,9 +16,7 @@ public interface EventMapper {
 	// 메인 페이지 진행예정 이벤트
 	public List<EventVO> getSoonEvent();
 	// 메인페이지 선택 날짜 이벤트
-	public List<EventVO> getListEndDate(String searchDate);
-	
-	
+	public List<EventVO> getListEndDate(String searchDate);	
 	// 이벤트 신청 최대 값
 	public int endMaxCount(int event_idx);
 	// 이벤트 신청 승인 점포
@@ -51,12 +49,23 @@ public interface EventMapper {
 	public List<EventVO> getMyEvent(int enter_idx);
 	// MY EVNET 종료
 	public List<EventVO> getMyEventEnd(int enter_idx);
-	
+	// eventModify에 idx 던져주는용
+	public EventVO selectEventByIdx(int eventIdx);
+	// event 내용 수정
+	public int updateEventContent(EventVO eventVO);
+	// event 파일 수정
+	public int updateEventFileByIdx(@Param("event_idx") int event_idx, @Param("event_file") String event_file);	
 	// 숨긴 이벤트 목록
 	public List<EventVO> getEventHiddenList();
 	// 이벤트 숨기기 등록
 	public int hideEvent(int event_idx);
 	// 이벤트 숨기기 해제
 	public int unhideEvent(int event_idx);
+	// 이벤트 수정
+	public int updateEventBasicInfo(EventVO eventVO);
+	
+	public EventVO getEventByIdx(int event_idx);
+
+	
 	
 }

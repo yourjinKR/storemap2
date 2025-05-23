@@ -19,4 +19,5 @@ public interface AttachFileMapper {
 	//uuid 가져오기
 	public List<AttachFileVO> getFilesByUuidList(@Param("uuidList") List<String> uuidList);
 	
+	
 }
