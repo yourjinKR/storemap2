@@ -433,6 +433,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
+
+        // 지도 이동이 완료되었을 발생하는 이벤트
+        kakao.maps.event.addListener(basicMap, 'dragend', function() {        
+            const center = basicMap.getCenter();
+            
+            // 중심 좌표가 제한된 범위를 벗어나면
+            if (!boundLimit.contain(center)) {
+                // 가장 가까운 지점으로 중심을 재조정
+                const lat = Math.min(Math.max(center.getLat(), boundLimit.getSouthWest().getLat()), boundLimit.getNorthEast().getLat());
+                const lng = Math.min(Math.max(center.getLng(), boundLimit.getSouthWest().getLng()), boundLimit.getNorthEast().getLng());
+
+                const newCenter = new kakao.maps.LatLng(lat, lng);
+                basicMap.setCenter(newCenter);
+            }
+        });
     }
 
 
@@ -681,21 +696,6 @@ document.addEventListener("DOMContentLoaded", () => {
         keywordInput.value = value;
         resetAutocomplete();
         mapSearchService(basicMap, value);
-    });
-
-    // 지도 이동이 완료되었을 발생하는 이벤트
-    kakao.maps.event.addListener(basicMap, 'dragend', function() {        
-    const center = basicMap.getCenter();
-    
-    // 중심 좌표가 제한된 범위를 벗어나면
-    if (!boundLimit.contain(center)) {
-        // 가장 가까운 지점으로 중심을 재조정
-        const lat = Math.min(Math.max(center.getLat(), boundLimit.getSouthWest().getLat()), boundLimit.getNorthEast().getLat());
-        const lng = Math.min(Math.max(center.getLng(), boundLimit.getSouthWest().getLng()), boundLimit.getNorthEast().getLng());
-
-        const newCenter = new kakao.maps.LatLng(lat, lng);
-        basicMap.setCenter(newCenter);
-    }
     });
 
     /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */ 
@@ -1642,7 +1642,7 @@ function apply2eventMap(data) {
         msg += 
         // `<li data-store_idx="${vo.store_idx}" name="store_idx">
         `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
-            <img src="/resources/img/store1.jpg" alt="">
+            <img src="${poster}" alt="event_${vo.event_idx}">
                 <div class="store-description">
                     <div class="event-title">${vo.event_title}</div>
                     <div class="event-location">${vo.event_location}</div>
