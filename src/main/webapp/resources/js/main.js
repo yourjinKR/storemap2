@@ -82,7 +82,7 @@ function getEventList(type){
 				str += 		`<div class="card-list d_f">`;
 			}
 				str +=			`<div class="card-box">`;
-				str += 			`<a href="/event/eventView?event_idx=${event.event_idx}">`;
+				str += 				`<a href="/event/eventView?event_idx=${event.event_idx}" class="por">`;
 				if(event.attachFile != null && event.attachFile.length > 0){
 					if(event.attachFile[0].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
 						str += 			`<div class="card-img"><img src="${event.attachFile[0].filename}"></div>`;						
@@ -93,9 +93,24 @@ function getEventList(type){
 					str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
 				}
 				str += 					`<div class="card-text">`;
-				str += 						`<p>${event.event_content}</p>`;
+				str += 						`<div class="event-title">${event.event_title}</div>`;
+				str += 						`<div>`;
+				str +=	 						`<span class="event-date">${dateFormate(event.event_bstartdate)} ~ ${dateFormate(event.event_bstopdate)}</span>`;
+				str += 							`<div class="icon-box">
+													<span class="material-symbols-outlined">
+														mode_comment
+													</span> ${event.comment_count}
+													<span class="material-symbols-outlined">
+														favorite
+													</span> ${event.like_count}
+												</div>`;
+				str += 						`</div>`;
 				str += 					`</div>`;
-				str += 			`</a>`;
+				str += 					`<div class="event-content">
+											<h4>${event.event_title}</h4>
+											<p>${event.event_content}</p>
+										</div>`;
+				str += 				`</a>`;
 				str += 			`</div>`;
 			if(idx == 4 || idx == 9){
 				str += 		`</div>`;
@@ -209,7 +224,7 @@ function eventListEndDate(dateStr){
 				let replydate = date.getFullYear()+ "-" + String(date.getMonth() + 1).padStart(2, '0')+ "-" + String(date.getDate()).padStart(2, '0');
 				str += 	`<li>`;
 				str += 		`<a href="/event/eventView?event_idx=${json.event_idx}" class="d_f">`;
-				str += 			`<p>${json.event_content}</p>`;
+				str += 			`<p>${json.event_title}</p>`;
 				str += 			`<span>종료 날짜 : ${replydate}</span>`;
 				str += 		`</a>`;
 				str +=  `</li>`;
