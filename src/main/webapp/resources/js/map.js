@@ -745,6 +745,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     }
+
+    /** 지도 새로고침 */
+    basicMap.relayout();
 });
 
 
