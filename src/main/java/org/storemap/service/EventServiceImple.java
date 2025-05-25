@@ -16,12 +16,17 @@ import org.storemap.domain.Criteria;
 import org.storemap.domain.EventDTO;
 import org.storemap.domain.EventDayVO;
 import org.storemap.domain.EventFilterVO;
+import org.storemap.domain.EventRequestVO;
 import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.EventDayMapper;
 import org.storemap.mapper.EventMapper;
+import org.storemap.mapper.EventRequestMapper;
+import org.storemap.mapper.StoreMapper;
+
+import com.sun.jdi.request.EventRequestManager;
 
 import lombok.extern.log4j.Log4j;
 
@@ -37,9 +42,13 @@ public class EventServiceImple implements EventService{
 	@Autowired
 	private EventDayService eventDayService;
 	@Autowired
-	private CloudinaryService cloudService;
+	private EventRequestMapper reqMapper;
 	@Autowired
 	private AttachFileMapper attachMapper;
+	@Autowired
+	private StoreMapper storeMapper;
+	@Autowired
+	private CloudinaryService cloudService;
 	
 	
 	// 메인 슬라이드
@@ -143,7 +152,16 @@ public class EventServiceImple implements EventService{
 	    // 임시 필드로 데이터 저장 (DB에는 저장되지 않음)
 	    event.setCloudinaryFiles(cloudinaryFiles);
 	    event.setExternalUrls(externalUrls);
-
+	    List<EventDayVO> edayList = eventDayMapper.getEventDaysByEventId(event.getEvent_idx());
+	    for (EventDayVO eday : edayList) {
+	    	List<EventRequestVO> reqList = reqMapper.getEdayRequestAttend(eday.getEday_idx());
+	    	for (EventRequestVO reqvo : reqList) {
+	    		reqvo.setJoin_store(storeMapper.read(reqvo.getStore_idx()));
+			}
+	    	eday.setJoin_ereq(reqList);
+		}
+	    event.setJoin_eday(edayList);
+	    
 	    return event;
 	}
 	

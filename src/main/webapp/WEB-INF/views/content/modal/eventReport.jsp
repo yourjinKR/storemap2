@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <form id="eventReportForm" action="/event/report/submit" method="post">
   <div id="event-report-selection" style="display: none;">
     <div class="event-report-content">

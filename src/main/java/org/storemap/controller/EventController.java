@@ -144,7 +144,7 @@ public class EventController {
 
 	    // 이벤트 정보 조회
 	    EventVO vo = eventService.getEventOneView(event_idx);
-	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
+//	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
 	    	    
 	    // event_file 컬럼에서 Cloudinary UUID와 외부 URL을 분리
 	    String eventFile = vo.getEvent_file();
@@ -170,7 +170,7 @@ public class EventController {
 	    }
 	    
 	    // 모델에 데이터 전달
-	    model.addAttribute("eday", eday);
+//	    model.addAttribute("eday", eday);
 	    model.addAttribute("evo", vo);
 	    model.addAttribute("fileList", cloudinaryFiles);    
 	    model.addAttribute("externalUrls", externalUrls);// 외부 URL 이미지 리스트

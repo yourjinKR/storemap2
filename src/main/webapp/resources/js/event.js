@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
       
       new Swiper('.swiper-container', {
-          loop: false,
+          loop: true,
           navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',

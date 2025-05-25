@@ -99,7 +99,7 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="eday" items="${eday}">
+                <c:forEach var="eday" items="${evo.join_eday}">
                     <tr>
                         <td><c:out value="${fn:substring(eday.event_starttime, 0, 10)}" /></td>
                         <td>${eday.event_starttime}</td>

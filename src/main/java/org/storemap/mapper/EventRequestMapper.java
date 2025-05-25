@@ -13,6 +13,8 @@ public interface EventRequestMapper {
 	
 	public List<Integer> selectAppliedEdayIdxList(@Param("store_idx") int storeIdx);
 	
+	// 신청 완료
+	public List<EventRequestVO> getEdayRequestAttend(int eday_idx);
 	// 입점 신청 리스트
 	public List<EventRequestVO> getEdayRequest(int eday_idx);
 	// 입점 승인

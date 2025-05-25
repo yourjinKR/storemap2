@@ -37,6 +37,10 @@
 		SELECT * FROM EVENT_REQUEST WHERE EDAY_IDX = #{eday_idx} AND PON = 0 ORDER BY REGDATE
     </select>
     
+	<select id="getEdayRequestAttend" parameterType="int" resultType="org.storemap.domain.EventRequestVO">
+		SELECT * FROM EVENT_REQUEST WHERE EDAY_IDX = #{eday_idx} AND PON = 1 ORDER BY REGDATE
+    </select>
+    
     <update id="updateRequest" parameterType="map">
     	UPDATE EVENT_REQUEST SET PON = 1 WHERE STORE_IDX = #{store_idx} AND EDAY_IDX = #{eday_idx} 
     </update>
