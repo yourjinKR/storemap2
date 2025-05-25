@@ -421,17 +421,17 @@ document.addEventListener("DOMContentLoaded", () => {
         kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
             const level = basicMap.getLevel();
 
-            if (level > 3) {
-                hideOverlay(storeOverlayList);
-                hideOverlay(eventOverlayList);
-            } else {
-                if (storeMapMode || unitedMapMode) {
-                    showOverlay(basicMap, storeOverlayList);
-                }
-                if (eventMapMode || unitedMapMode) {
-                    showOverlay(basicMap, eventOverlayList);
-                }
-            }
+            // if (level > 3) {
+            //     hideOverlay(storeOverlayList);
+            //     hideOverlay(eventOverlayList);
+            // } else {
+            //     if (storeMapMode || unitedMapMode) {
+            //         showOverlay(basicMap, storeOverlayList);
+            //     }
+            //     if (eventMapMode || unitedMapMode) {
+            //         showOverlay(basicMap, eventOverlayList);
+            //     }
+            // }
         });
 
         // 지도 이동이 완료되었을 발생하는 이벤트
@@ -751,7 +751,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// ============================ 지도 관련 함수 ============================
+// ============================ 마커 관련 함수 ============================
 
 // 지도 마커 추가 (구버전)
 function addMarker(map, lat, lng) {
@@ -765,7 +765,7 @@ function addMarker(map, lat, lng) {
     marker.setMap(map);
 }
 
-// 마커 등록
+/** 마커 등록 */ 
 function registerMarker(vo) {
     let lat;
     let lng;
@@ -791,7 +791,7 @@ function registerMarker(vo) {
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
         title : idx,
         image : icon, // 아이콘 이미지 변경 필요
-        zIndex : 4
+        zIndex : 5
     });
     return marker;
 }
@@ -905,30 +905,44 @@ function clickOverlay(ele) {
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
 }
 
+let clickedOverlay = null;
+
 /** 오버레이를 찾는 함수 */
 function findOverlay(idx, type) {
+    let overlay;
+    hideOverlay(storeOverlayList);
+    hideOverlay(eventOverlayList);
     if (type === 'store') {        
-        if (basicMap.getLevel() > 3) {
-            hideOverlay(storeOverlayList);
-            hideOverlay(eventOverlayList);
-        }
         storeVOList.forEach(vo => {
             if (vo.store_idx == idx) {
-                vo.overlay.setMap(basicMap);
+                overlay = vo.overlay;
             }
         })
     }
     else if (type === 'event') {     
-        if (basicMap.getLevel() > 3) {
-            hideOverlay(storeOverlayList);
-            hideOverlay(eventOverlayList);
-        }
         eventVOList.forEach(vo => {
             if (vo.event_idx == idx) {
-                vo.overlay.setMap(basicMap);
+                overlay = vo.overlay;
             }
         })
     }
+    overlay.setZIndex(8);
+    overlay.setMap(basicMap);
+    preventOverlayClickBlock();
+}
+
+/** 오버레이 DOM 클릭 방지하는 함수 */
+function preventOverlayClickBlock() {
+    document.querySelectorAll('.customoverlay').forEach(function(overlay) {
+        var container = overlay.parentElement;
+        if (container && container.style) {
+            // z-index는 유지, 클릭만 통과
+            container.style.pointerEvents = 'none';
+        }
+
+        // 내부 실제 텍스트(.title 등)는 클릭 가능하게 유지
+        overlay.style.pointerEvents = 'auto';
+    });
 }
 
 /** 오버레이와 매핑 */
@@ -1678,7 +1692,7 @@ function apply2storeMap(data) {
 
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
-        showOverlay(basicMap, storeOverlayList);
+        // showOverlay(basicMap, storeOverlayList);
 
         // 스토어 맵일 경우 지도 크기 조절
         // let level = getMapLevelFromMarkerLists(storeVOList);
@@ -1708,7 +1722,7 @@ function apply2eventMap(data) {
         let fileList = [];
 
         // 파일 지정 방식
-        // getEventListKeyword
+        // attachFile에서 파일 찾기
         if (vo.attachFile != null) {
             vo.attachFile.forEach(file => {
                 if(file.uuid != null) {
@@ -1720,7 +1734,7 @@ function apply2eventMap(data) {
                 }
             });
         }
-        // getEventByIdx
+        // cloudinaryFile & externalURL
         else if (vo.cloudinaryFiles != null && vo.externalUrls != null) {
             console.log('파일처리 구분');
             if (vo.cloudinaryFiles.length != 0) {
@@ -1733,6 +1747,7 @@ function apply2eventMap(data) {
             }
         }
 
+        // 이미지  없을 경우
         if (fileList.length == 0) {
             fileList.push("https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg");
         }
@@ -1765,7 +1780,7 @@ function apply2eventMap(data) {
     if (eventMapMode || unitedMapMode) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
-        showOverlay(basicMap, eventOverlayList);
+        // showOverlay(basicMap, eventOverlayList);
         
         // 이벤트 맵일때 크기 조절
         if (eventMapMode) {
