@@ -384,7 +384,6 @@ function viewDetailModalPage(li, type) {
             console.error(`data-${type}_idx 속성이 존재하지 않습니다.`);
             return;
         }
-        console.log(typeof unitedMapMode);
         
         fetch(`/modal/${type}View?${type}_idx=${idx}`)
             .then(response => response.text())

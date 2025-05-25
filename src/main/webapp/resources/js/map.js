@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 지도 기본 설정값
     let basicOption = {};
     if(currentPosition) {
-        // console.log('위치설정 있음');
+
         currentLat = currentPosition.lat;
         currentLng = currentPosition.lng;
         basicOption = {center: new kakao.maps.LatLng(currentLat, currentLng), level: 3};
@@ -127,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     } else {
-        console.log('기본 위치가 없는 관계로 솔데스크 강남점으로...')
         basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 1};
 
         clickMarker = new kakao.maps.Marker({ 
@@ -170,15 +169,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 검색창
     mapSearchForm = document.querySelector(".form#map");
-    console.log(mapSearchForm);
     
     if(mapType === "full") {
         keywordInput = mapSearchForm.keyword;
-        console.log('검색창 발견');
     } else {
         mapSearchForm = document.querySelector(".search-bar");
         keywordInput = document.querySelector(".search-bar input[name='keyword']");
-        console.log('없음');
     }
     autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
     autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
@@ -293,7 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // storeModify.jsp (영업 위치 설정 지도)
     else if (mapType === "store-loc") {
         let f = document.forms[0];
-        console.log(f);
         // 위치가 설정되지 않았을 경우
         if (f.lat.value != 0 && f.lng.value != 0) {
             let latlng = new kakao.maps.LatLng(f.lat.value, f.lng.value);
@@ -313,7 +308,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", e => {
             e.preventDefault();
             let type = btn.getAttribute("id");
-            console.log(type + " click");
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
                 panToLatLng(basicMap, basicLat, basicLng);
@@ -353,9 +347,6 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "panto-current") {
                 basicMap.setLevel(3);
                 panToLatLng(basicMap, currentLat, currentLng);
-                // console.log(clickMarker.getPosition());
-                // console.log(basicMap.getCenter());
-
                 if(new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter()) {
                     setMyCurrentPlace();
                 }
@@ -555,8 +546,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 자동완성 검색창 키보드 방향키 지원
-    console.log(keywordInput);
-    
     keywordInput.addEventListener("keydown", e => {        
         //const items = autoSearchUL.querySelectorAll("li");
         const items = Array.from(autoSearchUL.querySelectorAll("li")).filter(li => {
@@ -706,7 +695,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                console.log(result); // result : 결과 내용, [0] : 역삼동 / [1] : 역삼 1동
             }
         };
         geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
@@ -740,7 +728,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                console.log(result); // result : 결과 내용, [0] : 역삼동 / [1] : 역삼 1동
             }
         }
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
@@ -945,28 +932,6 @@ function preventOverlayClickBlock() {
     });
 }
 
-/** 오버레이와 매핑 */
-function overlayMapping(eles, type) {
-    let list = [];
-    if (type === 'store') {
-        list = storeVOList;
-    }
-
-    
-    
-
-    eles.forEach(ele => {
-        // 클릭 이벤트 추가
-        ele.addEventListener("click", e => {
-            console.log("idx 값 갖고 올 수 있는 지 확인");
-            list.forEach(vo => {
-                
-            });
-        })
-    });
-}
-
-
 // ============================= 이벤트 추가 관련 함수 =============================
 /** li요소 클릭 이벤트 추가, 마커 매핑 함수 (ele, type) */ 
 function markerMapping(eles, type) {
@@ -1020,7 +985,6 @@ function searchEleByTitle(title, type) {
 /** 마커 클릭 이벤트 추가 함수 */ 
 function addMarkerEvent(marker, type) {
     kakao.maps.event.addListener(marker, 'click', function() {
-        console.log("marker idx : " + marker.getTitle());
         // 마커 선택
         selectMarker(marker, type);
         
@@ -1168,8 +1132,6 @@ const asyncService = (function(){
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            
             callback(data);
         })
         .catch(err => {
@@ -1428,8 +1390,6 @@ function mapSearchService(map, keyword) {
         alert("키워드를 입력하시오");
         return;
     }
-
-    console.log(`${keyword}에 대한 검색 결과....`);
     
     storeFailModal.style.display = "none";
     eventFailModal.style.display = "none";
@@ -1453,7 +1413,6 @@ function mapSearchService(map, keyword) {
             let level = getMapLevelFromMarkerLists(storeVOList);
             basicMap.setLevel(level);
         } else {
-            console.log('장소를 못찾음');
             searchPlaces(keyword);
         }
     });
@@ -1464,9 +1423,6 @@ function mapSearchService(map, keyword) {
             processAllEvents(data, "search");
         }
     });
-
-    console.log(storeVOList);
-    console.log(eventVOList);
 }
 
 
@@ -1530,7 +1486,6 @@ function placesSearchCB(data, status, pagination) {
         } else {
             as.getListByKeyword(searchCondition, function (data) {
                 if (data.length != 0) {
-                    console.log('점포명 및 메뉴명을 검색 실행');
                     apply2storeMap(data);
                 }
                 else if (placeInfo.category_group_name != "음식점") {
@@ -1547,7 +1502,6 @@ function placesSearchCB(data, status, pagination) {
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         as.getListByKeyword(searchCondition, function (data) {
             if (data.length != 0) {
-                console.log('점포명 및 메뉴명을 검색 실행');
                 apply2storeMap(data);
             }
             else if (placeInfo.category_group_name != "음식점") {
@@ -1620,7 +1574,6 @@ function apply2storeMap(data) {
     storeUL = document.querySelector(".store-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
 
     if (data.length == 0) {
-        console.log("data 없음");
         failSearch();
         return;
     } else if (data.length == 1) {
@@ -1642,8 +1595,6 @@ function apply2storeMap(data) {
 
         storeVOList.push(vo);
     });
-
-    console.log('store vo list : ', storeVOList);
 
     let msg = "";
     // 점포 리스트 출력
@@ -1710,7 +1661,7 @@ function apply2eventMap(data) {
     // eventUL.innerHTML = "";
 
     if(data.length == 0) {
-        console.log('data 없음');
+
         failSearch();
         return;
     }
@@ -1736,7 +1687,6 @@ function apply2eventMap(data) {
         }
         // cloudinaryFile & externalURL
         else if (vo.cloudinaryFiles != null && vo.externalUrls != null) {
-            console.log('파일처리 구분');
             if (vo.cloudinaryFiles.length != 0) {
                 vo.cloudinaryFiles.forEach(file => {
                     let imgSrc = `https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}`;
@@ -1797,7 +1747,6 @@ function deleteAllEle() {
     if (mapType != "full") {
         return;
     }
-    console.log('요소를 삭제합니다');
 
     hideMarkers(storeVOList);
     hideMarkers(eventVOList);
@@ -1900,7 +1849,7 @@ function address2coordPromise(vo, funcType) {
  * @param type "search" or "autoComplete"
  */
 function processAllEvents(data, type) {
-    console.log(`함수를 ${type} 방식으로 실행`);
+    // console.log(`함수를 ${type} 방식으로 실행`);
     
     const promises = data.map(vo => address2coordPromise(vo, type));
 
@@ -1917,7 +1866,7 @@ function processAllEvents(data, type) {
 
         if (type === "search") {
             // 키워드 검색
-            console.log('event vo list : ', eventVOList);
+            // console.log('event vo list : ', eventVOList);
             apply2eventMap(eventVOList);
             failSearch();
 
@@ -1984,7 +1933,6 @@ function swap2unitedMap() {
 
         // 사이드바를 event로 변경
         // viewSideBar = document.querySelector(".side-bar#united");
-        console.log(viewSideBar);
 
         if (storeVOList.length !=0 || eventVOList.length != 0) {
             let level = getMapLevelFromMarkerLists(eventVOList, storeVOList);
@@ -2098,7 +2046,7 @@ function getMyCurrentPlace() {
     currentLng = latLng.getLng();
     setPositionData(currentLat, currentLng);
     positionOverlay.setMap(null);
-    console.log('현위치 커스텀 변경 완료' + latLng);
+    // console.log('현위치 커스텀 변경 완료' + latLng);
 }
 /** 위치정보 커스텀 변경 취소 함수 */
 function cancelMyCurrentPlace() {
@@ -2122,8 +2070,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
 // 현위치를 기준으로 List 정렬
 function sortEventVOListByDistance(lat, lng, list) {
     if(list.length == 0) {return;}
-    
-    console.log('정렬시작');
     list.sort((a, b) => {
         const distA = getDistance(lat, lng, parseFloat(a.event_lat), parseFloat(a.event_lng));
         const distB = getDistance(lat, lng, parseFloat(b.event_lat), parseFloat(b.event_lng));
@@ -2214,8 +2160,6 @@ function setRadiusByLevel(level) {
 // 자동완성 관련 함수
 /** 추천 리스트 UI 갱신 */ 
 function updateSuggestionList(list, type, keyword) {
-    // console.log(`"${type}"에서 "${keyword}"를 검색`);
-
     // 기존에 있었던 리스트 삭제
     let oldList = document.querySelectorAll(`.${type}-ele`);
     if(oldList != null) {
@@ -2265,7 +2209,6 @@ function updateActiveItem(items) {
         item.classList.toggle("active", i === selectedIndex);
         if(i === selectedIndex) {
             // 수정 필요
-            // console.log(items[i]);
             item.scrollIntoView({behavior: "auto", block: "nearest"});
         }
     });
@@ -2273,8 +2216,6 @@ function updateActiveItem(items) {
 
 /** 자동완성 초기화 */ 
 function resetAutocomplete() {
-    console.log("초기화");
-    
     hideAutocomplete();
     autoSearchUL.innerHTML = "";
 }

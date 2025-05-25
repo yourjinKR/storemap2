@@ -10,6 +10,9 @@
 
     <div class="event-info por">
 		<h3 class="event-title">${evo.event_title}</h3>
+		<div>${evo.event_bstartdate}~ ${evo.event_bstopdate}</div>
+		<div class="info-text">장소: ${evo.event_location}</div>
+		
 		<div class="photo-preview" style="display: flex; gap: 10px; flex-wrap: wrap;">
 			<!-- Cloudinary 이미지 출력 (0번째 제외) -->
 			<c:forEach var="file" items="${evo.cloudinaryFiles}" varStatus="status">
@@ -29,23 +32,7 @@
 			         class="expandable-img" />
 			  </c:if>
 			</c:forEach>
-		</div>
-      	<div class="info-text">장소: ${evo.event_location}</div>
-    </div>
-    <!-- n일차 정보 -->
-    <div>
-    	<div>← n일차 →</div>
-    	<p>점포명</p>
-    	<ul>
-    		<li>메뉴</li>
-    		<li>메뉴</li>
-    		<li>메뉴</li>
-    	</ul>
-    	<p>점포명</p>
-    	<ul>
-    		<li>메뉴</li>
-    		<li>메뉴</li>
-    		<li>메뉴</li>
-    	</ul>
+		</div>      	
+	    <div><a href="/event/eventView?event_idx=${evo.event_idx}">자세히 보기</a></div>
     </div>
 </div>
