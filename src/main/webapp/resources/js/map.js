@@ -1402,10 +1402,10 @@ function mapSearchService(map, keyword) {
     setToggle(300);
 
     // resetAutocomplete();
-    if (!keyword) {
-        alert("키워드를 입력하시오");
-        return;
-    }
+    // if (!keyword) {
+    //     alert("키워드를 입력하시오");
+    //     return;
+    // }
     
     storeFailModal.style.display = "none";
     eventFailModal.style.display = "none";

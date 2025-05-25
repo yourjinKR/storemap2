@@ -2,7 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="storeView">
-	
+	<div class="store-type">
+		<c:choose>
+			<c:when test="${svo.store_hidden eq 0}">미승인</c:when>
+			<c:when test="${svo.store_hidden eq 1}">미영업</c:when>
+			<c:when test="${svo.store_hidden eq 2}">영업중</c:when>
+		</c:choose>
+	</div>
 	<div class="store-image">
 		<c:choose>
 			<c:when test="${svo.attach.filename eq null}">
