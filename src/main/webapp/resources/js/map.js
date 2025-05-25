@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
 
     // map.jsp
-    if (mapType != null && mapType === "full") {
+    if (mapType === "full") {
         // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
         let zoomControl = new kakao.maps.ZoomControl();
         basicMap.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
@@ -250,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
             keywordInput.value = initialKeyword;
 
             // 검색 조건 구성 후 실행
-            searchCondition.keyword = initialKeyword;
             mapSearchService(basicMap, initialKeyword);
 
             // 재검색 방지: 세션 제거
@@ -264,6 +263,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // store idx 기반 검색 비동기 함수 실행
             // let IDX = 302;
             as.getStoreByIdx(initialStoreIDX, function (data) {
+                searchCondition.keyword = data.store_name;
+                setSubKeyword();
                 apply2storeMap([data]);
             });
         }
@@ -275,15 +276,23 @@ document.addEventListener("DOMContentLoaded", () => {
             // event idx 기반 검색 비동기 함수 실행
             // let IDX = 302;
             as.getEventByIdx(initialEventIDX, function (data) {
+                searchCondition.keyword = data.event_title;
+                setSubKeyword();
                 processAllEvents([data], "search");
             });
         }
 
-        // 초기검색어가 없을 경우 실행하는 기본 검색
+        // 예외처리
         if (!initialKeyword && !initialStoreIDX && !initialEventIDX) {
-            as.getListNearest(searchCondition, 5, function (data) {
-                apply2storeMap(data);
-            })
+            const subCondition = JSON.parse(localStorage.getItem("search_data"));
+            if (subCondition != null) {
+                searchCondition = subCondition;
+                mapSearchService(basicMap, searchCondition.keyword);
+            } else {
+                as.getListNearest(searchCondition, 5, function (data) {
+                    apply2storeMap(data);
+                })
+            }
         }
     }
     // storeModify.jsp (영업 위치 설정 지도)
@@ -386,6 +395,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (basicMap != null) {
+        /** 지도 새로고침 */
+        basicMap.relayout();
+
         // 지도 클릭 이벤트 (경도 위도 출력)
         kakao.maps.event.addListener(basicMap, 'click', function(mouseEvent) {        
         
@@ -412,17 +424,22 @@ document.addEventListener("DOMContentLoaded", () => {
         kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
             const level = basicMap.getLevel();
 
-            // if (level > 3) {
-            //     hideOverlay(storeOverlayList);
-            //     hideOverlay(eventOverlayList);
-            // } else {
-            //     if (storeMapMode || unitedMapMode) {
-            //         showOverlay(basicMap, storeOverlayList);
-            //     }
-            //     if (eventMapMode || unitedMapMode) {
-            //         showOverlay(basicMap, eventOverlayList);
-            //     }
-            // }
+            if (level > 3) {
+                hideOverlay(storeOverlayList);
+                hideOverlay(eventOverlayList);
+            } else {
+                if (storeMapMode || unitedMapMode) {
+                    showOverlay(basicMap, storeOverlayList);
+                }
+                if (eventMapMode || unitedMapMode) {
+                    showOverlay(basicMap, eventOverlayList);
+                }
+            }
+
+            if(clickedOverlay != null) {
+                clickedOverlay.setMap(basicMap);
+            }
+            preventOverlayClickBlock();
         });
 
         // 지도 이동이 완료되었을 발생하는 이벤트
@@ -446,8 +463,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // ====================== 검색어 자동완성 ====================== 
     // 방향키로 선택 중인 항목의 인덱스
     selectedIndex = -1;
-    /** 최근 실행한 검색어 (이전 기록을 기억) */
-    let subKeyword = null;
     /** 자동완성을 취소했을때 돌아갈 키워드 */
     let orgKeyword =null;
 
@@ -587,7 +602,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             case 13: // Enter
                 // 검색 키워드 기억
-                // subKeyword = keywordInput.value;
                 e.preventDefault();
                 deleteAllEle();
 
@@ -650,7 +664,6 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteAllEle();
 
         const target = e.target.closest("li");
-        // subKeyword = target.dataset.value;
         
         if (!target) return;
 
@@ -732,9 +745,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     }
-
-    /** 지도 새로고침 */
-    basicMap.relayout();
 });
 
 
@@ -778,7 +788,7 @@ function registerMarker(vo) {
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
         title : idx,
         image : icon, // 아이콘 이미지 변경 필요
-        zIndex : 5
+        zIndex : 3
     });
     return marker;
 }
@@ -825,7 +835,7 @@ function registerOverlay(vo) {
         position: new kakao.maps.LatLng(vo.store_lat, vo.store_lng),
         content: content,
         yAnchor: 1,
-        zIndex: 3,
+        zIndex: 5,
         clickable: false
         });
         // 리스트에 추가
@@ -863,6 +873,7 @@ function showOverlay(map, overlayList) {
             element.setMap(map);
         }
     }
+    preventOverlayClickBlock();
 }
 
 /** 커스텀 오버레이를 삭제하는 함수 */
@@ -897,8 +908,10 @@ let clickedOverlay = null;
 /** 오버레이를 찾는 함수 */
 function findOverlay(idx, type) {
     let overlay;
-    hideOverlay(storeOverlayList);
-    hideOverlay(eventOverlayList);
+    if (basicMap.getLevel() > 3) {
+        hideOverlay(storeOverlayList);
+        hideOverlay(eventOverlayList);
+    }
     if (type === 'store') {        
         storeVOList.forEach(vo => {
             if (vo.store_idx == idx) {
@@ -913,9 +926,9 @@ function findOverlay(idx, type) {
             }
         })
     }
-    overlay.setZIndex(8);
     overlay.setMap(basicMap);
     preventOverlayClickBlock();
+    clickedOverlay = overlay;
 }
 
 /** 오버레이 DOM 클릭 방지하는 함수 */
@@ -1320,8 +1333,6 @@ const as = asyncService;
 
 /** 지도, 위도, 경도를 입력하면 지도 이동 */
 function panToLatLng(map, lat, lng) {
-    const isValidNumber = (n) => typeof n === 'number' && !isNaN(n);
-
     // 대한민국 기준 위도 및 경도 범위
     const isValidLat = lat >= 33.0 && lat <= 43.0;
     const isValidLng = lng >= 124.0 && lng <= 132.0;
@@ -1378,6 +1389,11 @@ const subwayRegex = /역$/;
 /** 검색어 조건 */  
 let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null, amount:null, keyword:null};
 
+/** 검색어 조건 저장 함수 */
+function setSubKeyword() {
+    localStorage.setItem("search_data", JSON.stringify(searchCondition));
+}
+
 /** 지도 검색 기능 서비스 함수 */
 function mapSearchService(map, keyword) {
     showListSideBar();
@@ -1424,7 +1440,6 @@ function mapSearchService(map, keyword) {
         }
     });
 }
-
 
 // ======= 키워드 검색 관련 =======
 /** 장소 검색을 요청하는 함수 */
@@ -1643,7 +1658,7 @@ function apply2storeMap(data) {
 
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
-        // showOverlay(basicMap, storeOverlayList);
+        showOverlay(basicMap, storeOverlayList);
 
         // 스토어 맵일 경우 지도 크기 조절
         // let level = getMapLevelFromMarkerLists(storeVOList);
@@ -1651,6 +1666,8 @@ function apply2storeMap(data) {
         panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
         completeSearch();
     }
+
+    setSubKeyword();
 }
 
 /** 검색결과를 지도에 적용하는 콜백함수 (이벤트)  */
@@ -1730,7 +1747,7 @@ function apply2eventMap(data) {
     if (eventMapMode || unitedMapMode) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
-        // showOverlay(basicMap, eventOverlayList);
+        showOverlay(basicMap, eventOverlayList);
         
         // 이벤트 맵일때 크기 조절
         if (eventMapMode) {
@@ -1740,6 +1757,8 @@ function apply2eventMap(data) {
         }
         completeSearch();
     }
+
+    setSubKeyword();
 }
 
 /** 모든 요소를 삭제하는 함수 */
