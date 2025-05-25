@@ -1767,6 +1767,8 @@ function deleteAllEle() {
         return;
     }
 
+    clickedOverlay = null;
+
     hideMarkers(storeVOList);
     hideMarkers(eventVOList);
     hideOverlay(storeOverlayList);
