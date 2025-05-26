@@ -854,7 +854,7 @@ function registerOverlay(vo) {
         position: new kakao.maps.LatLng(vo.event_lat, vo.event_lng),
         content: content,
         yAnchor: 1,
-        zIndex: 3,
+        zIndex: 5,
         clickable: false
         });
         // 리스트에 추가
@@ -886,14 +886,14 @@ function hideOverlay(overlayList) {
 
 /** 오버레이 클릭 이벤트 추가 함수 */
 function clickOverlay(ele) {
-    let id = ele.getAttribute("id");
+    let type = ele.getAttribute("id");
     let idx = ele.getAttribute("idx");
-    let li = searchEleByTitle(idx, id);
+    let li = searchEleByTitle(idx, type);
 
-    viewSideBar = document.querySelector(`.side-bar#${id}`);
+    viewSideBar = document.querySelector(`.side-bar#${type}`);
     
-    emphMarker(idx, id);
-    viewDetailModalPage(li, id);
+    emphMarker(idx, type);
+    viewDetailModalPage(li, type);
 
     showListSideBar();
     showviewSideBar();
@@ -901,12 +901,18 @@ function clickOverlay(ele) {
     viewSideBarCheck = true;
 
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
+
+    findOverlay(idx, type);
 }
 
 let clickedOverlay = null;
 
 /** 오버레이를 찾는 함수 */
 function findOverlay(idx, type) {
+    if (clickedOverlay != null) {
+        clickedOverlay.setZIndex(5);
+    }
+
     let overlay;
     if (basicMap.getLevel() > 3) {
         hideOverlay(storeOverlayList);
@@ -927,6 +933,7 @@ function findOverlay(idx, type) {
         })
     }
     overlay.setMap(basicMap);
+    overlay.setZIndex(8);
     preventOverlayClickBlock();
     clickedOverlay = overlay;
 }
