@@ -1,23 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!-- url로 접근 못하게 하기? -->
+
+<c:if test="${(empty loginUser) or (loginUserIdx ne vo.member_idx) or (userType ne 'owner') or (vo.store_hidden eq 1)}">
+	<script>
+		alert("점포주인만 이용 가능합니다. 로그인 해 주세요.");
+		location.href="/";
+	</script>
+</c:if>
+
 <div class="store">
 	<h1>점포관리</h1>
-	<c:choose>
-		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
-			<c:choose>
-				<c:when test="${vo.store_hidden eq 1}">
-					<div><label>관리자에 의해 숨김처리 되었습니다.</label></div>	
-				</c:when>
-				<c:otherwise>
-					<div><label>제대로 접속중</label></div>			
-				</c:otherwise>
-			</c:choose>
-		</c:when>
-		<c:otherwise>
-			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
-		</c:otherwise>
-	</c:choose>
 
   <form method="post" id="store-modify">
   	<input type="hidden" name="store_idx" value="${vo.store_idx}">
@@ -72,10 +64,10 @@
 
     <div class="panel-body-btns">
     	<c:choose>
-			<c:when test="${vo.store_hidden eq 0}">
+			<c:when test="${vo.store_open eq 0}">
 				<button type="button" class="btn btn-sec" id="startBtn">점포 시작</button>
 			</c:when>
-			<c:when test="${vo.store_hidden eq 2}">
+			<c:when test="${vo.store_open eq 1}">
 				<button type="button" class="btn btn-sec" id="stopBtn">점포 철수</button>
 			</c:when>
 			<c:otherwise>

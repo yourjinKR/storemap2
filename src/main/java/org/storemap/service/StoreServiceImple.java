@@ -141,32 +141,6 @@ public class StoreServiceImple implements StoreService{
 	}
 	
 	@Override
-	public List<StoreVO> getNameList(String store_name) {
-		log.info("getNameList..."+store_name);
-		return mapper.getStoreNameList(store_name);
-	}
-	
-	@Override
-	public List<StoreVO> getDynamicList(Map<String, String> map) {
-		log.info("getDynamicList..."+map);
-		return mapper.getStoreDynamicList(map);
-	}
-	
-	/*
-	@Override
-	public List<StoreVO> getListWithPaging(Criteria cri) {
-		log.info("getListWithPaging...");
-		return mapper.getListWithPage(cri);
-	}
-	
-	@Override
-	public int getTotalRecordCount() {
-		log.info("getTotalRecordCount...");
-		return mapper.getTotalRecordCountPage();
-	}
-	*/
-	
-	@Override
 	public int hide(int store_idx) {
 		log.info("hide..."+store_idx);
 		int result = mapper.hideStore(store_idx);
@@ -178,10 +152,17 @@ public class StoreServiceImple implements StoreService{
 		int result = mapper.unhideStore(store_idx);
 		return result;
 	}
+	
 	@Override
 	public int start(int store_idx) {
 		log.info("start..."+store_idx);
 		int result = mapper.storeStart(store_idx);
+		return result;
+	}
+	@Override
+	public int stop(int store_idx) {
+		log.info("stop..."+store_idx);
+		int result = mapper.storeStop(store_idx);
 		return result;
 	}
 	

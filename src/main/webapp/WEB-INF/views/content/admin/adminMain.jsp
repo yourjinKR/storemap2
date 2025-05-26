@@ -3,6 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript" src="/resources/js/admin.js"></script>
 
+<c:if test="${(empty loginUser) or (userType ne 'admin')}">
+	<script>
+		alert("관리자만 이용 가능합니다. 로그인 해 주세요.");
+		location.href="/";
+	</script>
+</c:if>
+
 <div class="admin-wrap">
 
 	<c:choose>

@@ -118,62 +118,37 @@
 	<select id="getMember" parameterType="int" resultType="org.storemap.domain.StoreVO">
 		select member_idx from store where member_idx = #{member_idx}
 	</select>
-	<!-- 11.점포 이름 검색 -->
-	<select id="getStoreNameList" parameterType="String" resultType="org.storemap.domain.StoreVO">
-		select * from store where store_name = #{store_name}
-	</select>
-	<!-- 12.점포 동적 검색 -->
-	<select id="getStoreDynamicList" parameterType="hashmap" resultType="org.storemap.domain.StoreVO">
-		select * from store
-		<choose>
-			<when test="key==1"> where store_idx=#{value} </when>
-	 		<when test="key==2"> where store_name=#{value}</when>
-	 		<when test="key==3"> where store_area=#{value}</when>
-		</choose>
-		order by store_idx
-	</select>
-	<!-- 13. 점포 페이지 전체 보기
-	<select id="getListWithPage" resultType="org.storemap.domain.StoreVO">
-		<![CDATA[
-	 		select *
-			from (select store_idx, store_name, store_image, ROWNUM rn
-			from (select store_idx, store_name, store_image
-			    from store
-			    order by store_idx desc)
-			where rownum <= #{pageNum} * #{amount})
-			where rn > (#{pageNum}-1) * #{amount}
-	 	]]>
-	</select>
-	
-	<select id="getTotalRecordCountPage" resultType="int">
-		select count(*) from store
-	</select>
-	-->
-	<!-- 14.점포 숨기기 등록 -->
+	<!-- 11.점포 숨기기 등록 -->
 	<update id="hideStore" parameterType="int">
 		update store set 
 			store_hidden = 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 15.점포 숨기기 해제, 점포 철수 -->
+	<!-- 12.점포 숨기기 해제 -->
 	<update id="unhideStore" parameterType="int">
 		update store set 
 			store_hidden = 0
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 16.점포 시작! -->
+	<!-- 13.점포 시작! -->
 	<update id="storeStart" parameterType="int">
 		update store set 
-			store_hidden = 2
+			store_open = 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 17.점포 좋아요 업 -->
+	<!-- 14.점포 철수! -->
+	<update id="storeStop" parameterType="int">
+		update store set 
+			store_open = 0
+		where store_idx = #{store_idx}
+	</update>
+	<!-- 15.점포 좋아요 업 -->
 	<update id="updateFavorite" parameterType="int">
 		update store set
 			store_like_cnt = store_like_cnt + 1
 		where store_idx = #{store_idx}
 	</update>
-	<!-- 18.점포 좋아요 다운 -->
+	<!-- 16.점포 좋아요 다운 -->
 	<update id="deleteFavorite" parameterType="int">
 	    update store set
 	        store_like_cnt = GREATEST(store_like_cnt - 1, 0)

@@ -30,20 +30,14 @@ public interface StoreService {
 	public StoreVO getStore(int member_idx);
 	// 같은 회원정보를 가진 점포가 있는지 검증
 	public StoreVO getMember(int member_idx);
-	// 점포 이름 검색
-	public List<StoreVO> getNameList(String store_name);
-	// 점포 동적 검색
-	public List<StoreVO> getDynamicList(Map<String,String> map);
-	// 점포 페이지 목록
-	//public List<StoreVO> getListWithPageing(Criteria cri);
-	// 점포 페이지 카운트
-	//public int getTotalRecordCount();
 	// 점포 숨기기 등록
 	public int hide(int store_idx);
-	// 점포 숨기기 해제, 점포 철수
+	// 점포 숨기기 해제
 	public int unhide(int store_idx);
 	// 점포 시작!
 	public int start(int store_idx);
+	// 점포 철수!
+	public int stop(int store_idx);
 	// 메인페이지 점포 목록 랜덤 출력
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기

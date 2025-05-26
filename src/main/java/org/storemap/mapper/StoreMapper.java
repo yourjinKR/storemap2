@@ -29,20 +29,14 @@ public interface StoreMapper {
 	public StoreVO getStore(int member_idx);
 	// 같은 회원정보를 가진 점포가 있는지 검증
 	public StoreVO getMember(int member_idx);
-	// 점포 이름 검색
-	public List<StoreVO> getStoreNameList(String store_name);
-	// 점포 동적 검색
-	public List<StoreVO> getStoreDynamicList(Map<String,String> map);
-	// 점포 페이지 목록
-	//public List<StoreVO> getListWithPage(Criteria cri);
-	// 점포 페이지 카운트
-	//public int getTotalRecordCountPage();
 	// 점포 숨기기 등록
 	public int hideStore(int store_idx);
-	// 점포 숨기기 해제, 점포 철수
+	// 점포 숨기기 해제
 	public int unhideStore(int store_idx);
 	// 점포 시작!
 	public int storeStart(int store_idx);
+	// 점포 철수!
+	public int storeStop(int store_idx);
 	// 메인페이지 점포 목록 랜덤 출력
 	public List<StoreVO> getStoreRanList(String store_address);
 	// 점포 지역별 리스트 불러오기

@@ -1,15 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<c:if test="${(empty loginUser) or (loginUserIdx ne vo.member_idx) or (userType ne 'owner')}">
+	<script>
+		alert("점포주인만 이용 가능합니다. 로그인 해 주세요.");
+		location.href="/";
+	</script>
+</c:if>
+
 <div class="menu">
-	<c:choose>
-		<c:when test="${(not empty loginUser) and (userType eq 'owner') and (loginUserIdx eq vo.member_idx) or (userType eq 'admin')}">
-			<!-- 완성하면 본문내용 전부 여기로 -->
-		</c:when>
-		<c:otherwise>
-			<div><label>점포 주인 계정으로만 접속 가능합니다!</label></div>
-		</c:otherwise>
-	</c:choose>
     <button type="button" class="add_menu" id="addMenuPageBtn">메뉴 추가</button>
 	<button type="button" class="add_menu" id="storeBtn">점포 관리</button>
 	<!-- 메뉴 목록 -->

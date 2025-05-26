@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:if test="${svo.store_hidden eq 1}">
+	<script>
+		alert("숨겨진 점포 입니다.");
+		location.href="/store/map";
+	</script>
+</c:if>
+
 <div class="storeView">
 	<div class="store-type">
 		<c:choose>

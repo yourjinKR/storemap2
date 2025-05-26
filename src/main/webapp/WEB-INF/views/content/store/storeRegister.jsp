@@ -1,11 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!-- url로 접근 못하게 하기? -->
+
+<c:if test="${(empty loginUser) or (userType ne 'user')}">
+	<script>
+		alert("관리자만 이용 가능합니다. 로그인 해 주세요.");
+		location.href="/";
+	</script>
+</c:if>
+
 <div class="store">
 	<h1>점포등록</h1>
-	<c:choose>
-		<c:when test="${(not empty loginUser) and (userType eq 'user')}">
-		  <form method="post" enctype="multipart/form-data">
+		<form method="post" enctype="multipart/form-data">
 		  	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 		  
 		    <label for="sname">점포명</label>
@@ -41,7 +46,7 @@
 		    	<button type="button" class="btn btn-sec" id="resetBtn">다시 작성</button>
 		    	<button type="button" class="btn btn-sec" id="indexBtn">메인으로 이동</button>
 		    </div>
-		  </form>
+		</form>
 		  
 		  <div class="saving-overlay" id="savingUI">
 			<div class="saving-box">
@@ -49,11 +54,6 @@
 				<div class="saving-text">저장 중...</div>
 			</div>
 		</div>
-		</c:when>
-		<c:otherwise>
-			<div><label>일반 유저 계정으로만 접속 가능합니다!</label></div>
-		</c:otherwise>
-	</c:choose>
 <script type="text/javascript" src="/resources/js/store.js"></script>
 
 </div>

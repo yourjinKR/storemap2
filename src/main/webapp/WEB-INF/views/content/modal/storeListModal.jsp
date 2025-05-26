@@ -6,7 +6,7 @@
 		<ul>
 			<c:forEach var="vo" items="${list}">
 			<c:choose>
-				<c:when test="${vo.store_hidden eq 0}"><!-- 2로 바꿔줘야 시작된 점포만 보여줌 -->
+				<c:when test="${vo.store_hidden eq 0}"><!-- 1은 숨겨진 점포 -->
 					<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name="store_idx">
 					<c:choose>
 						<c:when test="${vo.attach.filename eq null}">

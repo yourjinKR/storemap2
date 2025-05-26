@@ -4,7 +4,7 @@
 <div class="eventListModal">
 	<div class="event-card">
 		<ul>
-		<!-- 숨겨진 리스트는 불러오지 않게 하기 AND 시작된 리스트hide2만 불러오기 -->
+		<!-- 숨겨진 리스트(hide1)는 불러오지 않게 하기 AND 시작된 리스트(open1)만 불러오기 -->
 			<li data-event_idx="" onclick="" name="event_idx">
 				<img src="/resources/img/store1.jpg" alt="">
 				<div class="event-description">

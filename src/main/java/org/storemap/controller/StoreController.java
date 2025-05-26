@@ -88,8 +88,7 @@ public class StoreController {
 		log.info("Files received: " + (file != null ? file.getOriginalFilename() : "none"));
 		//점포수정 + 이미지 재업로드
 		try {
-			storeService.modify(file, vo);	
-			//hide=2로 점포시작
+			storeService.modify(file, vo);
 			storeService.start(vo.getStore_idx());
 			return new ResponseEntity<String>("succeed", HttpStatus.OK);
 		} catch (Exception e) {
@@ -101,7 +100,7 @@ public class StoreController {
 	@PostMapping("/storeStop")
 	public String storeStop(StoreVO vo) {
 		log.info("storeStart...");
-		storeService.unhide(vo.getStore_idx());
+		storeService.stop(vo.getStore_idx());
 		return "redirect:/store/storeModify?store_idx="+vo.getStore_idx();
 	}
 	

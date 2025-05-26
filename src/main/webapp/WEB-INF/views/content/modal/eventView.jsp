@@ -3,6 +3,13 @@
 <script type="text/javascript" src="/resources/js/eventModal.js"></script>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<c:if test="${evo.event_hidden eq 1}">
+	<script>
+		alert("숨겨진 이벤트 입니다.");
+		location.href="/";
+	</script>
+</c:if>
+
 <div class="eventView">
 	
 	<div class="event-image">
