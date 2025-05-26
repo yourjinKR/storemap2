@@ -30,9 +30,6 @@
 
     <div class="store-info por">
       <h3>${svo.store_name}</h3>
-      <div class="info-text">주소: ${svo.store_address}</div>
-      <div class="info-text">영업일: ${svo.store_activity_time}</div>
-      <div class="info-text">전화: ${svo.store_num}</div>
       <div class="storeIcon">
       	<input type="button" name="storeReport" id="storeReport-icon${svo.store_idx}">
       	<label class="material-symbols-outlined" for="storeReport-icon${svo.store_idx}">
@@ -44,6 +41,9 @@
       	</label>
       	<span class="storeLike-count storeLike-count-${svo.store_idx}">${svo.store_like_cnt}</span>
       </div>
+      <div class="info-text">주소: ${svo.store_address}</div>
+      <div class="info-text">영업일: ${svo.store_activity_time}</div>
+      <div class="info-text">전화: ${svo.store_num}</div>
     </div>
 
     <div class="menu-section">

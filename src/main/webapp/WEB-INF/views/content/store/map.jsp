@@ -19,8 +19,8 @@
 			
 			    <div id="filter">
 			      <button class="mapBtn" id="united-mode">모두</button>
-			      <button class="mapBtn" id="event-mode">이벤트만</button>
-			      <button class="mapBtn" id="store-mode">점포만</button>
+			      <button class="mapBtn" id="event-mode">이벤트</button>
+			      <button class="mapBtn" id="store-mode">점포</button>
 			    </div>
 			  </div>
 			</div>

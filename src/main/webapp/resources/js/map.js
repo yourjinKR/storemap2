@@ -1640,8 +1640,6 @@ function apply2storeMap(data) {
     storeVOList.forEach(vo => {
         let imgURL = ``;
         if (vo.attach != null) {
-            console.log('attach 있음');
-            
             imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>`;
         } else {
             imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="${vo.store_image}"/>`;
@@ -1704,7 +1702,6 @@ function apply2eventMap(data) {
     // eventUL.innerHTML = "";
 
     if(data.length == 0) {
-
         failSearch();
         return;
     }
@@ -1834,6 +1831,12 @@ function failSearch() {
         } else {
             unitedFailModal.style.display = "block";
         }
+        if (storeVOList.length == 0) {
+            storeListModal.style.display = "none";
+        }
+        if (eventListModal.length == 0) {
+            eventListModal.style.display = "none";
+        }
     } 
     // 점포 맵
     else if (storeMapMode) {
@@ -1960,8 +1963,12 @@ function swap2unitedMap() {
         eventMapMode = false;
 
         // 리스트 제어
-        storeListModal.style.display = "block";
-        eventListModal.style.display = "block";
+        if (storeVOList.length != 0) {
+            storeListModal.style.display = "block";
+        }
+        if (eventVOList.length != 0) {
+            eventListModal.style.display = "block";
+        }
 
         // 스토어 마커를 맵에 표시
         showMarkers(basicMap, storeVOList);
@@ -2006,7 +2013,9 @@ function swap2eventMap() {
     
         // 화면 삭제
         storeListModal.style.display = "none";
-        eventListModal.style.display = "block";
+        if(eventVOList.length != 0) {
+            eventListModal.style.display = "block";
+        }
     
         // 스토어 마커를 맵에 숨기기
         hideMarkers(storeVOList);
@@ -2047,7 +2056,9 @@ function swap2storeMap() {
     
         // 화면 삭제
         eventListModal.style.display = "none";
-        storeListModal.style.display = "block";
+        if(storeVOList.length != 0) {
+            storeListModal.style.display = "block";
+        }
     
         // 이벤트 마커를 맵에 숨기기
         hideMarkers(eventVOList);

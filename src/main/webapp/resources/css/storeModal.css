@@ -64,7 +64,7 @@
 
 /* 버튼 아이콘 */
 
-.storeIcon, .reviewIcon {position: absolute;width: 20px; height: 20px; top: 0; right: 50px; cursor: pointer; white-space:nowrap; } 
+.storeIcon, .reviewIcon {width: 20px; height: 20px; top: 0; right: 50px; cursor: pointer; white-space:nowrap; } 
 
 input[type="checkbox"], input[type="button"] {width: 0;height: 0;z-index: -1;position:absolute;left: -9999px; } 
 
