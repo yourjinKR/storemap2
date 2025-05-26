@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/eventModal.js"></script>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <div class="eventView">
 	
@@ -32,7 +33,21 @@
 			         class="expandable-img" />
 			  </c:if>
 			</c:forEach>
-		</div>      	
-	    <div><a href="/event/eventView?event_idx=${evo.event_idx}">자세히 보기</a></div>
+		</div>
+		<c:choose>
+		  <c:when test="${fn:length(evo.event_content) > 100}">
+		    <div class="event-content">
+		      ${fn:substring(evo.event_content, 0, 100)}...
+		      <span><a href="/event/eventView?event_idx=${evo.event_idx}">자세히 보기</a></span>
+		    </div>
+		  </c:when>
+		  <c:otherwise>
+		    <div class="event-content">
+		      ${evo.event_content}
+		      <span><a href="/event/eventView?event_idx=${evo.event_idx}">자세히 보기</a></span>
+		    </div>
+		  </c:otherwise>
+		</c:choose>     	
+	    
     </div>
 </div>
