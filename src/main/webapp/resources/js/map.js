@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// 기본 설정값으로 지도 생성
 	let container = document.querySelector(".map");
+
     if(container != null) {
         basicMap = new kakao.maps.Map(container, basicOption);
     
@@ -1957,6 +1958,9 @@ function ctrlMapMode(mode) {
 
 /** 통합 맵으로 변경 */
 function swap2unitedMap() {
+    document.querySelector("#united-mode").classList.add('select');
+    document.querySelector("#event-mode").classList.remove('select');
+    document.querySelector("#store-mode").classList.remove('select');
     if (!unitedMapMode) {
         unitedMapMode = true;
         storeMapMode = false;
@@ -2006,6 +2010,9 @@ function swap2unitedMap() {
 
 /** 이벤트 맵으로 변경 */
 function swap2eventMap() {
+    document.querySelector("#united-mode").classList.remove('select');
+    document.querySelector("#event-mode").classList.add('select');
+    document.querySelector("#store-mode").classList.remove('select');
     if (!eventMapMode) {
         eventMapMode = true;
         unitedMapMode = false;
@@ -2049,6 +2056,9 @@ function swap2eventMap() {
 
 /** 스토어 맵으로 변경 */
 function swap2storeMap() {
+    document.querySelector("#united-mode").classList.remove('select');
+    document.querySelector("#event-mode").classList.remove('select');
+    document.querySelector("#store-mode").classList.add('select');
     if (!storeMapMode) {
         storeMapMode = true;
         eventMapMode = false;

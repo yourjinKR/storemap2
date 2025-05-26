@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="main-map">
-	<div class="map" id="full" style="width: 100%; height: 900px;"></div>
+	<div class="map" id="full" style="width: 100%; height: 1000px;"></div>
 	<!-- 리스트 사이드바 -->
 	<div class="side-bar show" id="list">
 		<div id="content">
@@ -18,7 +18,7 @@
 			    </form>
 			
 			    <div id="filter">
-			      <button class="mapBtn" id="united-mode">모두</button>
+			      <button class="mapBtn select" id="united-mode">모두</button>
 			      <button class="mapBtn" id="event-mode">이벤트</button>
 			      <button class="mapBtn" id="store-mode">점포</button>
 			    </div>
