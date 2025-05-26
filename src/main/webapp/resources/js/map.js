@@ -77,6 +77,8 @@ let autoSearchUL = null;
 /** 자동완성 재입력 방지 */ 
 let suppressAutocomplete = false;
 let selectedIndex = -1;
+/** 검색어 조건 */  
+let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null, amount:null, keyword:null, store_idx:null, event_idx:null};
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let basicLat = 37.505410898990775;
@@ -245,6 +247,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // 초기 검색 기능
         // 키워드 기반
         const initialKeyword = sessionStorage.getItem("initialKeyword");
+        const initialStoreIDX = sessionStorage.getItem("store_idx");
+        const initialEventIDX = sessionStorage.getItem("event_idx");
+        const subCondition = JSON.parse(localStorage.getItem("search_data"));
+
         if (initialKeyword) {
             // input에도 값 넣기 (선택사항)
             keywordInput.value = initialKeyword;
@@ -255,10 +261,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // 재검색 방지: 세션 제거
             sessionStorage.removeItem("initialKeyword");
         }
-        // idx 기반 점포 찾기
-        const initialStoreIDX = sessionStorage.getItem("store_idx");
-        sessionStorage.removeItem("store_idx");
-        if (initialStoreIDX) {
+        else if (initialStoreIDX) {
+            // idx 기반 점포 찾기
+            sessionStorage.removeItem("store_idx");
             showListSideBar();
             // store idx 기반 검색 비동기 함수 실행
             // let IDX = 302;
@@ -268,10 +273,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 apply2storeMap([data]);
             });
         }
-        // idx 기반 이벤트 찾기
-        const initialEventIDX = sessionStorage.getItem("event_idx");
-        sessionStorage.removeItem("event_idx");
-        if (initialEventIDX) {
+        else if (initialEventIDX) {
+            // idx 기반 이벤트 찾기
+            sessionStorage.removeItem("event_idx");
             showListSideBar();
             // event idx 기반 검색 비동기 함수 실행
             // let IDX = 302;
@@ -281,11 +285,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 processAllEvents([data], "search");
             });
         }
-
-        // 예외처리
-        if (!initialKeyword && !initialStoreIDX && !initialEventIDX) {
-            const subCondition = JSON.parse(localStorage.getItem("search_data"));
-            if (subCondition != null) {
+        else if (subCondition != null) {
+            if (subCondition.store_idx != null) {
+                as.getStoreByIdx(subCondition.store_idx, function (data) {
+                    apply2storeMap([data]);
+                })
+            } else if (subCondition.event_idx != null) {
+                as.getEventByIdx(subCondition.event_idx, function (data) {
+                    processAllEvents([data], "search");
+                })
+            }
+            else if (subCondition.keyword != null) {
                 searchCondition = subCondition;
                 mapSearchService(basicMap, searchCondition.keyword);
             } else {
@@ -1152,6 +1162,10 @@ const asyncService = (function(){
         })
         .then(response => response.json())
         .then(data => {
+            if(data != null) {
+                searchCondition.event_idx = data.event_idx;
+                searchCondition.store_idx = null;
+            }
             callback(data);
         })
         .catch(err => {
@@ -1170,6 +1184,10 @@ const asyncService = (function(){
         })
         .then(response => response.json())
         .then(data => {
+            if(data != null) {
+                searchCondition.event_idx = null;
+                searchCondition.store_idx = data.store_idx;
+            }
             callback(data);
         })
         .catch(err => {
@@ -1393,9 +1411,6 @@ function getDistanceMarkers(marker1, marker2) {
 /** "역"으로 끝나는 문자 */
 const subwayRegex = /역$/;
 
-/** 검색어 조건 */  
-let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null, amount:null, keyword:null};
-
 /** 검색어 조건 저장 함수 */
 function setSubKeyword() {
     localStorage.setItem("search_data", JSON.stringify(searchCondition));
@@ -1414,7 +1429,7 @@ function mapSearchService(map, keyword) {
     //     return;
     // }
     
-    storeFailModal.style.display = "none";
+    storeFailModal.style.display = "none";  
     eventFailModal.style.display = "none";
 
     deleteAllEle();
