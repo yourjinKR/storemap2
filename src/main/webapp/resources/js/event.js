@@ -339,7 +339,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
           },
-        
+          allowTouchMove: false,
           slidesPerView: 1,
         });
       
@@ -462,7 +462,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				  }
     		  }
     	  })
+    	  
+    	  let detailCon = document.querySelector(".event-detail");
+    	  if(detailCon == null){
+    		  moreBtn.style.display = "none";
+    	  }
       }
+      
+      // 상점이동
+      let storeHref = document.querySelectorAll(".store-box > a");
+		if(storeHref != null && storeHref.length > 0){
+			storeHref.forEach(target => {
+				target.addEventListener("click",function(e){
+					e.preventDefault();
+					sessionStorage.setItem('store_idx', this.getAttribute("href"));
+					location.href = "/store/map";
+				})
+			})
+		}
 });
 
 

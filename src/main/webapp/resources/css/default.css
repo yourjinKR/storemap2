@@ -66,5 +66,7 @@ textarea:read-only:focus{outline:none}
   --main-color: #3498db;
   --point-color: #FFF3C6;
   --point-color2: #FEDA3E;
+  --point-color3: #F4C300;
+  --inner-color: #EDE6D0;
   --font-color: #4A2F1B;
 } 

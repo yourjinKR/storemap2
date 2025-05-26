@@ -147,7 +147,7 @@ function getLetter(type){
 				str += `</li>`;
 				
 				if(result.length > 7){
-					document.querySelector("#list .inner").style.setProperty('width', 'calc(100% + 1.5vw)');
+					document.querySelector("#list .inner").style.setProperty('width', `calc(100% + ${getScrollbarWidth()}px)`);
 				}else{
 					document.querySelector("#list .inner").style.setProperty('width', '100%');
 				}
@@ -338,4 +338,24 @@ function getAttendEvent(){
 		}
 	})
 	.catch(err => console.log(err))
+}
+
+function getScrollbarWidth() {
+	const outer = document.createElement('div');
+	outer.style.visibility = 'hidden';
+	outer.style.overflow = 'scroll';
+	outer.style.width = '100px';
+	outer.style.height = '100px';
+	outer.style.position = 'absolute';
+	outer.style.top = '-9999px';
+	document.body.appendChild(outer);
+	
+	const inner = document.createElement('div');
+	inner.style.width = '100%';
+	inner.style.height = '100%';
+	outer.appendChild(inner);
+	
+	const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+	outer.remove();
+	return scrollbarWidth;
 }

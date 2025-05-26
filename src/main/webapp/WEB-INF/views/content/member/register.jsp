@@ -3,7 +3,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/register.js"></script>
 <script type="text/javascript" src="/resources/js/member.js"></script>
+
+<c:if test="${not empty loginUser and loginUser ne ''}">
+<script type="text/javascript">
+	alert("잘못된 접근입니다.");
+	history.back();
+</script>
+</c:if>
+
+
 <div class="member-wrap">
+	<a href="javascript:history.back();" class="back-btn" >
+		<span class="material-symbols-outlined">
+			undo
+		</span>
+	</a>
+	
 	<c:choose>
 		<c:when test="${type == 'personal'}">
 			<div>

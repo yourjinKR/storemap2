@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/resources/js/event.js"></script>
 
 
-<div class="content-list por mt50">
+<div class="content-list por mt50 pb50">
 	<div class="list-top mb30">
 		<c:choose>
 			<c:when test="${(not empty loginUser) and (userType ne 'user')}">
@@ -64,18 +64,6 @@
 							class="material-symbols-outlined"> filter_alt </span> 필터
 						</label>
 					</div>
-					<!-- <div>
-						<input type="radio" name="b-type" id="list-chk" value="list"
-							checked="checked"> <label for="list-chk"> <span
-							class="material-symbols-outlined"> view_list </span>
-						</label>
-					</div>
-					<div>
-						<input type="radio" name="b-type" id="card-chk" value="card">
-						<label for="card-chk"> <span
-							class="material-symbols-outlined"> view_column_2 </span>
-						</label>
-					</div> -->
 				</div>
 			</c:if>
 			<div class="search">
@@ -121,20 +109,26 @@
 						<label for="eventRdate">입점 신청일</label> 
 					</c:if>
 				</li>
-				<li>
-					<h4>지역</h4> 
-				</li>
 				<li><button type="button" onclick="eventFilter();" >적용</button></li>
 			</ul>
 	
 			<table class="barod board-list" id="boardList">
 				<colgroup>
-					<col width="175px">
+					<col width="155px">
 					<col width="*">
 					<col width="100px">
 					<col width="250px">
 					<col width="250px">
 				</colgroup>
+				<thead>
+					<tr>
+						<th>지역</th>
+						<th>이벤트명</th>
+						<th>모집</th>
+						<th class="rdate-head">모집 기간</th>
+						<th class="bdate-head">이벤트 기간</th>
+					</tr>
+				</thead>
 				<tbody>
 					
 				</tbody>

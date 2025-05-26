@@ -1,10 +1,10 @@
 @charset "UTF-8";
 
-h3{font-size: 32px}
+h3{font-size: 32px;font-weight:bold;}
 
 
 .board-top{justify-content: space-between;align-items: center}
-.right-con{align-items: center;}
+.right-con{align-items: center; display:flex;gap:15px;align-items: center}
 .state-icon{width: 78px ;background: #f00; color:#fff; border-radius: 15px;padding:5px 15px;font-size: 12px !important;font-weight:bold;}
 .open-icon{background: #4CAF50; color:#fff}
 .planned-icon{background: #BBDEFB; color:#1E3A8A}
@@ -31,11 +31,10 @@ h3{font-size: 32px}
 .board-card .card-box > a:hover .event-content{opacity: 1;}
 
 /* 리스트 타입 */
-.board-list{width: 100%;font-size: 16px;border-top:1px solid #222;border-right:1px solid #222;}
-.board-list thead th,.board-list thead td {font-size:18px;font-weight:bold; border-left:1px solid #222;border-bottom:1px solid #222;padding:10px 0;background: #92c5ff;}
+.board-list{width: 100%;font-size: 16px;border-top:1px solid #222;border-right:1px solid #222;margin-top:15px;}
+.board-list thead th,.board-list thead td {font-size:18px;font-weight:bold; border-left:1px solid #222;border-bottom:1px solid #222;padding:15px 0;background: var(--point-color);color:var(--font-color)}
 .board-list a{display:block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;width:100%;height:27px;line-height:27px;}
 .board-list span{font-size:14px;display:inline-block}
-
 
 .board-list tr > td{border-bottom: 1px solid #222;border-left: 1px solid #222;vertical-align: middle;padding:10px;font-size:16px;}
 
@@ -49,24 +48,29 @@ h3{font-size: 32px}
 .board-type input[type="checkbox"] + label .material-symbols-outlined,
 .board-type input[type="radio"] + label .material-symbols-outlined {font-size:32px;font-variation-settings:'FILL' 0,'wght' 200,'GRAD' 0,'opsz' 48}
 .board-type input[type="checkbox"]:checked + label .material-symbols-outlined,
-.board-type input[type="radio"]:checked + label .material-symbols-outlined {font-variation-settings:'FILL' 1,'wght' 200,'GRAD' 0,'opsz' 48}
+.board-type input[type="radio"]:checked + label .material-symbols-outlined { font-variation-settings:'FILL' 1,'wght' 200,'GRAD' 0,'opsz' 48}
+.board-type #filterChk + label{border-color:color:var(--font-color);box-shadow: 5px 5px 5px rgba(0,0,0,0.1);font-weight:bold;height:40px;padding:0 15px;}
+.board-type #filterChk:checked + label{background:var(--point-color2);color:var(--font-color);}
 
 
-.filter{position: absolute;top: 105px;right: 27%;height:0; opacity: 0; transition:0.1s ease; border: 1px solid #ccc;background: #fff;padding:10px;border-radius:5px;z-index:-1;box-shadow: 5px 5px 5px rgba(0,0,0,0.1);}
+.filter{position: absolute;top: 115px;right: 27%;height:0; opacity: 0; transition:0.1s ease; border: 1px solid #ccc;background: #fff;padding:10px;border-radius:5px;z-index:-1;box-shadow: 5px 5px 5px rgba(0,0,0,0.1);}
 .filter.on{height:auto;opacity: 1;z-index:3;}
 .filter li{border-bottom: 1px solid #d9d9d9;padding:10px 0;}
 .filter li:last-child{border-bottom:none;text-align:right}
 .filter li label{border:1px solid #ccc;background:#fff;color:#222;display:inline-block;padding:5px 10px;border-radius:15px;font-size:18px;}
+.filter li input[type="checkbox"],.filter li input[type="radio"]{position: absolute;left:-9999px;opacity: 0;width:0;height:0}
 .filter li input[type="checkbox"]:checked + label,
 .filter li input[type="radio"]:checked + label{border:1px solid #ccc;background:var(--point-color2);color:var(--font-color);}
 .filter h4{padding-bottom: 5px;margin-bottom: 5px;display:flex;align-items: center;gap:5px;}
 .filter h4 .material-symbols-outlined {font-size:18px;font-variation-settings:'FILL' 0,'wght' 200,'GRAD' 0,'opsz' 48}
-.filter button{background:var(--point-color2);color:var(--font-color);border:none;padding:5px 20px; border-radius:5px;font-size:18px;}
+.filter button{background:var(--point-color2);color:var(--font-color);border:none;padding:5px 20px; border-radius:5px;font-size:18px;font-weight:bold}
 
 .board-top .left-con{align-items: center;gab:10px;}
-.board-top .left-con > div{border-left:1px solid #d9d9d9;padding:0px 10px}
+.board-top .left-con > div{border-left:1px solid #d9d9d9;padding:0px 10px;display:flex;align-items: center;gap:10px;}
+.board-top .left-con > div:first-child{border-left:0;padding-left:0}
+.board-top .left-con > div select{border:2px solid var(--font-color);padding:5px 15px;font-size:18px;border-radius:5px;height:40px;}
 /* .btns-sort > div:last-child{border-right:0;} */
-.board-top .left-con input + label{}
+.board-top .left-con label{font-size:22px;}
 .board-top .left-con input:checked + label{color:var(--font-color);font-weight:bold;}
 
 
@@ -83,6 +87,10 @@ h3{font-size: 32px}
 #boardCard .card-text{position: relative;min-height:110px;padding:10px 15px;display:flex;flex-direction: column;justify-content: space-between;align-items: flex-start;}
 #boardCard .icon-box{display:flex; align-items: center; gap:5px;font-size:16px;}
 #boardCard .icon-box .material-symbols-outlined{font-size:16px;}
+
+.search{font-size:18px;display:flex;gap:10px;align-items: center}
+.search #boardSearch{height:40px;min-width:250px;border-radius:5px;}
+.search button{height:40px;background:var(--point-color2);color:var(--font-color);border-radius:5px;padding:5px 15px;font-weight:bold;font-size:18px;}
 
 @keyframes warning {
   0%{

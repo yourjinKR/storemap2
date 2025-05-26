@@ -185,7 +185,7 @@ public class MemberController {
 			// 단체
 			String enter_id = (String) session.getAttribute("loginUser");
 			String enter_name = (String) session.getAttribute("userName");
-			int enter_rnum = (Integer)session.getAttribute("userRnum");
+			String enter_rnum = (String) session.getAttribute("userRnum");
 			String enter_loc = (String) session.getAttribute("userLoc");
 			String enter_num = (String) session.getAttribute("userNum");
 			model.addAttribute("enter_id", enter_id);

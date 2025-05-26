@@ -8,8 +8,20 @@
 	점주 :&emsp;&emsp;&emsp;owner01/pw01<br>	 
 	관리자 :&emsp;&emsp;admin/pw01<br>	 
 </div>
+
+<c:if test="${not empty loginUser and loginUser ne ''}">
+<script type="text/javascript">
+	alert("이미 로그인 되었습니다.");
+	location.href="/";
+</script>
+</c:if>
 	
 <div class="login-wrap d_f">
+	<a href="javascript:history.back();" class="back-btn" >
+		<span class="material-symbols-outlined">
+			undo
+		</span>
+	</a>
 	<div class="left-con ">
 		<h3>로그인</h3>
 		<form action="/member/login" method="post">

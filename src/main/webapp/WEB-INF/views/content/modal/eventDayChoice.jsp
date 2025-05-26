@@ -22,7 +22,7 @@
   padding: 30px;
   border-radius: 12px;
   width: 80%;
-  max-width: 700px;
+  max-width: 990px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   animation: fadeIn 0.3s ease;
 }
@@ -102,8 +102,8 @@
                 <c:forEach var="eday" items="${evo.join_eday}">
                     <tr>
                         <td><c:out value="${fn:substring(eday.event_starttime, 0, 10)}" /></td>
-                        <td>${eday.event_starttime}</td>
-                        <td>${eday.event_stoptime}</td>
+                        <td>${eday.event_starttime.substring(0, 16)}</td>
+                        <td>${eday.event_stoptime.substring(0, 16)}</td>
                         <td>${eday.store_max}</td>
 
                         <td>

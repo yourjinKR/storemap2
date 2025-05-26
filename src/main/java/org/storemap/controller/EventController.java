@@ -171,10 +171,8 @@ public class EventController {
 	        cloudinaryFiles = cloudinaryService.getFilesByUuidList(cloudinaryUuids);
 	    }
 	    
-	    // 모델에 데이터 전달
 	    LocalDate now = LocalDate.now();
 
-        // 예: DB에서 받은 날짜가 java.sql.Date 라고 가정
         Date sqlDate = vo.getEvent_bstartdate();
         LocalDate eventDate = sqlDate.toLocalDate(); // LocalDate로 변환
 
@@ -396,61 +394,65 @@ public class EventController {
 	
 	//이벤트 컨텐츠 포멧
 	public static String formatToHtml(String fullText) {
-        int startIdx = fullText.indexOf("[행사내용]");
-        if (startIdx == -1) return "<p>행사내용을 찾을 수 없습니다.</p>";
+	    int startIdx = fullText.indexOf("[행사내용]");
 
-        // 소개 문단
-        String intro = fullText.substring(0, startIdx).trim();
-        String eventPart = fullText.substring(startIdx).trim();
+	    if (startIdx == -1) {
+	        String intro = fullText.trim();
+	        return "<p>" + intro.replace("\n", " ") + "</p>";
+	    }
 
-        StringBuilder html = new StringBuilder();
+	    // 소개 문단
+	    String intro = fullText.substring(0, startIdx).trim();
+	    String eventPart = fullText.substring(startIdx).trim();
 
-        // 소개문 출력
-        html.append("<p>").append(intro.replace("\n", " ")).append("</p>\n\n");
+	    StringBuilder html = new StringBuilder();
 
-        // 행사내용 HTML 영역 시작
-        html.append("<div class=\"event-detail\">\n");
-        html.append("<h4>[행사내용]</h4>\n");
+	    // 소개문 출력
+	    html.append("<p>").append(intro.replace("\n", " ")).append("</p>\n\n");
 
-        // 내용만 추출
-        String content = eventPart.replace("[행사내용]", "").trim();
-        String[] mainSections = content.split("(?=\\b\\d{1,2}\\.\\s?)");
+	    // 행사내용 HTML 영역 시작
+	    html.append("<div class=\"event-detail\">\n");
+	    html.append("<h4>[행사내용]</h4>\n");
 
-        for (String section : mainSections) {
-            section = section.trim();
-            if (section.isEmpty()) continue;
+	    // 내용만 추출
+	    String content = eventPart.replace("[행사내용]", "").trim();
+	    String[] mainSections = content.split("(?=\\b\\d{1,2}\\.\\s?)");
 
-            Matcher matcher = Pattern.compile("^(\\d{1,2})\\.\\s*").matcher(section);
-            String mainNumber = "";
-            String rest = section;
+	    for (String section : mainSections) {
+	        section = section.trim();
+	        if (section.isEmpty()) continue;
 
-            if (matcher.find()) {
-                mainNumber = matcher.group(1);
-                rest = section.substring(matcher.end()).trim();
-            } else {
-                continue;
-            }
+	        Matcher matcher = Pattern.compile("^(\\d{1,2})\\.\\s*").matcher(section);
+	        String mainNumber = "";
+	        String rest = section;
 
-            int subStart = rest.indexOf("①");
-            String mainTitle = (subStart != -1) ? rest.substring(0, subStart).trim() : rest.trim();
-            String subItems = (subStart != -1) ? rest.substring(subStart).trim() : "";
+	        if (matcher.find()) {
+	            mainNumber = matcher.group(1);
+	            rest = section.substring(matcher.end()).trim();
+	        } else {
+	            continue;
+	        }
 
-            html.append("  <h5>").append(mainNumber).append(". ").append(mainTitle).append("</h5>\n");
+	        int subStart = rest.indexOf("①");
+	        String mainTitle = (subStart != -1) ? rest.substring(0, subStart).trim() : rest.trim();
+	        String subItems = (subStart != -1) ? rest.substring(subStart).trim() : "";
 
-            if (!subItems.isEmpty()) {
-                html.append("  <ul>\n");
-                String[] items = subItems.split("(?=[①②③④⑤⑥⑦⑧⑨⑩⑪⑫])");
-                for (String item : items) {
-                    item = item.trim();
-                    if (item.length() < 2) continue;
-                    html.append("    <li>").append(item).append("</li>\n");
-                }
-                html.append("  </ul>\n\n");
-            }
-        }
+	        html.append("  <h5>").append(mainNumber).append(". ").append(mainTitle).append("</h5>\n");
 
-        html.append("</div> <!-- end of event-detail -->");
+	        if (!subItems.isEmpty()) {
+	            html.append("  <ul>\n");
+	            String[] items = subItems.split("(?=[①②③④⑤⑥⑦⑧⑨⑩⑪⑫])");
+	            for (String item : items) {
+	                item = item.trim();
+	                if (item.length() < 2) continue;
+	                html.append("    <li>").append(item).append("</li>\n");
+	            }
+	            html.append("  </ul>\n\n");
+	        }
+	    }
 
-        return html.toString().trim();
-    }
+	    html.append("</div> <!-- end of event-detail -->");
+
+	    return html.toString().trim();
+	}
 }

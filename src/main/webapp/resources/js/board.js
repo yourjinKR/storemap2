@@ -219,10 +219,10 @@ function listBoard(result){
 			let address = data.event_location.split(" ");
 			str += 	`<tr data-idx="${data.event_idx}">`;
 			str += 		`<td>`;
-			str += 		`지역 : ${address[0]} `;
+			str += 			`${address[0]} `;
 			str += 		`</td>`;
 			str += 		`<td>`;
-			str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">${data.event_title}&emsp;신청 : ${data.approved_store}&emsp;최대 : ${data.max_store}</a>`;
+			str += 			`<a href="/event/eventView?event_idx=${data.event_idx}">${data.event_title}</a>`;
 			str += 		`</td>`;
 			str += 		`<td>`;
 			
@@ -255,6 +255,17 @@ function listBoard(result){
 			str += 	`</tr>`;
 		})
 		
+		if(rDate != null && rDate.checked){
+			document.querySelector(".rdate-head").style.display = "table-cell";
+		}else{
+			document.querySelector(".rdate-head").style.display = "none";
+		}
+		
+		if(bDate != null && bDate.checked){
+			document.querySelector(".bdate-head").style.display = "table-cell";
+		}else{
+			document.querySelector(".bdate-head").style.display = "none";
+		}
 		
 		
 		if((rDate != null && bDate != null) && (rDate.checked && bDate.checked)){

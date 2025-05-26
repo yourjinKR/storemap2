@@ -2,7 +2,20 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/modifyInfo.js"></script>
+
+<c:if test="${empty loginUser and loginUser eq ''}">
+<script type="text/javascript">
+	alert("잘못된 접근입니다.");
+	history.back();
+</script>
+</c:if>
+
 <div class="member-wrap">
+	<a href="javascript:history.back();" class="back-btn" >
+		<span class="material-symbols-outlined">
+			undo
+		</span>
+	</a>
 	<c:choose>
 		<c:when test="${type == 'personal'}">
 			<div>
@@ -87,17 +100,21 @@
 							<tr> 
 								<th><label for="enter_id">아이디</label></th>
 								<td>
-									<input type="text" id="enter_id" name="enter_id" value="${enter_id}" readonly="readonly"/>
-									<div class="profile">
-										<c:choose>
-											<c:when test="${vo.attach.filename eq null}">
-												<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
-											</c:when>
-											<c:otherwise>
-												<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}"/>
-											</c:otherwise>
-										</c:choose>				
-										<input type="file" name="enter_image">
+									<div class="d-f">
+										<input type="text" id="enter_id" name="enter_id" value="${enter_id}" readonly="readonly"/>
+										<div class="profile">
+											<label for="profileImg">
+												<c:choose>
+													<c:when test="${vo.attach.filename eq null}">
+														<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
+													</c:when>
+													<c:otherwise>
+														<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}"/>
+													</c:otherwise>
+												</c:choose>		
+											</label>
+											<input type="file" name="enter_image" id="profileImg">
+										</div>
 									</div>
 								</td>
 							</tr>

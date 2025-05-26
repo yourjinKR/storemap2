@@ -83,13 +83,15 @@
 						<th>이벤트 명</th>
 						<td>: ${evo.event_title}</td>
 					</tr>
+					<c:if test="${not empty loginUser and loginUser ne null and userType ne 'user'}">
+						<tr>
+							<th>모집 기간</th>
+							<td>: ${evo.event_rstartdate} ~ ${evo.event_rstopdate}</td>
+						</tr>
+					</c:if>
 					<tr>
 						<th>이벤트 기간</th>
 						<td>: ${evo.event_bstartdate} ~ ${evo.event_bstopdate}</td>
-					</tr>
-					<tr>
-						<th>모집 기간</th>
-						<td>: ${evo.event_rstartdate} ~ ${evo.event_rstopdate}</td>
 					</tr>
 					<tr>
 						<th>주소</th>
@@ -98,6 +100,10 @@
 					<tr>
 						<th>주최</th>
 						<td>: ${evo.enter.enter_name}</td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td>: ${evo.enter.enter_num}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -110,27 +116,32 @@
 				 	<div class="swiper-slide">
 				 		 <dl>
 				 		 	<dt>${status.index + 1}일차</dt>
-				 			<dd>${eday.event_starttime} ~ ${eday.event_stoptime}</dd> 	
+				 			<dd>
+				 				${eday.event_starttime.substring(0, 16)} ~
+				 				${eday.event_stoptime.substring(0, 16)}
+							</dd> 	
 			 		 	</dl>
 				 		 <div class="eday-store">
 				 		 <c:choose>
 				 		 	<c:when test="${fn:length(eday.join_ereq) > 0}">
 						 		<c:forEach var="req" items="${eday.join_ereq}">
 								    <div class="store-box">
-								   		<div class="img-box">
-								   			<c:choose>
-								   				<c:when test="${req.join_store.attach ne null and req.join_store.attach ne '' }">
-										   			<img alt="" src="${IMG_URL}${req.join_store.attach.uuid}_${req.join_store.attach.filename}">
-								   				</c:when>
-								   				<c:otherwise>
-										   			<img alt="" src="${IMG_URL}NoImage_pdlhxd.jpg">
-								   				</c:otherwise>
-								   			</c:choose>
-								   		</div>
-								   		<div class="store-info">
-											<h4>${req.join_store.store_name}</h4>
-											<p>${req.join_store.store_content}</p>
-								   		</div>
+								    	<a href="${req.join_store.store_idx}">
+									   		<div class="img-box">
+									   			<c:choose>
+									   				<c:when test="${req.join_store.attach ne null and req.join_store.attach ne '' }">
+											   			<img alt="" src="${IMG_URL}${req.join_store.attach.uuid}_${req.join_store.attach.filename}">
+									   				</c:when>
+									   				<c:otherwise>
+											   			<img alt="" src="${IMG_URL}NoImage_pdlhxd.jpg">
+									   				</c:otherwise>
+									   			</c:choose>
+									   		</div>
+									   		<div class="store-info">
+												<h4>${req.join_store.store_name}</h4>
+												<p>${req.join_store.store_content}</p>
+									   		</div>
+								    	</a>
 								    </div>
 						        </c:forEach>
 				 		 	</c:when>

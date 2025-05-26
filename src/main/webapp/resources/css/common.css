@@ -12,7 +12,7 @@
 .right-div a{background: none;border: 1px solid #000;padding: 5px 15px;height: auto;}
 
 .icon {position: relative;}
-.icon span{position: absolute;top: -5px; right:-5px;display: inline-block;background: #f00;color:#fff;width: 20px;height: 20px;text-align: center;line-height: 10px;padding:5px;border-radius: 50%;font-size:14px}
+.icon span{position: absolute;top: -5px; right:-5px;display: inline-block;background: #f00;color:#fff;text-align: center;line-height: 10px;padding:5px;border-radius: 50%;font-size:14px}
 .icon .fa-envelope{font-size:36px;}
 .icon .material-symbols-outlined {
 	font-size:36px;
@@ -47,7 +47,7 @@
 .card-list{flex-wrap: wrap; justify-content: flex-start; }
 
 /* 사이드바  */
-.side-bar{opacity:0; transition: 0.25s ease;  position: fixed;right: -300px;top: 0;height: 100vh;background: #fff;width: 300px;z-index:101;border-left:1px solid #222;box-shadow: -5px 0 5px rgba(0,0,0,.05);}
+.side-bar{opacity:0; transition: 0.25s ease;  position: fixed;right: -300px;top: 0;height: 100vh;background: #fff;width: 300px;z-index:101;box-shadow: -5px 0 5px rgba(0,0,0,.2);}
 .side-bar.show{opacity:1; right:0}
 .side-bar .info{padding: 30px;align-items: center;gap:25px;border-bottom:1px solid #222;}
 .side-bar .btn-list li > a{border-bottom:1px solid #222;background:#d9d9d9;padding: 10px 15px;display:block}
@@ -63,7 +63,7 @@
 .pop-content .inner{max-height: 315px;overflow-x: hidden;overflow-y: auto;border-bottom:1px solid #222;}
 .pop-content h4{font-size: 24px;font-weight: bold;background: #d9d9d9;padding:10px 0;border-radius:5px}
 .pop-content .letter-list{width: 100%;border-bottom:1px solid #222;border-left:1px solid #222;}
-.pop-content .js-tab-content > .letter-list{font-size: 18px; font-weight: bold;background: #d9d9d9;}
+.pop-content .js-tab-content > .letter-list{font-size: 18px; font-weight: bold;background: var(--point-color);}
 .pop-content .letter-list:nth-child(1) .items{border-bottom: none;}
 .pop-content .letter-list:nth-child(1) .items:nth-child(4){display: inline-block;}
 .pop-content .letter-list#listBody {}
@@ -79,7 +79,7 @@
 .letter-list .material-symbols-outlined.drafts::before{display:none}
 .pop-content table{width:100%}
 .pop-content table th,
-.pop-content table td{padding:5px 0;border-left:1px solid #d9d9d9;border-bottom:1px solid #222;border-left:1px solid #222;vertical-align:middle}
+.pop-content table td{padding:5px;border-left:1px solid #d9d9d9;border-bottom:1px solid #222;border-left:1px solid #222;vertical-align:middle}
 .pop-content table th{font-size: 18px; font-weight: bold;background: #d9d9d9;}
 .pop-content .letter-list .empty-data{text-align:center; padding:50px 0;font-weight:bold;font-size:28px;color:#d9d9d9;width:100%;display:block;border:none;border-right:1px solid #222;}
 
@@ -97,7 +97,7 @@
 .letter-form table, .letter-form table th, .letter-form table td{border:none;text-align:left;}
 .letter-form table th{background:none;text-align:right;}
 .letter-form table th.v-top{vertical-align:top;}
-.letter-form table input, .letter-form table textarea, .letter-form table select{width:100%;padding:10px}
+.letter-form table input, .letter-form table textarea, .letter-form table select{width:100%;padding:10px;border:1px solid var(--font-color)}
 .letter-form table input, .letter-form table select{height:40px;}
 .letter-form table textarea{height:150px;resize:none;}
 .letter-form table label{display:inline-block;padding-right:10px;white-space:nowrap;}
