@@ -46,16 +46,17 @@
 
 /* 메뉴 추가 버튼 */
 .add_menu {
-	width: 100%;
-	padding: 12px;
+	width: 200px;
+	padding: 10px 20px;
 	background-color: #feda3e;
 	color: black;
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: bold;
 	border: none;
 	border-radius: 6px;
 	cursor: pointer;
-	margin-top: 20px;
+	margin: 10px;
+	display: inline-block;
 }
 
 .add_menu:hover {
@@ -139,6 +140,12 @@
 	transition: transform 0.2s;
 }
 
+/* 개별 메뉴 아이템(menu-li)에 연노란 배경 적용 */
+.menu-li {
+	background-color: #fff9c4 !important;
+	border: 2px solid #f0e68c;
+}
+
 .menu-list li:hover {
 	transform: scale(1.03);
 }
@@ -172,100 +179,138 @@
 /* 메뉴 추가 모달 */
 #add-modal{
 	position: fixed;
-	z-index: 1;
+	z-index: 1000;
 	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.4);
+	background-color: rgba(0, 0, 0, 0.5);
 	display: none;
+	animation: fadeIn 0.3s ease-in-out;
 }
 .add-modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 640px;
+	background: linear-gradient(135deg, #ffffff 0%, #fffef7 100%);
+	margin: 10% auto;
+	padding: 30px;
+	border: none;
+	border-radius: 15px;
+	width: 500px;
+	max-width: 90%;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+	animation: slideIn 0.3s ease-out;
 }
 
 .menu-add {
-	margin-top: 20px;
-	position: relative; /* 버튼 위치 기준 */
+	margin-top: 0;
+	position: relative;
 }
 
 .menu-add h3 {
-	margin-bottom: 10px;
-	font-size: 1.2em;
+	margin-bottom: 25px;
+	font-size: 1.5em;
+	color: #333;
+	text-align: center;
+	border-bottom: 2px solid #feda3e;
+	padding-bottom: 10px;
 }
 
 .menu-add label {
 	display: block;
-	margin-top: 15px;
-	margin-bottom: 5px;
-	color: #444;
+	margin-top: 20px;
+	margin-bottom: 8px;
+	color: #555;
 	font-weight: bold;
+	font-size: 16px;
 }
 
-.menu-add input[type="text"] {
+.menu-add input[type="text"], .menu-add input[type="file"] {
 	width: 100%;
-	padding: 10px;
+	padding: 12px 15px;
 	box-sizing: border-box;
-	background-color: #ddd;
-	border: none;
-	border-radius: 4px;
-	margin-bottom: 10px;
+	background-color: #f8f8f8;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	font-size: 14px;
+	transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.menu-add input[type="text"]:focus, .menu-add input[type="file"]:focus {
+	outline: none;
+	border-color: #feda3e;
+	background-color: #ffffff;
+	box-shadow: 0 0 5px rgba(254, 218, 62, 0.3);
 }
 
 /* 메뉴 수정 모달 */
 #modify-modal{
 	position: fixed;
-	z-index: 1;
+	z-index: 1000;
 	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.4);
+	background-color: rgba(0, 0, 0, 0.5);
 	display: none;
+	animation: fadeIn 0.3s ease-in-out;
 }
 .modify-modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 640px;
+	background: linear-gradient(135deg, #ffffff 0%, #fffef7 100%);
+	margin: 10% auto;
+	padding: 30px;
+	border: none;
+	border-radius: 15px;
+	width: 500px;
+	max-width: 90%;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+	animation: slideIn 0.3s ease-out;
 }
 .menu-image {
 	border-radius: 8px;
 }
 
 .menu-update {
-	margin-top: 20px;
-	position: relative; /* 버튼 위치 기준 */
+	margin-top: 0;
+	position: relative;
 }
 
 .menu-update h3 {
-	margin-bottom: 10px;
-	font-size: 1.2em;
+	margin-bottom: 25px;
+	font-size: 1.5em;
+	color: #333;
+	text-align: center;
+	border-bottom: 2px solid #f0ad4e;
+	padding-bottom: 10px;
 }
 
 .menu-update label {
 	display: block;
-	margin-top: 15px;
-	margin-bottom: 5px;
-	color: #444;
+	margin-top: 20px;
+	margin-bottom: 8px;
+	color: #555;
 	font-weight: bold;
+	font-size: 16px;
 }
 
-.menu-update input[type="text"] {
+.menu-update input[type="text"], .menu-update input[type="file"] {
 	width: 100%;
-	padding: 10px;
+	padding: 12px 15px;
 	box-sizing: border-box;
-	background-color: #ddd;
-	border: none;
-	border-radius: 4px;
-	margin-bottom: 10px;
+	background-color: #f8f8f8;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	font-size: 14px;
+	transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.menu-update input[type="text"]:focus, .menu-update input[type="file"]:focus {
+	outline: none;
+	border-color: #f0ad4e;
+	background-color: #ffffff;
+	box-shadow: 0 0 5px rgba(240, 173, 78, 0.3);
 }
 
 .menu-text {
@@ -274,10 +319,60 @@
 }
 
 #add-preview img, #modify-preview img {
-    max-width: 100px;
+    max-width: 150px;
     height: auto;
-    border: 1px solid #ccc;
-    margin-top: 5px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 모달 애니메이션 */
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes slideIn {
+	from { 
+		transform: translateY(-50px);
+		opacity: 0;
+	}
+	to { 
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+/* 모달 내 버튼 스타일링 */
+.menu-add .add_menu {
+	width: 100%;
+	margin-top: 25px;
+	padding: 15px;
+	font-size: 16px;
+	border-radius: 8px;
+	transition: all 0.3s ease;
+}
+
+.menu-add .add_menu:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(254, 218, 62, 0.4);
+}
+
+.menu-update .btn-modify, .menu-update .btn-remove {
+	position: static;
+	display: inline-block;
+	margin-top: 25px;
+	margin-right: 10px;
+	padding: 12px 20px;
+	border-radius: 8px;
+	font-size: 14px;
+	transition: all 0.3s ease;
+}
+
+.menu-update .btn-modify:hover, .menu-update .btn-remove:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 /* 로딩중 */
