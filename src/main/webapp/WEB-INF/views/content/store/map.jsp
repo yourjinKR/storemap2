@@ -7,24 +7,22 @@
 	<div class="side-bar show" id="list">
 		<div id="content">
 			<div class="header" id="list">
-				<div class="logo">
-					<a href="/">로고</a>
-				</div>
-				<!-- 검색창 -->
-				<form class="form" id="map">
-					<input type="text" id="keyword" autocomplete="off" placeholder="장소 및 이벤트 검색">
-					<!-- <button class="mapBtn" id="search">검색</button> -->
-					<div class="autocomplete">
-						<ul>
-						</ul>		
-					</div>
-				</form>
-				<!-- 지도 관련 편의기능 -->
-				<div id="filter">
-					<button class="mapBtn" id="united-mode">모두</button>
-					<button class="mapBtn" id="event-mode">이벤트만</button>
-					<button class="mapBtn" id="store-mode">점포만</button>
-				</div>
+			  <div class="logo">
+			    <a href="/">로고</a>
+			  </div>
+			
+			  <div class="inner">
+			    <form class="form" id="map">
+			      <input type="text" id="keyword" autocomplete="off" placeholder="장소 및 이벤트 검색">
+			      <div class="autocomplete"><ul></ul></div>
+			    </form>
+			
+			    <div id="filter">
+			      <button class="mapBtn" id="united-mode">모두</button>
+			      <button class="mapBtn" id="event-mode">이벤트만</button>
+			      <button class="mapBtn" id="store-mode">점포만</button>
+			    </div>
+			  </div>
 			</div>
 			<div id="body">
 				<jsp:include page="../modal/storeListModal.jsp"/>

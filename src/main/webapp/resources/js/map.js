@@ -1632,12 +1632,16 @@ function apply2storeMap(data) {
 
         storeVOList.push(vo);
     });
+    console.log(storeVOList);
+    
 
     let msg = "";
     // 점포 리스트 출력
     storeVOList.forEach(vo => {
         let imgURL = ``;
         if (vo.attach != null) {
+            console.log('attach 있음');
+            
             imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${vo.store_image}_${vo.attach.filename}" alt="${vo.attach.filename}"/>`;
         } else {
             imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="${vo.store_image}"/>`;
