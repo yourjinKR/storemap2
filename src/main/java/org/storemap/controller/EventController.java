@@ -183,7 +183,9 @@ public class EventController {
         if (dDay > 0) {
             model.addAttribute("dday", ("D-" + dDay));
         }
-        vo.setEvent_content(formatToHtml(vo.getEvent_content()));
+        if(vo.getEvent_content() != null) {
+        	vo.setEvent_content(formatToHtml(vo.getEvent_content()));
+        }
 	    model.addAttribute("evo", vo);
 	    model.addAttribute("fileList", cloudinaryFiles);    
 	    model.addAttribute("externalUrls", externalUrls);// 외부 URL 이미지 리스트

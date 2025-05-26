@@ -17,7 +17,9 @@
 			<c:when test="${evo.event_bstartdate > now}">
 			<div class="state-box">
 				<span class="event-state">진행 예정</span>
-				<span class="event-category">${evo.event_category}</span>
+				<c:if test="${evo.event_category ne null}">
+					<span class="event-category">${evo.event_category}</span>
+				</c:if>
 				<span class="event-dday">${dday}</span>
 			</div>
 			</c:when>

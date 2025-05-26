@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 .eventLike-count, .reviewLike-count {
 	font-size: 14px;
 	font-weight: bold;
@@ -221,6 +222,7 @@
 .store-box .store-info h4{font-size:18px;font-weight:bold;}
 .store-box .store-info p{font-size:16px;padding-top:10px}
 .more-content{background:var(--point-color2);color:var(--font-color);padding:10px 25px;border:none;font-size:16px;border-radius:5px;font-weight:bold}
+#participationSection{text-align:right;}
 #participationSection a, #openBtn{background:var(--point-color2);color:var(--font-color);padding:0 25px; height:50px; line-height:50px; border:none;font-size:22px;border-radius:5px;font-weight:bold;}
 
 

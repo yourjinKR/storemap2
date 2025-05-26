@@ -396,9 +396,15 @@ function generateDays() {
 	    alert("올바른 날짜를 선택하세요.");
 	    return;
 	  }
+	  
+	  
 
 	  // 일괄 입력 폼 추가
 	  const bulkDiv = document.createElement("div");
+	  let edayCon = document.querySelector("tr.hide");
+	  if(edayCon != null){
+		  edayCon.classList.remove("hide");
+	  }
 	  bulkDiv.style.marginBottom = "15px";
 	  bulkDiv.innerHTML = `
 	    <fieldset style="border:1px solid #aaa; padding:10px;">
