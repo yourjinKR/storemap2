@@ -12,12 +12,12 @@ if(formType == 'personal') {
 	let mPwValidState, mPwReValidState, mnicknameValidState = null;
 	let regExpPw, regExpName, regExpNickName = null;
 	let f = null;
+	let {pwCk, pwReCk, nicknameCk} = false; // 검증
 	document.addEventListener("DOMContentLoaded", (event) => {
 		f = document.getElementById('ModifyForm');
 		mPwValidState = document.querySelector("#mPwValidState");
 		mPwReValidState = document.querySelector("#mPwReValidState");
 		mnicknameValidState = document.querySelector("#mnicknameValidState");
-		let {pwCk, pwReCk, nicknameCk} = false; // 검증
 		
 		regExpPw = /^[0-9a-zA-Z]{8,16}$/;		// 비밀번호 검증 정규식
 		regExpName = /^[가-힣a-zA-Z]{2,12}$/;	// 이름 검증 정규식 
