@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -7,14 +8,42 @@
 <!-- 스크립트 -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="/resources/js/event.js"></script>
-
+<% request.setAttribute("now", new Date());%>
 <div class="readonly-form">
 	<!-- 제목 + 신고/좋아요 아이콘 -->
 	<div class="event-header">
-		<h2 class="event-title">글번호 ${evo.event_idx}</h2>
-		<h5>${evo.event_title}</h5>
+		<h3>${evo.event_title}</h3>
+		<c:choose>
+			<c:when test="${evo.event_bstartdate > now}">
+			<div class="state-box">
+				<span class="event-state">진행 예정</span>
+				<span class="event-category">${evo.event_category}</span>
+				<span class="event-dday">${dday}</span>
+			</div>
+			</c:when>
+			<c:when test="${evo.event_bstopdate < now}">
+				<span class="event-state">종료</span>
+			</c:when>
+			<c:otherwise>
+				<span class="event-state">진행 중</span>
+			</c:otherwise>
+		</c:choose>
+		<h4>${evo.event_bstartdate} ~ ${evo.event_bstopdate}</h4>
+		
+		<div class="event-img">
+			<c:forEach var="file" items="${evo.cloudinaryFiles}" varStatus="status">
+				<c:if test="${status.index > 0}">
+					<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="Cloudinary 이미지" style="width: 23%; height: auto;" />
+				</c:if>
+			</c:forEach>
 
-
+			<!-- 외부 URL 이미지 출력 -->
+			<c:forEach var="url" items="${evo.externalUrls}" varStatus="status">
+				<c:if test="${status.index > 0}">
+					<img src="${url}" alt="외부 이미지" class="expandable-img" />
+				</c:if>
+			</c:forEach>
+		</div>
 		<!-- 신고 및 좋아요 버튼 -->
 		<div class="eventIcon">
 			<input type="button" class="report-button" name="eventReport" id="eventReport-icon${evo.event_idx}"> 
@@ -24,90 +53,109 @@
 			<span class="eventLike-count eventLike-count-${evo.event_idx}">${evo.event_like_cnt}</span>
 		</div>
 	</div>
-
-	<!-- 이벤트 정보 테이블 -->
-	<table class="event-table">
-		<tr>
-			<th>카테고리</th>
-			<td>${evo.event_category}</td>
-		</tr>
-		<tr>
-			<th>행사 기간</th>
-			<td>${evo.event_bstartdate}~ ${evo.event_bstopdate}</td>
-		</tr>
-		<tr>
-			<th>사진</th>
-			<td>
-				<div class="photo-preview" style="display: flex; gap: 10px; flex-wrap: wrap;">
-					<!-- Cloudinary 이미지 출력 -->
-					<c:forEach var="file" items="${evo.cloudinaryFiles}">
-						<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="Cloudinary 이미지" style="width: 23%; height: auto;" />
-					</c:forEach>
-
-					<!-- 외부 URL 이미지 출력 -->
-					<c:forEach var="url" items="${evo.externalUrls}">
-						<img src="${url}" alt="외부 이미지" style="width: 23%; height: auto;" class="expandable-img" />
-					</c:forEach>
-				</div>
-			</td>
-		</tr>
-		<tr>
-			<th>이벤트 소개</th>
-			<td><pre style="white-space: pre-wrap;">${evo.event_content}</pre></td>
-		</tr>
-		<tr>
-			<th>주소</th>
-			<td>${evo.event_location}</td>
-		</tr>
-	</table>
-
-	<div class="swiper-container">
-		<div class="swiper-wrapper">
-			<c:forEach var="eday" items="${evo.join_eday}" varStatus="status">
-			 	<div class="swiper-slide">
-			 		 <dl>
-			 		 	<dt>${status.index + 1}일차</dt>
-			 			<dd>${eday.event_starttime} ~ ${eday.event_stoptime}</dd> 	
-		 		 	</dl>
-			 		 <c:choose>
-			 		 	<c:when test="${fn:length(eday.join_ereq) > 0}">
-					 		<c:forEach var="req" items="${eday.join_ereq}">
-							    <div class="store-box">
-									<h4>${req.join_store.store_name}</h4>
-									<p>${req.join_store.store_content}</p>
-							    </div>
-					        </c:forEach>
-			 		 	</c:when>
-			 		 	<c:otherwise>
-			 		 		<div class="empty-data">
-			 		 			등록된 점포가 없습니다.
-			 		 		</div>
-			 		 	</c:otherwise>
-			 		 </c:choose>
-			 	</div>
-			</c:forEach>
-			<%-- <c:forEach var="eday" items="${evo.event_ay}">
-		      <div class="swiper-slide">
-		        <h3>${eday.event_starttime} ~ ${eday.event_stoptime}</h3>
-		        <c:forEach var="req" items="${requestMap.get(eday.eday_idx)}">
-		          <div class="store-box">
-		            <h4>${req.join_store.store_name}</h4>
-		            <p>${req.join_store.store_content}</p>
-		          </div>
-		        </c:forEach>
-		      </div>
-		    </c:forEach> --%>
+	
+	<div class="event-text">
+		${evo.event_content}
+		<div class="btn-box t-r mt30 mb30">
+			<button type="button" class="more-content">더보기 ▼</button>
 		</div>
-
-		<!-- 네비게이션 버튼 -->
-		<div class="swiper-button-prev"></div>
-		<div class="swiper-button-next"></div>
-		<!-- 페이지네이션 -->
-		<div class="swiper-pagination"></div>
+	</div>
+	
+	<div class="info-box">
+		<div class="event-postor">
+		<c:choose>
+			<c:when test="${evo.cloudinaryFiles ne null and evo.cloudinaryFiles.size() > 0}">
+				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${evo.cloudinaryFiles[0].uuid}_${evo.cloudinaryFiles[0].filename}" alt="Cloudinary 이미지" style="width: 23%; height: auto;" />
+			</c:when>
+			<c:otherwise>
+				<img src="${evo.externalUrls[0]}" alt="포스터">
+			</c:otherwise>
+		</c:choose>
+		</div>
+		<div class="event-info">
+			<table>
+				<colgroup>
+					<col width="160px">
+					<col width="*">
+				</colgroup>
+				<tbody>
+					<tr>
+						<th>이벤트 명</th>
+						<td>: ${evo.event_title}</td>
+					</tr>
+					<tr>
+						<th>이벤트 기간</th>
+						<td>: ${evo.event_bstartdate} ~ ${evo.event_bstopdate}</td>
+					</tr>
+					<tr>
+						<th>모집 기간</th>
+						<td>: ${evo.event_rstartdate} ~ ${evo.event_rstopdate}</td>
+					</tr>
+					<tr>
+						<th>주소</th>
+						<td>: ${evo.event_location}</td>
+					</tr>
+					<tr>
+						<th>주최</th>
+						<td>: ${evo.enter.enter_name}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="attent-store">
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<c:forEach var="eday" items="${evo.join_eday}" varStatus="status">
+				 	<div class="swiper-slide">
+				 		 <dl>
+				 		 	<dt>${status.index + 1}일차</dt>
+				 			<dd>${eday.event_starttime} ~ ${eday.event_stoptime}</dd> 	
+			 		 	</dl>
+				 		 <div class="eday-store">
+				 		 <c:choose>
+				 		 	<c:when test="${fn:length(eday.join_ereq) > 0}">
+						 		<c:forEach var="req" items="${eday.join_ereq}">
+								    <div class="store-box">
+								   		<div class="img-box">
+								   			<c:choose>
+								   				<c:when test="${req.join_store.attach ne null and req.join_store.attach ne '' }">
+										   			<img alt="" src="${IMG_URL}${req.join_store.attach.uuid}_${req.join_store.attach.filename}">
+								   				</c:when>
+								   				<c:otherwise>
+										   			<img alt="" src="${IMG_URL}NoImage_pdlhxd.jpg">
+								   				</c:otherwise>
+								   			</c:choose>
+								   		</div>
+								   		<div class="store-info">
+											<h4>${req.join_store.store_name}</h4>
+											<p>${req.join_store.store_content}</p>
+								   		</div>
+								    </div>
+						        </c:forEach>
+				 		 	</c:when>
+				 		 	<c:otherwise>
+				 		 		<div class="empty-data">
+				 		 			등록된 점포가 없습니다.
+				 		 		</div>
+				 		 	</c:otherwise>
+				 		 </c:choose>
+				 		 </div>
+				 	</div>
+				</c:forEach>
+			</div>
+	
+			<!-- 네비게이션 버튼 -->
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+		</div>
 	</div>
 
 	<div id="participationSection">
+		<c:if test="${userType eq 'owner'}">
 		<input type="button" id="openBtn" value="참여" />
+		</c:if>
+		<a href="/event/eventList">목록</a>
 	</div>
 </div>
 
@@ -116,21 +164,9 @@
 <jsp:include page="../../content/modal/eventDayChoice.jsp" />
 <jsp:include page="../../content/modal/eventReport.jsp" />
 
-<!-- 목록으로 돌아가기 버튼 -->
-<div class="back-button">
-	<button onclick="goEventList()" id="goEventList">목록으로 돌아가기</button>
-</div>
-
 <style>
-.readonly-form {
-	max-width: 800px;
-	margin: 30px auto;
-	background-color: #fff;
-	padding: 30px;
-	border-radius: 12px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-}
 
+.readonly-form{padding-bottom:150px;}
 .readonly-form h2 {
 	margin-bottom: 20px;
 }
@@ -172,18 +208,12 @@
 	text-align: right;
 }
 
-button, input[type="button"] {
-	padding: 8px 16px;
-	background-color: #666;
-	color: white;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-}
-
-#participationSection {
-	margin-top: 40px;
-	text-align: center;
+#participationSection {	
+	display:flex;
+	justify-content:flex-end;
+	align-items: center;
+	gap:15px;
+	margin-top:30px;
 }
 
 #result {

@@ -1,6 +1,7 @@
 package org.storemap.controller;
 
 import java.io.File;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -144,7 +147,6 @@ public class EventController {
 
 	    // 이벤트 정보 조회
 	    EventVO vo = eventService.getEventOneView(event_idx);
-//	    List<EventDayVO> eday = eventDayService.getEventDaysByEventId(event_idx);
 	    	    
 	    // event_file 컬럼에서 Cloudinary UUID와 외부 URL을 분리
 	    String eventFile = vo.getEvent_file();
@@ -170,7 +172,20 @@ public class EventController {
 	    }
 	    
 	    // 모델에 데이터 전달
-//	    model.addAttribute("eday", eday);
+	    LocalDate now = LocalDate.now();
+
+        // 예: DB에서 받은 날짜가 java.sql.Date 라고 가정
+        Date sqlDate = vo.getEvent_bstartdate();
+        LocalDate eventDate = sqlDate.toLocalDate(); // LocalDate로 변환
+
+        // 날짜 차이 계산
+        long dDay = ChronoUnit.DAYS.between(now, eventDate);
+
+        // 출력
+        if (dDay > 0) {
+            model.addAttribute("dday", ("D-" + dDay));
+        }
+        vo.setEvent_content(formatToHtml(vo.getEvent_content()));
 	    model.addAttribute("evo", vo);
 	    model.addAttribute("fileList", cloudinaryFiles);    
 	    model.addAttribute("externalUrls", externalUrls);// 외부 URL 이미지 리스트
@@ -378,4 +393,64 @@ public class EventController {
 	    // 3. 수정 완료 후 상세 페이지로 리다이렉트
 	    return "redirect:/event/eventView?event_idx=" + evo.getEvent_idx();
 	}
+	
+	//이벤트 컨텐츠 포멧
+	public static String formatToHtml(String fullText) {
+        int startIdx = fullText.indexOf("[행사내용]");
+        if (startIdx == -1) return "<p>행사내용을 찾을 수 없습니다.</p>";
+
+        // 소개 문단
+        String intro = fullText.substring(0, startIdx).trim();
+        String eventPart = fullText.substring(startIdx).trim();
+
+        StringBuilder html = new StringBuilder();
+
+        // 소개문 출력
+        html.append("<p>").append(intro.replace("\n", " ")).append("</p>\n\n");
+
+        // 행사내용 HTML 영역 시작
+        html.append("<div class=\"event-detail\">\n");
+        html.append("<h4>[행사내용]</h4>\n");
+
+        // 내용만 추출
+        String content = eventPart.replace("[행사내용]", "").trim();
+        String[] mainSections = content.split("(?=\\b\\d{1,2}\\.\\s?)");
+
+        for (String section : mainSections) {
+            section = section.trim();
+            if (section.isEmpty()) continue;
+
+            Matcher matcher = Pattern.compile("^(\\d{1,2})\\.\\s*").matcher(section);
+            String mainNumber = "";
+            String rest = section;
+
+            if (matcher.find()) {
+                mainNumber = matcher.group(1);
+                rest = section.substring(matcher.end()).trim();
+            } else {
+                continue;
+            }
+
+            int subStart = rest.indexOf("①");
+            String mainTitle = (subStart != -1) ? rest.substring(0, subStart).trim() : rest.trim();
+            String subItems = (subStart != -1) ? rest.substring(subStart).trim() : "";
+
+            html.append("  <h5>").append(mainNumber).append(". ").append(mainTitle).append("</h5>\n");
+
+            if (!subItems.isEmpty()) {
+                html.append("  <ul>\n");
+                String[] items = subItems.split("(?=[①②③④⑤⑥⑦⑧⑨⑩⑪⑫])");
+                for (String item : items) {
+                    item = item.trim();
+                    if (item.length() < 2) continue;
+                    html.append("    <li>").append(item).append("</li>\n");
+                }
+                html.append("  </ul>\n\n");
+            }
+        }
+
+        html.append("</div> <!-- end of event-detail -->");
+
+        return html.toString().trim();
+    }
 }

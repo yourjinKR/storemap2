@@ -21,6 +21,7 @@ import org.storemap.domain.EventVO;
 import org.storemap.domain.MapDTO;
 import org.storemap.domain.StoreVO;
 import org.storemap.mapper.AttachFileMapper;
+import org.storemap.mapper.EnterMapper;
 import org.storemap.mapper.EventDayMapper;
 import org.storemap.mapper.EventMapper;
 import org.storemap.mapper.EventRequestMapper;
@@ -47,6 +48,8 @@ public class EventServiceImple implements EventService{
 	private AttachFileMapper attachMapper;
 	@Autowired
 	private StoreMapper storeMapper;
+	@Autowired
+	private EnterMapper enterMapper;
 	@Autowired
 	private CloudinaryService cloudService;
 	
@@ -171,12 +174,21 @@ public class EventServiceImple implements EventService{
 	    for (EventDayVO eday : edayList) {
 	    	List<EventRequestVO> reqList = reqMapper.getEdayRequestAttend(eday.getEday_idx());
 	    	for (EventRequestVO reqvo : reqList) {
-	    		reqvo.setJoin_store(storeMapper.read(reqvo.getStore_idx()));
+	    		StoreVO svo = storeMapper.read(reqvo.getStore_idx());
+	    		AttachFileVO attach = new AttachFileVO();
+	    		int idxof = svo.getStore_image().indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+	    		if(idxof == -1) {
+	    			attach = attachMapper.getAttach(svo.getStore_image());
+	    		}else {
+	    			attach.setFilename(svo.getStore_image());
+	    		}
+	    		svo.setAttach(attach);
+	    		reqvo.setJoin_store(svo);
 			}
 	    	eday.setJoin_ereq(reqList);
 		}
 	    event.setJoin_eday(edayList);
-	    
+	    event.setEnter(enterMapper.read(event.getEnter_idx()));
 	    return event;
 	}
 	

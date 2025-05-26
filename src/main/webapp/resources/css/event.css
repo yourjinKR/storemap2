@@ -95,13 +95,16 @@
 }
 .event-header {
   position: relative;
-  padding-right: 120px; /* 아이콘 공간 확보 */
   margin-bottom: 20px;
 }
-
+.event-header h3 {font-size:46px;font-weight:bold;padding:50px 0 30px;}
+.event-header h4 {font-size:24px;font-weight:bold;}
+.event-header .event-state,
+.event-header .event-dday,
+.event-header .event-category{display:inline-block; background:var(--point-color2);color:var(--font-color);border-radius:5px;padding:10px 15px;font-size:18px;font-weight:bold;margin-bottom:10px;}
+.state-box{display:flex;gap:10px;}
 /* 제목은 block 정렬 */
-.event-header h2,
-.event-header h5 {
+.event-header h2{
   margin: 0;
   padding: 0;
 }
@@ -109,7 +112,7 @@
 /* 아이콘 우측 상단 고정 */
 .eventIcon {
   position: absolute;
-  top: 0;
+  top: 75px;
   right: 0;
   display: flex;
   align-items: center;
@@ -124,7 +127,7 @@
 
 .eventIcon label.material-symbols-outlined {
   cursor: pointer;
-  font-size: 24px;
+  font-size: 32px;
   color: #555;
 }
 
@@ -135,7 +138,7 @@
 .eventLike-count {
   font-weight: bold;
   color: red;
-  font-size: 14px;
+  font-size: 24px;
 }
 
 .swiper-container {
@@ -163,28 +166,62 @@
 /* Swiper 기본 버튼 크기 조정 */
 .swiper-button-next,
 .swiper-button-prev {
-  width: 24px;   /* 너비 줄이기 */
-  height: 24px;  /* 높이 줄이기 */
-  background-color: rgba(0, 0, 0, 0.05); /* 살짝 배경 넣기 */
+  width: 50px;   /* 너비 줄이기 */
+  height: 50px;  /* 높이 줄이기 */
   border-radius: 50%;
-  color: #007aff; /* 화살표 색상 */
+  color: var(--font-color); /* 화살표 색상 */
+  top:58px;
 }
 
 /* 화살표 아이콘 자체 크기 줄이기 */
 .swiper-button-next::after,
 .swiper-button-prev::after {
-  font-size: 14px;  /* 아이콘 사이즈 줄이기 */
+  font-size: 30px;  /* 아이콘 사이즈 줄이기 */
 }
 
 /* 위치 약간 더 안쪽으로 */
 .swiper-button-next {
-  right: 5px;
+    right: 50%;
+    margin-right: -240px;
 }
 
 .swiper-button-prev {
-  left: 5px;
+    left: 50%;
+    margin-left: -240px;
 }
 
-.swiper-slide {border:1px solid #d9d9d9;}
+
 .swiper-slide dl{display:flex;justify-content: center;align-items: center;flex-direction: column;}
-.empty-data{width: 100%; text-align:center;padding:100px 0 !important;font-size:32px !important;font-weight:bold;color:#d9d9d9;}
+.empty-data{width: 100%; text-align:center;padding:100px 0 !important;font-size:32px !important;font-weight:bold;color:#d9d9d9;border:1px solid #d9d9d9;}
+
+.event-img{display: flex; gap: 10px; flex-wrap: wrap;margin-top:30px;}
+.event-img img{width:calc(33.3333% - 10px);}
+.event-text h4{font-size:22px;font-weight:bold;margin:30px 0 15px;}
+.event-text h5{font-size:18px;font-weight:bold;margin:15px 0 5px;}
+.event-text ul{margin-left:20px;font-size:16px;}
+.event-text ul li{margin-bottom:5px;}
+.event-text p{font-size:18px;line-height:1.5}
+.event-text .event-detail{height:0;overflow: hidden;transition:0.25s ease}
+
+.info-box{display:flex;gap:30px;padding:50px 0; border-top:1px solid #d9d9d9;border-bottom:1px solid #d9d9d9;}
+.info-box .event-poster{width:400px;}
+.info-box .event-info{width: calc(1200px - 430px);}
+.info-box .event-info table th{text-align:left;font-weight:bold}
+.info-box .event-info table th,
+.info-box .event-info table td{font-size:28px;padding:20px 0;}
+.attent-store{margin-top:50px;position: relative;}
+.attent-store h3{font-size:24px;font-weight:bold;padding:0 0 15px;}
+.attent-store dl > dt{font-size:24px;font-weight:bold;padding:10px 0;}
+.attent-store dl > dd{font-size:18px;font-weight:bold;}
+.eday-store{display:flex;gap:15px;width:100%;flex-wrap: wrap;margin-top:30px;}
+.store-box{width:calc(33.3333% - 14px);border:1px solid #ccc;display:flex;align-items: center;padding:15px;gap:15px;border-radius:10px;}
+.store-box .img-box{width:75px;height:75px;border:1px solid #d9d9d9;border-radius:50%;overflow: hidden;}
+.store-box .img-box img{height:100%;}
+.store-box .store-info h4{font-size:18px;font-weight:bold;}
+.store-box .store-info p{font-size:16px;padding-top:10px}
+.more-content{background:var(--point-color2);color:var(--font-color);padding:10px 25px;border:none;font-size:16px;border-radius:5px;font-weight:bold}
+#participationSection a, #openBtn{background:var(--point-color2);color:var(--font-color);padding:0 25px; height:50px; line-height:50px; border:none;font-size:22px;border-radius:5px;font-weight:bold;}
+
+
+
+

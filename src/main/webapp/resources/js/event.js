@@ -339,10 +339,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
           },
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-          },
+        
           slidesPerView: 1,
         });
       
@@ -447,6 +444,25 @@ document.addEventListener("DOMContentLoaded", (event) => {
         });
       }
 
+      
+      // 이벤트 설명 더보기     
+      let moreBtn = document.querySelector(".more-content");
+      if(moreBtn != null){
+    	  moreBtn.addEventListener("click", function(e){
+    		  e.preventDefault();
+    		  let detailCon = document.querySelector(".event-detail");
+    		  if(detailCon != null){
+    			  if (detailCon.style.height && detailCon.style.height !== "0px") {
+				    detailCon.style.height = "0px";
+				    document.querySelector(".more-content").innerHTML = "더보기 ▼";
+				    document.querySelector(".event-text").scrollIntoView({ behavior: "smooth" });
+				  } else {
+				    detailCon.style.height = detailCon.scrollHeight + "px";
+				    document.querySelector(".more-content").innerHTML = "접기 ▲";
+				  }
+    		  }
+    	  })
+      }
 });
 
 
