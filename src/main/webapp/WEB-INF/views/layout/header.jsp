@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="header d_f">
-	<h1><a href="/">로고</a></h1>
+	<h1><a href="/">Eventore</a></h1>
 	<div class="form" id="map">
 		<div class="search-bar">
 			<input type="text" name="keyword" placeholder="검색어를 입력해주세요.">

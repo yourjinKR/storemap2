@@ -8,7 +8,7 @@
 		<div id="content">
 			<div class="header" id="list">
 			  <div class="logo">
-			    <a href="/">로고</a>
+			    <a href="/">Eventore</a>
 			  </div>
 			
 			  <div class="inner">

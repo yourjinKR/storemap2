@@ -86,7 +86,7 @@ select {
 	width: 100%;
 	padding: 15px;
 	margin-top: 30px;
-	background-color: #4db8ff;
+	background-color: #feda3e;
 	color: black;
 	font-size: 18px;
 	font-weight: bold;
@@ -96,7 +96,7 @@ select {
 }
 
 .btn-sec:hover {
-	background-color: #33a6ee;
+	background-color: #cbae31;
 }
 
 textarea {

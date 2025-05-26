@@ -102,7 +102,7 @@
 		          <div class=""><!-- 제목 css필요 -->
 		          	${rvo.review_title}
 		          </div>
-		          <div class="review-img"><!-- 이미지/내용 css필요 -->
+		          <div class="review-img">
 		           <c:choose>
 		           	<c:when test="${rvo.review_filename eq null}">
 		           		<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
@@ -136,7 +136,7 @@
 			  <label><input type="radio" name="declaration_category" value="기타"> 기타</label>
 			</div>
 			<div>
-			  <textarea name="declaration_content" placeholder="신고 내용을 입력하세요"></textarea>
+			  <textarea name="declaration_content" placeholder="신고 내용을 입력하세요" style="resize: none;"></textarea>
 			</div>
 			<button type="button" class="add_report" id="storeReportBtn">신고 제출</button>
 		</div>
@@ -158,7 +158,7 @@
 			  <label><input type="radio" name="declaration_category" value="기타"> 기타</label>
 			</div>
 			<div>
-			  <textarea name="declaration_content" placeholder="신고 내용을 입력하세요"></textarea>
+			  <textarea name="declaration_content" placeholder="신고 내용을 입력하세요" style="resize: none;"></textarea>
 			</div>
 			<button type="button" class="add_report" id="reviewReportBtn">신고 제출</button>
 		</div>

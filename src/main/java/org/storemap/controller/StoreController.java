@@ -144,6 +144,7 @@ public class StoreController {
 	@GetMapping("/menu")
 	public String menuPage(@RequestParam("store_idx") int store_idx, Model model) {
 		log.info("menuPage..."+store_idx);
+		model.addAttribute("vo",storeService.get(store_idx));
 		model.addAttribute("list",menuService.getMap(store_idx));
 		return "index";
 	}

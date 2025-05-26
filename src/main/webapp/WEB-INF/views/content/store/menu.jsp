@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<c:if test="${(empty loginUser) or (loginUserIdx ne vo.member_idx) or (userType ne 'owner')}">
+<c:if test="${(empty loginUser) or (loginUserIdx ne vo.member_idx) or (userType ne 'owner') or (vo.store_hidden eq 1)}">
 	<script>
 		alert("점포주인만 이용 가능합니다. 로그인 해 주세요.");
 		location.href="/";
