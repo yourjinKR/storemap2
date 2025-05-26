@@ -102,9 +102,9 @@ function reportDetails(targetIdx, targetElement) {
 			let rowIdx = row.getAttribute('data-store-idx') || row.getAttribute('data-review-idx') || row.getAttribute('data-event-idx');
 			
 			if(rowIdx && rowIdx === targetIdx) {
-				row.style.display = 'flex'; // 해당 점포의 신고만 표시
+				row.style.display = 'flex'; // 해당 번호의 신고만 표시
 			} else {
-				row.style.display = 'none'; // 다른 점포의 신고는 숨김
+				row.style.display = 'none'; // 다른 번호의 신고는 숨김
 			}
 		});
 	}
@@ -113,9 +113,9 @@ function reportDetails(targetIdx, targetElement) {
 function buttonEvent(){
 	// 리뷰 버튼 선택
 	const ReviewReportHideBtns = document.querySelectorAll("#reviewReportHideBtn");
+	const ReviewReportUnhideBtns = document.querySelectorAll("#reviewReportUnhideBtn");
 	const ReviewReportRemoveAllBtns = document.querySelectorAll("#reviewReportRemoveAllBtn");
 	const ReviewReportRemoveBtns = document.querySelectorAll("#reviewReportRemoveBtn");
-	const ReviewUnhideBtns = document.querySelectorAll("#reviewUnhideBtn");
 	// 점포 버튼 선택
 	const StoreApprovalBtns = document.querySelectorAll("#storeApprovalBtn");
 	const StoreDisallowBtns = document.querySelectorAll("#storeDisallowBtn");
@@ -124,8 +124,13 @@ function buttonEvent(){
 	const StoreReportRemoveAllBtns = document.querySelectorAll("#storeReportRemoveAllBtn");
 	const StoreReportRemoveBtns = document.querySelectorAll("#storeReportRemoveBtn");
 	// 기업 버튼 선택
-	
+	const EnterApprovalBtns = document.querySelectorAll("#enterApprovalBtn");
+	const EnterDisallowBtns = document.querySelectorAll("#enterDisallowBtn");
 	// 이벤트 버튼 선택
+	const EventReportHideBtns = document.querySelectorAll("#eventReportHideBtn");
+	const EventReportUnhideBtns = document.querySelectorAll("#eventReportUnhideBtn");
+	const EventReportRemoveAllBtns = document.querySelectorAll("#eventReportRemoveAllBtn");
+	const EventReportRemoveBtns = document.querySelectorAll("#eventReportRemoveBtn");
 	
 	// 리뷰 숨기기
 	ReviewReportHideBtns.forEach(btn => {
@@ -152,7 +157,7 @@ function buttonEvent(){
 	});
 
 	// 리뷰 숨기기 해제
-	ReviewUnhideBtns.forEach(btn => {
+	ReviewReportUnhideBtns.forEach(btn => {
 		const newBtn = btn.cloneNode(true);
 		btn.parentNode.replaceChild(newBtn, btn);
 		newBtn.addEventListener("click", function() {
@@ -260,6 +265,7 @@ function buttonEvent(){
 			}
 		});
 	});
+	
 	//점포 불허
 	StoreDisallowBtns.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
@@ -288,6 +294,7 @@ function buttonEvent(){
 			}
 		});
 	});
+	
 	// 점포 숨기기
 	StoreReportHideBtns.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
@@ -316,6 +323,7 @@ function buttonEvent(){
 			}
 		});
 	});
+	
 	// 점포 숨기기 해제
 	storeReportunHideBtn.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
@@ -344,6 +352,7 @@ function buttonEvent(){
 			}
 		});
 	});
+	
 	// 점포 신고 전체 취소
 	StoreReportRemoveAllBtns.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
@@ -372,6 +381,7 @@ function buttonEvent(){
 			}
 		});
 	});
+	
 	// 점포 신고 취소
 	StoreReportRemoveBtns.forEach(btn => {
 		// 이벤트 중복 방지를 위한 복제
@@ -409,10 +419,187 @@ function buttonEvent(){
 			}
 		});
 	});
+	
 	// 기업 승인
+	EnterApprovalBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 enter_idx 값 가져오기
+			const li = this.closest('li');
+			const enterIdx = li.querySelector('.idx').textContent;
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 승인하시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/enterApproval';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'enter_idx';
+				input.value = enterIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
+	
 	// 기업 불허
+	EnterDisallowBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 enter_idx 값 가져오기
+			const li = this.closest('li');
+			const enterIdx = li.querySelector('.idx').textContent;
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 불허하시겠습니까?")) {
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/enterDisallow';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'enter_idx';
+				input.value = enterIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
+	
 	// 이벤트 숨기기
+	EventReportHideBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 event_idx와 enter_idx 값 가져오기
+			const li = this.closest('li');
+			const eventIdx = li.querySelector('.idx').textContent;
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 숨기시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/eventReportHide';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'event_idx';
+				input.value = eventIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
+	
 	// 이벤트 숨기기 해제
+	EventReportUnhideBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 event_idx 값 가져오기
+			const li = this.closest('li');
+			const eventIdx = li.querySelector('.idx').textContent;
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 해제하시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/eventReportunHide';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'event_idx';
+				input.value = eventIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
+	
 	// 이벤트 신고 취소
+	EventReportRemoveBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 event_idx와 member_idx 값 가져오기
+			const li = this.closest('li');
+			const eventIdx = li.getAttribute('data-event-idx');
+			// 버튼 텍스트에서 member_idx 추출
+			const buttonText = this.textContent;
+			const memberIdx = buttonText.replace('신고 삭제', '');
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 삭제하시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/eventReportRemove';
+				
+				const input1 = document.createElement('input');
+				input1.type = 'hidden';
+				input1.name = 'event_idx';
+				input1.value = eventIdx;
+				
+				const input2 = document.createElement('input');
+				input2.type = 'hidden';
+				input2.name = 'member_idx';
+				input2.value = memberIdx;
+				
+				form.appendChild(input1);
+				form.appendChild(input2);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
+	
 	// 이벤트 신고 전체 취소
+	EventReportRemoveAllBtns.forEach(btn => {
+		// 이벤트 중복 방지를 위한 복제
+		const newBtn = btn.cloneNode(true);
+		btn.parentNode.replaceChild(newBtn, btn);
+		// 새 버튼에 이벤트 추가
+		newBtn.addEventListener("click", function() {
+			// 현재 버튼이 속한 행에서 event_idx 값 가져오기
+			const li = this.closest('li');
+			const eventIdx = li.querySelector('.idx').textContent;
+			// 확인 메시지는 한 번만 표시
+			if(confirm("정말 삭제하시겠습니까?")){
+				// 새로운 form 생성 및 제출
+				const form = document.createElement('form');
+				form.method = 'post';
+				form.action = '/admin/eventReportRemoveAll';
+				
+				const input = document.createElement('input');
+				input.type = 'hidden';
+				input.name = 'event_idx';
+				input.value = eventIdx;
+				
+				form.appendChild(input);
+				document.body.appendChild(form);
+				form.submit();
+			}
+		});
+	});
 }

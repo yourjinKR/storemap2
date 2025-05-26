@@ -31,6 +31,7 @@
 		<result property="event_hidden" column="event_hidden"/>
 		<result property="event_file" column="event_file"/>
 		<result property="event_location" column="event_location"/>
+		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="enterMap" type="org.storemap.domain.EnterVO">
 		<id property="enter_idx" column="enter_idx"/>

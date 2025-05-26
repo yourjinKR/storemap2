@@ -51,4 +51,16 @@
 		select * from enter where enter_idx = #{enter_idx}
 	</select>
 	
+	<!-- 회원 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from enter where enter_idx = #{enter_idx}
+	</delete>
+	
+	<!-- 권한 수락 -->
+	<update id="acceptPermission" parameterType="int">
+		update enter set
+			enter_auth = 1
+		where enter_idx = #{enter_idx}
+	</update>
+	
 </mapper>

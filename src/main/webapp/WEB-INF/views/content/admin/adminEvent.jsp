@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <ul class="sub-tab">
@@ -34,7 +34,8 @@
 							<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 						</c:when>
 						<c:otherwise>
-							<img src="${IMG_URL}${evo.event_file}_${evo.attach.filename}" alt="${evo.attach.filename}"/>
+							<c:set var="fileId" value="${fn:contains(evo.event_file, ',') ? fn:substring(evo.event_file, 0, fn:indexOf(evo.event_file, ',')) : evo.event_file}" />
+							<img src="${IMG_URL}${fileId}_${evo.attach.filename}" alt="${evo.attach.filename}"/>
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -44,7 +45,7 @@
 				<div>${evo.event_bstartdate}~${evo.event_bstopdate}</div>
 				<div>
 					<div class="btn-box">
-						<button type="button" id="eventUnhideBtn" class="approve-btn">숨기기 해제</button>
+						<button type="button" id="eventReportUnhideBtn" class="approve-btn">숨기기 해제</button>
 					</div>
 				</div>
 			</li>
@@ -80,14 +81,19 @@
 							<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 						</c:when>
 						<c:otherwise>
-							<img src="${IMG_URL}${ervo.event.event_file}_${ervo.attach.filename}" alt="${ervo.attach.filename}"/>
+							<c:set var="fileId" value="${fn:contains(ervo.event.event_file, ',') ? fn:substring(ervo.event.event_file, 0, fn:indexOf(ervo.event.event_file, ',')) : ervo.event.event_file}" />
+							<img src="${IMG_URL}${fileId}_${ervo.attach.filename}" alt="${ervo.attach.filename}"/>
 						</c:otherwise>
 					</c:choose>
 				</div>
-				<div>${ervo.event.event_title}</div>
+				<div>
+					<a href="${ervo.event.event_idx}" class="detail-btn">${ervo.event.event_title}(${ervo.declaration_count})</a>
+				</div>
 				<div>${ervo.event.event_category}</div>
 				<div>${ervo.event.event_location_detail}</div>
 				<div>${ervo.event.event_bstartdate}~${ervo.event.event_bstopdate}</div>
+				<div>${ervo.regdate}</div>
+				<div>${ervo.declaration_count}</div>
 				<div>
 					<div class="btn-box">
 						<button type="button" id="eventReportHideBtn" class="approve-btn">숨기기</button>
@@ -107,7 +113,7 @@
 				</ul>
 				<ul>
 					<c:forEach var="erdvo" items="${eventReportDetailList}">
-					<li data-review-idx="${erdvo.event_idx}">
+					<li data-event-idx="${erdvo.event_idx}">
 						<div>${erdvo.member.member_name}</div>
 						<div>${erdvo.declaration_category}</div>
 						<div>${erdvo.declaration_content}</div>

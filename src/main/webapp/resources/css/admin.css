@@ -51,19 +51,19 @@
 .sub-tab-content.member-hide ul > li > div:nth-child(3){width:120px;} /* 리뷰 작성자 */
 .sub-tab-content.member-hide ul > li > div:nth-child(4){width:200px;} /* 리뷰사진 */
 .sub-tab-content.member-hide ul > li > div:nth-child(5){width:200px;} /* 리뷰명 */
-.sub-tab-content.member-hide ul > li > div:nth-child(6){width:80px;}  /* 리뷰 평점 */
-.sub-tab-content.member-hide ul > li > div:nth-child(7){width:calc(100% - 720px);} /* 버튼 영역 */
+.sub-tab-content.member-hide ul > li > div:nth-child(6){width:100px;}  /* 리뷰 평점 */
+.sub-tab-content.member-hide ul > li > div:nth-child(7){width:calc(100% - 740px);} /* 버튼 영역 */
 
 /* 리뷰 신고용 스타일 */
 .sub-tab-content.member-report ul > li > div:nth-child(1){width:80px;}  /* idx */
-.sub-tab-content.member-report ul > li > div:nth-child(2){width:40px;}  /* NO */
+.sub-tab-content.member-report ul > li > div:nth-child(2){width:150px;}  /* NO */
 .sub-tab-content.member-report ul > li > div:nth-child(3){width:120px;} /* 리뷰 작성자 */
 .sub-tab-content.member-report ul > li > div:nth-child(4){width:180px;} /* 리뷰사진 */
 .sub-tab-content.member-report ul > li > div:nth-child(5){width:180px;} /* 리뷰명 */
-.sub-tab-content.member-report ul > li > div:nth-child(6){width:80px;}  /* 리뷰 평점 */
+.sub-tab-content.member-report ul > li > div:nth-child(6){width:100px;}  /* 리뷰 평점 */
 .sub-tab-content.member-report ul > li > div:nth-child(7){width:125px;} /* 신고된 날짜 */
 .sub-tab-content.member-report ul > li > div:nth-child(8){width:100px;} /* 누적신고 수 */
-.sub-tab-content.member-report ul > li > div:nth-child(9){width:calc(100% - 905px);} /* 버튼 영역 */
+.sub-tab-content.member-report ul > li > div:nth-child(9){width:calc(100% - 1035px);} /* 버튼 영역 */
 
 /* 숨긴 점포용 스타일 */
 .sub-tab-content.store-hide ul > li > div:nth-child(1){width:40px;}  /* idx */
@@ -72,8 +72,8 @@
 .sub-tab-content.store-hide ul > li > div:nth-child(4){width:150px;} /* 점포명 */
 .sub-tab-content.store-hide ul > li > div:nth-child(5){width:180px;} /* 점포연락처 */
 .sub-tab-content.store-hide ul > li > div:nth-child(6){width:200px;}  /* 점포 주소 */
-.sub-tab-content.store-hide ul > li > div:nth-child(7){width:120px;} /* 사업자등록번호 */
-.sub-tab-content.store-hide ul > li > div:nth-child(8){width:calc(100% - 930px);} /* 버튼 영역 */
+.sub-tab-content.store-hide ul > li > div:nth-child(7){width:130px;} /* 사업자등록번호 */
+.sub-tab-content.store-hide ul > li > div:nth-child(8){width:calc(100% - 940px);} /* 버튼 영역 */
 
 /* 점주 요청용 스타일 */
 .sub-tab-content.store-request ul > li > div:nth-child(1){width:40px;}   /* idx */
@@ -83,9 +83,9 @@
 .sub-tab-content.store-request ul > li > div:nth-child(5){width:150px;}  /* 점포명 */
 .sub-tab-content.store-request ul > li > div:nth-child(6){width:180px;}  /* 점포 연락처 */
 .sub-tab-content.store-request ul > li > div:nth-child(7){width:200px;}  /* 점포 주소 */
-.sub-tab-content.store-request ul > li > div:nth-child(8){width:120px;}  /* 사업자등록번호 */
+.sub-tab-content.store-request ul > li > div:nth-child(8){width:130px;}  /* 사업자등록번호 */
 .sub-tab-content.store-request ul > li > div:nth-child(9){width:125px;} /* 신청일시 */
-.sub-tab-content.store-request ul > li > div:nth-child(10){width:calc(100% - 1135px);} /* 버튼 영역 */
+.sub-tab-content.store-request ul > li > div:nth-child(10){width:calc(100% - 1145px);} /* 버튼 영역 */
 
 /* 점포 신고용 스타일 */
 .sub-tab-content.store-report ul > li > div:nth-child(1){width:80px;}  /* idx */
@@ -95,8 +95,42 @@
 .sub-tab-content.store-report ul > li > div:nth-child(5){width:160px;} /* 점포 연락처 */
 .sub-tab-content.store-report ul > li > div:nth-child(6){width:250px;}  /* 점포 주소 */
 .sub-tab-content.store-report ul > li > div:nth-child(7){width:125px;} /* 신고된날짜 */
-.sub-tab-content.store-report ul > li > div:nth-child(8){width:100px;} /* 누적신고 수 */
-.sub-tab-content.store-report ul > li > div:nth-child(9){width:calc(100% - 1295px);} /* 버튼 영역 */
+.sub-tab-content.store-report ul > li > div:nth-child(8){width:110px;} /* 누적신고 수 */
+.sub-tab-content.store-report ul > li > div:nth-child(9){width:calc(100% - 1305px);} /* 버튼 영역 */
+
+/* 기업 등록용 스타일 */
+.sub-tab-content.enter-request ul > li > div:nth-child(1){width:40px;}   /* idx */
+.sub-tab-content.enter-request ul > li > div:nth-child(2){width:40px;}   /* NO */
+.sub-tab-content.enter-request ul > li > div:nth-child(3){width:200px;}  /* 신청기업 */
+.sub-tab-content.enter-request ul > li > div:nth-child(4){width:180px;}  /* 기업 연락처 */
+.sub-tab-content.enter-request ul > li > div:nth-child(5){width:250px;}  /* 기업 주소 */
+.sub-tab-content.enter-request ul > li > div:nth-child(6){width:120px;}  /* 사업자등록번호 */
+.sub-tab-content.enter-request ul > li > div:nth-child(7){width:125px;}  /* 신청일시 */
+.sub-tab-content.enter-request ul > li > div:nth-child(8){width:calc(100% - 955px);} /* 버튼 영역 */
+
+/* 숨긴 이벤트용 스타일 */
+.sub-tab-content.event-hide ul > li > div:nth-child(1){width:40px;}  /* idx */
+.sub-tab-content.event-hide ul > li > div:nth-child(2){width:40px;}  /* NO */
+.sub-tab-content.event-hide ul > li > div:nth-child(3){width:120px;} /* 기업명 */
+.sub-tab-content.event-hide ul > li > div:nth-child(4){width:200px;} /* 이벤트사진 */
+.sub-tab-content.event-hide ul > li > div:nth-child(5){width:200px;} /* 이벤트명 */
+.sub-tab-content.event-hide ul > li > div:nth-child(6){width:130px;} /* 이벤트 카테고리 */
+.sub-tab-content.event-hide ul > li > div:nth-child(7){width:200px;} /* 이벤트 장소 */
+.sub-tab-content.event-hide ul > li > div:nth-child(8){width:200px;} /* 이벤트 기간 */
+.sub-tab-content.event-hide ul > li > div:nth-child(9){width:calc(100% - 1130px);} /* 버튼 영역 */
+
+/* 이벤트 신고용 스타일 */
+.sub-tab-content.event-report ul > li > div:nth-child(1){width:100px;}  /* idx */
+.sub-tab-content.event-report ul > li > div:nth-child(2){width:100px;}  /* NO */
+.sub-tab-content.event-report ul > li > div:nth-child(3){width:120px;} /* 기업명 */
+.sub-tab-content.event-report ul > li > div:nth-child(4){width:150px;} /* 이벤트사진 */
+.sub-tab-content.event-report ul > li > div:nth-child(5){width:180px;} /* 이벤트명 */
+.sub-tab-content.event-report ul > li > div:nth-child(6){width:130px;} /* 이벤트 카테고리 */
+.sub-tab-content.event-report ul > li > div:nth-child(7){width:180px;} /* 이벤트 장소 */
+.sub-tab-content.event-report ul > li > div:nth-child(8){width:160px;} /* 이벤트 기간 */
+.sub-tab-content.event-report ul > li > div:nth-child(9){width:125px;} /* 신고된 날짜 */
+.sub-tab-content.event-report ul > li > div:nth-child(10){width:100px;} /* 누적신고 수 */
+.sub-tab-content.event-report ul > li > div:nth-child(11){width:calc(100% - 1345px);} /* 버튼 영역 */
 
 
 /* 신고 상세 내용 스타일 */

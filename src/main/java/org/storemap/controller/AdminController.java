@@ -99,10 +99,10 @@ public class AdminController {
 	
 	// 리뷰 숨기기
 	@PostMapping("/reviewReportHide")
-	public String reviewReportHide(int review_idx, int member_idx) {
+	public String reviewReportHide(int review_idx) {
 		log.info("reviewReportHide..."+review_idx);
 		reviewService.hide(review_idx);
-		reviewDeclService.remove(review_idx, member_idx);
+		reviewDeclService.removeAll(review_idx);
 		return "redirect:/admin/adminMain";
 	}
 	// 리뷰 숨기기 해제
@@ -178,24 +178,24 @@ public class AdminController {
 	public String enterApproval(int enter_idx) {
 		log.info("enterApproval..."+enter_idx);
 		enterReqService.modify(enter_idx);
-		//memberService.approvalOwner(enter_idx);
+		enterService.acceptPermission(enter_idx);
 		return "redirect:/admin/adminMain";
 	}
 	// 기업 승인 취소
 	@PostMapping("/enterDisallow")
 	public String enterDisallow(int enter_idx) {
 		log.info("enterDisallow..."+enter_idx);
-		//enterService.removeStore(enter_idx);
+		enterService.remove(enter_idx);
 		enterReqService.remove(enter_idx);
 		return "redirect:/admin/adminMain";
 	}
 	
 	// 이벤트 숨기기
 	@PostMapping("/eventReportHide")
-	public String eventReportHide(int event_idx, int enter_idx) {
+	public String eventReportHide(int event_idx) {
 		log.info("eventReportHide..."+event_idx);
 		eventService.hide(event_idx);
-		eventDeclService.remove(event_idx, enter_idx);
+		eventDeclService.removeAll(event_idx);
 		return "redirect:/admin/adminMain";
 	}
 	// 이벤트 숨기기 해제
@@ -207,9 +207,9 @@ public class AdminController {
 	}
 	// 이벤트 신고 취소
 	@PostMapping("/eventReportRemove")
-	public String eventReportRemove(int event_idx, int enter_idx) {
-		log.info("eventReportRemove..."+event_idx+", "+enter_idx);
-		eventDeclService.remove(event_idx, enter_idx);
+	public String eventReportRemove(int event_idx, int member_idx) {
+		log.info("eventReportRemove..."+event_idx+", "+member_idx);
+		eventDeclService.remove(event_idx, member_idx);
 		return "redirect:/admin/adminMain";
 	}
 	// 이벤트 신고 전체 취소

@@ -40,7 +40,7 @@
 				<div>${rvo.review_star}</div>
 				<div>
 					<div class="btn-box">
-						<button type="button" id="reviewUnhideBtn" class="approve-btn">숨기기 해제</button>
+						<button type="button" id="reviewReportUnhideBtn" class="approve-btn">숨기기 해제</button>
 					</div>
 				</div>
 			</li>
@@ -82,7 +82,7 @@
 					<a href="${rrvo.review.review_idx}" class="detail-btn">${rrvo.review.review_title}(${rrvo.declaration_count})</a>
 				</div>
 				<div>${rrvo.review.review_star}</div>
-				<div>${rrvo.review.review_regdate}</div>
+				<div>${rrvo.regdate}</div>
 				<div>${rrvo.declaration_count}</div>
 				<div>
 					<div class="btn-box">

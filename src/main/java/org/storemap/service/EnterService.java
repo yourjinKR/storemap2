@@ -19,4 +19,10 @@ public interface EnterService {
 	// 회원 정보
 	public EnterVO get(int enter_idx);
 	
+	// 회원 삭제
+	public int remove(int enter_idx);
+	
+	// 권한 수락
+	public int acceptPermission(int enter_idx);
+	
 }

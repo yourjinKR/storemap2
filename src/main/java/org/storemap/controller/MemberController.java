@@ -32,6 +32,7 @@ import org.storemap.domain.StoreVO;
 import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.MemberMapper;
 import org.storemap.service.CommentLikeServiceImple;
+import org.storemap.service.EnterRequestServiceImple;
 import org.storemap.service.EnterServiceImple;
 import org.storemap.service.EventLikeServiceImple;
 import org.storemap.service.MemberServiceImple;
@@ -52,6 +53,8 @@ public class MemberController {
 	private EnterServiceImple enterService;
 	@Autowired
 	private StoreServiceImple storeService;
+	@Autowired
+	private EnterRequestServiceImple enterRequestService;
 	@Autowired
 	private StoreLikeServiceImple storeLikeService;
 	@Autowired
@@ -126,37 +129,41 @@ public class MemberController {
 		// enter 테이블 검증
 		EnterVO enter = enterService.eLogin(id, pw);
 		if(enter != null) {
-			enter.setEnter_pw(null);
-			// NULL 체크를 추가하여 enter_image가 NULL인 경우 처리
-			if(enter.getEnter_image() != null) {
-				AttachFileVO aevo = attachMapper.getAttach(enter.getEnter_image());
-				// aevo가 null이 아닌 경우에만 파일 이름 설정
-				if(aevo != null) {
-					session.setAttribute("userFilename", aevo.getFilename());
+			if(enter.getEnter_auth() == 0) {
+				//승인받고 enter_auth=1이어야 로그인가능
+			}else {
+				enter.setEnter_pw(null);
+				// NULL 체크를 추가하여 enter_image가 NULL인 경우 처리
+				if(enter.getEnter_image() != null) {
+					AttachFileVO aevo = attachMapper.getAttach(enter.getEnter_image());
+					// aevo가 null이 아닌 경우에만 파일 이름 설정
+					if(aevo != null) {
+						session.setAttribute("userFilename", aevo.getFilename());
+					} else {
+						// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
+						session.setAttribute("userFilename", "member1.jpg");
+					}
 				} else {
-					// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
+					// enter_image가 NULL인 경우 기본 이미지 설정
+					enter.setEnter_image("enter1.jpg"); // 기본 이미지 값 설정
 					session.setAttribute("userFilename", "member1.jpg");
 				}
-			} else {
-				// enter_image가 NULL인 경우 기본 이미지 설정
-				enter.setEnter_image("enter1.jpg"); // 기본 이미지 값 설정
-				session.setAttribute("userFilename", "member1.jpg");
+				session.setAttribute("loginUserIdx", enter.getEnter_idx());
+				session.setAttribute("loginUser", enter.getEnter_id());
+				session.setAttribute("userName", enter.getEnter_name());
+				session.setAttribute("userRnum", enter.getEnter_rnum());
+				session.setAttribute("userLoc", enter.getEnter_loc());
+				session.setAttribute("userNum", enter.getEnter_num());
+				session.setAttribute("userImage", enter.getEnter_image());
+				session.setAttribute("userType", "enter");
+				
+				String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+				if(redirectUrl != null && redirectUrl.startsWith("/")) {
+					session.removeAttribute("redirectAfterLogin");
+					return "redirect:" + redirectUrl;
+				}
+				return "redirect:/";
 			}
-			session.setAttribute("loginUserIdx", enter.getEnter_idx());
-			session.setAttribute("loginUser", enter.getEnter_id());
-			session.setAttribute("userName", enter.getEnter_name());
-			session.setAttribute("userRnum", enter.getEnter_rnum());
-			session.setAttribute("userLoc", enter.getEnter_loc());
-			session.setAttribute("userNum", enter.getEnter_num());
-			session.setAttribute("userImage", enter.getEnter_image());
-			session.setAttribute("userType", "enter");
-			
-			String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
-			if(redirectUrl != null && redirectUrl.startsWith("/")) {
-				session.removeAttribute("redirectAfterLogin");
-				return "redirect:" + redirectUrl;
-			}
-			return "redirect:/";
 		}
 		model.addAttribute("msg","아이디 또는 비밀번호가 틀렸습니다.");
 		model.addAttribute("page","login");
@@ -311,6 +318,7 @@ public class MemberController {
 	public Map<String, Object> registerEnter(@RequestBody EnterVO enter) {
 		Map<String, Object> result = new HashMap<>();
 		int res = enterService.insertEnter(enter);
+		enterRequestService.register(enter.getEnter_idx());
 		result.put("result", res);
 		return result;
 	}

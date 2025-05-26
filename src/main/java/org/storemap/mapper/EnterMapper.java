@@ -22,4 +22,10 @@ public interface EnterMapper {
 	// 기업 정보
 	public EnterVO read(int enter_idx);
 	
+	// 회원 삭제
+	public int delete(int enter_idx);
+	
+	// 권한 수락
+	public int acceptPermission(int enter_idx);
+	
 }

@@ -69,4 +69,16 @@ public class EnterServiceImple implements EnterService{
 	public EnterVO get(int enter_idx) {
 		return enterMapper.read(enter_idx);
 	}
+	
+	// 회원 삭제
+	@Override
+	public int remove(int enter_idx) {
+		return enterMapper.delete(enter_idx);
+	}
+	
+	// 권한 수락
+	@Override
+	public int acceptPermission(int enter_idx) {
+		return enterMapper.acceptPermission(enter_idx);
+	}
 }
