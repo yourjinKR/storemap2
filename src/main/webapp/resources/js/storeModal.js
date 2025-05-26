@@ -411,7 +411,7 @@ function viewDetailModalPage(li, type) {
                     store_id = input.value;
                 }
                 else if (type === "event") {
-                    initializeEvents();
+                    // initializeEvents();
                     event_id = input.value;
                 }
                 openModal();

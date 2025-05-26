@@ -13,7 +13,7 @@
 				<!-- 검색창 -->
 				<form class="form" id="map">
 					<input type="text" id="keyword" autocomplete="off" placeholder="장소 및 이벤트 검색">
-					<button class="mapBtn" id="search">검색</button>
+					<!-- <button class="mapBtn" id="search">검색</button> -->
 					<div class="autocomplete">
 						<ul>
 						</ul>		
