@@ -153,6 +153,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				goRegister();
 			}else if(e.currentTarget.getAttribute("id")=="goEventList"){
 				goEventList();
+			}else if(e.currentTarget.getAttribute("id")=="modifyBtn"){
+				modifyBtn();
 			}
 		})
 	});
@@ -343,108 +345,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
           slidesPerView: 1,
         });
       
-      const deletedUuids = [];
-      const deletedUuidsInput = document.getElementById('deletedUuidsInput');
-      const existingImages = document.getElementById('existingImages');
-      const newImageInput = document.getElementById('newImageInput');
-      const newImagesPreview = document.getElementById('newImagesPreview');
-      const form = document.querySelector('form');
-
-      // 기존 이미지 삭제 처리
-      if (existingImages) {
-        existingImages.addEventListener('click', function (e) {
-          if (e.target.classList.contains('deleteExistingImageBtn')) {
-            const imageBox = e.target.closest('.imageBox');
-            const uuid = imageBox.dataset.uuid;
-
-            if (uuid) {
-              deletedUuids.push(uuid);
-            }
-
-            imageBox.remove();
-          }
-        });
-      }
-
-      // 새 이미지 선택 시 미리보기
-      if (newImageInput) {
-        newImageInput.addEventListener('change', function (event) {
-          const files = Array.from(event.target.files);
-          const existingCount = document.querySelectorAll('#existingImages .imageBox').length;
-          const previewCount = newImagesPreview.querySelectorAll('.imageBox').length;
-          const totalImages = existingCount + previewCount + files.length;
-
-          if (totalImages > 4) {
-            alert("이미지는 최대 4장까지만 업로드할 수 있습니다.");
-            newImageInput.value = "";
-            return;
-          }
-
-          const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-
-          files.forEach(file => {
-            if (!validImageTypes.includes(file.type)) {
-              alert(file.name + " 은 지원하지 않는 이미지 형식입니다.");
-              return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              const imageBox = document.createElement('div');
-              imageBox.className = 'imageBox';
-              imageBox.style.position = 'relative';
-
-              const img = document.createElement('img');
-              img.src = e.target.result;
-              img.style.width = '100px';
-              img.style.height = 'auto';
-              img.style.objectFit = 'cover';
-              img.style.border = '1px solid #ccc';
-              img.style.borderRadius = '6px';
-              img.style.display = 'block';
-
-              const deleteBtn = document.createElement('button');
-              deleteBtn.textContent = '×';
-              deleteBtn.type = 'button';
-              deleteBtn.className = 'deleteNewImageBtn';
-              deleteBtn.style.position = 'absolute';
-              deleteBtn.style.top = '2px';
-              deleteBtn.style.right = '2px';
-              deleteBtn.style.background = 'rgba(0,0,0,0.6)';
-              deleteBtn.style.color = '#fff';
-              deleteBtn.style.border = 'none';
-              deleteBtn.style.borderRadius = '50%';
-              deleteBtn.style.width = '20px';
-              deleteBtn.style.height = '20px';
-              deleteBtn.style.cursor = 'pointer';
-
-              deleteBtn.addEventListener('click', () => {
-                imageBox.remove();
-
-                // 새 이미지 중 하나라도 삭제되면 input 자체를 초기화 (중복 방지)
-                if (newImagesPreview.children.length === 0) {
-                  newImageInput.value = "";
-                }
-              });
-
-              imageBox.appendChild(img);
-              imageBox.appendChild(deleteBtn);
-              newImagesPreview.appendChild(imageBox);
-            };
-
-            reader.readAsDataURL(file);
-          });
-        });
-      }
-
-      // 폼 제출 시 삭제 UUID를 hidden input에 반영
-      if (form) {
-        form.addEventListener('submit', function (e) {
-          deletedUuidsInput.value = deletedUuids.join(',');
-        });
-      }
-
-      
       // 이벤트 설명 더보기     
       let moreBtn = document.querySelector(".more-content");
       if(moreBtn != null){
@@ -481,7 +381,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			})
 		}
 });
-
 
 function generateDays() {
 	  const container = document.getElementById("eventDaysContainer");
@@ -669,4 +568,11 @@ function logEventDayList() {
 	f.submit();
 }
 
+function modifyBtn(){
+	  const deletedUuidsInput = document.getElementById('deletedUuidsInput');
+	  deletedUuidsInput.value = deletedUuids.join(',');
+	  console.log("삭제 대상 UUIDs:", deletedUuidsInput.value);
+	
+	f.submit();
+}
 

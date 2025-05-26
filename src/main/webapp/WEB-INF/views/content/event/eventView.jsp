@@ -177,57 +177,129 @@
 
 <style>
 
-.readonly-form{padding-bottom:150px;}
-.readonly-form h2 {
-	margin-bottom: 20px;
+.event-register-wrapper {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #5D4037; /* 진한 갈색 느낌 */
+  background-color: #FFFDE7; /* 아주 연한 개나리 옐로우 */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(255, 235, 59, 0.3); /* 부드러운 노란 그림자 */
 }
 
-.event-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 20px;
+/* 헤더 스타일 */
+.event-register-wrapper .page-header {
+  margin-bottom: 30px;
+  border-bottom: 3px solid #FFEB3B; /* 개나리색 굵은 선 */
+  color: #FBC02D; /* 선명한 개나리색 */
+  font-weight: 700;
+  font-size: 1.8rem;
 }
 
-.event-table th, .event-table td {
-	padding: 12px;
-	border: 1px solid #ddd;
-	vertical-align: top;
-	text-align: left;
+/* 테이블 */
+.event-register-wrapper table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #FFFDE7;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(255, 235, 59, 0.2);
 }
 
-.event-table th {
-	background-color: #f2f2f2;
-	width: 150px;
+.event-register-wrapper th,
+.event-register-wrapper td {
+  border: 1px solid #FFEB3B;
+  padding: 12px 15px;
 }
 
-.photo-preview {
-	display: flex;
-	gap: 10px;
-	margin-top: 10px;
+.event-register-wrapper th {
+  background-color: #FFF176; /* 연한 개나리 */
+  color: #5D4037;
+  width: 160px;
+  text-align: left;
+  font-weight: 600;
 }
 
-.photo-preview img {
-	width: 100px;
-	height: 100px;
-	object-fit: cover;
-	border-radius: 6px;
-	border: 1px solid #ccc;
+.event-register-wrapper td {
+  background-color: #FFFDE7;
+  color: #5D4037;
+  font-size: 0.95rem;
 }
 
-.back-button {
-	margin-top: 20px;
-	text-align: right;
+/* 입력 폼 요소 */
+.event-register-wrapper input[type="text"],
+.event-register-wrapper select,
+.event-register-wrapper input[type="date"],
+.event-register-wrapper textarea,
+.event-register-wrapper input[type="file"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid #FFEB3B;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #5D4037;
+  background-color: #FFFDE7;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-#participationSection {	
-	display:flex;
-	justify-content:flex-end;
-	align-items: center;
-	gap:15px;
-	margin-top:30px;
+.event-register-wrapper input[type="text"]:focus,
+.event-register-wrapper select:focus,
+.event-register-wrapper input[type="date"]:focus,
+.event-register-wrapper textarea:focus,
+.event-register-wrapper input[type="file"]:focus {
+  outline: none;
+  border-color: #FBC02D;
+  box-shadow: 0 0 5px #FBC02D;
 }
 
-#result {
-	margin-bottom: 10px;
+/* textarea 고정 크기 */
+.event-register-wrapper textarea {
+  resize: none;
+}
+
+/* 이미지 미리보기 컨테이너 */
+.event-register-wrapper #previewContainer {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+/* 버튼 영역 */
+.event-register-wrapper .panel-body-btns {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+/* 버튼 기본 스타일 */
+.event-register-wrapper .eventBtn {
+  background-color: #FFEB3B; /* 개나리색 */
+  border: none;
+  color: #5D4037;
+  font-weight: 700;
+  padding: 12px 22px;
+  cursor: pointer;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(251, 192, 45, 0.5);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  user-select: none;
+  font-size: 1rem;
+}
+
+/* 버튼 호버 시 */
+.event-register-wrapper .eventBtn:hover {
+  background-color: #FBC02D;
+  color: #3E2723;
+  box-shadow: 0 4px 10px rgba(251, 192, 45, 0.7);
+}
+
+/* 작은 회색 텍스트 */
+.event-register-wrapper small {
+  color: #A1887F;
+  font-size: 0.85rem;
+  font-style: italic;
 }
 </style>

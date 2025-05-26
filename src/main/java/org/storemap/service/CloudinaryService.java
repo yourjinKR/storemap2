@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EventVO;
 import org.storemap.mapper.AttachFileMapper;
+import org.storemap.mapper.EventMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +30,12 @@ public class CloudinaryService {
 	private AttachFileMapper mapper;
     
     @Autowired
+    private EventMapper eventMapper;
+    
+    @Autowired
     private EventService eventService;
+    
+
     
     @Autowired
     public CloudinaryService(Cloudinary cloudinary) {
@@ -119,7 +125,9 @@ public class CloudinaryService {
         // 2. 기존 이벤트 정보 가져오기
         EventVO event = eventService.getEventByIdx(event_idx);
         List<String> currentUuids = new ArrayList<>();
-        if (event.getEvent_file() != null && !(event.getEvent_file().trim().length() > 0)) {
+
+        // 수정된 조건 : event_file이 null이 아니고, 빈 문자열이 아닐 때만 처리
+        if (event.getEvent_file() != null && event.getEvent_file().trim().length() > 0) {
             currentUuids.addAll(Arrays.asList(event.getEvent_file().split(",")));
         }
 
@@ -129,19 +137,52 @@ public class CloudinaryService {
         }
 
         // 4. 새 파일 업로드 및 UUID 추가
-        for (MultipartFile file : newFiles) {
-            if (!file.isEmpty()) {
-                String newUuid = uploadFile(file);
-                currentUuids.add(newUuid);
+        if (newFiles != null) {
+            for (MultipartFile file : newFiles) {
+                if (!file.isEmpty()) {
+                    String newUuid = uploadFile(file);
+                    currentUuids.add(newUuid);
+                }
             }
         }
 
-        // 5. event_file 컬럼 업데이트
+        // 5. event_file 컬럼 업데이트용 문자열 생성
         String joinedUuids = String.join(",", currentUuids);
         event.setEvent_file(joinedUuids);
 
-        // 6. DB 업데이트 (event_file 컬럼만)
-        eventService.modifyEventFileOnly(event);
+        // 6. 디버깅용 로그 출력
+        System.out.println("최종 UUID: " + joinedUuids);
+        System.out.println("수정할 idx: " + event.getEvent_idx());
+
+        // 7. DB 업데이트 (event_file 컬럼만)
+        int updated = eventMapper.updateEventFileOnly(event);
+        System.out.println("수정된 행 수: " + updated);
+    }
+    
+    public List<AttachFileVO> getFilesByEventIdx(int event_idx) {
+        EventVO event = eventService.getEventByIdx(event_idx);
+        List<String> uuidList = new ArrayList<>();
+
+        if (event.getEvent_file() != null && !event.getEvent_file().trim().isEmpty()) {
+            uuidList = Arrays.asList(event.getEvent_file().split(","));
+        }
+
+        return uuidList.isEmpty() ? new ArrayList<>() : mapper.getFilesByUuidList(uuidList);
+    }
+
+    public List<String> getExternalUrlsByEventIdx(int event_idx) {
+        EventVO event = eventService.getEventByIdx(event_idx);
+        String eventFile = event.getEvent_file();
+
+        if (eventFile == null || eventFile.isEmpty()) return new ArrayList<>();
+
+        List<String> urls = new ArrayList<>();
+        for (String uuid : eventFile.split(",")) {
+            if (uuid.startsWith("http")) { // 외부 링크
+                urls.add(uuid);
+            }
+        }
+        return urls;
     }
 
 }

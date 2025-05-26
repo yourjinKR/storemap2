@@ -366,29 +366,45 @@ public class EventController {
 	} 
 	
 	@GetMapping("/eventModify")
-	public String showEventModifyPage(@RequestParam("event_idx") int eventIdx,
-										 Model model) {
-	    EventVO evo = eventService.getEventByIdx(eventIdx);
+	public String showModifyForm(@RequestParam("event_idx") int event_idx, Model model) {
+	    // 1. 기본 이벤트 정보
+	    EventVO evo = eventService.getEventByIdx(event_idx);
 	    model.addAttribute("evo", evo);
-	    return "index";
+
+	    // 2. 첨부된 이미지들 (Cloudinary)
+	    List<AttachFileVO> fileList = cloudinaryService.getFilesByEventIdx(event_idx);
+	    model.addAttribute("fileList", fileList);
+
+	    // 3. 외부 URL이 있는 경우 (선택사항)
+	    List<String> externalUrls = evo.getExternalUrls(); // getter가 있다면
+	    model.addAttribute("externalUrls", externalUrls);
+
+	    // 4. 일정 정보
+	    List<EventDayVO> eventDays = eventDayService.getEventDaysByEventId(event_idx);
+	    model.addAttribute("eventDays", eventDays);
+
+	    return "index"; // JSP 경로
 	}
 
 	@PostMapping("/eventModify")
 	public String modifyEvent(
 	    EventVO evo,
-	    @RequestParam(value = "deleteUuids", required = false) List<String> deleteUuids,
+	    @RequestParam(value = "deleteUuids", required = false) String deleteUuidsRaw,
 	    @RequestParam(value = "eventImages", required = false) List<MultipartFile> newFiles) {
 
-	    // 1. 기본 텍스트 필드 수정
+	    List<String> deleteUuids = new ArrayList<>();
+	    if (deleteUuidsRaw != null && !deleteUuidsRaw.trim().isEmpty()) {
+	        deleteUuids = Arrays.asList(deleteUuidsRaw.split(","));
+	    }
+
+	    System.out.println("deleteUuids: " + deleteUuids);
+
 	    eventService.modifyEventBasicInfo(evo);
 
-	    // 2. 이미지 파일 관련 수정 처리
-	    if ((deleteUuids != null && !deleteUuids.isEmpty()) || 
-	        (newFiles != null && !newFiles.isEmpty() && newFiles.get(0).getSize() > 0)) {
+	    if ((!deleteUuids.isEmpty()) || (newFiles != null && !newFiles.isEmpty() && newFiles.get(0).getSize() > 0)) {
 	        cloudinaryService.updateEventImagesWithDeleteAndNewFiles(evo.getEvent_idx(), deleteUuids, newFiles);
 	    }
 
-	    // 3. 수정 완료 후 상세 페이지로 리다이렉트
 	    return "redirect:/event/eventView?event_idx=" + evo.getEvent_idx();
 	}
 	
