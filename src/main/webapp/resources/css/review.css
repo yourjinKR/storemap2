@@ -1,9 +1,11 @@
 @charset "UTF-8";
 
 .review {
-	font-family: sans-serif;
 	text-align: center;
-	padding: 30px;
+	padding: 50px 0 50px;
+	background:var(--point-color);
+	height:100%;
+	min-height:100vh;
 }
 
 h1 {
@@ -12,24 +14,26 @@ h1 {
 }
 
 form {
-	max-width: 600px;
+	max-width: 1000px;
 	margin: 0 auto;
 	text-align: left;
+	border:1px solid var(--font-color);
+	padding:30px;
+	border-radius:10px;
+	background:var(--inner-color);
 }
 
 label {
 	display: block;
-	margin-top: 15px;
-	margin-bottom: 5px;
 }
 
 input[type="text"], select, textarea, input[type="file"] {
 	width: 100%;
 	padding: 10px;
 	box-sizing: border-box;
-	background-color: #ddd;
-	border: none;
+	border: 1px solid var(--font-color);
 	border-radius: 4px;
+	height:50px;
 }
 
 textarea {
@@ -41,12 +45,11 @@ button {
 	display: block;
 	width: 100%;
 	padding: 15px;
-	margin-top: 30px;
 	background-color: #feda3e;
 	color: black;
 	font-size: 18px;
 	font-weight: bold;
-	border: none;
+	border: 1px solid var(--font-color);
 	border-radius: 6px;
 	cursor: pointer;
 }
@@ -59,7 +62,6 @@ button:hover {
 	display:none;
 	width: 100px;
 	height: auto;
-	margin-left: 10px;
 	border: 1px solid #ccc;
 }
 
@@ -70,6 +72,25 @@ button:hover {
 .saving-box {background: white;padding: 30px 50px;border-radius: 10px;box-shadow: 0 4px 10px rgba(0,0,0,0.2);display: flex;flex-direction: column;align-items: center;}
 .spinner {border: 6px solid #f3f3f3;border-top: 6px solid #3498db;border-radius: 50%;width: 40px;height: 40px;animation: spin 1s linear infinite;margin-bottom: 15px;}
 .saving-text {font-size: 18px;font-weight: bold;color: #333;}
+
+h3{font-size: 36px;font-weight: bold;text-align: center;padding: 30px 0 50px;color:var(--font-color)}
+.right-nav{display:none}
+.wrap{width:100%;min-height:100vh; height:100%}
+.header{display:none;}
+body{min-height:100vh; height:100%}
+
+form table{width:100%;}
+form table th{width: 150px;font-weight: bold;font-size: 24px;color: var(--font-color);text-align: left;vertical-align: middle}
+form table th,form table td{padding:10px 0}
+#store-loc{border:1px solid var(--font-color);border-radius:5px; }
+.panel-body-btns{display:flex;flex-wrap:wrap;gap:15px;}
+.panel-body-btns button{width:calc(33.3333% - 10px);}
+.panel-body-btns button:nth-child(n + 4){width:calc(50% - 8px)}
+.v-t{vertical-align:top !important;}
+.v-t label{margin-top:10px;}
+
+.back-btn{position: fixed;top:0;left:0;width:75px;height:75px;background:none;color:var(--font-color);border:none;display:flex;justify-content: center;align-items: center}
+.back-btn span{font-size:36px;}
 
 @keyframes spin {
 	0% { transform: rotate(0deg); }
