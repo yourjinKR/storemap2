@@ -375,7 +375,27 @@ public class EventServiceImple implements EventService{
 	@Override
 	public List<EventVO> getHiddenList() {
 		log.info("getHiddenList...");
-		return mapper.getEventHiddenList();
+		List<EventVO> list = mapper.getEventHiddenList();
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] file = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+                
+                AttachFileVO attach = new AttachFileVO();
+                int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+                if(idxof == -1) {
+                    attach = attachMapper.getAttach(file[0]);
+                }else {
+                    attach.setFilename(file[0]);
+                }
+                
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
+		return list;
 	}
 	// 이벤트 숨기기
 	@Override

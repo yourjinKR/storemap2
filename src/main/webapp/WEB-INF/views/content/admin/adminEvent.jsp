@@ -30,12 +30,18 @@
 				<div>${evo.enter.enter_name}</div>
 				<div>
 					<c:choose>
-						<c:when test="${evo.event_file eq null}">
-							<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+						<c:when test="${(evo.attachFile ne null) and (fn:length(evo.attachFile) > 0)}">
+							<c:choose>
+								<c:when test="${evo.attachFile[0].filename.indexOf('https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/') eq 0}">
+									<img src="${evo.attachFile[0].filename}">
+								</c:when>
+								<c:otherwise>
+									<img src="${IMG_URL}${evo.attachFile[0].uuid}_${evo.attachFile[0].filename}">
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
-							<c:set var="fileId" value="${fn:contains(evo.event_file, ',') ? fn:substring(evo.event_file, 0, fn:indexOf(evo.event_file, ',')) : evo.event_file}" />
-							<img src="${IMG_URL}${fileId}_${evo.attach.filename}" alt="${evo.attach.filename}"/>
+							<img src="${IMG_URL}NoImage_pdlhxd.jpg">
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -77,12 +83,18 @@
 				<div>${ervo.enter.enter_name}</div>
 				<div>
 					<c:choose>
-						<c:when test="${ervo.event.event_file eq null}">
-							<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
+						<c:when test="${(ervo.event.attachFile ne null) and (fn:length(ervo.event.attachFile) > 0)}">
+							<c:choose>
+								<c:when test="${ervo.event.attachFile[0].filename.indexOf('https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/') eq 0}">
+									<img src="${ervo.event.attachFile[0].filename}">
+								</c:when>
+								<c:otherwise>
+									<img src="${IMG_URL}${ervo.event.attachFile[0].uuid}_${ervo.event.attachFile[0].filename}">
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
-							<c:set var="fileId" value="${fn:contains(ervo.event.event_file, ',') ? fn:substring(ervo.event.event_file, 0, fn:indexOf(ervo.event.event_file, ',')) : ervo.event.event_file}" />
-							<img src="${IMG_URL}${fileId}_${ervo.attach.filename}" alt="${ervo.attach.filename}"/>
+							<img src="${IMG_URL}NoImage_pdlhxd.jpg">
 						</c:otherwise>
 					</c:choose>
 				</div>

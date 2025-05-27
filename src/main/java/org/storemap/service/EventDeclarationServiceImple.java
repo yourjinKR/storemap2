@@ -1,10 +1,14 @@
 package org.storemap.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.storemap.domain.AttachFileVO;
 import org.storemap.domain.EventDeclarationVO;
+import org.storemap.domain.EventVO;
+import org.storemap.mapper.AttachFileMapper;
 import org.storemap.mapper.EventDeclarationMapper;
 
 import lombok.extern.log4j.Log4j;
@@ -14,6 +18,8 @@ import lombok.extern.log4j.Log4j;
 public class EventDeclarationServiceImple implements EventDeclarationService{
 	@Autowired
 	private EventDeclarationMapper mapper;
+	@Autowired
+	private AttachFileMapper attachMapper;
 	
 	@Override
 	public int submitReport(EventDeclarationVO reportVO) {
@@ -38,7 +44,28 @@ public class EventDeclarationServiceImple implements EventDeclarationService{
 	@Override
 	public List<EventDeclarationVO> getDeclarationMap() {
 		log.info("getDeclarationMap...");
-		return mapper.getEventDeclarationMap();
+		List<EventDeclarationVO> list = mapper.getEventDeclarationMap();
+		for(EventDeclarationVO vo : list) {
+			EventVO evo = vo.getEvent();
+			if(evo.getEvent_file() != null) {
+				String[] file = evo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				
+				AttachFileVO attach = new AttachFileVO();
+                int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+                if(idxof == -1) {
+                    attach = attachMapper.getAttach(file[0]);
+                }else {
+                    attach.setFilename(file[0]);
+                }
+                
+				if(attach != null) {
+					attachList.add(attach);
+				}
+				evo.setAttachFile(attachList);
+			}
+		}
+		return list;
 	}
 	
 	@Override
