@@ -130,7 +130,7 @@ function showMenuList(){
 	let msg = '';
 
 	ms.getList(store_idx, jsonArray => {
-		jsonArray.forEach(json => {	
+		jsonArray.forEach(json => {
 			msg += `<li data-menu_idx="${json.menu_idx}" onclick="menuModifyPage(this)" name="mid" class="menu-li">`;
 			if(!json.attach || !json.attach.filename){
 				msg += `	<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!" class="menu-image"/>`;

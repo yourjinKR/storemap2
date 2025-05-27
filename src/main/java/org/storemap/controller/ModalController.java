@@ -213,7 +213,15 @@ public class ModalController {
 			produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> storeDeclaration(@RequestBody StoreDeclarationVO vo){
 		log.info("storeDeclaration..."+vo);
-		return storeDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
+		
+		// 중복 신고 체크
+		StoreDeclarationVO existingDeclaration = storeDeclarationService.get(vo.getStore_idx(), vo.getMember_idx());
+		if(existingDeclaration != null) {
+			return new ResponseEntity<String>("duplicate", HttpStatus.OK);
+		}
+		
+		return storeDeclarationService.register(vo)==1?
+			new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
@@ -269,7 +277,15 @@ public class ModalController {
 			produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> reviewDeclaration(@RequestBody ReviewDeclarationVO vo){
 		log.info("reviewDeclaration..."+vo);
-		return reviewDeclarationService.register(vo)==1? new ResponseEntity<String>("success", HttpStatus.OK) :
+		
+		// 중복 신고 체크
+		ReviewDeclarationVO existingDeclaration = reviewDeclarationService.get(vo.getReview_idx(), vo.getMember_idx());
+		if(existingDeclaration != null) {
+			return new ResponseEntity<String>("duplicate", HttpStatus.OK);
+		}
+		
+		return reviewDeclarationService.register(vo)==1?
+			new ResponseEntity<String>("success", HttpStatus.OK) :
 			new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	

@@ -94,8 +94,16 @@ function initializeEvents() {
             },
             function (result) {
                 console.log("result: " + result);
-                document.querySelector("#store-report-selection").style.display = "none";
-                alert("점포신고를 성공 했습니다.");
+                if (result === "duplicate") {
+                    alert("이미 신고한 점포 입니다!");
+                    document.querySelector("#store-report-selection").style.display = "none";
+                    return;
+                } else if (result === "success") {
+                    document.querySelector("#store-report-selection").style.display = "none";
+                    alert("점포신고를 성공 했습니다.");
+                } else {
+                    alert("신고 처리 중 오류가 발생했습니다.");
+                }
             }
         );
     }
@@ -119,8 +127,16 @@ function initializeEvents() {
             },
             function (result) {
                 console.log("result: " + result);
-                document.querySelector("#review-report-selection").style.display = "none";
-                alert("리뷰신고를 성공 했습니다.");
+                if (result === "duplicate") {
+                    alert("이미 신고한 리뷰 입니다!");
+                    document.querySelector("#review-report-selection").style.display = "none";
+                    return;
+                } else if (result === "success") {
+                    document.querySelector("#review-report-selection").style.display = "none";
+                    alert("리뷰신고를 성공 했습니다.");
+                } else {
+                    alert("신고 처리 중 오류가 발생했습니다.");
+                }
             }
         );
     }

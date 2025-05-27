@@ -45,7 +45,7 @@
 	</select>
 	<!-- 5.메뉴 조인 전체 보기 -->
 	<select id="getMenuMap" parameterType="int" resultMap="menuMap">
-		SELECT m.*, a.filename
+		SELECT m.*, a.*
 		FROM menu m
 		LEFT OUTER JOIN attach_file a ON m.menu_image = a.uuid
 		WHERE m.store_idx = #{store_idx}
@@ -56,7 +56,7 @@
 	</select>
 	<!-- 7.메뉴 조인 자세히 보기 -->
 	<select id="map" parameterType="int" resultMap="menuMap">
-		SELECT m.*, a.filename
+		SELECT m.*, a.*
 		FROM menu m
 		LEFT OUTER JOIN attach_file a ON m.menu_image = a.uuid
 		WHERE m.menu_idx = #{menu_idx}
