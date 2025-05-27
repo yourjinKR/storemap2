@@ -1,17 +1,16 @@
 @charset "UTF-8";
 
+h3{font-size: 36px;font-weight: bold;text-align: center;padding: 30px 0 50px;color:var(--font-color)}
 .right-nav{display:none}
-.wrap{width:100%;}
+.wrap{width:100%;min-height:100vh; height:100%}
 .header, .footer{display:none;}
+body{min-height:100vh; height:100%}
 .store {
 	text-align: center;
-	padding: 30px;
+	padding: 50px 0 100px;
 	background:var(--point-color);
-}
-
-h1 {
-	font-size: 26px;
-	margin-bottom: 30px;
+	height:100%;
+	min-height:100vh;
 }
 
 form {
@@ -23,11 +22,17 @@ form {
 	border-radius:10px;
 	background:var(--inner-color);
 }
-
+form table{width:100%;}
+form table th{width: 150px;font-weight: bold;font-size: 24px;color: var(--font-color);text-align: left;vertical-align: middle}
+form table th,form table td{padding:10px 0}
+#store-loc{border:1px solid var(--font-color);border-radius:5px; }
+.panel-body-btns{display:flex;flex-wrap:wrap;gap:15px;margin-top:30px;}
+.panel-body-btns button{width:calc(33.3333% - 10px);}
+.panel-body-btns button:nth-child(n + 4){width:calc(50% - 8px)}
+.v-t{vertical-align:top !important;}
+.v-t label{margin-top:10px;}
 label {
 	display: block;
-	margin-top: 15px;
-	margin-bottom: 5px;
 }
 
 input[type="text"],
@@ -37,9 +42,9 @@ select {
 	width: 100%;
 	padding: 10px;
 	box-sizing: border-box;
-	background-color: #ddd;
-	border: none;
 	border-radius: 4px;
+	height:50px;
+	border: 1px solid var(--font-color);
 }
 
 input[type="text"][readonly] {
@@ -99,7 +104,6 @@ select {
 	display: block;
 	width: 100%;
 	padding: 15px;
-	margin-top: 30px;
 	background-color: #feda3e;
 	color: black;
 	font-size: 18px;
@@ -112,26 +116,37 @@ select {
 .btn-sec:hover {
 	background-color: #cbae31;
 }
+#removeBtn:hover{
+	background-color: #DC143C;
+	color:#fff;
+}
 
 textarea {
-	width: 100%; padding : 10px; box-sizing : border-box; background-color :
-	#ddd; border : none; border-radius : 4px;
-	height: 100px;
+	margin-top:10px;
+	width: 100%; 
+	height: 150px;
 	resize: none;
 	padding: 10px;
 	box-sizing: border-box;
-	background-color: #ddd;
-	border: none;
+	border: 1px solid var(--font-color);
 	border-radius: 4px;
+	
 }
 
 #preview{
-	display:none;
-	width: 100px;
-	height: auto;
-	margin-left: 10px;
+	width: auto;
 	border: 1px solid #ccc;
+	border:2px solid var(--font-color);
+	display:inline-block;
+	overflow: hidden;
+	position: relative;
 }
+#preview label{display:flex;align-items: center;justify-content: center;height: 100%;}
+#preview label img{height: 100%;width: auto;max-height: 250px}
+#preview label:before{content:"변경"; display:none; background: rgba(0,0,0,0.6);color:#fff;line-height: 250px;text-align: center;position: absolute;top: 0;left: 0;width:100%;height: 100%;font-size:28px;font-weight:bold;}
+#preview label:hover:before{display:block;}
+#simage{position:absolute;left: -9999px;overflow: hidden;height: 0;}
+
 
 /* 로딩중 */
 

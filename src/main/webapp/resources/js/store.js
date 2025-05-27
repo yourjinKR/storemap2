@@ -244,7 +244,7 @@ function menu(){
 
 // 점주에서 user로 격하도 시켜야됨
 function remove(){
-	if(confirm("정말 취소하시겠습니까?")){
+	if(confirm("정말 페업하시겠습니까?")){
 		document.querySelector("#savingUI").classList.add("save");
 		f.action = `/store/storeRemove?store_idx=${store_idx}`;
 	    f.submit();
@@ -261,12 +261,8 @@ document.querySelector("#simage").addEventListener("change", function (e) {
     if (file && file.type.startsWith("image/")) {
         const reader = new FileReader();
         reader.onload = function (e) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="미리보기 이미지" style="max-width:100px; height:auto;">`;
-            preview.style.display = "block";
+        	preview.querySelector("img").setAttribute("src", e.target.result);
         };
         reader.readAsDataURL(file);
-    } else {
-        preview.innerHTML = "";
-        preview.style.display = "none";
     }
 });
