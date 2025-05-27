@@ -29,5 +29,4 @@ public class EventVO {
 	private int approved_store, max_store, like_count, comment_count,pon;
 	
 	private EnterVO enter;		 // 조인 대상 필드
-	private AttachFileVO attach; // 조인 대상 필드
 }

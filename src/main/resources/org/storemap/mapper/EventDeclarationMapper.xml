@@ -13,7 +13,6 @@
 		<association property="event" resultMap="eventMap"/>
 		<association property="enter" resultMap="enterMap"/>
 		<association property="member" resultMap="memberMap"/>
-		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="eventMap" type="org.storemap.domain.EventVO">
 		<id property="event_idx" column="event_idx"/>
@@ -31,7 +30,6 @@
 		<result property="event_hidden" column="event_hidden"/>
 		<result property="event_file" column="event_file"/>
 		<result property="event_location" column="event_location"/>
-		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="enterMap" type="org.storemap.domain.EnterVO">
 		<id property="enter_idx" column="enter_idx"/>
@@ -40,11 +38,6 @@
 	<resultMap id="memberMap" type="org.storemap.domain.MemberVO">
 		<id property="member_idx" column="member_idx"/>
 		<result property="member_name" column="member_name"/>
-	</resultMap>
-	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">
-		<id property="attach_idx" column="attach_idx"/>
-		<result property="filename" column="filename"/>
-		<result property="uuid" column="uuid"/>
 	</resultMap>
 
 	<!-- 1.이벤트 신고 등록 -->
@@ -88,7 +81,6 @@
 			   e.event_hidden,
 			   e.event_file,
 			   e.event_location,
-			   a.filename,
 			   d.event_idx,
 			   d.regdate,
 			   t.enter_name,
@@ -96,11 +88,9 @@
 		FROM event_declaration d
 		JOIN event e ON d.event_idx = e.event_idx
 		JOIN enter t ON e.enter_idx = t.enter_idx
-		LEFT JOIN attach_file a ON e.event_file = a.uuid
 		GROUP BY d.event_idx,
 				 t.enter_name,
 				 d.regdate,
-				 a.filename,
 				 e.event_idx,
 				 e.enter_idx,
 				 e.event_title,
