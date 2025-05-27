@@ -23,20 +23,20 @@
 .event-calendar .right-con .no-list p{width:100%;font-size:32px;color:#ccc;border-right:none;}
 
 .swiper-button-next, .swiper-button-prev{margin-top:5px}
-.swiper-slide .card-text{position: relative;min-height:110px;padding:10px 15px;display:flex;flex-direction: column;justify-content: space-between;align-items: flex-start;}
+.swiper-slide .card-text{position: relative;min-height:130px;padding:10px 15px;display:flex;flex-direction: column;justify-content: space-between;align-items: flex-start;}
 .swiper-slide .icon-box{display:flex; align-items: center; gap:5px;font-size:16px;}
 .swiper-slide .icon-box .material-symbols-outlined{font-size:16px;}
 .board-card .event-title{display:inline-block;word-break:keep-all}
 .board-card .event-date{display:inline-block;font-size:14px;padding-bottom:5px}
-.board-card .event-content{display:block;position: absolute;top: 0;left:0;width:100%;height:100%;background:rgba(18, 18, 18, 0.85); ;color:#E0E0E0;padding:15px;font-size:14px;opacity: 0;transition:0.1s linear}
+.board-card .event-content{display:block;position: absolute;top: 0;left:0;width:100%;height:100%;background:rgba(18, 18, 18, 0.85);color:#E0E0E0;padding:10px;font-size:14px;opacity: 0;transition:0.1s linear}
 .board-card .event-content h4{border-bottom:1px solid #fff;font-size:18px;font-weight:bold;padding-bottom:5px;margin-bottom:15px;}
 .board-card .event-content p{
 	line-height:1.5;
 	display: -webkit-box;
   	-webkit-box-orient: vertical;
   	overflow: hidden;
-  	-webkit-line-clamp: 11;
-  	line-clamp: 11; /* 일부 브라우저 지원 */}
+  	-webkit-line-clamp: 9;
+  	line-clamp: 9; /* 일부 브라우저 지원 */}
 .board-card .card-box > a:hover .event-content{opacity: 1;}
 
 /* 캘린더 */

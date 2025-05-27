@@ -142,11 +142,13 @@
 	<ul class="barod board-card d_f" id="boardCard">
 	
 	</ul>
-		<c:if test="${not empty loginUserIdx and loginUserType eq 'enter'}">
+	<div class="btn-box">
+		<c:if test="${not empty loginUserIdx and userType eq 'enter'}">
 			  <button type="button" class="eventBtn" id="registerBtn" onclick="location.href='/event/eventRegister'">
-			    새 게시글 등록
+			   	 새 게시글 등록
 			  </button>
 		</c:if>
+	</div>
 	<!-- page -->
 	<div class="page-wrap">
 		<ul class="page-nation" data-pageNum="${pageMaker.cri.pageNum}"

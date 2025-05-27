@@ -4,7 +4,7 @@
 <c:if test="${(empty loginUser) or (userType eq 'enter')}">
 	<script>
 		alert("일반/점주 계정으로 로그인해야 이용 가능합니다. 로그인 해 주세요.");
-		location.href="/";
+		location.href="/member/login";
 	</script>
 </c:if>
 

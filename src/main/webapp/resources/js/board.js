@@ -274,9 +274,16 @@ function listBoard(result){
 			document.querySelectorAll("#boardList colgroup col")[3].classList.add("hide");
 		}
 	}else{
+		let colCnt = 3;
+		if(bDate != null && bDate.checked){
+			colCnt++;
+		}
+		if(rDate != null && rDate.checked){
+			colCnt++;
+		}
 		str += `
 			<tr>
-				<td colspan="4" class="empty-data">
+				<td colspan="${colCnt}" class="empty-data">
 					검색된 이벤트가 없습니다.
 				</td>
 			</tr>`;

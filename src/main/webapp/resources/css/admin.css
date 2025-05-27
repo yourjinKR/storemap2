@@ -37,7 +37,7 @@
 .sub-tab-content ul > li > div:last-child{border-right:1px solid #ccc;} /* 마지막 칸에 오른쪽 테두리 추가 */
 
 /* 헤더 스타일 */
-.sub-tab-content > ul:first-child {background:#92c5ff;}
+.sub-tab-content > ul:first-child {background:var(--point-color2);}
 .sub-tab-content > ul:first-child > li > div{
 	border:1px solid #222;
 	border-right:none;
