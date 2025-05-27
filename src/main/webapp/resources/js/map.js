@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 클릭마커 클릭 이벤트 추가
     kakao.maps.event.addListener(clickMarker, 'click', function() {
-        if (!customPositionMode) {
+        if (!customPositionMode && mapType === "full") {
             // alert("현위치를 수정하시겠습니까?");
             setMyCurrentPlace();
         }
@@ -427,6 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     f.lat.value = latlng.getLat();
                     f.lng.value = latlng.getLng();
                     initAddrFromCoords(latlng, f);
+                    initDetailAddrFromCoords(latlng, f);
                 }
             }
         });
@@ -678,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (!target) return;
 
-        const type = target.getAttribute("type");
+        const type = target.getAttribute("type");   
         const idx = target.getAttribute("idx");
 
         // map.jsp
@@ -729,7 +730,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                form.address.value = result[0].address_name; // 서울특별시 강남구 논현동
                 form.regcode.value = result[0].code; // 행정코드
             }
         };
@@ -748,10 +748,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
-    function searchDetailAddrFromCoords(coords) {
+    function initDetailAddrFromCoords(coords, form) {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
+                form.address.value = result[0].address.address_name;
             }
         }
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
