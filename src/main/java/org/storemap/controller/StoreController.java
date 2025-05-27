@@ -157,7 +157,7 @@ public class StoreController {
 		})
 	public ResponseEntity<List<MenuVO>> menuList(@PathVariable("store_idx") int store_idx){
 		log.info("menuList..."+store_idx);
-		return new ResponseEntity<List<MenuVO>>(menuService.getList(store_idx), HttpStatus.OK);
+		return new ResponseEntity<List<MenuVO>>(menuService.getMap(store_idx), HttpStatus.OK);
 	}
 	
 	// 메뉴 상세 조회
