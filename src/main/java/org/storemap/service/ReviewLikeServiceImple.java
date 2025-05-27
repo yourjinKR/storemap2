@@ -39,7 +39,9 @@ public class ReviewLikeServiceImple implements ReviewLikeService{
 	public List<ReviewVO> getLikeList(int member_idx) {
 		List<ReviewVO> list = mapper.getLikeList(member_idx);
 		for (ReviewVO vo : list) {
-			vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
+			if(vo.getReview_image() != null) {
+				vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
+			}
 		}
 		return list;
 	}
@@ -48,7 +50,9 @@ public class ReviewLikeServiceImple implements ReviewLikeService{
 	public List<ReviewVO> getMyReview(int member_idx) {
 		List<ReviewVO> list = mapper.getMyReview(member_idx);
 		for (ReviewVO vo : list) {
-			vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
+			if(vo.getReview_image() != null) {
+				vo.setAttach(attachMapper.getAttach(vo.getReview_image()));
+			}
 		}
 		return list;
 	}

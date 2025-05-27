@@ -60,6 +60,7 @@ function getMyLike(type){
 			if(type == 'event'){
 				for (let data of result) {
 					str += `<li>`;
+					str += `<div class="d-f">`;
 					str += 		`<a href="/event/eventView?event_idx=${data.event_idx}">`;
 					str += 			`<div class="img-box">`;
 					if(result.attach_list != null && result.attach_list.length > 0){
@@ -73,24 +74,26 @@ function getMyLike(type){
 					str += 				`<dd>이벤트 기간 : ${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</dd>	`;
 					str += 				`<dd>내용 : ${data.event_content}</dd>`;
 					str += 			`</dl>`;
-					str += 			`<div class="like-box">`;
-					str += 				`<input type="checkbox" id="likeChk${data.event_idx}" checked>`;
-					str += 				`<label for="likeChk${data.event_idx}" class="material-symbols-outlined">`;
-					str += 					`favorite`;
-					str += 				`</label>`;
-					str += 			`</div>`;
 					str += 		`</a>`;
+					str += 		`<div class="like-box">`;
+					str += 			`<input type="checkbox" id="likeChk${data.event_idx}" checked>`;
+					str += 			`<label for="likeChk${data.event_idx}" class="material-symbols-outlined">`;
+					str += 				`favorite`;
+					str += 			`</label>`;
+					str += 		`</div>`;
+					str += 	`</div>`;
 					str += `</li>`;
 				}
 			}else if(type == "store"){
 				for (let data of result) {
 					str += `<li>`;
+					str += `<div class="d-f">`;
 					str += 		`<a href="${data.store_idx}">`;
 					str += 			`<div class="img-box">`;
 					if(data.attach != null){
-						str += 				`<img src="${IMG_URL}${data.attach.uuid}_${data.attach.filename}">`;
+						str += 			`<img src="${IMG_URL}${data.attach.uuid}_${data.attach.filename}">`;
 					}else{
-						str += 				`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+						str += 			`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 					}
 					str += 			`</div>`;
 					str += 			`<dl>`;
@@ -98,13 +101,14 @@ function getMyLike(type){
 					str += 				`<dd>전화번호 : ${data.store_num}</dd>	`;
 					str += 				`<dd>설명 : ${data.store_content}</dd>`;
 					str += 			`</dl>`;
-					str += 			`<div class="like-box">`;
-					str += 				`<input type="checkbox" data-idx="${data.store_idx}" id="likeChk${data.store_idx}" checked>`;
-					str += 				`<label for="likeChk${data.store_idx}" class="material-symbols-outlined">`;
-					str += 					`favorite`;
-					str += 				`</label>`;
-					str += 			`</div>`;
 					str += 		`</a>`;
+					str += 		`<div class="like-box">`;
+					str += 			`<input type="checkbox" data-idx="${data.store_idx}" id="likeChk${data.store_idx}" checked>`;
+					str += 			`<label for="likeChk${data.store_idx}" class="material-symbols-outlined">`;
+					str += 				`favorite`;
+					str += 			`</label>`;
+					str += 		`</div>`;
+					str += `</div>`;
 					str += `</li>`;
 				}
 			}else{
@@ -150,7 +154,7 @@ function getMyLike(type){
 				}
 			})
 		}
-		let storeHref = document.querySelectorAll(".store-content > ul > li > a");
+		let storeHref = document.querySelectorAll(".store-content > ul > li > .d-f > a");
 		if(storeHref != null && storeHref.length > 0){
 			storeHref.forEach(target => {
 				target.addEventListener("click",function(e){
