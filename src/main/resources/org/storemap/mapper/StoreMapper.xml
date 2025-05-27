@@ -20,6 +20,7 @@
 		<result property="store_lat" column="store_lat"/>
 		<result property="store_lng" column="store_lng"/>
 		<result property="store_regcode" column="store_regcode"/>
+		<result property="store_open" column="store_open"/>
 		<association property="attach" resultMap="attachMap"/>
 	</resultMap>
 	<resultMap id="attachMap" type="org.storemap.domain.AttachFileVO">

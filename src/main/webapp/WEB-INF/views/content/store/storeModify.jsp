@@ -61,7 +61,7 @@
     
     <label for="rnum">사업자번호</label>
     <input type="text" id="rnum" name="store_rnum" value="${vo.store_rnum}">
-
+    
     <div class="panel-body-btns">
     	<c:choose>
 			<c:when test="${vo.store_open eq 0}">
@@ -70,9 +70,6 @@
 			<c:when test="${vo.store_open eq 1}">
 				<button type="button" class="btn btn-sec" id="stopBtn">점포 철수</button>
 			</c:when>
-			<c:otherwise>
-				<div><label>관리자에게 숨김처리 당함</label></div>
-			</c:otherwise>
 		</c:choose>
     	<button type="button" class="btn btn-sec" id="menuBtn">메뉴 관리</button>
     	<button type="button" class="btn btn-sec" id="modifyBtn">수정 완료</button>
