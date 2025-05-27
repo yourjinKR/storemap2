@@ -161,7 +161,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     // 모달 열기
 	let openBtn = document.getElementById('openBtn');
 	if(openBtn != null){
-		openBtn.addEventListener('click', function () {
+		openBtn.addEventListener('click', function (e) {
+			e.preventDefault();
 			document.getElementById('calendarModal').style.display = 'block';
 		});
 	}

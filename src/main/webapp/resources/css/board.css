@@ -91,7 +91,8 @@ h3{font-size: 32px;font-weight:bold;}
 .search{font-size:18px;display:flex;gap:10px;align-items: center}
 .search #boardSearch{height:40px;min-width:250px;border-radius:5px;}
 .search button{height:40px;background:var(--point-color2);color:var(--font-color);border-radius:5px;padding:5px 15px;font-weight:bold;font-size:18px;}
-
+.btn-box{display:flex;justify-content: flex-end;}
+#registerBtn{background:var(--point-color3);color:var(--font-color);border-radius:5px;padding:10px 25px;font-size:18px;font-weight:bold}
 @keyframes warning {
   0%{
     opacity: 1;

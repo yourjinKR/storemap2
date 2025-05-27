@@ -65,7 +65,11 @@
 	
 	<div class="info-box">
 		<div class="event-postor">
+		
 		<c:choose>
+			<c:when test="${evo.cloudinaryFiles eq null or evo.cloudinaryFiles.size() == 0 and evo.externalUrls eq null or evo.externalUrls.size() == 0}">
+				<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="noimg"/>
+			</c:when>
 			<c:when test="${evo.cloudinaryFiles ne null and evo.cloudinaryFiles.size() > 0}">
 				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${evo.cloudinaryFiles[0].uuid}_${evo.cloudinaryFiles[0].filename}" alt="Cloudinary 이미지" style="width: 23%; height: auto;" />
 			</c:when>
@@ -166,7 +170,7 @@
 
 	<div id="participationSection">
 		<c:if test="${userType eq 'owner'}">
-		<input type="button" id="openBtn" value="참여" />
+		<a id="openBtn" href="">참여</a>
 		</c:if>
 		<a href="/event/eventList">목록</a>
 	</div>
