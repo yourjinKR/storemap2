@@ -4,6 +4,37 @@ linkEle.rel = 'stylesheet';
 linkEle.href = MEMBER_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
 
+//이미지 미리보기 함수
+function previewImage(input) {
+    const file = input.files[0];
+    if (file) {
+        // 파일이 이미지인지 확인
+        if (!file.type.startsWith('image/')) {
+            alert('이미지 파일만 선택해주세요.');
+            input.value = '';
+            return;
+        }
+        
+        // 파일 크기 체크 (5MB 제한)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('파일 크기는 5MB 이하로 선택해주세요.');
+            input.value = '';
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // 해당하는 프로필 이미지 찾기
+            const label = input.previousElementSibling || input.nextElementSibling.querySelector('label') || document.querySelector('label[for="' + input.id + '"]');
+            const img = label.querySelector('img');
+            if (img) {
+                img.src = e.target.result;
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 // ---------- Form 관련 요소들 ----------------
 let formType = new URLSearchParams(location.search).get("type");
 if(formType == 'personal') {
@@ -22,6 +53,14 @@ if(formType == 'personal') {
 		regExpPw = /^[0-9a-zA-Z]{8,16}$/;		// 비밀번호 검증 정규식
 		regExpName = /^[가-힣a-zA-Z]{2,12}$/;	// 이름 검증 정규식 
 		regExpNickName = /^[가-힣a-zA-Z]{2,12}$/;	// 별명 검증 정규식 
+		
+		// 이미지 미리보기 이벤트 리스너 추가
+		const profileImageInput = document.querySelector("input[name='member_image']");
+		if (profileImageInput) {
+			profileImageInput.addEventListener('change', function() {
+				previewImage(this);
+			});
+		}
 
 		document.querySelectorAll("button").forEach(btn => {
 			btn.addEventListener('click', ()=> {
@@ -32,6 +71,8 @@ if(formType == 'personal') {
 					regist();
 				}else if(type === 'resetBtn'){
 					f.reset();
+					// 리셋 시 이미지도 원래대로 복구
+					resetProfileImage();
 				}
 			});
 		});
@@ -91,7 +132,16 @@ if(formType == 'personal') {
 		});
 	})
 	
+	// 프로필 이미지 리셋 함수
+	function resetProfileImage() {
+		const img = document.querySelector('.profile img');
+		const originalSrc = img.getAttribute('data-original-src') || img.src;
+		if (img && originalSrc) {
+			img.src = originalSrc;
+		}
+	}
 	
+	// 데이터 검증 완료 함수
 	function validated(inputTarget, resultState, comment){
 		inputTarget.classList.add("is-valid");
 		inputTarget.classList.remove("is-invalid");
@@ -162,6 +212,14 @@ if(formType == 'personal') {
 		let {pwCk, pwReCk} = false; // 검증
 		regExpPw = /^[0-9a-zA-Z]{8,16}$/;		// 비밀번호 검증 정규식
 		
+		// 이미지 미리보기 이벤트 리스너 추가
+		const profileImageInput = document.querySelector("input[name='enter_image']");
+		if (profileImageInput) {
+			profileImageInput.addEventListener('change', function() {
+				previewImage(this);
+			});
+		}
+		
 		document.querySelectorAll("button").forEach(btn => {
 			btn.addEventListener('click', ()=> {
 				let type = btn.getAttribute("id");
@@ -171,6 +229,8 @@ if(formType == 'personal') {
 					regist();
 				}else if(type === 'resetBtn'){
 					f.reset();
+					// 리셋 시 이미지도 원래대로 복구
+					resetProfileImage();
 				}
 			});
 		});
@@ -214,6 +274,15 @@ if(formType == 'personal') {
 		});
 		
 	})
+	
+	// 프로필 이미지 리셋 함수
+	function resetProfileImage() {
+		const img = document.querySelector('.profile img');
+		const originalSrc = img.getAttribute('data-original-src') || img.src;
+		if (img && originalSrc) {
+			img.src = originalSrc;
+		}
+	}
 	
 	// 데이터 검증 완료 함수
 	function validated(inputTarget, resultState, comment){

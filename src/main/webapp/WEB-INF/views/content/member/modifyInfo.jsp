@@ -40,14 +40,14 @@
 											<label for="profileImg">
 												<c:choose>
 													<c:when test="${vo.attach.filename eq null}">
-														<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
+														<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="${sessionScope.userImage}" data-original-src="${IMG_URL}NoMember_pgeszi.jpg"/>
 													</c:when>
 													<c:otherwise>
-														<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}"/>
+														<img src="${IMG_URL}${sessionScope.userImage}_${sessionScope.userFilename}" alt="${sessionScope.userFilename}" data-original-src="${IMG_URL}${sessionScope.userImage}_${sessionScope.userFilename}"/>
 													</c:otherwise>
 												</c:choose>		
 											</label>
-											<input type="file" name="member_image" id="profileImg">
+											<input type="file" name="member_image" id="profileImg" accept="image/*">
 										</div>
 									</div>
 								</td>
