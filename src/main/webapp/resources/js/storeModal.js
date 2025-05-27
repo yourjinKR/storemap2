@@ -135,6 +135,7 @@ function initializeEvents() {
             if (!member_idx || member_idx === '0') {
                 alert('로그인이 필요합니다.');
                 this.checked = false;
+                location.href = '/member/login';
                 return;
             }
 
@@ -152,6 +153,7 @@ function initializeEvents() {
 
             if (!currentMemberIdx || currentMemberIdx === '0') {
                 alert('로그인이 필요합니다.');
+                location.href = '/member/login';
                 return;
             }
 
@@ -178,6 +180,7 @@ function initializeEvents() {
             if (!member_idx || member_idx === '0') {
                 alert('로그인이 필요합니다.');
                 this.checked = false;
+                location.href = '/member/login';
                 return;
             }
 
@@ -195,6 +198,7 @@ function initializeEvents() {
 
             if (!currentMemberIdx || currentMemberIdx === '0') {
                 alert('로그인이 필요합니다.');
+                location.href = '/member/login';
                 return;
             }
 
