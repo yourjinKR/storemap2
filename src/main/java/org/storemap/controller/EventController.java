@@ -136,7 +136,13 @@ public class EventController {
 	
 	//이벤트 등록 화면 보여주는 컨트롤러
 	@GetMapping("/eventRegister")
-	public String showEventRegister() {
+	public String showEventRegiste(HttpSession session, Model model) {
+		String userType = (String) session.getAttribute("userType");
+	    if (!"enter".equals(userType)) {
+	        model.addAttribute("msg", "기업 회원만 접근할 수 있습니다.");
+	        model.addAttribute("redirectUrl", "/member/login");
+	        return "content/modal/alertRedirect";
+	    }
 		return "index";
 	}
 	
@@ -368,8 +374,15 @@ public class EventController {
 	} 
 	
 	@GetMapping("/eventModify")
-	public String showModifyForm(@RequestParam("event_idx") int event_idx, Model model) {
-	    // 1. 기본 이벤트 정보
+	public String showModifyForm(@RequestParam("event_idx") int event_idx, Model model, HttpSession session) {
+		String userType = (String) session.getAttribute("userType");
+	    if (!"enter".equals(userType)) {
+	        model.addAttribute("msg", "기업 회원만 접근할 수 있습니다.");
+	        model.addAttribute("redirectUrl", "/member/login");
+	        return "content/modal/alertRedirect";
+	    }
+		
+		// 1. 기본 이벤트 정보
 	    EventVO evo = eventService.getEventByIdx(event_idx);
 	    model.addAttribute("evo", evo);
 
