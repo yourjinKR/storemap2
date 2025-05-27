@@ -2,6 +2,7 @@
 
 h3{font-size: 32px;font-weight:bold;}
 
+.wrap{width:1200px !important;}
 
 .board-top{justify-content: space-between;align-items: center}
 .right-con{align-items: center; display:flex;gap:15px;align-items: center}

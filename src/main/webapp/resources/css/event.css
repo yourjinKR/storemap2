@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+.wrap{width:1000px}
 .eventLike-count, .reviewLike-count {
 	font-size: 14px;
 	font-weight: bold;
@@ -209,7 +210,7 @@
 .info-box .event-info{width: calc(1200px - 430px);}
 .info-box .event-info table th{text-align:left;font-weight:bold;}
 .info-box .event-info table th,
-.info-box .event-info table td{font-size:28px;padding:20px 0;word-break:keep-all}
+.info-box .event-info table td{font-size:24px;padding:20px 0;word-break:keep-all}
 .attent-store{margin-top:50px;position: relative;}
 .attent-store h3{font-size:24px;font-weight:bold;padding:0 0 15px;}
 .attent-store dl > dt{font-size:24px;font-weight:bold;padding:10px 0;}
@@ -225,6 +226,10 @@
 #participationSection{text-align:right;}
 #participationSection a, #openBtn{background:var(--point-color2);color:var(--font-color);padding:10px 25px; height:50px; line-height:50px; border:none;font-size:22px;border-radius:5px;font-weight:bold;}
 .readonly-form{padding-bottom:100px}
+
+.back-btn{position: fixed;top:0;left:0;width:75px;height:75px;background:none;color:var(--font-color);border:none;display:flex;justify-content: center;align-items: center}
+.back-btn span{font-size:36px;}
+
 
 
 

@@ -2,6 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/event.js"></script>
 	
+	
+<a href="javascript:history.back();" class="back-btn" >
+	<span class="material-symbols-outlined">
+		undo
+	</span>
+</a>
+	
 <h3>이벤트 등록</h3>
 
 <div class="event-register-wrapper">

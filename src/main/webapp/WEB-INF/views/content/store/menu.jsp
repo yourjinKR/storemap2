@@ -7,24 +7,28 @@
 		location.href="/";
 	</script>
 </c:if>
-
+<a href="javascript:history.back();" class="back-btn" >
+	<span class="material-symbols-outlined">
+		undo
+	</span>
+</a>
 <div class="menu">
-    <button type="button" class="add_menu" id="addMenuPageBtn">메뉴 추가</button>
-	<button type="button" class="add_menu" id="storeBtn">점포 관리</button>
 	<!-- 메뉴 목록 -->
 	<div class="menu-list">
-		<h1>메뉴관리</h1>
+		<h3>메뉴관리</h3>
 		<ul class="menu-page">
-				<li data-store_idx="10" class="menu-li">
-					<img class="menu-image">
-					<div class="menu-description">
-						<div class="menu-name">메뉴이름</div>
-						<div class="menu-price">가격</div>
-						<a class="remove_menu">삭제</a>
-					</div>
-					<br>
-				</li>
+			<li data-store_idx="10" class="menu-li">
+				<img class="menu-image">
+				<div class="menu-description">
+					<div class="menu-name">메뉴이름</div>
+					<div class="menu-price">가격</div>
+					<a class="remove_menu">삭제</a>
+				</div>
+				<br>
+			</li>
 		</ul>
+		<button type="button" class="add_menu" id="addMenuPageBtn">메뉴 추가</button>
+		<button type="button" class="add_menu" id="storeBtn">점포 관리</button>
 	</div>
 	<!-- 메뉴 추가 모달 -->
 	<div id="add-modal">

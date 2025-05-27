@@ -5,7 +5,6 @@
 	font-family: sans-serif;
 	text-align: center;
 	padding: 30px;
-	background-color: #f9f9f9;
 }
 
 /* 제목 스타일 */
@@ -52,7 +51,7 @@
 	color: black;
 	font-size: 14px;
 	font-weight: bold;
-	border: none;
+	border:1px solid var(--font-color);
 	border-radius: 6px;
 	cursor: pointer;
 	margin: 10px;
@@ -104,11 +103,12 @@
 
 /* 메뉴 리스트 전체 박스 */
 .menu-list {
-	max-width: 700px;
+	max-width: 1000px;
 	margin: 0 auto;
 	padding: 20px;
-	background-color: #ffffff;
+	background-color: var(--inner-color);
 	border-radius: 8px;
+	border:1px solid var(--font-color);
 	box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -126,11 +126,12 @@
 	margin: 0;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	gap:10px;
+	justify-content: flex-start;
 }
 
 .menu-list li {
-	width: 48%;
+	width: 32%;
 	margin-bottom: 20px;
 	background-color: #f2f2f2;
 	border-radius: 8px;
@@ -153,9 +154,10 @@
 /* 메뉴 이미지 */
 .menu-list img {
 	width: 100%;
-	height: auto;
+	height:200px;
 	border-radius: 6px;
 	margin-bottom: 10px;
+	border:1px solid var(--font-color);
 }
 
 /* 설명 텍스트 */
@@ -382,6 +384,16 @@
 .saving-box {background: white;padding: 30px 50px;border-radius: 10px;box-shadow: 0 4px 10px rgba(0,0,0,0.2);display: flex;flex-direction: column;align-items: center;}
 .spinner {border: 6px solid #f3f3f3;border-top: 6px solid #3498db;border-radius: 50%;width: 40px;height: 40px;animation: spin 1s linear infinite;margin-bottom: 15px;}
 .saving-text {font-size: 18px;font-weight: bold;color: #333;}
+
+h3{font-size: 36px;font-weight: bold;text-align: center;padding: 30px 0 50px;color:var(--font-color)}
+.right-nav{display:none}
+.wrap{width:100%;min-height:100vh; height:100%}
+.header{display:none;}
+body{min-height:100vh; height:100%;background:var(--point-color)}
+
+
+.back-btn{position: fixed;top:0;left:0;width:75px;height:75px;background:none;color:var(--font-color);border:none;display:flex;justify-content: center;align-items: center}
+.back-btn span{font-size:36px;}
 
 @keyframes spin {
 	0% { transform: rotate(0deg); }

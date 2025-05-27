@@ -1,6 +1,11 @@
-	<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<a href="javascript:history.back();" class="back-btn" >
+	<span class="material-symbols-outlined">
+		undo
+	</span>
+</a>
 
 <div class="event-register-wrapper">
 	<div class="panel-body">	
