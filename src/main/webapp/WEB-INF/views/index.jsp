@@ -33,15 +33,5 @@
 	
 	<jsp:include page="./layout/content.jsp" />
 	
-	<c:choose>
-		<c:when test="${path eq '/store/map'}"></c:when>
-		<c:when test="${path eq '/modal/storeView'}"></c:when>
-		<c:when test="${path eq '/modal/eventView'}"></c:when>
-		<c:when test="${path eq '/modal/postcodeForm'}"></c:when>
-		<c:when test="${path eq '/admin/adminMain'}"></c:when>
-		<c:otherwise>
-			<jsp:include page="./layout/footer.jsp" />
-		</c:otherwise>
-	</c:choose>
 </body>
 </html>

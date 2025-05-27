@@ -128,49 +128,56 @@ function getEventRequest(){
 	.then(response => response.json())
 	.then(result => {
 		let str = "";
-		for (let data of result) {
-			if(data.eventDay != null && data.eventDay.length > 0){
-				str += `<li>`;
-				str += 		`<p data-idx="${data.event_idx}">${data.event_title}</p>`;
-				str += 		`<div class="request-detail">`;
-				str += 			`<ul class="eday-tab">`;
-				data.eventDay.forEach((eday,idx) => {
-					str += 			`<li><a href="${eday.eday_idx}">${idx + 1}일차</a></li>`;
-				})
-				str += 			`</ul>`;
-				data.eventDay.forEach((eday,idx) => {
-					str += 		`<div class="eday-content event${data.event_idx}-eday${eday.eday_idx}">`;
-					str += 			`<table data-idx="${eday.eday_idx}">`;
-					str += 				`<colgroup>`;
-					str += 					`<col width="*">`;
-					str += 					`<col width="175px">`;
-					str += 					`<col width="150px">`;
-					str += 					`<col width="75px">`;
-					str += 					`<col width="75px">`;
-					str += 					`<col width="150px">`;
-					str += 				`</colgroup>`;
-					str += 				`<thead>`;
-					str += 					`<tr>`;
-					str += 						`<th>점포명</th>`;
-					str += 						`<th>품목</th>`;
-					str += 						`<th>신청날짜</th>`;
-					str += 						`<th>좋아요</th>`;
-					str += 						`<th>신고</th>`;
-					str += 						`<th></th>`;
-					str += 					`</tr>`;
-					str += 				`</thead>`;
-					str += 				`<tbody>`;
-					str += 					`<tr>`;
-					str += 						`<td colspan="6" class="empty-data">신청 정보가 없습니다</td>`;
-					str += 					`</tr>`;
-					str += 				`</tbody>`;
-					str += 			`</table>`;
+		if(result != null && result.length > 0){
+			for (let data of result) {
+				if(data.eventDay != null && data.eventDay.length > 0){
+					str += `<li>`;
+					str += 		`<p data-idx="${data.event_idx}">${data.event_title}</p>`;
+					str += 		`<div class="request-detail">`;
+					str += 			`<ul class="eday-tab">`;
+					data.eventDay.forEach((eday,idx) => {
+						str += 			`<li><a href="${eday.eday_idx}">${idx + 1}일차</a></li>`;
+					})
+					str += 			`</ul>`;
+					data.eventDay.forEach((eday,idx) => {
+						str += 		`<div class="eday-content event${data.event_idx}-eday${eday.eday_idx}">`;
+						str += 			`<table data-idx="${eday.eday_idx}">`;
+						str += 				`<colgroup>`;
+						str += 					`<col width="*">`;
+						str += 					`<col width="175px">`;
+						str += 					`<col width="150px">`;
+						str += 					`<col width="75px">`;
+						str += 					`<col width="75px">`;
+						str += 					`<col width="150px">`;
+						str += 				`</colgroup>`;
+						str += 				`<thead>`;
+						str += 					`<tr>`;
+						str += 						`<th>점포명</th>`;
+						str += 						`<th>품목</th>`;
+						str += 						`<th>신청날짜</th>`;
+						str += 						`<th>좋아요</th>`;
+						str += 						`<th>신고</th>`;
+						str += 						`<th></th>`;
+						str += 					`</tr>`;
+						str += 				`</thead>`;
+						str += 				`<tbody>`;
+						str += 					`<tr>`;
+						str += 						`<td colspan="6" class="empty-data">신청 정보가 없습니다</td>`;
+						str += 					`</tr>`;
+						str += 				`</tbody>`;
+						str += 			`</table>`;
+						str += 		`</div>`;
+					})
 					str += 		`</div>`;
-				})
-				str += 		`</div>`;
-				str += 	`</li>`;
+					str += 	`</li>`;
+				}
 			}
+		}else{
+			str += `<li class="empty-data">`;
+			str += 		`<p>신청목록이 없습니다.</p>`;
+			str += `</li>`;
 		}
+		
 		
 		reqCon.querySelector("ul").innerHTML = str;
 		

@@ -2,7 +2,7 @@
 
 .right-nav{display:none}
 .wrap{width:100%;}
-.header, .footer{display:none;}
+.header{display:none;}
 .login-wrap{border:1px solid #d9d9d9;height:100vh;box-shadow: 0 5px 5px rgba(0,0,0,0.1);}
 .login-wrap h3{font-size:36px;font-weight:bold;width:100%;word-break: keep-all;color:var(--font-color);max-width:75%}
 .login-wrap > div{width:50%;}

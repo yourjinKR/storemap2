@@ -90,7 +90,6 @@
   h3{font-size: 36px;font-weight:bold;text-align:center;padding:30px 0 50px}
   .right-nav{display:none;}
   .header{display:none;}
-  .footer{display:none;}
   .wrap{width:100%;background: var(--point-color);padding:75px 0 100px;display:flex;justify-content: center;align-items: center;flex-direction: column;}
   .rdate{display:flex;align-items: center;justify-content: space-between;}
   .rdate input[type="date"]{width:48%}

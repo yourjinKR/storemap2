@@ -3,7 +3,7 @@
 h3{font-size: 36px;font-weight: bold;text-align: center;padding: 30px 0 50px;color:var(--font-color)}
 .right-nav{display:none}
 .wrap{width:100%;min-height:100vh; height:100%}
-.header, .footer{display:none;}
+.header{display:none;}
 body{min-height:100vh; height:100%}
 .store {
 	text-align: center;
