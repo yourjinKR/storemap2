@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 사이드바 닫기 버튼
             else if (type === "close-store" || type === "close-event" || type === "close-united") {
                 viewSideBarCheck = false;
-                setToggle(300);
+                semiToggle();
                 hideviewSideBar();
             }
             // 우편번호 찾기 버튼
@@ -908,7 +908,7 @@ function clickOverlay(ele) {
 
     showListSideBar();
     showviewSideBar();
-    setToggle(600);
+    onToggle();
     viewSideBarCheck = true;
 
     document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
@@ -989,7 +989,7 @@ function markerMapping(eles, type) {
                     if (vo.marker.getTitle() === idx) {
                         showviewSideBar();
                         emphMarker(idx, type);
-                        setToggle(600);
+                        onToggle();
                         // 오버레이 표시
                         findOverlay(idx, type);
                     }
@@ -1034,7 +1034,7 @@ function addMarkerEvent(marker, type) {
         else if (type === "event") {
             showviewSideBar();
         }
-        setToggle(600);
+        onToggle();
 
         // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작
         document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
@@ -1103,7 +1103,7 @@ function emphMarker(idx, type) {
 /** 리스트 사이드바 여는 함수 */
 function showListSideBar() {
     listSideBar.classList.add("show");
-    setToggle(300);
+    semiToggle();
 }
 /** 리스트 사이드바 닫는 함수 */
 function hideListSideBar() {
@@ -1124,14 +1124,30 @@ function hideviewSideBar() {
 function setToggle(pixel) {
     toggleBtn.style.left = `${pixel}px`;
 }
+/** 토글 닫기 */
+function offToggle() {
+    toggleBtn.classList.remove("semi");
+    toggleBtn.classList.remove("on");
+}
+/** 토글 중간 */
+function semiToggle() {
+    toggleBtn.classList.add("semi");
+    toggleBtn.classList.remove("on");
+}
+/** 토글 열기 */
+function onToggle() {
+    toggleBtn.classList.remove("semi");
+    toggleBtn.classList.add("on");
+}
+
 /** 리스트 사이드바 토글 함수 */
 function toggleListSideBar() {
     // let ListSideBar = document.querySelector(".side-bar#store-list");
     // 토글 OFF
-    if (listSideBar.classList[1] == "show") {
+    if (listSideBar.classList.contains("show")) {
         hideviewSideBar();
         hideListSideBar();
-        setToggle(0);
+        offToggle();
     } 
     // 토글 ON
     else {
@@ -1140,9 +1156,9 @@ function toggleListSideBar() {
             showviewSideBar();
         }
         if (!viewSideBarCheck) {
-            setToggle(300);
+            semiToggle();
         } else {
-            setToggle(600);
+            onToggle();
         }
     }
 }
@@ -1422,7 +1438,7 @@ function mapSearchService(map, keyword) {
     showListSideBar();
     hideviewSideBar();
     viewSideBarCheck = false;
-    setToggle(300);
+    semiToggle();
 
     // resetAutocomplete();
     // if (!keyword) {
@@ -1857,7 +1873,7 @@ function failSearch() {
     }
     viewSideBarCheck = false;
     hideviewSideBar();
-    setToggle(300);
+    semiToggle();
 }
 
 /** 이벤트 좌표 등록 프로미스 */
@@ -1987,7 +2003,7 @@ function swap2unitedMap() {
         // 상세보기 사이드바 닫기
         hideviewSideBar();
         viewSideBarCheck = false;
-        setToggle(300);
+        semiToggle();
 
         // 사이드바를 event로 변경
         // viewSideBar = document.querySelector(".side-bar#united");
@@ -2037,7 +2053,7 @@ function swap2eventMap() {
         // 상세보기 사이드바 닫기
         hideviewSideBar();
         viewSideBarCheck = false;
-        setToggle(300);
+        semiToggle();
 
         if (eventVOList.length != 0) {
             let level = getMapLevelFromMarkerLists(eventVOList);
@@ -2083,7 +2099,7 @@ function swap2storeMap() {
         // 상세보기 사이드바 닫기
         hideviewSideBar();
         viewSideBarCheck = false;
-        setToggle(300);
+        semiToggle();
 
         if(storeVOList.length != 0) {
             let level = getMapLevelFromMarkerLists(storeVOList);

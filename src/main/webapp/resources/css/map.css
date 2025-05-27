@@ -32,8 +32,9 @@
 .side-bar .wrap { width: 100%; } 
 
 /* 토글버튼 */
-.side-bar#toggle-box { opacity:1; left:300px; overflow:auto; background:transparent; top:50%; height:auto; width:50px; display:inline-flex; white-space:nowrap; position:absolute; transform:translateY(-50%); } 
-.side-bar.show#toggle-box { opacity:1; left: 600px; overflow: auto; } 
+.side-bar#toggle-box { opacity:1; left:0px; overflow:auto; background:transparent; top:50%; height:auto; width:50px; display:inline-flex; white-space:nowrap; position:absolute; transform:translateY(-50%); } 
+.side-bar.semi#toggle-box { opacity:1; left: 300px; overflow: auto; } 
+.side-bar.on#toggle-box { opacity:1; left: 600px; overflow: auto; } 
 
 .side-bar#event-list { left: -300px; overflow: auto; } 
 .side-bar.show#event-list { opacity:1; left:300px; overflow: auto; } 
