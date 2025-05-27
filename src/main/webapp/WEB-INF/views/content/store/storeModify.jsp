@@ -32,26 +32,17 @@
     <button class="mapBtn" id="panto-current">현위치</button>
     <div class="map" id="store-loc" style="width:auto; height:400px;"></div>
     
-    <input type="text" id="lat" name="store_lat" value="${vo.store_lat}">
-    <input type="text" id="lng" name="store_lng" value="${vo.store_lng}">
+    <input type="hidden" id="lat" name="store_lat" value="${vo.store_lat}">
+    <input type="hidden" id="lng" name="store_lng" value="${vo.store_lng}">
     
     <label for="address">주소</label>
-    <input type="text" id="address" name="store_address" value="${vo.store_address}">
+    <input type="text" id="address" name="store_address" value="${vo.store_address}" readonly>
 	
 	<label for="regcode">행정코드</label>
-    <input type="text" id="regcode" name="store_regcode" value="${vo.store_regcode}">
+    <input type="text" id="regcode" name="store_regcode" value="${vo.store_regcode}" readonly>
 	
     <label for="area">주요 활동 지역</label>
     <input type="text" id="area" name="store_area" value="${vo.store_area}">
-    <%--     <select id="area" name="store_area">
-    	<option value="${vo.store_area}" selected hidden>${vo.store_area}</option>
-        <option value="서울">서울</option>
-        <option value="경기">경기</option>
-        <option value="인천">인천</option>
-        <option value="강원">강원</option>
-        <option value="제주">제주</option>
-      </select> --%>
-
 
     <label for="activitytime">점포 운영 시간</label>
     <input type="text" id="activitytime" name="store_activity_time" value="${vo.store_activity_time}">

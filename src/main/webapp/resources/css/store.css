@@ -35,6 +35,13 @@ select {
 	border-radius: 4px;
 }
 
+input[type="text"][readonly] {
+	background-color: #bbb;
+	color: #555;
+	border: 1px solid #999;
+	font-weight: bold;
+}
+
 select {
 	width: auto;
 	padding: 8px 12px;
