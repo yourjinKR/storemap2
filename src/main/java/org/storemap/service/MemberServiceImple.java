@@ -25,7 +25,7 @@ public class MemberServiceImple implements MemberService{
 		// NULL 체크를 추가하여 member_image가 NULL인 경우 처리
 		if(member != null && member.getMember_image() == null) {
 			// member_image가 NULL인 경우 기본 이미지 설정
-			member.setMember_image("member1.jpg");
+			member.setMember_image("");
 		}
 		return member;
 	}
@@ -51,7 +51,7 @@ public class MemberServiceImple implements MemberService{
 			// 파일이 있는 경우에만 이미지 업로드 처리
 			if(file != null && !file.isEmpty()){
 				// 이미지가 이미 있는 경우 삭제
-				if(!oldImg.equals("member1.jpg")) {
+				if(!oldImg.equals("")) {
 					cloudinaryService.deleteFile(oldImg);
 				}
 				// 새 이미지 직접 업로드

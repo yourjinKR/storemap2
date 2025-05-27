@@ -39,7 +39,7 @@
 										<div class="profile">
 											<label for="profileImg">
 												<c:choose>
-													<c:when test="${vo.attach.filename eq null}">
+													<c:when test="${sessionScope.userFilename eq ''}">
 														<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="${sessionScope.userImage}" data-original-src="${IMG_URL}NoMember_pgeszi.jpg"/>
 													</c:when>
 													<c:otherwise>

@@ -105,12 +105,12 @@ public class MemberController {
 					session.setAttribute("userFilename", amvo.getFilename());
 				} else {
 					// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
-					session.setAttribute("userFilename", "member1.jpg");
+					session.setAttribute("userFilename", "");
 				}
 			} else {
 				// member_image가 NULL인 경우 기본 이미지 설정
-				member.setMember_image("member1.jpg"); // 기본 이미지 값 설정
-				session.setAttribute("userFilename", "member1.jpg");
+				member.setMember_image(""); // 기본 이미지 값 설정
+				session.setAttribute("userFilename", "");
 			}
 			session.setAttribute("loginUserIdx", member.getMember_idx());
 			session.setAttribute("loginUser", member.getMember_id());
@@ -141,12 +141,12 @@ public class MemberController {
 						session.setAttribute("userFilename", aevo.getFilename());
 					} else {
 						// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
-						session.setAttribute("userFilename", "member1.jpg");
+						session.setAttribute("userFilename", "");
 					}
 				} else {
 					// enter_image가 NULL인 경우 기본 이미지 설정
-					enter.setEnter_image("enter1.jpg"); // 기본 이미지 값 설정
-					session.setAttribute("userFilename", "member1.jpg");
+					enter.setEnter_image(""); // 기본 이미지 값 설정
+					session.setAttribute("userFilename", "");
 				}
 				session.setAttribute("loginUserIdx", enter.getEnter_idx());
 				session.setAttribute("loginUser", enter.getEnter_id());
@@ -222,6 +222,22 @@ public class MemberController {
 	    int res = memberService.modifyMember(file, member);
 	    if(res > 0) {
 	        session.setAttribute("userNickName", member.getMember_nickname());
+	        session.setAttribute("userImage", member.getMember_image());
+	        // NULL 체크를 추가하여 member_image가 NULL인 경우 처리
+	     	if(member.getMember_image() != null) {
+	     		AttachFileVO amvo = attachMapper.getAttach(member.getMember_image());
+	     		// amvo가 null이 아닌 경우에만 파일 이름 설정
+	     		if(amvo != null) {
+	     			session.setAttribute("userFilename", amvo.getFilename());
+	     		} else {
+	     			// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
+	     			session.setAttribute("userFilename", "");
+	     		}
+	     	} else {
+	     		// member_image가 NULL인 경우 기본 이미지 설정
+	     		member.setMember_image(""); // 기본 이미지 값 설정
+	     		session.setAttribute("userFilename", "");
+	     	}    
 	    }
 	    result.put("result", res);
 	    return result;
@@ -253,6 +269,23 @@ public class MemberController {
 	    enter.setEnter_num(enter_num);
 	    
 	    int res = enterService.modifyEnter(file, enter);
+	    if(res > 0) {
+	    	// NULL 체크를 추가하여 enter_image가 NULL인 경우 처리
+			if(enter.getEnter_image() != null) {
+				AttachFileVO aevo = attachMapper.getAttach(enter.getEnter_image());
+				// aevo가 null이 아닌 경우에만 파일 이름 설정
+				if(aevo != null) {
+					session.setAttribute("userFilename", aevo.getFilename());
+				} else {
+					// attachMapper에서 파일을 찾지 못한 경우 기본 이미지 설정
+					session.setAttribute("userFilename", "");
+				}
+			} else {
+				// enter_image가 NULL인 경우 기본 이미지 설정
+				enter.setEnter_image(""); // 기본 이미지 값 설정
+				session.setAttribute("userFilename", "");
+			}
+	    }
 	    result.put("result", res);
 	    System.out.println("결과 : " + res);
 	    return result;

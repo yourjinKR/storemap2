@@ -35,7 +35,7 @@
 				<a class="btn" id="hlogoutLink" href="/member/login">로그아웃</a>
 				<div class="profile">
 					<c:choose>
-						<c:when test="${sessionScope.userFilename eq 'member1.jpg'}">
+						<c:when test="${sessionScope.userFilename eq ''}">
 							<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
 						</c:when>
 						<c:otherwise>
