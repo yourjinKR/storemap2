@@ -145,7 +145,7 @@
 	<div class="btn-box">
 		<c:if test="${not empty loginUserIdx and userType eq 'enter'}">
 			  <button type="button" class="eventBtn" id="registerBtn" onclick="location.href='/event/eventRegister'">
-			   	 새 게시글 등록
+			   	 이벤트 등록
 			  </button>
 		</c:if>
 	</div>
