@@ -9,11 +9,8 @@
 </c:if>
 
 <div class="storeView">
-	<div class="store-type">
-		<c:choose>
-			<c:when test="${svo.store_open eq 0}">미영업</c:when>
-			<c:when test="${svo.store_open eq 1}">영업 중</c:when>
-		</c:choose>
+	<div class="store-status ${svo.store_open eq 0 ? 'closed' : 'open'}">
+  		${svo.store_open eq 0 ? 'CLOSE' : 'OPEN'}
 	</div>
 	<div class="store-image">
 		<c:choose>

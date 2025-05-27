@@ -15,8 +15,8 @@ const markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT), // 기본, 
     clickedMarkerSize = new kakao.maps.Size(CLICKED_WIDTH, CLICKED_HEIGHT); // 오버 마커의 크기
 
 // ================== 마커 option ================== 
-let markerOption = {offset: new kakao.maps.Point(16, 34), alt: "마커 이미지 예제", shape: "poly", coords: "1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33"};
-let clickedMarkerOption = {offset: new kakao.maps.Point(20, 46), alt: "클릭 마커 이미지 예제", shape: "poly", coords: "1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33"};
+let markerOption = { offset: new kakao.maps.Point(16, 34), alt: "마커 이미지 예제", shape: "poly", coords: "1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33" };
+let clickedMarkerOption = { offset: new kakao.maps.Point(20, 46), alt: "클릭 마커 이미지 예제", shape: "poly", coords: "1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33" };
 
 // 마커 아이콘
 let testIcon = new kakao.maps.MarkerImage(basicMarkerSrc, markerSize, markerOption);
@@ -29,15 +29,15 @@ let eventIcon = new kakao.maps.MarkerImage(eventMarkerSrc, markerSize, markerOpt
 let eventClickedIcon = new kakao.maps.MarkerImage(eventMarkerSrc, clickedMarkerSize, clickedMarkerOption);
 
 // 클릭하여 강조된 마커
-let selectedMarker = {marker : null, type : null};
+let selectedMarker = { marker: null, type: null };
 /** 지도 클릭 이벤트 마커 */
 let clickMarker = null;
 
 // 지도에 표시된 마커 객체를 가지고 있을 배열
 let markerList = [];
-/** store vo 리스트 */ 
+/** store vo 리스트 */
 let storeVOList = [];
-/** event vo 리스트 */ 
+/** event vo 리스트 */
 let eventVOList = [];
 /** 장소 정보를 담는 리스트 */
 let placeList = [];
@@ -53,7 +53,7 @@ let storeUL = null;
 let listSideBar = null;
 // 스토어 리스트의 검색 결과 div
 let searchResult;
-/** true : 사이드바가 열린 상태 */  
+/** true : 사이드바가 열린 상태 */
 let viewSideBarCheck = false;
 let viewSideBar = null;
 // 토글 버튼
@@ -74,11 +74,11 @@ let keywordInput;
 // 자동완성
 let autoCompleteBox = null;
 let autoSearchUL = null;
-/** 자동완성 재입력 방지 */ 
+/** 자동완성 재입력 방지 */
 let suppressAutocomplete = false;
 let selectedIndex = -1;
-/** 검색어 조건 */  
-let searchCondition = {lat:null, lng:null, kilometer:null, level:null, code:null, amount:null, keyword:null, store_idx:null, event_idx:null};
+/** 검색어 조건 */
+let searchCondition = { lat: null, lng: null, kilometer: null, level: null, code: null, amount: null, keyword: null, store_idx: null, event_idx: null };
 
 // 기본 위도 경도 설정 (솔데스크 강남점)
 let basicLat = 37.505410898990775;
@@ -107,37 +107,37 @@ let positionOverlay = null;
 
 // 페이지 로드 후 script 실행
 document.addEventListener("DOMContentLoaded", () => {
-	const CSS_PATH = '/resources/css/map.css';
-	let linkEle = document.createElement('link');
-	linkEle.rel = 'stylesheet';
-	linkEle.href = CSS_PATH;
-	document.head.appendChild(linkEle);
-	
+    const CSS_PATH = '/resources/css/map.css';
+    let linkEle = document.createElement('link');
+    linkEle.rel = 'stylesheet';
+    linkEle.href = CSS_PATH;
+    document.head.appendChild(linkEle);
+
     /** 로컬 스토리지 기반 경도위도 값 */
     let currentPosition = getPositionData();
 
     // 지도 기본 설정값
     let basicOption = {};
-    if(currentPosition) {
+    if (currentPosition) {
 
         currentLat = currentPosition.lat;
         currentLng = currentPosition.lng;
-        basicOption = {center: new kakao.maps.LatLng(currentLat, currentLng), level: 3};
+        basicOption = { center: new kakao.maps.LatLng(currentLat, currentLng), level: 3 };
 
-        clickMarker = new kakao.maps.Marker({ 
+        clickMarker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(currentLat, currentLng)
         });
 
     } else {
-        basicOption = {center: new kakao.maps.LatLng(basicLat, basicLng), level: 1};
+        basicOption = { center: new kakao.maps.LatLng(basicLat, basicLng), level: 1 };
 
-        clickMarker = new kakao.maps.Marker({ 
+        clickMarker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(basicLat, basicLng)
         });
     }
 
     // 클릭마커 클릭 이벤트 추가
-    kakao.maps.event.addListener(clickMarker, 'click', function() {
+    kakao.maps.event.addListener(clickMarker, 'click', function () {
         if (!customPositionMode && mapType === "full") {
             // alert("현위치를 수정하시겠습니까?");
             setMyCurrentPlace();
@@ -150,16 +150,16 @@ document.addEventListener("DOMContentLoaded", () => {
         new kakao.maps.LatLng(39.5, 132.0)   // 북동쪽
     );
 
-	// 기본 설정값으로 지도 생성
-	let container = document.querySelector(".map");
+    // 기본 설정값으로 지도 생성
+    let container = document.querySelector(".map");
 
-    if(container != null) {
+    if (container != null) {
         basicMap = new kakao.maps.Map(container, basicOption);
-    
+
         // 새로고침
         centerLatLng = basicMap.getCenter();
         loadAddrFromCoords(centerLatLng);
-    
+
         // 클릭 마커 생성  
         clickMarker.setMap(basicMap);
 
@@ -172,8 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 검색창
     mapSearchForm = document.querySelector(".form#map");
-    
-    if(mapType === "full") {
+
+    if (mapType === "full") {
         keywordInput = mapSearchForm.keyword;
     } else {
         mapSearchForm = document.querySelector(".search-bar");
@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storeModal.classList.add("side-bar");
         storeModal.setAttribute("id", "store");
         // 닫기 버튼 표시
-        let storeHeader = document.querySelectorAll(".modal-header")[0];        
+        let storeHeader = document.querySelectorAll(".modal-header")[0];
         storeHeader.style.display = 'block';
 
         // 이벤트 상세보기 모달 사이드바 style로 변경
@@ -201,22 +201,22 @@ document.addEventListener("DOMContentLoaded", () => {
         eventModal.classList.add("side-bar");
         eventModal.setAttribute("id", "event");
         // 닫기 버튼 표시
-        let eventHeader = document.querySelectorAll(".modal-header")[1];        
+        let eventHeader = document.querySelectorAll(".modal-header")[1];
         eventHeader.style.display = 'block';
 
         // 닫기 버튼 표시
-        let unitedHeader = document.querySelectorAll(".modal-header")[2];        
+        let unitedHeader = document.querySelectorAll(".modal-header")[2];
         unitedHeader.style.display = 'block';
 
         // 기본 상태
         searchCondition = {
-            level : basicMap.getLevel(),
-            lat : basicMap.getCenter().getLat(),
-            lng : basicMap.getCenter().getLng(),
-            code : centerLoc.code,
+            level: basicMap.getLevel(),
+            lat: basicMap.getCenter().getLat(),
+            lng: basicMap.getCenter().getLng(),
+            code: centerLoc.code,
             // keyword : keyword,
-            amount : 100,
-            kilometer : setRadiusByLevel(basicMap.getLevel())
+            amount: 100,
+            kilometer: setRadiusByLevel(basicMap.getLevel())
         }
 
         // ==================== 요소 선언 ====================
@@ -297,7 +297,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             }
             else if (subCondition.keyword != null) {
+                console.log('초기 검색 (키워드) 실행');
                 searchCondition = subCondition;
+                basicMap.setLevel(searchCondition.level);
                 mapSearchService(basicMap, searchCondition.keyword);
             } else {
                 as.getListNearest(searchCondition, 5, function (data) {
@@ -331,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // 지도 중심좌표 부드럽게 이동하기
             if (type === "panToTest") {
                 panToLatLng(basicMap, basicLat, basicLng);
-            } 
+            }
             // 마커 리스트 비울때는 숨김 처리 후 리스트의 요소를 비워야 정상 작동
             else if (type === "markersClear") {
                 hideMarkers(basicMap);
@@ -361,13 +363,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // 영업 위치설정
             else if (type === "store-loc") {
-                
+
             }
             // 현위치 이동 (임시 함수, 추후 수정)
             else if (type === "panto-current") {
                 basicMap.setLevel(3);
                 panToLatLng(basicMap, currentLat, currentLng);
-                if(new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter()) {
+                if (new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter()) {
                     setMyCurrentPlace();
                 }
             }
@@ -395,14 +397,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 현위치 커스텀 설정 오버레이를 생성합니다
     positionOverlay = new kakao.maps.CustomOverlay({
-    content: `
+        content: `
                 <div class="customoverlay">
                     <span class="title">현위치 설정</span>
                     <button onclick="getMyCurrentPlace()">변경</button>
                     <button onclick="cancelMyCurrentPlace()">취소</button>
                 </div>`,
-    yAnchor: 1,
-    zIndex: 3
+        yAnchor: 1,
+        zIndex: 3
     });
 
     if (basicMap != null) {
@@ -410,16 +412,16 @@ document.addEventListener("DOMContentLoaded", () => {
         basicMap.relayout();
 
         // 지도 클릭 이벤트 (경도 위도 출력)
-        kakao.maps.event.addListener(basicMap, 'click', function(mouseEvent) {        
-        
+        kakao.maps.event.addListener(basicMap, 'click', function (mouseEvent) {
+
             // 클릭한 위도, 경도 정보
             let latlng = mouseEvent.latLng;
-    
+
             if (mapType === "full" && customPositionMode) {
                 clickMarker.setPosition(latlng);
                 positionOverlay.setPosition(latlng);
             }
-    
+
             if (mapType === "store-loc") {
                 clickMarker.setPosition(latlng);
                 let f = document.querySelector("#store-modify");
@@ -433,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // 줌 이벤트
-        kakao.maps.event.addListener(basicMap, 'zoom_changed', function() {
+        kakao.maps.event.addListener(basicMap, 'zoom_changed', function () {
             const level = basicMap.getLevel();
 
             if (level > 3) {
@@ -448,16 +450,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            if(clickedOverlay != null) {
+            if (clickedOverlay != null) {
                 clickedOverlay.setMap(basicMap);
             }
             preventOverlayClickBlock();
         });
 
         // 지도 이동이 완료되었을 발생하는 이벤트
-        kakao.maps.event.addListener(basicMap, 'dragend', function() {        
+        kakao.maps.event.addListener(basicMap, 'dragend', function () {
             const center = basicMap.getCenter();
-            
+
             // 중심 좌표가 제한된 범위를 벗어나면
             if (!boundLimit.contain(center)) {
                 // 가장 가까운 지점으로 중심을 재조정
@@ -476,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 방향키로 선택 중인 항목의 인덱스
     selectedIndex = -1;
     /** 자동완성을 취소했을때 돌아갈 키워드 */
-    let orgKeyword =null;
+    let orgKeyword = null;
 
     let suggestionList = []; // 현재 렌더링 중인 추천 리스트
 
@@ -491,7 +493,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 검색창에 값 입력
     keywordInput.addEventListener("input", e => {
         // console.log('값입력');
-        
+
         resetAutocomplete();
 
         const keyword = keywordInput.value.trim();
@@ -499,7 +501,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (keyword.length === 0) {
             return;
         }
-        
+
         let lat;
         let lng;
         // 검색어 미리보기는 전국 단위로 확인
@@ -523,43 +525,43 @@ document.addEventListener("DOMContentLoaded", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0, kilometer : kilometer}) 
+            body: JSON.stringify({ keyword: keyword, lat: lat, lng: lng, amount: 0, kilometer: kilometer })
         })
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data);
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
 
-            // 최대 5개까지만 표시
-            // const suggestionList = data.slice(0, 3);
-            updateSuggestionList(data, 'store', keyword);
-        })
-        .catch(err => {
-            console.error("자동완성 fetch 실패", err);
-            // resetAutocomplete();
-        });
+                // 최대 5개까지만 표시
+                // const suggestionList = data.slice(0, 3);
+                updateSuggestionList(data, 'store', keyword);
+            })
+            .catch(err => {
+                console.error("자동완성 fetch 실패", err);
+                // resetAutocomplete();
+            });
 
         // 이벤트 정보 불러오기 (서버에 비동기 요청)
-        fetch("/event/eventFilter/keyword" , {
+        fetch("/event/eventFilter/keyword", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ keyword: keyword, lat : lat, lng : lng, amount : 0})
+            body: JSON.stringify({ keyword: keyword, lat: lat, lng: lng, amount: 0 })
         })
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data);
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
 
-            // processAllEvents(data, "autoComplete");
+                // processAllEvents(data, "autoComplete");
 
-            // 최대 5개까지만 표시
-            // const suggestionList = data.slice(0, 3);
-            updateSuggestionList(data, 'event', keyword);
-        })
-        .catch(err => {
-            console.error("자동완성 fetch 실패", err);
-            // resetAutocomplete();
-        });
+                // 최대 5개까지만 표시
+                // const suggestionList = data.slice(0, 3);
+                updateSuggestionList(data, 'event', keyword);
+            })
+            .catch(err => {
+                console.error("자동완성 fetch 실패", err);
+                // resetAutocomplete();
+            });
 
 
     });
@@ -573,7 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 자동완성 검색창 키보드 방향키 지원
-    keywordInput.addEventListener("keydown", e => {        
+    keywordInput.addEventListener("keydown", e => {
         //const items = autoSearchUL.querySelectorAll("li");
         const items = Array.from(autoSearchUL.querySelectorAll("li")).filter(li => {
             return window.getComputedStyle(li).display === "block";
@@ -588,7 +590,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateActiveItem(items);
                     // input에 값 적용
                     keywordInput.value = items[selectedIndex].dataset.value;
-                } 
+                }
                 // 자동완성 리스트에 벗어나기
                 else if (selectedIndex == 0) {
                     if (orgKeyword != null) {
@@ -647,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             location.href = "/store/map";  // 주소에 파라미터 안 붙음
                         }
                     }
-                } 
+                }
                 // 자동완성 검색어를 선택하지 않을때
                 else if (selectedIndex == -1 && items.length >= 0) {
                     if (!keywordInput.value) {
@@ -662,12 +664,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         location.href = "/store/map";  // 주소에 파라미터 안 붙음
                     }
                 }
-                keywordInput.value = "";    
+                keywordInput.value = "";
                 break;
 
-            default :
-                // console.log(e.keyCode);
-                // resetAutocomplete();
+            default:
+            // console.log(e.keyCode);
+            // resetAutocomplete();
         }
     });
 
@@ -676,10 +678,10 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteAllEle();
 
         const target = e.target.closest("li");
-        
+
         if (!target) return;
 
-        const type = target.getAttribute("type");   
+        const type = target.getAttribute("type");
         const idx = target.getAttribute("idx");
 
         // map.jsp
@@ -695,7 +697,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 return;
             }
-        } 
+        }
         // header
         else {
             if (type === "store") {
@@ -715,10 +717,10 @@ document.addEventListener("DOMContentLoaded", () => {
         mapSearchService(basicMap, value);
     });
 
-    /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */ 
+    /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */
     function searchAddrFromCoords(latlng) {
         let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function(result, status) {
+        let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
             }
         };
@@ -728,7 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
     function initAddrFromCoords(latlng, form) {
         let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function(result, status) {
+        let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
                 form.regcode.value = result[0].code; // 행정코드
             }
@@ -739,7 +741,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /** 경도위도를 기반으로 현재 지도정보를 최신화 */
     function loadAddrFromCoords(latlng) {
         let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function(result, status) {
+        let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
                 centerLoc = result[0];
             }
@@ -750,7 +752,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
     function initDetailAddrFromCoords(coords, form) {
         let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function(result, status) {
+        let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
                 form.address.value = result[0].address.address_name;
             }
@@ -765,7 +767,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // 지도 마커 추가 (구버전)
 function addMarker(map, lat, lng) {
     // 마커가 표시될 위치
-    let markerPosition  = new kakao.maps.LatLng(lat, lng); 
+    let markerPosition = new kakao.maps.LatLng(lat, lng);
     // 마커 생성
     let marker = new kakao.maps.Marker({
         position: markerPosition
@@ -774,7 +776,7 @@ function addMarker(map, lat, lng) {
     marker.setMap(map);
 }
 
-/** 마커 등록 */ 
+/** 마커 등록 */
 function registerMarker(vo) {
     let lat;
     let lng;
@@ -793,14 +795,14 @@ function registerMarker(vo) {
     }
 
     // 마커 위치 설정
-    let markerPosition  = new kakao.maps.LatLng(lat, lng); 
+    let markerPosition = new kakao.maps.LatLng(lat, lng);
     // 마커 생성
     let marker = new kakao.maps.Marker({
         position: markerPosition,
         // 추후에 마우스 오버시 idx 노출 안되도록 수정
-        title : idx,
-        image : icon, // 아이콘 이미지 변경 필요
-        zIndex : 3
+        title: idx,
+        image: icon, // 아이콘 이미지 변경 필요
+        zIndex: 3
     });
     return marker;
 }
@@ -812,19 +814,19 @@ function setMarkers(map, list) {
     }
 }
 
-/** 배열 비우기 */ 
+/** 배열 비우기 */
 function clearMarkers() {
     markerList = [];
 }
 
 /** 배열에 추가된 마커를 지도에 표시하는 함수 */
 function showMarkers(map, list) {
-    setMarkers(map, list)    
+    setMarkers(map, list)
 }
 
 /** 배열에 추가된 마커를 지도에서 삭제하는 함수 */
 function hideMarkers(list) {
-    setMarkers(null, list);    
+    setMarkers(null, list);
 }
 
 // ============================= 오버레이 관련 함수 =============================
@@ -843,12 +845,12 @@ function registerOverlay(vo) {
         </div>`;
         // 커스텀 오버레이를 생성합니다
         let customOverlay = new kakao.maps.CustomOverlay({
-        // map: map,
-        position: new kakao.maps.LatLng(vo.store_lat, vo.store_lng),
-        content: content,
-        yAnchor: 1,
-        zIndex: 5,
-        clickable: false
+            // map: map,
+            position: new kakao.maps.LatLng(vo.store_lat, vo.store_lng),
+            content: content,
+            yAnchor: 1,
+            zIndex: 5,
+            clickable: false
         });
         // 리스트에 추가
         // storeOverlayList.push(customOverlay);
@@ -862,12 +864,12 @@ function registerOverlay(vo) {
         </div>`;
         // 커스텀 오버레이를 생성합니다
         let customOverlay = new kakao.maps.CustomOverlay({
-        // map: map,
-        position: new kakao.maps.LatLng(vo.event_lat, vo.event_lng),
-        content: content,
-        yAnchor: 1,
-        zIndex: 5,
-        clickable: false
+            // map: map,
+            position: new kakao.maps.LatLng(vo.event_lat, vo.event_lng),
+            content: content,
+            yAnchor: 1,
+            zIndex: 5,
+            clickable: false
         });
         // 리스트에 추가
         // storeOverlayList.push(customOverlay);
@@ -903,7 +905,7 @@ function clickOverlay(ele) {
     let li = searchEleByTitle(idx, type);
 
     viewSideBar = document.querySelector(`.side-bar#${type}`);
-    
+
     emphMarker(idx, type);
     viewDetailModalPage(li, type);
 
@@ -912,7 +914,7 @@ function clickOverlay(ele) {
     onToggle();
     viewSideBarCheck = true;
 
-    document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
+    document.querySelector(".side-bar#list").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
 
     findOverlay(idx, type);
 }
@@ -930,14 +932,14 @@ function findOverlay(idx, type) {
         hideOverlay(storeOverlayList);
         hideOverlay(eventOverlayList);
     }
-    if (type === 'store') {        
+    if (type === 'store') {
         storeVOList.forEach(vo => {
             if (vo.store_idx == idx) {
                 overlay = vo.overlay;
             }
         })
     }
-    else if (type === 'event') {     
+    else if (type === 'event') {
         eventVOList.forEach(vo => {
             if (vo.event_idx == idx) {
                 overlay = vo.overlay;
@@ -952,7 +954,7 @@ function findOverlay(idx, type) {
 
 /** 오버레이 DOM 클릭 방지하는 함수 */
 function preventOverlayClickBlock() {
-    document.querySelectorAll('.customoverlay').forEach(function(overlay) {
+    document.querySelectorAll('.customoverlay').forEach(function (overlay) {
         var container = overlay.parentElement;
         if (container && container.style) {
             // z-index는 유지, 클릭만 통과
@@ -965,9 +967,9 @@ function preventOverlayClickBlock() {
 }
 
 // ============================= 이벤트 추가 관련 함수 =============================
-/** li요소 클릭 이벤트 추가, 마커 매핑 함수 (ele, type) */ 
+/** li요소 클릭 이벤트 추가, 마커 매핑 함수 (ele, type) */
 function markerMapping(eles, type) {
-    if (eles != null ) {
+    if (eles != null) {
         eles.forEach(ele => {
 
             // idx 추출
@@ -1014,12 +1016,12 @@ function searchEleByTitle(title, type) {
     return result;
 }
 
-/** 마커 클릭 이벤트 추가 함수 */ 
+/** 마커 클릭 이벤트 추가 함수 */
 function addMarkerEvent(marker, type) {
-    kakao.maps.event.addListener(marker, 'click', function() {
+    kakao.maps.event.addListener(marker, 'click', function () {
         // 마커 선택
         selectMarker(marker, type);
-        
+
         let idx = marker.getTitle();
         emphMarker(idx, type);
         let li = searchEleByTitle(idx, type);
@@ -1038,7 +1040,7 @@ function addMarkerEvent(marker, type) {
         onToggle();
 
         // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작
-        document.querySelector(".side-bar#list").scrollTo({left:0, top:li.offsetTop, behavior:'smooth'});
+        document.querySelector(".side-bar#list").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
 
         // 오버레이 강조
         findOverlay(idx, type);
@@ -1074,16 +1076,16 @@ function selectMarker(marker, type) {
         // 기존에 클릭된 마커의 이미지를 바꿈
         // 기존의 마커가 어떤 타입이었는지 구분
         !!selectedMarker.marker && selectedMarker.marker.setImage(oldIcon);
-        
+
         marker.setImage(icon);
     }
-    selectedMarker = {marker : marker, type : type};
+    selectedMarker = { marker: marker, type: type };
 }
 
 /** idx를 받으면 일치하는 마커로 이동 및 강조하는 함수 */
 function emphMarker(idx, type) {
     let list = [];
-    if(type === "store") {
+    if (type === "store") {
         list = storeVOList;
     } else if (type === "event") {
         list = eventVOList;
@@ -1149,7 +1151,7 @@ function toggleListSideBar() {
         hideviewSideBar();
         hideListSideBar();
         offToggle();
-    } 
+    }
     // 토글 ON
     else {
         showListSideBar();
@@ -1169,7 +1171,7 @@ function calcToggle() {
 }
 
 // 비동기 서비스
-const asyncService = (function(){
+const asyncService = (function () {
     function getEventByIdx(idx, callback) {
         fetch(`/modal/event/getByIdx.json`, {
             method: 'POST',
@@ -1178,21 +1180,21 @@ const asyncService = (function(){
             },
             body: JSON.stringify(idx)
         })
-        .then(response => response.json())
-        .then(data => {
-            if(data != null) {
-                searchCondition.event_idx = data.event_idx;
-                searchCondition.store_idx = null;
-            }
-            callback(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    searchCondition.event_idx = data.event_idx;
+                    searchCondition.store_idx = null;
+                }
+                callback(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     /** idx로 점포 정보 로드하는 함수 */
-    function getStoreByIdx(idx, callback){
+    function getStoreByIdx(idx, callback) {
         fetch(`/modal/store/getByIdx.json`, {
             method: 'POST',
             headers: {
@@ -1200,21 +1202,21 @@ const asyncService = (function(){
             },
             body: JSON.stringify(idx)
         })
-        .then(response => response.json())
-        .then(data => {
-            if(data != null) {
-                searchCondition.event_idx = null;
-                searchCondition.store_idx = data.store_idx;
-            }
-            callback(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    searchCondition.event_idx = null;
+                    searchCondition.store_idx = data.store_idx;
+                }
+                callback(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     /** 현위치에서 가장 가까운 점포 n개 로드하는 함수 */
-    function getListNearest(condition, amount, callback){
+    function getListNearest(condition, amount, callback) {
         condition.amount = amount;
         fetch(`/modal/list/nearest.json`, {
             method: 'POST',
@@ -1223,17 +1225,17 @@ const asyncService = (function(){
             },
             body: JSON.stringify(condition)
         })
-        .then(response => response.json())
-        .then(data => {
-            callback(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
-    /** 반경 내 점포 리스트 (condition, kilometer, callback) */ 
-    function getStoreListWhithin(searchCondition, kilometer, callback){
+    /** 반경 내 점포 리스트 (condition, kilometer, callback) */
+    function getStoreListWhithin(searchCondition, kilometer, callback) {
         searchCondition.kilometer = kilometer;
         fetch(`/modal/list/within.json`, {
             method: 'POST',
@@ -1242,27 +1244,27 @@ const asyncService = (function(){
             },
             body: JSON.stringify(searchCondition)
         })
-        .then(response => response.json())
-        .then(data => {
-            callback(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
-    
+
     // 지역명 기반 검색, 추후에 store_regcode로 진행   
-    function getListByReg(store_area, callback){
+    function getListByReg(store_area, callback) {
         fetch(`/modal/list/store_area/${store_area}.json`)
-        .then(response => response.json())
-        .then(data => {
-            callback(data);
-        })
-        .catch(err => console.log(err));
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => console.log(err));
     }
 
     // 현위치 기반 검색
-    function getListByLoc(searchCondition, callback) {        
+    function getListByLoc(searchCondition, callback) {
         fetch(`/modal/list/loc.json`, {
             method: 'POST',
             headers: {
@@ -1270,21 +1272,21 @@ const asyncService = (function(){
             },
             body: JSON.stringify(searchCondition)
         })
-        .then(response => response.json())
-        .then(data => {
-            callback(data);
-        })
-        .catch(err => console.error(err));
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => console.error(err));
     }
 
     // 카테고리 기반 검색 (store table에 카테고리가 없으니 menu에서 찾아야 하는가)
     function getListByCategory(menu_name, callback) {
-        
+
     }
 
     // 점포명 기반 검색
     function getListByName(store_name, callback) {
-        
+
     }
 
     /** 키워드 기반 검색 함수 */
@@ -1296,13 +1298,13 @@ const asyncService = (function(){
             },
             body: JSON.stringify(searchCondition)
         })
-        .then(response => response.json())
-        .then(data => {
-            callback(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     /** 지역명=키워드 기반 검색 함수 */
@@ -1314,17 +1316,17 @@ const asyncService = (function(){
             },
             body: JSON.stringify(searchCondition)
         })
-        .then(response => response.json())
-        .then(data => {
-            callback(data);
-        })
-        .catch(err => {
-            console.error(err);
-        });
+            .then(response => response.json())
+            .then(data => {
+                callback(data);
+            })
+            .catch(err => {
+                console.error(err);
+            });
     }
 
     /** store_idx 입력 시 점포 상세보기 정보 출력 함수 */
-    function getStore(store_idx, callback){
+    function getStore(store_idx, callback) {
         fetch(`/modal/${store_idx}.json`)
             .then(response => response.json())
             .then(data => {
@@ -1332,7 +1334,7 @@ const asyncService = (function(){
             })
             .catch(err => console.log(err));
     }
-    
+
     /** 메뉴 목록 함수 */
     function getMenuList(store_idx, callback) {
         fetch(`/store/list/${store_idx}.json`)
@@ -1343,33 +1345,33 @@ const asyncService = (function(){
             .catch(err => console.log(err));
     }
 
-	/** 키워드를 입력하여 이벤트 리스트 불러오는 함수 */
-    function eventListByKeyword(searchCondition, callback){
-	fetch("/event/eventFilter/keyword", {
-		method : 'POST',
-		headers:{
-			'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify(searchCondition)
-	})
-	.then(response => response.json())
-    .then(data => callback(data))
-	.catch(err => console.log(err))
-}
+    /** 키워드를 입력하여 이벤트 리스트 불러오는 함수 */
+    function eventListByKeyword(searchCondition, callback) {
+        fetch("/event/eventFilter/keyword", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchCondition)
+        })
+            .then(response => response.json())
+            .then(data => callback(data))
+            .catch(err => console.log(err))
+    }
 
     // 함수 객체 리턴
     return {
-        getListNearest : getListNearest,
-        getStoreListWhithin : getStoreListWhithin, 
-        getListByReg : getListByReg,
-        getListByLoc : getListByLoc,
-        getStore : getStore,
-        getMenuList : getMenuList,
-        getListByKeyword : getListByKeyword,
-        getListByAddrKeyword : getListByAddrKeyword,
-        eventListByKeyword : eventListByKeyword,
-        getStoreByIdx : getStoreByIdx,
-        getEventByIdx : getEventByIdx
+        getListNearest: getListNearest,
+        getStoreListWhithin: getStoreListWhithin,
+        getListByReg: getListByReg,
+        getListByLoc: getListByLoc,
+        getStore: getStore,
+        getMenuList: getMenuList,
+        getListByKeyword: getListByKeyword,
+        getListByAddrKeyword: getListByAddrKeyword,
+        eventListByKeyword: eventListByKeyword,
+        getStoreByIdx: getStoreByIdx,
+        getEventByIdx: getEventByIdx
     };
 })();
 const as = asyncService;
@@ -1391,7 +1393,7 @@ function panToLatLng(map, lat, lng) {
 
 /** 업로드할 요소 위치를 입력하여 지도를 업로드 함수 (반환값 : 해당 지도 요소) */
 function uploadMap(path, lat, lng) {
-    let basicOption = {center: new kakao.maps.LatLng(lat, lng), level: 3};
+    let basicOption = { center: new kakao.maps.LatLng(lat, lng), level: 3 };
     let result = new kakao.maps.Map(path, basicOption);
     return result;
 }
@@ -1407,12 +1409,12 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a =
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) *
-    Math.cos(lat2 * Math.PI / 180) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
 
     return distance;
@@ -1446,25 +1448,25 @@ function mapSearchService(map, keyword) {
     //     alert("키워드를 입력하시오");
     //     return;
     // }
-    
-    storeFailModal.style.display = "none";  
+
+    storeFailModal.style.display = "none";
     eventFailModal.style.display = "none";
 
     deleteAllEle();
 
     searchCondition = {
-        level : basicMap.getLevel(),
-        lat : basicMap.getCenter().getLat(),
-        lng : basicMap.getCenter().getLng(),
-        code : centerLoc.code,
-        keyword : keyword,
-        amount : 100,
-        kilometer : setRadiusByLevel(basicMap.getLevel())
+        level: basicMap.getLevel(),
+        lat: basicMap.getCenter().getLat(),
+        lng: basicMap.getCenter().getLng(),
+        code: centerLoc.code,
+        keyword: keyword,
+        amount: 100,
+        kilometer: setRadiusByLevel(basicMap.getLevel())
     }
 
     // 점포 및 장소 검색 시작
     as.getListByAddrKeyword(searchCondition, function (data) {
-        if(data.length != 0) {
+        if (data.length != 0) {
             apply2storeMap(data);
             let level = getMapLevelFromMarkerLists(storeVOList);
             basicMap.setLevel(level);
@@ -1474,7 +1476,7 @@ function mapSearchService(map, keyword) {
     });
 
     // 이벤트 검색 시작
-    as.eventListByKeyword(searchCondition, function(data) {
+    as.eventListByKeyword(searchCondition, function (data) {
         if (data.length != 0) {
             processAllEvents(data, "search");
         }
@@ -1484,7 +1486,7 @@ function mapSearchService(map, keyword) {
 // ======= 키워드 검색 관련 =======
 /** 장소 검색을 요청하는 함수 */
 function searchPlaces(keyword) {
-    let ps = new kakao.maps.services.Places();  
+    let ps = new kakao.maps.services.Places();
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         // alert('키워드를 입력해주세요!');
@@ -1492,12 +1494,12 @@ function searchPlaces(keyword) {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청
-    ps.keywordSearch(keyword, placesSearchCB); 
+    ps.keywordSearch(keyword, placesSearchCB);
 }
 
 /** 역 검색을 요청하는 함수 */
 function searchSubway(keyword) {
-    let ps = new kakao.maps.services.Places();  
+    let ps = new kakao.maps.services.Places();
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         // alert('키워드를 입력해주세요!');
@@ -1505,13 +1507,13 @@ function searchSubway(keyword) {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청
-    let options = {category_group_code : 'SW8'};
+    let options = { category_group_code: 'SW8' };
     ps.keywordSearch(keyword, subwaySearchCB, options);
 }
 
 /** 역 검색 서비스를 요청하는 함수 */
 function serviceSubway(keyword) {
-    let ps = new kakao.maps.services.Places();  
+    let ps = new kakao.maps.services.Places();
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         // alert('키워드를 입력해주세요!');
@@ -1519,7 +1521,7 @@ function serviceSubway(keyword) {
     }
 
     // 장소검색 객체를 통해 키워드로 장소검색을 요청
-    let options = {category_group_code : 'SW8'};
+    let options = { category_group_code: 'SW8' };
     ps.keywordSearch(keyword, subwayServiceCB, options);
 }
 
@@ -1528,7 +1530,7 @@ function serviceSubway(keyword) {
 /** true = 검색 기능을 재실행 하는 여부 */
 let againSearch;
 
-/** 장소검색이 완료됐을 때 호출되는 콜백함수 */ 
+/** 장소검색이 완료됐을 때 호출되는 콜백함수 */
 function placesSearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
         placeList = data;
@@ -1582,12 +1584,12 @@ function placesSearchCB(data, status, pagination) {
 function subwaySearchCB(data, status, pagination) {
     if (status === kakao.maps.services.Status.OK) {
         subwayInfo = data[0];
-    } 
+    }
     else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         apply2storeMap(data);
         // alert('subway 검색 결과가 존재하지 않습니다.');
         return;
-    } 
+    }
     else if (status === kakao.maps.services.Status.ERROR) {
         apply2storeMap(data);
         // alert('subway 검색 결과 중 오류가 발생했습니다.');
@@ -1609,12 +1611,12 @@ function subwayServiceCB(data, status, pagination) {
         as.getStoreListWhithin(searchCondition, 0.5, function (data) {
             apply2storeMap(data);
         });
-    } 
+    }
     else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         apply2storeMap(data);
         // alert('subway 검색 결과가 존재하지 않습니다.');
         return;
-    } 
+    }
     else if (status === kakao.maps.services.Status.ERROR) {
         apply2storeMap(data);
         // alert('subway 검색 결과 중 오류가 발생했습니다.');
@@ -1635,7 +1637,7 @@ function apply2storeMap(data) {
         basicMap.setLevel(1);
     }
 
-    
+
     // 데이터 등록
     data.forEach(vo => {
         vo.type = "store";
@@ -1643,7 +1645,7 @@ function apply2storeMap(data) {
         let marker = registerMarker(vo);
         addMarkerEvent(marker, "store");
         vo.marker = marker;
-        
+
         let overlay = registerOverlay(vo);
         storeOverlayList.push(overlay);
         vo.overlay = overlay;
@@ -1651,7 +1653,7 @@ function apply2storeMap(data) {
         storeVOList.push(vo);
     });
     console.log(storeVOList);
-    
+
 
     let msg = "";
     // 점포 리스트 출력
@@ -1663,9 +1665,9 @@ function apply2storeMap(data) {
             imgURL = `<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg" alt="${vo.store_image}"/>`;
         }
         // console.log(vo);
-        msg += 
-        // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-        `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
+        msg +=
+            // `<li data-store_idx="${vo.store_idx}" name="store_idx">
+            `<li data-store_idx="${vo.store_idx}" onclick="viewDetailModalPage(this, 'store')" name ="store_idx">
             ${imgURL}
             <input type="hidden" name="store_address" value="${vo.store_address}">
             <input type="hidden" name="store_activity_time" value="${vo.store_activity_time}">
@@ -1687,7 +1689,7 @@ function apply2storeMap(data) {
     // 오버레이 클릭 이벤트 추가
     let overlayEles = document.querySelector(".customoverlay#store");
     // console.log(overlayEles);
-    
+
     // overlayEles.forEach(ele => {
     //     console.log(ele);
     //     ele.addEventListener('click', e => {
@@ -1696,7 +1698,7 @@ function apply2storeMap(data) {
     // })
 
     // 마커와 오버레이 표시
-    if ((storeMapMode || unitedMapMode) && storeVOList.length != 0 ) {
+    if ((storeMapMode || unitedMapMode) && storeVOList.length != 0) {
 
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
@@ -1719,7 +1721,7 @@ function apply2eventMap(data) {
     let eventUL = document.querySelector(".event-card ul"); // 추후 수정 (시점 문제로 인해 잠시 임시로 재선언)
     // eventUL.innerHTML = "";
 
-    if(data.length == 0) {
+    if (data.length == 0) {
         failSearch();
         return;
     }
@@ -1734,7 +1736,7 @@ function apply2eventMap(data) {
         // attachFile에서 파일 찾기
         if (vo.attachFile != null) {
             vo.attachFile.forEach(file => {
-                if(file.uuid != null) {
+                if (file.uuid != null) {
                     let imgSrc = `https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}`;
                     fileList.push(imgSrc);
                 } else {
@@ -1760,9 +1762,9 @@ function apply2eventMap(data) {
             fileList.push("https://res.cloudinary.com/dbdkdnohv/image/upload/v1747123330/NoImage_pdlhxd.jpg");
         }
 
-        msg += 
-        // `<li data-store_idx="${vo.store_idx}" name="store_idx">
-        `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
+        msg +=
+            // `<li data-store_idx="${vo.store_idx}" name="store_idx">
+            `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
             <img src="${fileList[0]}" alt="event_${vo.event_idx}">
                 <div class="store-description">
                     <div class="event-title">${vo.event_title}</div>
@@ -1772,7 +1774,7 @@ function apply2eventMap(data) {
         </li>`;
 
         // vo.type = "event";
-        
+
         let overlay = registerOverlay(vo);
         eventOverlayList.push(overlay);
         vo.overlay = overlay;
@@ -1789,7 +1791,7 @@ function apply2eventMap(data) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
         showOverlay(basicMap, eventOverlayList);
-        
+
         // 이벤트 맵일때 크기 조절
         if (eventMapMode) {
             let level = getMapLevelFromMarkerLists(eventVOList);
@@ -1831,7 +1833,7 @@ function deleteAllEle() {
 
 /** 검색결과가 있을 경우 모달을 호출하는 함수 */
 function completeSearch() {
-    if(storeMapMode && storeVOList.length != 0) {
+    if (storeMapMode && storeVOList.length != 0) {
         storeListModal.style.display = "block"; // 스토어 리스트 view
     }
     else if (eventMapMode && eventVOList.length != 0) {
@@ -1846,16 +1848,10 @@ function failSearch() {
     if (unitedMapMode) {
         if (storeVOList.length != 0 || eventVOList.length != 0) {
             unitedFailModal.style.display = "none";
-        } else {
+        } else if (storeVOList.length == 0 && eventVOList.length != 0) {
             unitedFailModal.style.display = "block";
         }
-        if (storeVOList.length == 0) {
-            storeListModal.style.display = "none";
-        }
-        if (eventListModal.length == 0) {
-            eventListModal.style.display = "none";
-        }
-    } 
+    }
     // 점포 맵
     else if (storeMapMode) {
         if (storeVOList.length == 0) {
@@ -1882,7 +1878,7 @@ function address2coordPromise(vo, funcType) {
     return new Promise((resolve, reject) => {
         let geocoder = new kakao.maps.services.Geocoder();
 
-        geocoder.addressSearch(vo.event_location, function(result, status) {
+        geocoder.addressSearch(vo.event_location, function (result, status) {
 
             if (status === kakao.maps.services.Status.OK) {
                 let lat = result[0].y;
@@ -1890,14 +1886,14 @@ function address2coordPromise(vo, funcType) {
                 vo.event_lat = lat;
                 vo.event_lng = lng;
                 vo.type = "event";
-                
+
                 let marker = registerMarker(vo);
-                
+
                 if (funcType === "search") {
                     //console.log("search 테스트");
                     // 마커 등록
                     vo.marker = marker;
-    
+
                     // 마커에 이벤트 추가
                     addMarkerEvent(marker, "event");
                 } else {
@@ -1905,7 +1901,7 @@ function address2coordPromise(vo, funcType) {
                 }
 
                 resolve(vo); // 변환된 vo를 반환
-            } 
+            }
             else {
                 resolve(null); // 실패한 경우에도 resolve하여 전체 처리를 막지 않음
             }
@@ -1918,15 +1914,15 @@ function address2coordPromise(vo, funcType) {
  */
 function processAllEvents(data, type) {
     // console.log(`함수를 ${type} 방식으로 실행`);
-    
+
     const promises = data.map(vo => address2coordPromise(vo, type));
 
     Promise.all(promises).then(results => {
         // null 제거 및 (eventVOList에 추가)
         eventVOList = results.filter(vo => vo !== null);
-        
+
         // 위치 정렬
-        if(mapType === "full") {
+        if (mapType === "full") {
             sortEventVOListByDistance(basicMap.getCenter().getLat(), basicMap.getCenter().getLng(), eventVOList);
         } else {
             sortEventVOListByDistance(currentLat, currentLng, eventVOList);
@@ -1948,7 +1944,7 @@ function processAllEvents(data, type) {
                     basicMap.setLevel(level);
                     panToLatLng(basicMap, storeVOList[0].event_lat, storeVOList[0].event_lng);
                 }
-            } 
+            }
         } else if (type === "autoComplete") {
             // 자동완성
             const suggestionList = eventVOList.slice(0, 3);
@@ -1961,13 +1957,13 @@ function processAllEvents(data, type) {
 
 /** 맵의 모드를 변경하는 함수 (문자열로 입력) */
 function ctrlMapMode(mode) {
-    if (mode==="store") {
+    if (mode === "store") {
         swap2storeMap();
     }
-    else if (mode==="event") {
+    else if (mode === "event") {
         swap2eventMap();
     }
-    else if (mode==="united") {
+    else if (mode === "united") {
         swap2unitedMap();
     }
     failSearch();
@@ -2009,7 +2005,7 @@ function swap2unitedMap() {
         // 사이드바를 event로 변경
         // viewSideBar = document.querySelector(".side-bar#united");
 
-        if (storeVOList.length !=0 || eventVOList.length != 0) {
+        if (storeVOList.length != 0 || eventVOList.length != 0) {
             let level = getMapLevelFromMarkerLists(eventVOList, storeVOList);
             basicMap.setLevel(level);
 
@@ -2034,23 +2030,23 @@ function swap2eventMap() {
         eventMapMode = true;
         unitedMapMode = false;
         storeMapMode = false;
-    
+
         // 화면 삭제
         storeListModal.style.display = "none";
-        if(eventVOList.length != 0) {
+        if (eventVOList.length != 0) {
             eventListModal.style.display = "block";
         }
-    
+
         // 스토어 마커를 맵에 숨기기
         hideMarkers(storeVOList);
         // 이벤트 마커를 맵에 표시
         showMarkers(basicMap, eventVOList);
-    
+
         // 스토어 마커의 오버레이 숨기기
         hideOverlay(storeOverlayList);
         // 이벤트 마커의 오버레이 표시
         showOverlay(basicMap, eventOverlayList);
-    
+
         // 상세보기 사이드바 닫기
         hideviewSideBar();
         viewSideBarCheck = false;
@@ -2080,29 +2076,29 @@ function swap2storeMap() {
         storeMapMode = true;
         eventMapMode = false;
         unitedMapMode = false;
-    
+
         // 화면 삭제
         eventListModal.style.display = "none";
-        if(storeVOList.length != 0) {
+        if (storeVOList.length != 0) {
             storeListModal.style.display = "block";
         }
-    
+
         // 이벤트 마커를 맵에 숨기기
         hideMarkers(eventVOList);
         // 스토어 마커를 맵에 표시
         showMarkers(basicMap, storeVOList);
-    
+
         // 이벤트 마커의 오버레이 숨기기
         hideOverlay(eventOverlayList);
         // 스토어 마커의 오버레이 표시
         showOverlay(basicMap, storeOverlayList);
-    
+
         // 상세보기 사이드바 닫기
         hideviewSideBar();
         viewSideBarCheck = false;
         semiToggle();
 
-        if(storeVOList.length != 0) {
+        if (storeVOList.length != 0) {
             let level = getMapLevelFromMarkerLists(storeVOList);
             basicMap.setLevel(level);
             panToLatLng(basicMap, storeVOList[0].store_lat, storeVOList[0].store_lng);
@@ -2121,7 +2117,7 @@ function setMyCurrentPlace() {
     positionOverlay.setMap(basicMap);
     positionOverlay.setPosition(clickMarker.getPosition());
     alert("클릭하여 정확한 위치를 설정하시오");
-	customPositionMode = true;
+    customPositionMode = true;
 }
 /** 위치정보 커스텀 변경 적용 함수 */
 function getMyCurrentPlace() {
@@ -2146,15 +2142,15 @@ function getDistance(lat1, lng1, lat2, lng2) {
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLng = (lng2 - lng1) * Math.PI / 180;
     const a = Math.pow(Math.sin(dLat / 2), 2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.pow(Math.sin(dLng / 2), 2);
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.pow(Math.sin(dLng / 2), 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 }
 
 // 현위치를 기준으로 List 정렬
 function sortEventVOListByDistance(lat, lng, list) {
-    if(list.length == 0) {return;}
+    if (list.length == 0) { return; }
     list.sort((a, b) => {
         const distA = getDistance(lat, lng, parseFloat(a.event_lat), parseFloat(a.event_lng));
         const distB = getDistance(lat, lng, parseFloat(b.event_lat), parseFloat(b.event_lng));
@@ -2207,7 +2203,7 @@ function setRadiusByLevel(level) {
     let kilometer;
     if (level <= 2) {
         kilometer = 0.5
-    } 
+    }
     else if (level == 3) {
         kilometer = 0.8
     }
@@ -2243,11 +2239,11 @@ function setRadiusByLevel(level) {
 }
 
 // 자동완성 관련 함수
-/** 추천 리스트 UI 갱신 */ 
+/** 추천 리스트 UI 갱신 */
 function updateSuggestionList(list, type, keyword) {
     // 기존에 있었던 리스트 삭제
     let oldList = document.querySelectorAll(`.${type}-ele`);
-    if(oldList != null) {
+    if (oldList != null) {
         oldList.forEach(el => el.remove());
     }
 
@@ -2266,12 +2262,12 @@ function updateSuggestionList(list, type, keyword) {
         li.classList.add(`${type}-ele`);
 
         li.setAttribute("type", type);
-        if(type === "store") {
+        if (type === "store") {
             li.setAttribute("idx", item.store_idx);
         } else if (type === "event") {
             li.setAttribute("idx", item.event_idx);
         }
-        
+
         li.dataset.value = text;
         li.innerHTML = `<span class="highlighted-text">${highlighted}</span>
                         <span class="ele-type">${type === 'event' ? "이벤트" : "점포"}</span>`;
@@ -2288,18 +2284,18 @@ function updateSuggestionList(list, type, keyword) {
 }
 
 
-/** 강조 항목 업데이트 */ 
+/** 강조 항목 업데이트 */
 function updateActiveItem(items) {
     items.forEach((item, i) => {
         item.classList.toggle("active", i === selectedIndex);
-        if(i === selectedIndex) {
+        if (i === selectedIndex) {
             // 수정 필요
-            item.scrollIntoView({behavior: "auto", block: "nearest"});
+            item.scrollIntoView({ behavior: "auto", block: "nearest" });
         }
     });
 }
 
-/** 자동완성 초기화 */ 
+/** 자동완성 초기화 */
 function resetAutocomplete() {
     hideAutocomplete();
     autoSearchUL.innerHTML = "";
@@ -2315,7 +2311,7 @@ function hideAutocomplete() {
 function ctrlAutoComplete() {
     const storeList = document.querySelectorAll(".store-ele");
     const eventList = document.querySelectorAll(".event-ele");
-    
+
     if (storeMapMode) {
         storeList.forEach(store => {
             store.style.display = 'block';
@@ -2337,5 +2333,49 @@ function ctrlAutoComplete() {
         storeList.forEach(store => {
             store.style.display = 'block';
         });
+    }
+}
+
+// 모달 오픈 시 호출되는 함수 내부에서 실행
+function initializeEventSlider() {
+
+    const slider = document.querySelector(".event-slider-inner");
+    const slides = document.querySelectorAll(".event-slide");
+    const prevBtn = document.querySelector(".slider-btn.prev");
+    const nextBtn = document.querySelector(".slider-btn.next");
+
+    if (!slider || slides.length === 0) return;
+
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+
+    function updateSlidePosition() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateButtonVisibility();
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+            if (currentIndex < totalSlides - 1) {
+                currentIndex++;
+                updateSlidePosition();
+            }
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSlidePosition();
+            }
+        });
+    }
+
+    updateSlidePosition(); // 초기 위치 설정
+    
+    function updateButtonVisibility() {
+        prevBtn.classList.toggle("show", currentIndex > 0);
+        nextBtn.classList.toggle("show", currentIndex < totalSlides - 1);
     }
 }

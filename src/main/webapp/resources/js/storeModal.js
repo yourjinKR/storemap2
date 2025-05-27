@@ -408,7 +408,6 @@ function viewDetailModalPage(li, type) {
         fetch(`/modal/${type}View?${type}_idx=${idx}`)
             .then(response => response.text())
             .then(html => {
-                // console.log(html);
                 if (typeof unitedMapMode === 'undefined') {
                     document.querySelector(`.modal-content#${type}`).innerHTML = html;
                 } 
@@ -432,6 +431,7 @@ function viewDetailModalPage(li, type) {
                 }
                 else if (type === "event") {
                     // initializeEvents();
+                    initializeEventSlider();
                     event_id = input.value;
                 }
                 openModal();
