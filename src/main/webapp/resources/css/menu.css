@@ -126,7 +126,7 @@
 	margin: 0;
 	display: flex;
 	flex-wrap: wrap;
-	gap:10px;
+	gap:19px;
 	justify-content: flex-start;
 }
 
@@ -139,6 +139,7 @@
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 	cursor: pointer;
 	transition: transform 0.2s;
+	border:1px solid var(--font-color);
 }
 
 /* 개별 메뉴 아이템(menu-li)에 연노란 배경 적용 */
@@ -157,7 +158,7 @@
 	height:200px;
 	border-radius: 6px;
 	margin-bottom: 10px;
-	border:1px solid var(--font-color);
+	border:1px solid #ccc;
 }
 
 /* 설명 텍스트 */

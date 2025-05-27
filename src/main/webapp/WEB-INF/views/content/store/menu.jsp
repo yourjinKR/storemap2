@@ -14,8 +14,8 @@
 </a>
 <div class="menu">
 	<!-- 메뉴 목록 -->
+	<h3>메뉴관리</h3>
 	<div class="menu-list">
-		<h3>메뉴관리</h3>
 		<ul class="menu-page">
 			<li data-store_idx="10" class="menu-li">
 				<img class="menu-image">

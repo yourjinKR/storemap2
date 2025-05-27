@@ -6,7 +6,7 @@
 	<div class="info d_f">
 		<div class="left-con profile">
 		<c:choose>
-			<c:when test="${sessionScope.userFilename eq 'member1.jpg'}">
+			<c:when test="${sessionScope.userFilename eq '' or sessionScope.userFilename eq null}">
 				<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="${sessionScope.userImage}"/>
 			</c:when>
 			<c:otherwise>
@@ -23,6 +23,9 @@
 				<c:when test="${userType == 'enter'}">
 					<div class="user-name">${sessionScope.userName}</div>
 				</c:when>
+				<c:otherwise>
+					<a href="/member/login" class="login-text">로그인을 해주세요</a>
+				</c:otherwise>
 			</c:choose>
 		</div>
 	</div>
