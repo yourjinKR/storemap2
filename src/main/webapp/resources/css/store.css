@@ -108,7 +108,7 @@ select {
 	color: black;
 	font-size: 18px;
 	font-weight: bold;
-	border: none;
+	border: 1px solid var(--font-color);
 	border-radius: 6px;
 	cursor: pointer;
 }
@@ -136,7 +136,7 @@ textarea {
 #preview{
 	width: auto;
 	border: 1px solid #ccc;
-	border:2px solid var(--font-color);
+	border:1px solid var(--font-color);
 	display:inline-block;
 	overflow: hidden;
 	position: relative;
@@ -155,6 +155,11 @@ textarea {
 .saving-box {background: white;padding: 30px 50px;border-radius: 10px;box-shadow: 0 4px 10px rgba(0,0,0,0.2);display: flex;flex-direction: column;align-items: center;}
 .spinner {border: 6px solid #f3f3f3;border-top: 6px solid #3498db;border-radius: 50%;width: 40px;height: 40px;animation: spin 1s linear infinite;margin-bottom: 15px;}
 .saving-text {font-size: 18px;font-weight: bold;color: #333;}
+
+.back-btn{position: fixed;top:0;left:0;width:75px;height:75px;background:none;color:var(--font-color);border:none;display:flex;justify-content: center;align-items: center}
+.back-btn span{font-size:36px;}
+
+#panto-current{background:var(--point-color3);color:var(--font-color);padding:5px 15px;border-radius:5px;font-weight:bold;margin-top:10px;border: 1px solid var(--font-color);}
 
 @keyframes spin {
 	0% { transform: rotate(0deg); }

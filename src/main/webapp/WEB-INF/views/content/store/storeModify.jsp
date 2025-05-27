@@ -8,6 +8,11 @@
 	</script>
 </c:if>
 
+<a href="javascript:history.back();" class="back-btn" >
+	<span class="material-symbols-outlined">
+		undo
+	</span>
+</a>
 <div class="store">
 	<h3>점포관리</h3>
 
@@ -45,7 +50,7 @@
  			</tr>
  			<tr>
  				<th class="v-t"><label for="store-loc">위치 설정</label></th>
- 				<td>
+ 				<td class="t-r">
 				    <div class="map" id="store-loc" style="height:400px;"></div>
 				    <button class="mapBtn" id="panto-current">현위치</button>
  				</td>
