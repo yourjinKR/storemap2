@@ -492,10 +492,6 @@
 	      AND EVENT_HIDDEN = 0
 	    ORDER BY EVENT_BSTARTDATE ASC
 	</select>
-
-
-
-
 	
 	<!-- 게시글 등록 -->
 	<insert id="insertEvent" parameterType="org.storemap.domain.EventVO">

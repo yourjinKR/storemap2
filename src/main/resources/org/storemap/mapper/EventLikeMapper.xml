@@ -19,4 +19,25 @@
 		ON E.EVENT_IDX = ED.EVENT_IDX
 		WHERE MEMBER_IDX = #{member_idx}
 	</select>
+	
+	
+	<insert id="insertLike" parameterType="map">
+	  MERGE INTO event_like target
+	  USING (SELECT #{eventIdx} AS event_idx, #{memberIdx} AS member_idx FROM dual) source
+	  ON (target.event_idx = source.event_idx AND target.member_idx = source.member_idx)
+	  WHEN NOT MATCHED THEN
+	    INSERT (event_idx, member_idx) VALUES (source.event_idx, source.member_idx)
+	</insert>
+
+    <delete id="deleteLike">
+        DELETE FROM event_like
+        WHERE event_idx = #{eventIdx} AND member_idx = #{memberIdx}
+    </delete>
+
+	<select id="existsLike" resultType="boolean" parameterType="map">
+	  SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+	  FROM event_like
+	  WHERE event_idx = #{eventIdx} AND member_idx = #{memberIdx}
+	</select>
+
 </mapper>

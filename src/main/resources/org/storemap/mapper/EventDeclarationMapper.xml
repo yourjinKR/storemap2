@@ -115,4 +115,11 @@
 		ORDER BY d.regdate DESC
 	</select>
 	
+	<!-- 이벤트 신고 중복방지 -->
+	<select id="countByMemberAndEvent" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM event_declaration
+	    WHERE member_idx = #{memberIdx}
+	    AND event_idx = #{eventIdx}
+	</select>
 </mapper>

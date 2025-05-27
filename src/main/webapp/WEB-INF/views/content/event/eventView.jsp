@@ -175,7 +175,12 @@
 		<a href="/event/eventList">목록</a>
 	</div>
 </div>
-
+<c:if test="${not empty alreadyDeclared}">
+    <script>alert("이미 이 이벤트를 신고하셨습니다.");</script>
+</c:if>
+<c:if test="${empty alreadyDeclared and not empty successMessage}">
+    <script>alert("${successMessage}");</script>
+</c:if>
 <!-- 모달 -->
 
 <jsp:include page="../../content/modal/eventDayChoice.jsp" />

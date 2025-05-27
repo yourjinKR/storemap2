@@ -322,6 +322,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
                       const likeCountElement = document.querySelector(`.eventLike-count-${eventIdx}`);
                       if (likeCountElement) {
                           likeCountElement.textContent = data.likeCount;
+                          // 좋아요 수 변경 애니메이션 클래스 추가
+                          likeCountElement.classList.add('like-update');
+                          setTimeout(() => {
+                              likeCountElement.classList.remove('like-update');
+                          }, 500);
                       }
                   } else {
                       console.error('Invalid response data:', data);
@@ -380,7 +385,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 					location.href = "/store/map";
 				})
 			})
-		}
+		}		
 });
 
 function generateDays() {

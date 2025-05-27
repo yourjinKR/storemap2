@@ -7,6 +7,7 @@
 	</span>
 </a>
 
+<h3>이벤트 수정</h3>
 <div class="event-register-wrapper">
 	<div class="panel-body">	
 		<form method="POST" action="/event/eventModify" enctype="multipart/form-data">
@@ -363,5 +364,17 @@ if (form && deletedUuidsInput) {
       flex-direction: column;
       gap: 10px;
     }
+  }
+  
+   input[readonly], select[disabled], textarea[readonly] {
+    background-color: #f0f0f0;
+    color: #888;
+    cursor: not-allowed;
+  }
+
+  button[disabled] {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
   }
 </style>

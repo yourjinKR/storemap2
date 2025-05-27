@@ -57,6 +57,7 @@ import org.storemap.service.CommentEventServiceImple;
 import org.storemap.service.EventDayService;
 import org.storemap.service.EventDayServiceImple;
 import org.storemap.service.EventDeclarationService;
+import org.storemap.service.EventLikeService;
 import org.storemap.service.EventRequestService;
 import org.storemap.service.EventServiceImple;
 
@@ -78,6 +79,8 @@ public class EventController {
 	private CloudinaryService cloudinaryService;
 	@Autowired
 	private EventDeclarationService eventDeclarationService;
+	@Autowired
+	private EventLikeService eventLikeService;
 	
 	@GetMapping("/eventList")
 	public String eventList() {	
@@ -146,6 +149,7 @@ public class EventController {
 		return "index";
 	}
 	
+	// 이벤트 상세보기
 	@GetMapping("/eventView")
 	public String eventView(Model model,
 	                        @RequestParam("event_idx") int event_idx,
@@ -205,7 +209,13 @@ public class EventController {
 	    } else {
 	        session.setAttribute("alertMsg", "로그인을 해야 신고 기능을 이용할 수 있습니다.");
 	    }
-
+	    
+	    boolean eventLiked = false;
+	    if (loginUserIdx != null) {
+	        eventLiked = eventLikeService.hasLiked(event_idx, loginUserIdx);
+	        model.addAttribute("eventLiked", eventLiked);
+	    }
+	    
 	    Integer storeIdx = (Integer) session.getAttribute("storeIdx");
 	    if (storeIdx != null) {
 	        List<Integer> appliedEdayIdxList = eventRequestService.getAppliedEdayIdxList(storeIdx);
@@ -248,25 +258,37 @@ public class EventController {
 	    return response;
 	}
 	
-	// 이벤트 신고제출
+	// 이벤트 신고 기능
 	@PostMapping("/report/submit")
-	public String submitReport(HttpSession session,
-	                           @RequestParam("declaration_category") String declarationCategory,
-	                           @RequestParam("declaration_content") String declarationContent) {
+	public String submitReport(@RequestParam("declaration_category") String declarationCategory,
+	                           @RequestParam("declaration_content") String declarationContent,
+	                           @RequestParam("event_idx") Integer eventIdx,
+	                           @RequestParam("member_idx") Integer memberIdx,
+	                           RedirectAttributes redirectAttributes) {
 
-	    Integer eventIdx = (Integer) session.getAttribute("event_idx");
-	    Integer memberIdx = (Integer) session.getAttribute("member_idx");
+	    System.out.println("[신고 제출 요청] eventIdx=" + eventIdx + ", memberIdx=" + memberIdx);
 
+	    // 중복 신고 여부 확인
+	    boolean alreadyDeclared = eventDeclarationService.hasAlreadyDeclared(memberIdx, eventIdx);
+	    System.out.println("[중복 신고 여부] alreadyDeclared=" + alreadyDeclared);
 
-	    EventDeclarationVO reportVO = new EventDeclarationVO();
-	    reportVO.setEvent_idx(eventIdx);
-	    reportVO.setMember_idx(memberIdx);
-	    reportVO.setDeclaration_category(declarationCategory);
-	    reportVO.setDeclaration_content(declarationContent);
+	    if (alreadyDeclared) {
+	        // 여기서 successMessage는 아예 안 보냄
+	        redirectAttributes.addFlashAttribute("alreadyDeclared", true);
+	    } else {
+	        EventDeclarationVO reportVO = new EventDeclarationVO();
+	        reportVO.setEvent_idx(eventIdx);
+	        reportVO.setMember_idx(memberIdx);
+	        reportVO.setDeclaration_category(declarationCategory);
+	        reportVO.setDeclaration_content(declarationContent);
 
-	    eventDeclarationService.submitReport(reportVO);
+	        System.out.println("[신고 저장 시작] " + reportVO.toString());
+	        eventDeclarationService.submitReport(reportVO);
+	        System.out.println("[신고 저장 완료]");
 
-	    // 이벤트 상세 페이지로 리다이렉트
+	        redirectAttributes.addFlashAttribute("successMessage", "신고가 정상적으로 접수되었습니다.");
+	    }
+
 	    return "redirect:/event/eventView?event_idx=" + eventIdx;
 	}
 	
@@ -304,21 +326,40 @@ public class EventController {
 
 	    try {
 	        if ("like".equals(action)) {
-	            eventService.incrementLike(eventIdx);
+	            eventLikeService.addLike(eventIdx, loginUserIdx);     
 	        } else {
-	            eventService.decrementLike(eventIdx);
+	            eventLikeService.removeLike(eventIdx, loginUserIdx);    
 	        }
 	    } catch (Exception e) {
+	        e.printStackTrace(); 
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Map.of("message", "서버 오류: 좋아요 처리 실패"));
+	                .body(Map.of("message", "서버 오류: 좋아요 처리 실패", "error", e.getMessage()));
 	    }
 
 	    try {
-	        int likeCount = eventService.getLikeCount(eventIdx);
+	        int likeCount = eventService.getLikeCount(eventIdx); // 기존 방식 유지
 	        return ResponseEntity.ok(Map.of("likeCount", likeCount));
 	    } catch (Exception e) {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 	                .body(Map.of("message", "서버 오류: 좋아요 수 조회 실패"));
+	    }
+	}
+	
+	@GetMapping(value = "/like/check", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> checkLike(@RequestParam("event_idx") int eventIdx, HttpSession session) {
+	    Integer loginUserIdx = (Integer) session.getAttribute("member_idx");
+	    if (loginUserIdx == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                .body(Map.of("message", "로그인이 필요합니다."));
+	    }
+
+	    try {
+	        boolean liked = eventLikeService.hasLiked(eventIdx, loginUserIdx);
+	        return ResponseEntity.ok(Map.of("liked", liked));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(Map.of("message", "서버 오류: 좋아요 여부 확인 실패"));
 	    }
 	}
 

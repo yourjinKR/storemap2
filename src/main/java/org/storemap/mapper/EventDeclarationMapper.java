@@ -2,6 +2,7 @@ package org.storemap.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.storemap.domain.EventDeclarationVO;
 
 public interface EventDeclarationMapper {
@@ -15,4 +16,6 @@ public interface EventDeclarationMapper {
 	public List<EventDeclarationVO> getEventDeclarationMap();
 	// 조인 신고 디테일 목록
 	public List<EventDeclarationVO> getEventDeclarationDetailMap();
+	// 이벤트 중복 신고 방지
+	public int countByMemberAndEvent(@Param("memberIdx") int memberIdx, @Param("eventIdx") int eventIdx);
 }

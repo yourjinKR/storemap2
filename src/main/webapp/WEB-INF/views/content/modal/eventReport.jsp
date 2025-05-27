@@ -22,10 +22,10 @@
       </div>
 
       <!-- 로그인 여부는 서버에서 처리 -->
-      <input type="hidden" id="isLoggedIn" value="${not empty sessionScope.loginUserIdx}" />
-      <input type="hidden" name="event_idx" value="${evo.event_idx}" />
-      <input type="hidden" name="member_idx" value="${sessionScope.loginUserIdx}" />
-
+		<input type="hidden" id="isLoggedIn" value="${not empty sessionScope.loginUserIdx}" />
+		<input type="hidden" name="event_idx" value="${evo.event_idx}" />
+		<input type="hidden" name="member_idx" value="${sessionScope.loginUserIdx}" />
+	
       <button type="button" class="add_report" id="eventReportBtn">신고 제출</button>
     </div>
   </div>

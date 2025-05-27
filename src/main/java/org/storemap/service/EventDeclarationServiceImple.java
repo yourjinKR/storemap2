@@ -74,4 +74,10 @@ public class EventDeclarationServiceImple implements EventDeclarationService{
 		return mapper.getEventDeclarationDetailMap();
 	}
 	
+	public boolean hasAlreadyDeclared(int memberIdx, int eventIdx) {
+	    int count = mapper.countByMemberAndEvent(memberIdx, eventIdx);
+	    System.out.println("[Mapper 반환값] 중복 신고 건수 count = " + count);
+	    return count > 0;
+	}
+	
 }

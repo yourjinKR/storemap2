@@ -15,4 +15,7 @@ public interface EventDeclarationService {
 	public List<EventDeclarationVO> getDeclarationMap();
 	// 조인된 신고 목록 조회
 	public List<EventDeclarationVO> getDeclarationDetailMap();
+	// 이벤트 신고 중복 방지
+	public boolean hasAlreadyDeclared(int memberIdx, int eventIdx);
+	
 }

@@ -7,6 +7,7 @@
 	<div class="map" id="postcode" style="width:500px;height:400px;"></div>
 	<div class="form" id="postcode">
 	    <input type="text" name="event_postcode" id="postcodeInput" placeholder="우편번호" required readonly>
+	    <span id="postcodeWarning" style="color: red; font-size: 0.9em; display: none;">우편번호는 필수 입력 항목입니다.</span>
 	    <button class="mapBtn" id="search-postcode" onclick="">우편번호 찾기</button><br>
 	    <input type="text" name="event_location" id="roadAddressInput" placeholder="도로명주소" readonly>
 	    <input type="text" id="jibunAddressInput" placeholder="지번주소" readonly>

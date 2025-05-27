@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .wrap{width:1000px}
-.eventLike-count, .reviewLike-count {
+.eventLike-count {
 	font-size: 14px;
 	font-weight: bold;
 	color: #f00;
