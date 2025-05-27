@@ -21,21 +21,17 @@
   	<input type="hidden" name="member_idx" value="${vo.member_idx}">
     <input type="hidden" id="lat" name="store_lat" value="${vo.store_lat}">
     <input type="hidden" id="lng" name="store_lng" value="${vo.store_lng}">
+    
+    <div class="store-state open">
+    	<span>CLOSE</span>
+   	</div>
+    
  	<table>
  		<colgroup>
  			<col width="175px;">
  			<col width="*">
  		</colgroup>
  		<tbody>
- 			<tr>
- 				<th>대표 이미지</th>
- 				<td>
- 					<input type="file" id="simage" name="store_image">
-					<div id="preview">
-						<label for="simage"><img alt="프로필" src="${IMG_URL}NoImage_pdlhxd.jpg"></label>
-					</div>
- 				</td>
- 			</tr>
  			<tr>
  				<th><label for="sname">점포명</label></th>
  				<td><input type="text" id="sname" name="store_name" value="${vo.store_name}"></td>
@@ -79,6 +75,15 @@
  				<th><label for="rnum">사업자번호</label></th>
  				<td><input type="text" id="rnum" name="store_rnum" value="${vo.store_rnum}"></td>
 			</tr>
+			<tr>
+ 				<th>대표 이미지</th>
+ 				<td>
+ 					<input type="file" id="simage" name="store_image">
+					<div id="preview">
+						<label for="simage"><img alt="프로필" src="${IMG_URL}NoImage_pdlhxd.jpg"></label>
+					</div>
+ 				</td>
+ 			</tr>
  		</tbody>
 	</table>
     

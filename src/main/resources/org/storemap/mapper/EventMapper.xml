@@ -41,7 +41,7 @@
 			            AND INSTR(EVENT_FILE, ',') > 0
 			        ORDER BY EVENT_LIKE_CNT DESC
 			    )
-			    WHERE ROWNUM <= 20
+			    WHERE ROWNUM <= 10
 			    ORDER BY DBMS_RANDOM.VALUE
 			)
 			WHERE ROWNUM <= 5

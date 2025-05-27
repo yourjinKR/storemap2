@@ -23,15 +23,6 @@
 		 		</colgroup>
 		 		<tbody>
 		 			<tr>
-		 				<th>대표 이미지</th>
-		 				<td>
-							<input type="file" id="simage" name="store_image">
-							<div id="preview">
-								<label for="simage"><img alt="프로필" src="${IMG_URL}NoImage_pdlhxd.jpg"></label>
-							</div>
-		 				</td>
-		 			</tr>
-		 			<tr>
 		 				<th> <label for="sname">점포명</label></th>
 		 				<td><input type="text" id="sname" name="store_name" placeholder="점포 이름"></td>
 		 			</tr>
@@ -70,6 +61,15 @@
 		 				<th><label for="rnum">사업자번호</label></th>
 		 				<td><input type="text" id="rnum" name="store_rnum"></td>
 					</tr>
+					<tr>
+		 				<th>대표 이미지</th>
+		 				<td>
+							<input type="file" id="simage" name="store_image">
+							<div id="preview">
+								<label for="simage"><img alt="프로필" src="${IMG_URL}NoImage_pdlhxd.jpg"></label>
+							</div>
+		 				</td>
+		 			</tr>
 		 		</tbody>
 			</table>
 			

@@ -159,6 +159,10 @@ textarea {
 .back-btn{position: fixed;top:0;left:0;width:75px;height:75px;background:none;color:var(--font-color);border:none;display:flex;justify-content: center;align-items: center}
 .back-btn span{font-size:36px;}
 
+.store-state{text-align: center;margin-bottom:20px;}
+.store-state span{padding:5px 15px;border-radius:5px;background:#E74C3C;color:#fff;display: inline-block;font-size:24px;box-shadow: inset 1px 1px 2px rgba(255,255,255,0.9), 0px 5px 10px rgba(0,0,0,0.2)}
+.store-state.open span{background:#2ECC71;color:#fff;}
+
 #panto-current{background:var(--point-color3);color:var(--font-color);padding:5px 15px;border-radius:5px;font-weight:bold;margin-top:10px;border: 1px solid var(--font-color);}
 
 @keyframes spin {

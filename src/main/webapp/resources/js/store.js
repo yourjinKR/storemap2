@@ -6,6 +6,22 @@ linkEle.rel = 'stylesheet';
 linkEle.href = CSS_PATH;
 document.head.appendChild(linkEle);
 
+document.addEventListener("DOMContentLoaded", (event) => {
+	let storeState = document.querySelector(".store-state");
+	if(document.querySelector("#stopBtn") != null){
+		if(storeState != null){
+			storeState.classList.add("open");
+			storeState.querySelector("span").innerHTML = "OPEN";
+		}
+	}
+	if(document.querySelector("#startBtn") != null){
+		if(storeState != null){
+			storeState.classList.remove("open");
+			storeState.querySelector("span").innerHTML = "CLOSE";
+		}
+	}
+})
+
 document.querySelectorAll('button').forEach(btn => {
 	btn.addEventListener('click', ()=> {
 		let type = btn.getAttribute("id");
@@ -29,6 +45,7 @@ document.querySelectorAll('button').forEach(btn => {
 		}
 	})
 });
+
 
 function start(){
 	if(!f.store_name.value){
