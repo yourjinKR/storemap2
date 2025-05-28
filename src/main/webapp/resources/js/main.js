@@ -34,13 +34,7 @@ function getMainSlide(){
 		if(result != null && result.length > 0){
 			result.forEach((event,idx) => {
 				str += `<div class="swiper-slide">`;
-				str += 		`<div class="img-box">`;
-				if(event.attachFile[idx].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
-					str += 		`<img src="${event.attachFile[idx].filename}">`;
-				}else{
-					str += 		`<img src="${IMG_URL}${event.attachFile[idx].uuid}_${event.attachFile[idx].filename}">`;
-				}
-				str += 		`</div>`;
+				str += 		`<div class="img-box main-img${idx}"></div>`;
 				str += 		`<div class="slide-title">`;
 				str += 			`<h2>${event.event_title}</h2>`;
 				str += 			`<a href="/event/eventView?event_idx=${event.event_idx}">View More</a>`;
@@ -66,6 +60,19 @@ function getMainSlide(){
 		let mainSlide = document.querySelector(".main-slide .swiper-wrapper");
 		if(mainSlide != null){
 			mainSlide.innerHTML = str;
+		}
+		
+		if(result != null && result.length > 0){
+			result.forEach((event,idx) => {
+				let target = document.querySelector(`.main-img${idx}`);
+				if(event.attachFile[0].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+					target.style.backgroundImage = `url(${event.attachFile[0].filename})`;
+				}else{
+					target.style.backgroundImage  = `url(${IMG_URL}${event.attachFile[0].uuid}_${event.attachFile[0].filename})`;
+				}
+				target.style.backgroundSize = 'cover';
+				target.style.backgroundPosition = 'center';
+			})
 		}
 	})
 	.catch(err => console.log(err));

@@ -70,7 +70,7 @@
 				<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="noimg"/>
 			</c:when>
 			<c:when test="${evo.cloudinaryFiles ne null and evo.cloudinaryFiles.size() > 0}">
-				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${evo.cloudinaryFiles[0].uuid}_${evo.cloudinaryFiles[0].filename}" alt="Cloudinary 이미지" style="width: auto%; height: auto;" />
+				<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${evo.cloudinaryFiles[0].uuid}_${evo.cloudinaryFiles[0].filename}" alt="Cloudinary 이미지" />
 			</c:when>
 			<c:otherwise>
 				<img src="${evo.externalUrls[0]}" alt="포스터">

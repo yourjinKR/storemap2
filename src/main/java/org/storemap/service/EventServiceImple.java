@@ -57,8 +57,8 @@ public class EventServiceImple implements EventService{
 	// 메인 슬라이드
 	public List<EventVO> getMainSlide(){
 		List<EventVO> list = mapper.getMainSlide();
-		List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
 		for (EventVO vo : list) {
+			List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
 			AttachFileVO attach = new AttachFileVO();
 			String[] file = vo.getEvent_file().split(",");
 			int idxof = file[1].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");

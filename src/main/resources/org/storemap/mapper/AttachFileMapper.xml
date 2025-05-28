@@ -41,6 +41,7 @@
         <foreach collection="uuidList" item="uuid" open="(" separator="," close=")">
             #{uuid}
         </foreach>
+        ORDER BY ATTACH_IDX
     </select>
     
     
