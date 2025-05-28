@@ -158,17 +158,15 @@ function cardBoard(result){
 				str += 		`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 			}
 			str += 		`</div>`;
+			console.log(data);
 			str += 		`<div class="card-text">`;
 			str += 			`<div class="event-title">${data.event_title}</div>`;
 			str += 			`<div>`;
 			str +=	 			`<span class="event-date">${dateFormate(data.event_bstartdate)} ~ ${dateFormate(data.event_bstopdate)}</span>`;
 			str += 				`<div class="icon-box">
 									<span class="material-symbols-outlined">
-										mode_comment
-									</span> ${data.comment_count}
-									<span class="material-symbols-outlined">
 										favorite
-									</span> ${data.like_count}
+									</span> ${data.event_like_cnt}
 								</div>`;
 			str += 			`</div>`;
 			str += 		`</div>`;

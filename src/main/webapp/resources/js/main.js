@@ -98,11 +98,8 @@ function getEventList(type){
 				str +=	 						`<span class="event-date">${dateFormate(event.event_bstartdate)} ~ ${dateFormate(event.event_bstopdate)}</span>`;
 				str += 							`<div class="icon-box">
 													<span class="material-symbols-outlined">
-														mode_comment
-													</span> ${event.comment_count}
-													<span class="material-symbols-outlined">
 														favorite
-													</span> ${event.like_count}
+													</span> ${event.event_like_cnt}
 												</div>`;
 				str += 						`</div>`;
 				str += 					`</div>`;

@@ -23,7 +23,7 @@
 		 		</colgroup>
 		 		<tbody>
 		 			<tr>
-		 				<th> <label for="sname">점포명</label></th>
+		 				<th><label for="sname">점포명</label></th>
 		 				<td><input type="text" id="sname" name="store_name" placeholder="점포 이름"></td>
 		 			</tr>
 		 			<tr>
