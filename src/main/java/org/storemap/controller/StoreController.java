@@ -129,12 +129,13 @@ public class StoreController {
 	
 	// 점포 삭제
 	@PostMapping("/storeRemove")
-	public String storeRemove(int store_idx) {
+	public String storeRemove(int store_idx, HttpSession session) {
 		log.info("storeRemove..."+store_idx);
 		StoreVO vo = storeService.get(store_idx);
 		// 점포삭제 전에 외래키 엮인거 전부 삭제하기
 		storeService.remove(store_idx);
 		memberService.cancelOwner(vo.getMember_idx());
+		session.setAttribute("userType", "owner");
 		return "redirect:/modal/storeListModal";
 	}
 	

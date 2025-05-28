@@ -165,8 +165,6 @@ function register(){
     formData.append("file", document.querySelector("input[type='file']").files[0]);
 
     document.querySelector("#savingUI").classList.add("save");
-
-	console.log(formData);
 	
     // 데이터 전송
     fetch("/store/storeRegister", {
@@ -180,11 +178,15 @@ function register(){
         return response.text();
     })
     .then(data => {
+    	// 로딩창 숨기기
+        document.querySelector("#savingUI").classList.remove("save");
         alert("점주 신청 완료.");
         location.href = "/"; // 성공 시 리다이렉트
     })
     .catch(error => {
         console.error("Error:", error);
+        // 에러 발생 시에도 로딩창 숨기기
+        document.querySelector("#savingUI").classList.remove("save");
         alert("점주 신청 실패.");
     });
 
@@ -269,7 +271,7 @@ function menu(){
 function remove(){
 	if(confirm("정말 페업하시겠습니까?")){
 		document.querySelector("#savingUI").classList.add("save");
-		f.action = `/store/storeRemove?store_idx=${store_idx}`;
+		f.action = "/";
 	    f.submit();
 	    alert("삭제 되었습니다");
 	}else{
