@@ -127,6 +127,7 @@
 .side-btn {padding:0;background:none;height:35px; border:none; cursor:pointer}
 .side-btn .material-symbols-outlined{font-size:50px;line-height:35px; height:35px; }
 
-.right-nav{position: fixed;right:5%; top:45%; transform: translateY(-50%); border-radius:10px; border:1px solid #ccc; box-shadow: 0 2px 10px rgba(0,0,0,.2);z-index:100;overflow: hidden;}
+.right-nav{position: absolute;right:5%; top:800px; transform: translateY(-50%); border-radius:10px; border:1px solid #ccc; box-shadow: 0 2px 10px rgba(0,0,0,.2);z-index:100;overflow: hidden;}
+.right-nav.fixed{position: fixed;top:44%;}
 .right-nav a{display:block;padding:15px 50px;text-align:center;border-bottom:1px solid #ccc;background:#fff;cursor: pointer;}
 .right-nav li:last-child a{border:none}

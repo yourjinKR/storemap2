@@ -238,9 +238,9 @@
 		            EVENT_FILE,
 		            EVENT_CONTENT,
 		            EVENT_LOCATION,
+                    EVENT_LIKE_CNT,
                     APPROVED_STORE,
                     COMMENT_COUNT,
-                    LIKE_COUNT,
                     MAX_STORE,
 		            ROWNUM RN
 		        FROM (
@@ -255,9 +255,9 @@
 		                E.EVENT_FILE,
 		                E.EVENT_CONTENT,
 		                E.EVENT_LOCATION,
+		                E.EVENT_LIKE_CNT,
                         APPROVED_STORE,
                         COMMENT_COUNT,
-		                LIKE_COUNT,
                         MAX_STORE
 		            FROM EVENT E
 		
@@ -366,13 +366,13 @@
 				            	<when test="eventFilter.sort_count_type == 'lCount'">
 				            		 CASE
 		                                WHEN 
-					                    	LIKE_COUNT >= 0 
+					                    	EVENT_LIKE_CNT >= 0 
 					                    	THEN 1
 						                WHEN 
-					                    	LIKE_COUNT IS NULL
+					                    	EVENT_LIKE_CNT IS NULL
 					                    	THEN 2
 		                            END,
-		                            LIKE_COUNT DESC,
+		                            EVENT_LIKE_CNT DESC,
 				            	</when>
 				            	<when test="eventFilter.sort_count_type == 'cCount'">
 				            		 CASE

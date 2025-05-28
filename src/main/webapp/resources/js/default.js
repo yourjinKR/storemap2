@@ -66,6 +66,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			window.scrollTo({ top: 0, behavior: 'smooth' });
 		})
 	}
+	
+	// 스크롤 위치 확인
+	let nav = document.querySelector(".right-nav");
+	if(nav != null){
+		if(window.location.pathname != "/"){
+			nav.classList.add("fixed");
+		}else{
+			window.addEventListener('scroll', function () {
+				if(window.scrollY > 400){
+					nav.classList.add("fixed");
+				}else{
+					nav.classList.remove("fixed");
+				}
+			});
+		}
+	}
 
 	// 위치 정보 실행 (1회)
 	getCurrentPlace();
