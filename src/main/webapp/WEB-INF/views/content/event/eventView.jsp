@@ -35,7 +35,7 @@
 		<div class="event-img">
 			<c:forEach var="file" items="${evo.cloudinaryFiles}" varStatus="status">
 				<c:if test="${status.index > 0}">
-					<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="Cloudinary 이미지" style="width: 23%; height: auto;" />
+					<img src="https://res.cloudinary.com/dbdkdnohv/image/upload/v1747269979/${file.uuid}_${file.filename}" alt="Cloudinary 이미지"/>
 				</c:if>
 			</c:forEach>
 
