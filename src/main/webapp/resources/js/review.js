@@ -62,12 +62,12 @@ function register(){
     .then(data => {
     	document.querySelector("#savingUI").classList.remove("save");
         alert("리뷰 등록 완료.");
-        history.back();
+        location.href = "/store/map";
     })
     .catch(error => {
     	document.querySelector("#savingUI").classList.remove("save");
         console.error("Error:", error);
-        alert("리뷰 등록 실패.");
+        alert("이미 리뷰가 존재합니다.");
     });
 };
 

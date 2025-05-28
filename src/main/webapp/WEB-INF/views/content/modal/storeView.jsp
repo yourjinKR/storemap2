@@ -96,7 +96,7 @@
 		          <div class="review-meta">
 		          	<strong>${rvo.review_writer}</strong> · <small class="">${rvo.review_regdate}</small>
 		          </div>
-		          <div class=""><!-- 제목 css필요 -->
+		          <div class="review-title">
 		          	${rvo.review_title}
 		          </div>
 		          <div class="review-img">
