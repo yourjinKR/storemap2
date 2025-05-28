@@ -63,8 +63,12 @@ function getMyLike(type){
 					str += `<div class="d-f">`;
 					str += 		`<a href="/event/eventView?event_idx=${data.event_idx}">`;
 					str += 			`<div class="img-box">`;
-					if(result.attach_list != null && result.attach_list.length > 0){
-						
+					if(data.attachFile != null && data.attachFile.length > 0){
+						if(data.attachFile[0].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+							str += 			`<img src="${data.attachFile[0].filename}">`;
+						}else{
+							str += 			`<img src="${IMG_URL}${data.attachFile[0].uuid}_${data.attachFile[0].filename}">`;
+						}
 					}else{
 						str += 				`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 					}
@@ -76,7 +80,7 @@ function getMyLike(type){
 					str += 			`</dl>`;
 					str += 		`</a>`;
 					str += 		`<div class="like-box">`;
-					str += 			`<input type="checkbox" id="likeChk${data.event_idx}" checked>`;
+					str += 			`<input type="checkbox" data-idx="${data.event_idx}" id="likeChk${data.event_idx}" checked>`;
 					str += 			`<label for="likeChk${data.event_idx}" class="material-symbols-outlined">`;
 					str += 				`favorite`;
 					str += 			`</label>`;
@@ -220,7 +224,7 @@ function likeChkUpdate(type, list_idx){
 
 	let postUrl = null;
 	if(type == "event"){
-		postUrl = `/modal/reviewLike/toggle?review_idx=${list_idx}`;
+		postUrl = `/event/eventLike?event_idx=${list_idx}`;
 	}else if(type == "store"){
 		postUrl = `/modal/storeLike/toggle?store_idx=${list_idx}`;
 	}else{

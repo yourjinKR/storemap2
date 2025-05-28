@@ -27,17 +27,21 @@ public class EventLikeServiceImple implements EventLikeService{
 	@Override
 	public List<EventVO> getLikeList(int member_idx) {
 		List<EventVO> list = mapper.getLikeList(member_idx);
-//		for (EventVO vo : list) {
-//			if(vo.getEvent_file() != null) {
-//				String[] arr = vo.getEvent_file().split(",");
-//				List<AttachFileVO> fileList = new ArrayList<AttachFileVO>();
-//				for (String uuid : arr) {
-//					fileList.add(attachMapper.getAttach(uuid));
-//				}
-//				vo.setAttachFile(fileList);
-//			}
-//		}
-		return mapper.getLikeList(member_idx);
+		for (EventVO vo : list) {
+			if(vo.getEvent_file() != null) {
+				String[] arr = vo.getEvent_file().split(",");
+				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
+				AttachFileVO attach = new AttachFileVO();
+				if(arr[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+					attach.setFilename(arr[0]);
+					attachList.add(attach);
+				}else {
+					attachList.add(attachMapper.getAttach(arr[0]));
+				}
+				vo.setAttachFile(attachList);
+			}
+		}
+		return list;
 	}
 	
 	@Override
