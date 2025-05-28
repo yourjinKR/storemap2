@@ -12,7 +12,7 @@ import org.storemap.domain.MapDTO;
 
 public interface EventService {
 	// 메인 슬라이드
-	public List<AttachFileVO> getMainSlide();
+	public List<EventVO> getMainSlide();
 	// 메인 페이지 진행중인 이벤트
 	public List<EventVO> getLiveEvent();
 	// 메인 페이지 진행예정 이벤트

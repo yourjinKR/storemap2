@@ -48,8 +48,8 @@ public class MainController {
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
 	})
-	public ResponseEntity<List<AttachFileVO>> getMainSlide(){
-		return new ResponseEntity<List<AttachFileVO>>(eventService.getMainSlide(), HttpStatus.OK);
+	public ResponseEntity<List<EventVO>> getMainSlide(){
+		return new ResponseEntity<List<EventVO>>(eventService.getMainSlide(), HttpStatus.OK);
 	}
 	
 	// 메인 이벤트 진행예정 리스트

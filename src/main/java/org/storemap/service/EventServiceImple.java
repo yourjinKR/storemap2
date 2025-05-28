@@ -55,7 +55,7 @@ public class EventServiceImple implements EventService{
 	
 	
 	// 메인 슬라이드
-	public List<AttachFileVO> getMainSlide(){
+	public List<EventVO> getMainSlide(){
 		List<EventVO> list = mapper.getMainSlide();
 		List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
 		for (EventVO vo : list) {
@@ -71,9 +71,10 @@ public class EventServiceImple implements EventService{
 			if(attach != null) {
 				attachList.add(attach);
 			}
+			vo.setAttachFile(attachList);
 		}
 		
-		return attachList;
+		return list;
 	}
 	
 	// 메인 페이지 진행중인 이벤트

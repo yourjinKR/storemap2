@@ -32,14 +32,13 @@
 .member-wrap td {position: relative;}
 .member-wrap td span{position: absolute; top:52px;left:0;font-size:14px;color:var(--point-color3)}
 .member-wrap .btn-box{display:flex;justify-content: center;margin:0 0 20px;}
-.member-wrap .btn-box button{background:var(--point-color3);color:var(--font-color);border:1px solid var(--point-color3);font-size:22px;padding:10px 25px;border-radius:10px;font-weight:bold;cursor:pointer}
-.member-wrap .btn-box button:last-child{background:none;}
+.member-wrap .btn-box button{background:var(--point-color3);color:var(--font-color);border:1px solid var(--font-color);font-size:22px;padding:10px 25px;border-radius:10px;font-weight:bold;cursor:pointer}
+.member-wrap .btn-box button.delete-btn:hover{background-color: #DC143C;color:#fff;}
 .member-wrap .profile{width:50px;height:50px;border-raidus:50%;}
 .member-wrap .profile input[type="file"]{position: absolute;top: 0; left: -9999px;height:0;overflow: hidden}
 .member-wrap .profile label{position: relative;width:100%;height:100%;display:block;cursor: pointer;}
 .member-wrap .profile label:before{content: "변경"; display: none; color:#fff;width:100%;height: 100%;position: absolute;top: 0;left: 0;background: rgba(0,0,0,0.5);text-align: center;line-height: 50px;}
 .member-wrap .profile label:hover:before{display:block;}
-.member-wrap .delete-btn{width:280px;}
 
 .back-btn{position: absolute;top:0;left:0;width:75px;height:75px;background:none;color:var(--font-color);border:none;display:flex;justify-content: center;align-items: center}
 .back-btn span{font-size:36px;}

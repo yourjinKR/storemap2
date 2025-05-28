@@ -31,25 +31,36 @@ function getMainSlide(){
 	.then(response => response.json())
 	.then(result =>{
 		let str = "";
-		for (let data of result) {
-			str += `<div class="swiper-slide">`;
-			str += 		`<div class="img-box">`;
-			if(data.filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
-				str += 		`<img src="${data.filename}">`;
-			}else{
-				str += 		`<img src="${IMG_URL}${data.uuid}_${data.filename}">`;
-			}
-			str += 		`</div>`;
-			str += `</div>`;
+		if(result != null && result.length > 0){
+			result.forEach((event,idx) => {
+				str += `<div class="swiper-slide">`;
+				str += 		`<div class="img-box">`;
+				if(event.attachFile[idx].filename.indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/") == 0){
+					str += 		`<img src="${event.attachFile[idx].filename}">`;
+				}else{
+					str += 		`<img src="${IMG_URL}${event.attachFile[idx].uuid}_${event.attachFile[idx].filename}">`;
+				}
+				str += 		`</div>`;
+				str += 		`<div class="slide-title">`;
+				str += 			`<h2>${event.event_title}</h2>`;
+				str += 			`<a href="/event/eventView?event_idx=${event.event_idx}">View More</a>`;
+				str += 		`</div>`;
+				str += `</div>`;
+			})
 		}
 		
 		// 메인 배너 슬라이드
 		var swiper = new Swiper(".main-slide .mySwiper", {
-			spaceBetween : 30,
+			allowTouchMove: false,
 			pagination : {
 				el : ".swiper-pagination",
 				clickable : true,
 			},
+			autoplay: {
+				delay: 5000,         // 자동 재생 딜레이 (ms)
+				disableOnInteraction: false, // 유저가 터치해도 자동재생 계속
+				pauseOnMouseEnter: true,     // 마우스 오버 시 일시정지
+			}
 		});	
 		
 		let mainSlide = document.querySelector(".main-slide .swiper-wrapper");

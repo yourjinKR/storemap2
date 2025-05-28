@@ -79,11 +79,9 @@
 					<div class="btn-box">
 						<button type="button" id="modifyBtn">수정하기</button>
 						<button type="reset" id="resetBtn">다시작성</button>
+						<button onclick="location.href='/member/delete'" class="delete-btn">회원탈퇴</button>
 					</div>
 				</form>
-				<div class="btn-box">
-					<button onclick="location.href='/member/delete'" class="delete-btn">회원탈퇴</button>
-				</div>
 			</div>
 		</c:when>
 		<c:when test="${type == 'group'}">
