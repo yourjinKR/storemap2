@@ -15,7 +15,7 @@ document.querySelectorAll('button').forEach(btn => {
 		}else if(type === 'resetBtn'){
 			f.reset();
 		}else if(type === 'storeBtn'){
-			location.href=`/modal/storeView?store_idx=${f.store_idx.value}`;
+			location.href="/store/map";
 		}
 	})
 });
