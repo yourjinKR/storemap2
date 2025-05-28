@@ -56,7 +56,9 @@ let searchResult;
 /** true : 사이드바가 열린 상태 */
 let viewSideBarCheck = false;
 let viewSideBar = null;
-// 토글 버튼
+/** 토글 버튼 박스 */
+let toggleBtnBox = null;
+/** 토글 버튼 */
 let toggleBtn = null;
 // 스토어 리스트바 모달
 let storeListModal = null;
@@ -231,8 +233,10 @@ document.addEventListener("DOMContentLoaded", () => {
         //  뷰 사이드바
         viewSideBarCheck = false;
         viewSideBar = document.querySelector(".side-bar#united");
+        // 토글 버튼 박스
+        toggleBtnBox = document.querySelector(".side-bar#toggle-box");
         // 토글 버튼
-        toggleBtn = document.querySelector(".side-bar#toggle-box");
+        toggleBtn = document.querySelector(".mapBtn#toggle");
         // 스토어 리스트 모달
         storeListModal = document.querySelector(".storeListModal");
         // 이벤트 리스트 모달
@@ -369,24 +373,9 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "store-loc") {
 
             }
-            // 현위치 이동 (임시 함수, 추후 수정)
+            // 현위치 이동
             else if (type === "panto-current") {
-                basicMap.setLevel(3);
-                panToLatLng(basicMap, currentLat, currentLng);
-                // 이미 현위치일 경우 실행
-                if (new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter()) {
-                    setMyCurrentPlace();
-                }
-                // 점포 위치 설정시 현위치 이동 및 함수 실행
-                if (mapType === "store-loc") {
-                    let latlng = new kakao.maps.LatLng(currentLat, currentLng);
-                    let f = document.querySelector("#store-modify");
-                    clickMarker.setPosition(latlng);
-
-                    initRCodeFromCoords(latlng, f);
-                    initDetailAddrFromCoords(latlng, f);
-
-                }
+                handleCurrentLocationClick(basicMap, currentLat, currentLng, mapType);
             }
             // 검색
             else if (type === "search") {
@@ -1002,8 +991,6 @@ function markerMapping(eles, type) {
 
             // (store or event) 클릭 이벤트 추가
             ele.addEventListener('click', e => {
-                console.log(ele);
-                
                 hideviewSideBar();
                 viewSideBar = document.querySelector(`.side-bar#${type}`);
                 // 리스트 중에서 idx 찾기
@@ -1157,22 +1144,25 @@ function hideviewSideBar() {
 
 /** 숫자입력시 해당 pixel만큼 토글버튼의 위치를 설정하는 함수 */
 function setToggle(pixel) {
-    toggleBtn.style.left = `${pixel}px`;
+    toggleBtnBox.style.left = `${pixel}px`;
 }
 /** 토글 닫기 */
 function offToggle() {
-    toggleBtn.classList.remove("semi");
-    toggleBtn.classList.remove("on");
+    toggleBtnBox.classList.remove("semi");
+    toggleBtnBox.classList.remove("on");
+    toggleBtn.innerHTML = "&gt";
 }
 /** 토글 중간 */
 function semiToggle() {
-    toggleBtn.classList.add("semi");
-    toggleBtn.classList.remove("on");
+    toggleBtnBox.classList.add("semi");
+    toggleBtnBox.classList.remove("on");
+    toggleBtn.innerHTML = "&lt";
 }
 /** 토글 열기 */
 function onToggle() {
-    toggleBtn.classList.remove("semi");
-    toggleBtn.classList.add("on");
+    toggleBtnBox.classList.remove("semi");
+    toggleBtnBox.classList.add("on");
+    toggleBtn.innerHTML = "&lt";
 }
 
 /** 리스트 사이드바 토글 함수 */
@@ -1422,6 +1412,39 @@ function panToLatLng(map, lat, lng) {
     }
 }
 
+/**
+ * 현재 지도 중심이 주어진 위/경도와 같은지 확인
+ */
+function isSamePosition(map, lat, lng) {
+    const center = map.getCenter();
+    return (
+        Math.abs(center.getLat() - lat) < 0.0001 &&
+        Math.abs(center.getLng() - lng) < 0.0001
+    );
+}
+
+/** 현위치로 이동하는 함수 및  */
+function handleCurrentLocationClick(map, lat, lng, mapType) {
+    // 이미 현위치라면: 이동하지 않고 커스텀 위치 함수 실행
+    if (isSamePosition(map, lat, lng) && mapType === "full") {
+        console.log("이미 현위치입니다. setMyCurrentPlace() 실행");
+        setMyCurrentPlace();
+        return;
+    }
+
+    // 위치가 다르면 이동
+    map.setLevel(3);  // 줌레벨 설정
+    const moveLatLng = new kakao.maps.LatLng(lat, lng);
+    map.panTo(moveLatLng);
+
+    // 추가 로직: store-loc 일 경우 마커 및 주소 업데이트
+    if (mapType === "store-loc") {
+        const f = document.querySelector("#store-modify");
+        clickMarker.setPosition(moveLatLng);
+        initRCodeFromCoords(moveLatLng, f);
+        initDetailAddrFromCoords(moveLatLng, f);
+    }
+}
 
 /** 업로드할 요소 위치를 입력하여 지도를 업로드 함수 (반환값 : 해당 지도 요소) */
 function uploadMap(path, lat, lng) {
