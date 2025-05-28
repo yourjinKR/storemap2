@@ -350,9 +350,17 @@ public class MemberController {
 	@ResponseBody
 	public Map<String, Object> registerEnter(@RequestBody EnterVO enter) {
 		Map<String, Object> result = new HashMap<>();
-		int res = enterService.insertEnter(enter);
-		enterRequestService.register(enter.getEnter_idx());
-		result.put("result", res);
+		try {
+			int res = enterService.insertEnterWithRequest(enter);
+			if (res > 0) {
+				result.put("result", 1);
+			} else {
+				result.put("result", 0);
+			}
+		} catch (Exception e) {
+			log.error("기업 회원가입 처리 중 오류 발생: " + e.getMessage(), e);
+			result.put("result", 0);
+		}
 		return result;
 	}
 	

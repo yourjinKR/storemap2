@@ -16,6 +16,18 @@ function closeModal() {
     modal.style.display = "none";
 }
 
+//기업 회원 여부 확인 함수
+function isEnterUser() {
+    // JSP에서 userType 세션 값을 JavaScript 전역 변수로 전달받아야 함
+    // 또는 hidden input으로 userType 값을 전달받아 확인
+    const userTypeInput = document.querySelector('input[name="userType"]');
+    if (userTypeInput) {
+        return userTypeInput.value === 'enter';
+    }
+    // 또는 서버에서 렌더링할 때 JavaScript 변수로 설정
+    return typeof userType !== 'undefined' && userType === 'enter';
+}
+
 function initializeEvents() {
     let currentStoreIdx, currentReviewIdx, currentMemberIdx;  // 신고용 store_idx, review_idx, member_idx 전역 변수 저장
     const declarationService = (function () {
@@ -145,6 +157,13 @@ function initializeEvents() {
     const storeLikeCheckboxes = document.querySelectorAll('input[name="storeLike"]');
     storeLikeCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
+        	// 기업 회원인지 확인
+            if (isEnterUser()) {
+                alert('기업 회원은 좋아요 기능을 사용할 수 없습니다.');
+                this.checked = false;
+                return;
+            }
+        	
             const store_idx = this.id.replace('storeLike-icon', '');
             const member_idx = document.querySelector('input[name="member_idx"]').value;
 
@@ -163,6 +182,12 @@ function initializeEvents() {
     const storeReportBtns = document.querySelectorAll('input[name="storeReport"]');
     storeReportBtns.forEach(button => {
         button.addEventListener("click", () => {
+        	// 기업 회원인지 확인
+            if (isEnterUser()) {
+                alert('기업 회원은 신고 기능을 사용할 수 없습니다.');
+                return;
+            }
+        	
             const storeReport = document.querySelector("#store-report-selection")
             currentStoreIdx = button.id.replace('storeReport-icon', '');
             currentMemberIdx = document.querySelector('input[name="member_idx"]').value;
@@ -190,6 +215,13 @@ function initializeEvents() {
     const reviewLikeCheckboxes = document.querySelectorAll('input[name="reviewLike"]');
     reviewLikeCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
+        	// 기업 회원인지 확인
+            if (isEnterUser()) {
+                alert('기업 회원은 좋아요 기능을 사용할 수 없습니다.');
+                this.checked = false;
+                return;
+            }
+            
             const review_idx = this.id.replace('reviewLike-icon', '');
             const member_idx = document.querySelector('input[name="member_idx"]').value;
 
@@ -208,6 +240,12 @@ function initializeEvents() {
     const reviewReportBtns = document.querySelectorAll('input[name="reviewReport"]');
     reviewReportBtns.forEach(button => {
         button.addEventListener("click", () => {
+        	// 기업 회원인지 확인
+            if (isEnterUser()) {
+                alert('기업 회원은 신고 기능을 사용할 수 없습니다.');
+                return;
+            }
+            
             const reviewReport = document.querySelector("#review-report-selection")
             currentReviewIdx = button.id.replace('reviewReport-icon', '');
             currentMemberIdx = document.querySelector('input[name="member_idx"]').value;

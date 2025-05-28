@@ -24,6 +24,7 @@
 	</div>
 	<input type="hidden" name="member_idx" value="${loginUserIdx}">
 	<input type="hidden" name="store_idx" value="${svo.store_idx}">
+	<input type="hidden" name="userType" value="${userType}">
 
     <div class="store-info por">
       <h3>${svo.store_name}</h3>
