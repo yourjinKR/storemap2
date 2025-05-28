@@ -914,7 +914,7 @@ function clickOverlay(ele) {
     onToggle();
     viewSideBarCheck = true;
 
-    document.querySelector(".side-bar#list #body").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
+    scorllToLi(ele);
 
     findOverlay(idx, type);
 }
@@ -985,6 +985,8 @@ function markerMapping(eles, type) {
 
             // (store or event) 클릭 이벤트 추가
             ele.addEventListener('click', e => {
+                console.log(ele);
+                
                 hideviewSideBar();
                 viewSideBar = document.querySelector(`.side-bar#${type}`);
                 // 리스트 중에서 idx 찾기
@@ -998,9 +1000,24 @@ function markerMapping(eles, type) {
                     }
                 });
                 viewSideBarCheck = true;
+                scorllToLi(ele);
             });
         });
     }
+}
+
+/** <li>요소를 기준으로 스크롤 조작 함수 */
+function scorllToLi(ele) {
+    // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작        
+    const container = document.querySelector(".side-bar#list #body");
+    const offset = ele.offsetTop - container.offsetTop;
+    
+    container.scrollTo({
+    top: offset,
+    behavior: 'smooth',
+    block : 'start'
+    });
+    
 }
 
 /** 타이틀로 idx가 일치하는 리스트의 요소 찾는 동적 함수 (list, type) */
@@ -1038,9 +1055,7 @@ function addMarkerEvent(marker, type) {
             showviewSideBar();
         }
         onToggle();
-
-        // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작        
-        document.querySelector(".side-bar#list #body").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
+        scorllToLi(li);
 
         // 오버레이 강조
         findOverlay(idx, type);
