@@ -373,8 +373,19 @@ document.addEventListener("DOMContentLoaded", () => {
             else if (type === "panto-current") {
                 basicMap.setLevel(3);
                 panToLatLng(basicMap, currentLat, currentLng);
+                // 이미 현위치일 경우 실행
                 if (new kakao.maps.LatLng(currentLat, currentLng) == basicMap.getCenter()) {
                     setMyCurrentPlace();
+                }
+                // 점포 위치 설정시 현위치 이동 및 함수 실행
+                if (mapType === "store-loc") {
+                    let latlng = new kakao.maps.LatLng(currentLat, currentLng);
+                    let f = document.querySelector("#store-modify");
+                    clickMarker.setPosition(latlng);
+
+                    initRCodeFromCoords(latlng, f);
+                    initDetailAddrFromCoords(latlng, f);
+
                 }
             }
             // 검색
