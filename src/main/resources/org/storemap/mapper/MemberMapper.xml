@@ -64,6 +64,11 @@
 		where member_idx = #{member_idx}
 	</update>
 	
+	<!-- 회원 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM MEMBER WHERE MEMBER_IDX = #{member_idx}
+	</delete>
+	
 </mapper>
 
 

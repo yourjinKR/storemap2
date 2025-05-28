@@ -26,5 +26,8 @@ public interface MemberMapper {
 	
 	// 회원 정보
 	public MemberVO read(int member_idx);
+	
+	// 회원 삭제
+	public int delete(int member_idx);
 		
 }

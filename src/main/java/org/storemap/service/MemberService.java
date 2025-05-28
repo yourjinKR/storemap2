@@ -24,4 +24,7 @@ public interface MemberService {
 	
 	// 회원 정보
 	public MemberVO get(int member_idx);
+	
+	// 회원 삭제
+	public int remove(int member_idx);
 }

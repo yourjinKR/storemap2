@@ -82,4 +82,10 @@ public class MemberServiceImple implements MemberService{
 		return memberMapper.read(member_idx);
 	}
 	
+	// 회원 삭제
+	@Override
+	public int remove(int member_idx) {
+		return memberMapper.delete(member_idx);
+	}
+	
 }

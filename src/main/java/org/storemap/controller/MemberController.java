@@ -358,9 +358,9 @@ public class MemberController {
 	
 	// 회원탈퇴 페이지로 이동
 	@GetMapping("/delete")
-	public String deletePage() {
-		//model.addAttribute("path", "/member/delete");
-		return "index";
+	public String deletePage(Model model) {
+	    model.addAttribute("page", "member/delete");
+	    return "index";
 	}
 	
 	@GetMapping("/mypage")
@@ -396,30 +396,35 @@ public class MemberController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-//	@PostMapping("/delete") // 진행중
-//	public String deleteMember(@RequestParam String pw, HttpSession session, Model model) {
-//	    String loginId = (String) session.getAttribute("loginUser");
-//	    String userType = (String) session.getAttribute("userType");
-//
-//	    if ("enter".equals(userType)) {
-//	        EnterVO enter = enterService.eLogin(loginId, pw);
-//	        if (enter == null) {
-//	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
-//	            return "index";
-//	        }
-//	        enterService.deleteEnter(enter.getEnter_idx());
-//	    } else {
-//	        MemberVO member = memberService.mLogin(loginId, pw);
-//	        if (member == null) {
-//	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
-//	            return "index";
-//	        }
-//	        memberService.deleteMember(member.getMember_idx());
-//	    }
-//
-//	    session.invalidate(); // 세션 삭제
-//	    return "redirect:/"; // 메인으로
-//	}
+	@PostMapping("/delete")
+	public String deleteMember(@RequestParam String pw, HttpSession session, Model model) {
+	    String loginId = (String) session.getAttribute("loginUser");
+	    String userType = (String) session.getAttribute("userType");
+
+	    if ("enter".equals(userType)) {
+	        EnterVO enter = enterService.eLogin(loginId, pw);
+	        if (enter == null) {
+	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
+	            model.addAttribute("page", "member/delete");
+	            return "index";
+	        }
+	        // 회원탈퇴 처리
+	        enterService.remove(enter.getEnter_idx());
+	    } else {
+	        MemberVO member = memberService.mLogin(loginId, pw);
+	        if (member == null) {
+	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
+	            model.addAttribute("page", "member/delete");
+	            return "index";
+	        }
+	        // 회원탈퇴 처리
+	        memberService.remove(member.getMember_idx());
+	    }
+
+	    session.invalidate(); // 세션 삭제
+	    model.addAttribute("msg", "회원탈퇴가 완료되었습니다.");
+	    return "redirect:/"; // 메인으로 리다이렉트
+	}
 	
 	
 	
