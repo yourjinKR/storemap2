@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <div class="main-map">
-	<div class="map" id="full" style="width: 100%; height: 1000px;"></div>
+	<div class="map" id="full" style="width: 100%; height: 100vh;"></div>
 	<!-- 리스트 사이드바 -->
 	<div class="side-bar show" id="list">
 		<div id="content">
