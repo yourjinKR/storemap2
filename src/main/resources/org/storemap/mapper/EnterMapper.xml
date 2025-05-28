@@ -63,4 +63,43 @@
 		where enter_idx = #{enter_idx}
 	</update>
 	
+	<!-- ENTER와 ENTER_REQUEST를 하나의 트랜잭션에서 처리 -->
+	<insert id="insertEnterWithRequest" parameterType="org.storemap.domain.EnterVO">
+	    <selectKey keyProperty="enter_idx" resultType="int" order="BEFORE">
+	        SELECT enter_seq.NEXTVAL FROM DUAL
+	    </selectKey>
+	    
+	    <!-- 1. ENTER 테이블 등록 -->
+	    INSERT ALL
+	        INTO enter (
+	            ENTER_IDX,
+	            ENTER_IMAGE,
+	            ENTER_ID,
+	            ENTER_PW,
+	            ENTER_NAME,
+	            ENTER_RNUM,
+	            ENTER_LOC,
+	            ENTER_NUM
+	        ) VALUES (
+	            #{enter_idx},
+	            #{enter_image, jdbcType = VARCHAR},
+	            #{enter_id},
+	            #{enter_pw},
+	            #{enter_name},
+	            #{enter_rnum},
+	            #{enter_loc},
+	            #{enter_num}
+	        )
+	        
+	        <!-- 2. ENTER_REQUEST 테이블 등록 -->
+	        INTO enter_request (
+	            enter_idx,
+	            pon
+	        ) VALUES (
+	            #{enter_idx},
+	            0
+	        )
+	    SELECT 1 FROM DUAL
+	</insert>
+	
 </mapper>

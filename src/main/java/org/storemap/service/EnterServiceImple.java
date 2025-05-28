@@ -2,6 +2,9 @@ package org.storemap.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.storemap.domain.EnterVO;
 import org.storemap.mapper.EnterMapper;
@@ -17,6 +20,8 @@ public class EnterServiceImple implements EnterService{
 	//이미지 업로드 서버
 	@Autowired
 	private CloudinaryService cloudinaryService;
+	@Autowired
+	private EnterRequestService enterRequestService;
 	
 	// 로그인
 	@Override
@@ -35,10 +40,28 @@ public class EnterServiceImple implements EnterService{
 		int result = enterMapper.checkId(member_id);
 		return result;
 	}
+	
 	// 회원가입
 	@Override
 	public int insertEnter(EnterVO enter) {
 		return enterMapper.insertEnter(enter);
+	}
+	@Override
+	@Transactional
+	public int insertEnterWithRequest(EnterVO enter) {
+	    try {
+	        int result = enterMapper.insertEnterWithRequest(enter);
+	        if (result > 0) {
+	            log.info("회원가입 완료");
+	            return result;
+	        } else {
+	            throw new RuntimeException("회원가입 실패");
+	        }
+	        
+	    } catch (Exception e) {
+	        log.error("회원가입 처리 중 오류: " + e.getMessage(), e);
+	        throw new RuntimeException("회원가입 실패: " + e.getMessage(), e);
+	    }
 	}
 	
 	// 회원정보 수정

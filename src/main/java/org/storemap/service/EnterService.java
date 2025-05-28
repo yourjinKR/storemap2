@@ -25,4 +25,7 @@ public interface EnterService {
 	// 권한 수락
 	public int acceptPermission(int enter_idx);
 	
+	// ENTER와 ENTER_REQUEST를 하나의 프로시저로 처리
+    public int insertEnterWithRequest(EnterVO enter);
+	
 }

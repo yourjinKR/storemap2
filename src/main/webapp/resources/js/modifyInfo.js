@@ -206,10 +206,12 @@ if(formType == 'personal') {
 	// **************** 단체 **********************
 	//
 	let ePwValidState, ePwReValidState, regExpPw = null;
+	let {pwCk, pwReCk} = false; // 검증
+	let f = null;
 	document.addEventListener("DOMContentLoaded", (event) => {
+		f = document.getElementById('ModifyForm');
 		ePwValidState = document.querySelector("#ePwValidState");
 		ePwReValidState = document.querySelector("#ePwReValidState");
-		let {pwCk, pwReCk} = false; // 검증
 		regExpPw = /^[0-9a-zA-Z]{8,16}$/;		// 비밀번호 검증 정규식
 		
 		// 이미지 미리보기 이벤트 리스너 추가
