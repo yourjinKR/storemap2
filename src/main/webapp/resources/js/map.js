@@ -1838,18 +1838,22 @@ function completeSearch() {
     }
     else if (eventMapMode && eventVOList.length != 0) {
         eventListModal.style.display = "block";
+    } 
+    else if (unitedMapMode && (storeVOList.length != 0 || eventVOList.length != 0)) {
+        unitedFailModal.style.display = "none";
     }
-    // resetAutocomplete();
 }
 
 /** 검색결과가 없거나 실패할때 모달을 호출하는 함수 */
 function failSearch() {
     // 통합 맵
     if (unitedMapMode) {
-        if (storeVOList.length != 0 || eventVOList.length != 0) {
-            unitedFailModal.style.display = "none";
-        } else if (storeVOList.length == 0 && eventVOList.length != 0) {
+        if (storeVOList.length == 0 && eventVOList.length == 0) {
+            storeListModal.style.display = "none";
+            eventListModal.style.display = "none";
             unitedFailModal.style.display = "block";
+        } else if (storeVOList.length != 0 || eventVOList.length != 0) {
+            unitedFailModal.style.display = "none";
         }
     }
     // 점포 맵
