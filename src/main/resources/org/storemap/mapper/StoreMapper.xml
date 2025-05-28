@@ -298,7 +298,7 @@
 	            COS(RADIANS(#{lat})) * COS(RADIANS(store_lat)) *
 	            COS(RADIANS(store_lng) - RADIANS(#{lng})) +
 	            SIN(RADIANS(#{lat})) * SIN(RADIANS(store_lat))
-	        ) &lt;= #{kilometer}
+	        ) &lt;= 500
 	    <if test="amount != 0">
 		    AND ROWNUM &lt;= #{amount}    
 	    </if>
