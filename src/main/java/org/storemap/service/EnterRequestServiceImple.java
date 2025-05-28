@@ -8,7 +8,9 @@ import org.storemap.domain.EnterRequestVO;
 import org.storemap.domain.EnterVO;
 import org.storemap.domain.LetterVO;
 import org.storemap.domain.MemberVO;
+import org.storemap.mapper.EnterMapper;
 import org.storemap.mapper.EnterRequestMapper;
+import org.storemap.mapper.LetterMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -16,17 +18,21 @@ import lombok.extern.log4j.Log4j;
 @Service
 public class EnterRequestServiceImple implements EnterRequestService{
 	@Autowired
-	EnterRequestMapper mapper;
+	private EnterRequestMapper mapper;
+	@Autowired
+	private EnterMapper enterMapper;
+	@Autowired
+	private LetterMapper letterMapper;
 	
 	@Override
 	public int register(int enter_idx) {
 		log.info("register..."+enter_idx);
 		int result = mapper.insert(enter_idx);
-		EnterVO evo = memberMapper.read(member_idx);
+		EnterVO evo = enterMapper.read(enter_idx);
 		if(result == 1) {
 			LetterVO vo = new LetterVO();
-			vo.setLetter_writer(mvo.getMember_id());
-			vo.setLetter_content("입점 요청이 접수되었습니다.");
+			vo.setLetter_writer(evo.getEnter_id());
+			vo.setLetter_content("그룹등록 요청이 접수되었습니다.");
 			vo.setLetter_receiver("admin");
 			letterMapper.insertLetter(vo);
 		}
@@ -44,6 +50,14 @@ public class EnterRequestServiceImple implements EnterRequestService{
 	public int remove(int enter_idx) {
 		log.info("remove..."+enter_idx);
 		int result = mapper.delete(enter_idx);
+		EnterVO evo = enterMapper.read(enter_idx);
+		if(result == 1) {
+			LetterVO vo = new LetterVO();
+			vo.setLetter_writer(evo.getEnter_id());
+			vo.setLetter_content("그룹등록 요청이 반려되었습니다.");
+			vo.setLetter_receiver("admin");
+			letterMapper.insertLetter(vo);
+		}
 		return result;
 	}
 	
