@@ -14,7 +14,10 @@
 </a>
 <div class="store">
 	<h3>점포등록</h3>
-		<form method="post" enctype="multipart/form-data">
+		<form method="post" enctype="multipart/form-data" id="store-modify">
+			<input type="hidden" id="lat" name="store_lat">
+    		<input type="hidden" id="lng" name="store_lng">
+    		<input type="hidden" id="regcode" name="store_regcode">
 			<input type="hidden" name="member_idx" value="${loginUserIdx}">
 			<table>
 		 		<colgroup>

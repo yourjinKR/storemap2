@@ -428,8 +428,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (f) {
                     f.lat.value = latlng.getLat();
                     f.lng.value = latlng.getLng();
-                    initAddrFromCoords(latlng, f);
+                    initRCodeFromCoords(latlng, f);
                     initDetailAddrFromCoords(latlng, f);
+                } else {
+                    
                 }
             }
         });
@@ -728,7 +730,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
-    function initAddrFromCoords(latlng, form) {
+    function initRCodeFromCoords(latlng, form) {
         let geocoder = new kakao.maps.services.Geocoder();
         let callback = function (result, status) {
             if (status === kakao.maps.services.Status.OK) {
