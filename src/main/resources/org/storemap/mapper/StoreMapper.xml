@@ -42,7 +42,10 @@
 			store_area,
 			store_activity_time,
 			store_content,
-			store_rnum
+			store_rnum,
+			store_regcode,
+			store_lat,
+			store_lng
 		)
 		values(
 	 		store_seq.nextval,
@@ -55,7 +58,10 @@
 	 		#{store_area},
 	 		#{store_activity_time},
 	 		#{store_content},
-	 		#{store_rnum}
+	 		#{store_rnum},
+	 		#{store_regcode},
+	 		#{store_lat},
+	 		#{store_lng}
 	 	)
 	</insert>
 	<!-- 2.점포 관리  -->

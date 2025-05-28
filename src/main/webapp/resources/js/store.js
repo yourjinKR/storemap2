@@ -158,10 +158,16 @@ function register(){
 	formData.append("store_activity_time" , document.querySelector("input[name='store_activity_time']").value);
 	formData.append("store_content" , document.querySelector("textarea[name='store_content']").value);
 	formData.append("store_rnum" , document.querySelector("input[name='store_rnum']").value);
+	formData.append("store_regcode" , document.querySelector("input[name='store_regcode']").value);
+	formData.append("store_lat" , document.querySelector("input[name='store_lat']").value);
+	formData.append("store_lng" , document.querySelector("input[name='store_lng']").value);
 	//이미지 파일
     formData.append("file", document.querySelector("input[type='file']").files[0]);
 
     document.querySelector("#savingUI").classList.add("save");
+
+	console.log(formData);
+	
     // 데이터 전송
     fetch("/store/storeRegister", {
         method: "POST",
