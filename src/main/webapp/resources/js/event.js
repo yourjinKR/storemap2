@@ -272,66 +272,71 @@ document.addEventListener("DOMContentLoaded", (event) => {
         reportForm.submit();
       });
       
-      // 이벤트 좋아요 기능
+      
+      const userTypeInput = document.getElementById('userType');
+      const userType = userTypeInput ? userTypeInput.value.trim() : '';
+
       const heartIcons = document.querySelectorAll('.eventLike-checkbox');
       heartIcons.forEach(icon => {
-          icon.addEventListener('change', function () {
-              // 클릭된 체크박스의 id에서 eventIdx를 추출
-              const eventIdx = this.id.replace('eventLike-icon', '');
+        icon.addEventListener('click', function (e) {
+          if (userType.toLowerCase() !== 'user') {
+            alert('일반회원만 좋아요를 등록할 수 있습니다.');
+            e.preventDefault();
+            return false;
+          }
+        });
 
-              if (!eventIdx) {
-                  return;
+        icon.addEventListener('change', function () {
+          if (userType.toLowerCase() !== 'user') {
+            alert('일반회원만 좋아요를 등록할 수 있습니다.');
+            this.checked = !this.checked;
+            return;
+          }
+
+          const eventIdx = this.id.replace('eventLike-icon', '');
+          if (!eventIdx) return;
+
+          const isLiked = this.checked;
+
+          fetch('/event/like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              event_idx: eventIdx,
+              action: isLiked ? 'like' : 'unlike'
+            })
+          })
+          .then(response => {
+            if (response.status === 401) {
+              alert('로그인이 필요합니다.');
+              return;
+            }
+
+            if (!response.ok) {
+              return Promise.reject('서버 오류');
+            }
+
+            return response.json();
+          })
+          .then(data => {
+            if (data && data.likeCount !== undefined) {
+              const likeCountElement = document.querySelector(`.eventLike-count-${eventIdx}`);
+              if (likeCountElement) {
+                likeCountElement.textContent = data.likeCount;
               }
-
-              const isLiked = this.checked;
-
-              // 서버에 좋아요 요청 보내기
-              fetch('/event/like', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  credentials: 'same-origin',  // 세션 쿠키 포함
-                  body: JSON.stringify({
-                      event_idx: eventIdx,
-                      action: isLiked ? 'like' : 'unlike'
-                  })
-              })
-              .then(response => {
-                  if (response.status === 401) {
-                      // 401 에러 발생 시 알림을 띄우고, 더 이상 진행하지 않음
-                      alert('로그인이 필요합니다.');
-                      return; // 네트워크 오류로 처리되지 않게 하고 종료
-                  }
-
-                  if (!response.ok) {
-                      return Promise.reject('서버 오류');
-                  }
-
-                  return response.json();
-              })
-              .then(data => {
-                  if (data && data.likeCount !== undefined) {
-                      const likeCountElement = document.querySelector(`.eventLike-count-${eventIdx}`);
-                      if (likeCountElement) {
-                          likeCountElement.textContent = data.likeCount;
-                          // 좋아요 수 변경 애니메이션 클래스 추가
-                          likeCountElement.classList.add('like-update');
-                          setTimeout(() => {
-                              likeCountElement.classList.remove('like-update');
-                          }, 500);
-                      }
-                  } else {
-                      console.error('Invalid response data:', data);
-                  }
-              })
-              .catch(error => {
-                  // 오류를 명시적으로 콘솔에 기록하지 않음
-                  if (error !== '서버 오류') {
-                      console.error('Error:', error);
-                  }
-              });
+            } else {
+              console.error('Invalid response data:', data);
+            }
+          })
+          .catch(error => {
+            if (error === '서버 오류') {
+              alert('서버에서 오류가 발생했습니다.');
+            } else {
+              console.error('Error:', error);
+            }
           });
+        });
       });
       
       new Swiper('.swiper-container', {
