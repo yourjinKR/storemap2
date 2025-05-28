@@ -345,6 +345,18 @@ public class EventController {
 	    }
 	}
 	
+	@GetMapping(value = "/eventLike",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String,Integer>> eventLike(@RequestParam("event_idx") int event_idx,HttpSession session){
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		int loginUserIdx = (int) session.getAttribute("member_idx");
+		if(loginUserIdx != 0) {
+			eventLikeService.removeLike(event_idx, loginUserIdx);
+		}
+		map.put("success",1);
+		return new ResponseEntity<Map<String,Integer>>(map, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/like/check", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> checkLike(@RequestParam("event_idx") int eventIdx, HttpSession session) {
