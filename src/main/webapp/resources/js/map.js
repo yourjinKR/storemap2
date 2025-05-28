@@ -914,7 +914,7 @@ function clickOverlay(ele) {
     onToggle();
     viewSideBarCheck = true;
 
-    document.querySelector(".side-bar#list").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
+    document.querySelector(".side-bar#list #body").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
 
     findOverlay(idx, type);
 }
@@ -1039,8 +1039,8 @@ function addMarkerEvent(marker, type) {
         }
         onToggle();
 
-        // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작
-        document.querySelector(".side-bar#list").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
+        // 마커 클릭시 리스트 사이드바의 스크롤 상태 조작        
+        document.querySelector(".side-bar#list #body").scrollTo({ left: 0, top: li.offsetTop, behavior: 'smooth' });
 
         // 오버레이 강조
         findOverlay(idx, type);
@@ -1766,7 +1766,7 @@ function apply2eventMap(data) {
             // `<li data-store_idx="${vo.store_idx}" name="store_idx">
             `<li data-event_idx="${vo.event_idx}" onclick="viewDetailModalPage(this, 'event')" name="event_idx">
             <img src="${fileList[0]}" alt="event_${vo.event_idx}">
-                <div class="store-description">
+                <div class="event-description">
                     <div class="event-title">${vo.event_title}</div>
                     <div class="event-location">${vo.event_location}</div>
                 </div>

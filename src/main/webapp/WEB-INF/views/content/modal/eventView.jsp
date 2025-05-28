@@ -12,9 +12,6 @@
 </c:if>
 
 <div class="eventView">
-	
-	<div class="event-image">
-	</div>
 	<input type="hidden" name="event_idx" value="${evo.event_idx}">
 
     <div class="event-info por">
