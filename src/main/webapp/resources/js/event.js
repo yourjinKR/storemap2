@@ -575,16 +575,27 @@ function logEventDayList() {
         alert("대표 이미지를 선택하세요.");
         return;
     }
+    document.querySelector("#savingUI").classList.add("save");
     updateDateTimeHiddenFields()
     f.action="/event/eventRegister";
 	f.submit();
 }
 
 function modifyBtn(){
-	  const deletedUuidsInput = document.getElementById('deletedUuidsInput');
-	  deletedUuidsInput.value = deletedUuids.join(',');
-	  console.log("삭제 대상 UUIDs:", deletedUuidsInput.value);
+	const deletedUuidsInput = document.getElementById('deletedUuidsInput');
+	deletedUuidsInput.value = deletedUuids.join(',');
+	console.log("삭제 대상 UUIDs:", deletedUuidsInput.value);
 	
+	  const postcodeInput = document.getElementById('postcodeInput');
+	  const warning = document.getElementById('postcodeWarning');
+
+	  if (!postcodeInput.value.trim()) {
+	    warning.style.display = 'inline';
+	    postcodeInput.focus();
+	    return false;
+	  } 
+	
+	document.querySelector("#savingUI").classList.add("save");
 	f.submit();
 }
 

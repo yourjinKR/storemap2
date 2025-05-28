@@ -89,6 +89,13 @@
 	</div>
 </div>
 
+	<div class="saving-overlay" id="savingUI">
+		<div class="saving-box">
+			<div class="spinner"></div>
+			<div class="saving-text">등록 중...</div>
+		</div>
+	</div>
+
 <style>
   * {
     box-sizing: border-box;
@@ -203,7 +210,6 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
 
- 
   @media (max-width: 768px) {
     .event-register-wrapper {
       padding: 20px;
@@ -220,4 +226,15 @@
       gap: 10px;
     }
   }
+  
+.saving-overlay {position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.4);display: none;justify-content: center;align-items: center;z-index: 9999;}
+.saving-overlay.save {display:flex;}
+.saving-box {background: white;padding: 30px 50px;border-radius: 10px;box-shadow: 0 4px 10px rgba(0,0,0,0.2);display: flex;flex-direction: column;align-items: center;}
+.spinner {border: 6px solid #f3f3f3;border-top: 6px solid #3498db;border-radius: 50%;width: 40px;height: 40px;animation: spin 1s linear infinite;margin-bottom: 15px;}
+.saving-text {font-size: 18px;font-weight: bold;color: #333;}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg);}
+}
 </style>

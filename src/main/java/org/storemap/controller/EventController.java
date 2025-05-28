@@ -134,7 +134,7 @@ public class EventController {
 	        return "errorPage";
 	    }
 
-	    return "redirect:/event/eventRegister";
+	    return "redirect:/event/eventView?event_idx=" + eventVO.getEvent_idx();
 	}
 	
 	//이벤트 등록 화면 보여주는 컨트롤러
