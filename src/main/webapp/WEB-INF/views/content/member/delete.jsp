@@ -2,22 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:if test="${empty loginUser and loginUser eq ''}">
-<script type="text/javascript">
-	alert("잘못된 접근입니다.");
-	history.back();
-</script>
-</c:if>
-
-<div class="member-wrap">
-	<a href="javascript:history.back();" class="back-btn">
-		<span class="material-symbols-outlined">
-			undo
-		</span>
-	</a>
-	<div>
+<div class="delete-modal">
+	<div class="modal-inner">
 		<h3>회원탈퇴</h3>
-		<form action="/member/delete" method="post">
+		<form id="delete-form" method="post">
 			<table>
 				<colgroup>
 					<col width="145px">
@@ -33,8 +21,7 @@
 				</tbody>
 			</table>
 			<div class="btn-box">
-				<button type="submit">탈퇴하기</button>
-				<button type="button" onclick="location.href='/'">돌아가기</button>
+				<button type="button" class="delete-btn" onclick="deleteAction();">탈퇴하기</button>
 			</div>
 		</form>
 	</div>

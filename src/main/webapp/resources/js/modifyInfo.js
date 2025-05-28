@@ -3,7 +3,7 @@ let linkEle = document.createElement('link');
 linkEle.rel = 'stylesheet';
 linkEle.href = MEMBER_CSS_FILE_PATH;
 document.head.appendChild(linkEle);
-
+let deleteModal = null;
 //이미지 미리보기 함수
 function previewImage(input) {
     const file = input.files[0];
@@ -45,6 +45,7 @@ if(formType == 'personal') {
 	let f = null;
 	let {pwCk, pwReCk, nicknameCk} = false; // 검증
 	document.addEventListener("DOMContentLoaded", (event) => {
+		deleteModal = document.querySelector(".delete-modal");
 		f = document.getElementById('ModifyForm');
 		mPwValidState = document.querySelector("#mPwValidState");
 		mPwReValidState = document.querySelector("#mPwReValidState");
@@ -130,6 +131,16 @@ if(formType == 'personal') {
 				nicknameCk = true;
 			}
 		});
+		
+	    const modalInner = document.querySelector('.delete-modal .modal-inner');
+
+	    if (deleteModal) {
+	        deleteModal.addEventListener('click', function(event) {
+	            if (modalInner && !modalInner.contains(event.target)) {
+	            	deleteModal.classList.remove("on");
+	            }
+	        });
+	    }
 	})
 	
 	// 프로필 이미지 리셋 함수
@@ -209,6 +220,7 @@ if(formType == 'personal') {
 	let {pwCk, pwReCk} = false; // 검증
 	let f = null;
 	document.addEventListener("DOMContentLoaded", (event) => {
+		deleteModal = document.querySelector(".delete-modal");
 		f = document.getElementById('ModifyForm');
 		ePwValidState = document.querySelector("#ePwValidState");
 		ePwReValidState = document.querySelector("#ePwReValidState");
@@ -274,6 +286,16 @@ if(formType == 'personal') {
 				pwReCk = true;
 			}
 		});
+		
+	    const modalInner = document.querySelector('.delete-modal .modal-inner');
+
+	    if (deleteModal) {
+	        deleteModal.addEventListener('click', function(event) {
+	            if (modalInner && !modalInner.contains(event.target)) {
+	            	deleteModal.classList.remove("on");   
+	            }
+	        });
+	    }
 		
 	})
 	
@@ -350,9 +372,35 @@ if(formType == 'personal') {
 		});
 	}
 }
-
+function deleteAction(){
+	let deleteForm = document.querySelector("#delete-form");
+	let deleteModal = document.querySelector(".delete-modal");
+	let formData = new FormData();
+	formData.append("pw", deleteForm.pw.value);
+	fetch('/member/delete',{
+		method : 'POST',
+		body : formData
+	})
+	.then(response => response.text())
+	.then(data => {
+		if(data == "fail"){
+			alert("비밀번호를 정확히 입력해주세요.");
+			deleteForm.pw.focus();
+		}else{
+			alert("회원이 탈퇴되었습니다.");
+			deleteModal.classList.remove("on");
+			location.href = "/";
+		}
+	})
+	.catch(error => {
+	    console.error('데이터를 가져오는 데 실패했습니다:', error);
+	});
+}
 function goToDeletePage() {
     if(confirm("정말로 회원탈퇴를 하시겠습니까?")) {
-        location.href = '/member/delete';
+    	let deleteModal = document.querySelector(".delete-modal");
+    	if(deleteModal != null){
+    		deleteModal.classList.add("on");
+    	}
     }
 }

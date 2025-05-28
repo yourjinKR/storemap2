@@ -171,4 +171,5 @@
 	    	<h1>타입 값이 잘못되었습니다.</h1>
 	  	</c:otherwise>
 	</c:choose>
+	<jsp:include page="./delete.jsp"/>
 </div>

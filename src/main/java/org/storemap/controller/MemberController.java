@@ -120,7 +120,7 @@ public class MemberController {
 			session.setAttribute("userImage", member.getMember_image());
 			
 			String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
-			if(redirectUrl != null && redirectUrl.startsWith("/")) {
+			if(redirectUrl != null && redirectUrl.startsWith("/") && redirectUrl.indexOf("/member/register") == -1) {
 				session.removeAttribute("redirectAfterLogin");
 				return "redirect:" + redirectUrl;
 			}
@@ -158,7 +158,7 @@ public class MemberController {
 				session.setAttribute("userType", "enter");
 				
 				String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
-				if(redirectUrl != null && redirectUrl.startsWith("/")) {
+				if(redirectUrl != null && redirectUrl.startsWith("/") && redirectUrl.indexOf("/member/register") == -1) {
 					session.removeAttribute("redirectAfterLogin");
 					return "redirect:" + redirectUrl;
 				}
@@ -364,13 +364,6 @@ public class MemberController {
 		return result;
 	}
 	
-	// 회원탈퇴 페이지로 이동
-	@GetMapping("/delete")
-	public String deletePage(Model model) {
-	    model.addAttribute("page", "member/delete");
-	    return "index";
-	}
-	
 	@GetMapping("/mypage")
 	public String getMyPage() {
 		return "index";
@@ -404,34 +397,29 @@ public class MemberController {
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 	
-	@PostMapping("/delete")
-	public String deleteMember(@RequestParam String pw, HttpSession session, Model model) {
+	@PostMapping(value = "/delete" ,
+			produces = "text/plain;charset=UTF-8")
+	public ResponseEntity<String> deleteMember(@RequestParam String pw, HttpSession session, Model model) {
 	    String loginId = (String) session.getAttribute("loginUser");
 	    String userType = (String) session.getAttribute("userType");
-
 	    if ("enter".equals(userType)) {
 	        EnterVO enter = enterService.eLogin(loginId, pw);
 	        if (enter == null) {
-	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
-	            model.addAttribute("page", "member/delete");
-	            return "index";
+	            return new ResponseEntity<String>("fail",HttpStatus.BAD_REQUEST);
 	        }
 	        // 회원탈퇴 처리
 	        enterService.remove(enter.getEnter_idx());
 	    } else {
 	        MemberVO member = memberService.mLogin(loginId, pw);
 	        if (member == null) {
-	            model.addAttribute("msg", "비밀번호가 틀렸습니다.");
-	            model.addAttribute("page", "member/delete");
-	            return "index";
+	        	return new ResponseEntity<String>("fail",HttpStatus.BAD_REQUEST);
 	        }
 	        // 회원탈퇴 처리
 	        memberService.remove(member.getMember_idx());
 	    }
 
 	    session.invalidate(); // 세션 삭제
-	    model.addAttribute("msg", "회원탈퇴가 완료되었습니다.");
-	    return "redirect:/"; // 메인으로 리다이렉트
+	    return new ResponseEntity<String>("success",HttpStatus.OK);
 	}
 	
 	
