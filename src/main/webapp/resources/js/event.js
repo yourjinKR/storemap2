@@ -393,6 +393,7 @@ function generateDays() {
 
 	  if (isNaN(startDate) || isNaN(endDate) || startDate > endDate) {
 	    alert("올바른 날짜를 선택하세요.");
+	    adjustEventDaysContainerScroll();
 	    return;
 	  }
 	  
@@ -592,3 +593,15 @@ function modifyBtn(){
 	f.submit();
 }
 
+function adjustEventDaysContainerScroll() {
+	  const container = document.getElementById('eventDaysContainer');
+	  const days = container.querySelectorAll('.event-day').length;
+
+	  if (days > 5) {
+	    container.style.maxHeight = "600px"; // 높이 조절 가능
+	    container.style.overflowY = "auto";
+	  } else {
+	    container.style.maxHeight = "";
+	    container.style.overflowY = "";
+	  }
+	}
