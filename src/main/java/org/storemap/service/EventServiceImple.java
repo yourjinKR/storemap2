@@ -253,12 +253,6 @@ public class EventServiceImple implements EventService{
 		
 		return list;
 	}
-
-	// 이벤트 좋아요
-	@Override
-	public int updateFavorite(int event_idx) {
-		return mapper.updateFavorite(event_idx);
-	}
 	
 	// 이벤트 IDX
 	@Override

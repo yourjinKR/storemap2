@@ -533,13 +533,13 @@
     )
 	</insert>
 	
-	<update id="incrementLike">
+	<update id="incrementLike" parameterType="int">
 	    UPDATE event
 	    SET event_like_cnt = event_like_cnt + 1
 	    WHERE event_idx = #{eventIdx}
   	</update>
 
-  	<update id="decrementLike">
+  	<update id="decrementLike" parameterType="int">
 	    UPDATE event
 	    SET event_like_cnt = CASE
 	        WHEN event_like_cnt > 0 THEN event_like_cnt - 1

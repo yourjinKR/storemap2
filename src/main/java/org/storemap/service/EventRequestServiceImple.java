@@ -107,4 +107,8 @@ public class EventRequestServiceImple implements EventRequestService{
 		}
 		return result;
 	}
+	
+	public int getPonByEdayIdxAndStoreIdx(int edayIdx, int storeIdx) {
+	    return mapper.selectPonByEdayIdxAndStoreIdx(edayIdx, storeIdx);
+	}
 }

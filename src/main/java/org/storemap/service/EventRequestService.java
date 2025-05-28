@@ -19,4 +19,6 @@ public interface EventRequestService {
 	public int updateRequest(String enter_id, int eday_idx, int store_idx);
 	// 입점 반려
 	public int deleteRequest(String enter_id, int eday_idx, int store_idx);
+	// pon 받아와서 승인된 점포 철회 버튼 막기
+	public int getPonByEdayIdxAndStoreIdx(int edayIdx, int storeIdx);
 }

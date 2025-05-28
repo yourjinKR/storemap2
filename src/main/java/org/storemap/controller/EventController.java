@@ -113,13 +113,7 @@ public class EventController {
 		log.info("eventFilterKeyword..."+ map);
 		return new ResponseEntity<List<EventVO>>(eventService.getEventListByKeyword(map), HttpStatus.OK);
 	}
-	
-	@ResponseBody
-	@GetMapping("/favorite/{event_idx}") 
-	public int updateFavorite(@PathVariable("event_idx") int event_idx) {
-		eventService.updateFavorite(event_idx);
-		return 1; 
-	}
+
 	
 	@PostMapping("/eventRegister")
 	public String eventRegister(EventVO eventVO, 
@@ -219,11 +213,18 @@ public class EventController {
 	    Integer storeIdx = (Integer) session.getAttribute("storeIdx");
 	    if (storeIdx != null) {
 	        List<Integer> appliedEdayIdxList = eventRequestService.getAppliedEdayIdxList(storeIdx);
+	        
 	        Map<Integer, String> entryStatusMap = new HashMap<>();
+	        Map<Integer, Integer> entryPonMap = new HashMap<>();
+	        
 	        for (Integer edayIdx : appliedEdayIdxList) {
 	            entryStatusMap.put(edayIdx, "신청 승인중");
+	            int pon = eventRequestService.getPonByEdayIdxAndStoreIdx(edayIdx, storeIdx);
+	            entryPonMap.put(edayIdx, pon);
 	        }
+	        
 	        model.addAttribute("entryStatusMap", entryStatusMap);
+	        model.addAttribute("entryPonMap", entryPonMap);
 	    }
 
 	    return "index";
@@ -236,7 +237,6 @@ public class EventController {
 		return "redirect:/event/eventView?event_idx=" + event_idx;
 	}
 	
-	//이벤트 입점 신청 철회
 	@PostMapping(value = "/cancelEntry", produces = "application/json")
 	@ResponseBody
 	public Map<String, Object> cancelEntry(
@@ -245,14 +245,22 @@ public class EventController {
 
 	    Map<String, Object> response = new HashMap<>();
 	    try {
+	        // pon 상태 확인
+	        int currentPon = eventRequestService.getPonByEdayIdxAndStoreIdx(edayIdx, storeIdx);
+	        if (currentPon == 1) {
+	            response.put("success", false);
+	            response.put("message", "승인된 신청은 철회할 수 없습니다.");
+	            return response;
+	        }
+
 	        int eventIdx = eventRequestService.getEventIdxByEdayIdx(edayIdx);
 	        eventRequestService.cancelEntry(edayIdx, storeIdx);
 
 	        response.put("success", true);
 	        response.put("eventIdx", eventIdx);
 	    } catch (Exception e) {
-	    	e.printStackTrace();
-	    	response.put("success", false);
+	        e.printStackTrace();
+	        response.put("success", false);
 	        response.put("message", "철회 처리에 실패했습니다.");
 	    }
 	    return response;

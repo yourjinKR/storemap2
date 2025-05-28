@@ -19,4 +19,6 @@ public interface EventRequestMapper {
 	public List<EventRequestVO> getEdayRequest(int eday_idx);
 	// 입점 승인
 	public int updateRequest(Map<String, Integer> map);
+	
+	public int selectPonByEdayIdxAndStoreIdx(@Param("edayIdx") int edayIdx, @Param("storeIdx") int storeIdx);
 }

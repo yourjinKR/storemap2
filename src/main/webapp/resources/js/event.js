@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			    if (isNaN(start)) return;
 
 			    const maxDate = new Date(start);
-			    maxDate.setDate(maxDate.getDate() + 5); // 총 5일
+			    maxDate.setDate(maxDate.getDate() + 30);
 
 			    const maxDateStr = maxDate.toISOString().split("T")[0];
 			    endDateInput.setAttribute("max", maxDateStr);
@@ -158,76 +158,69 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			}
 		})
 	});
-    // 모달 열기
+	// 모달 열기
 	let openBtn = document.getElementById('openBtn');
-	if(openBtn != null){
-		openBtn.addEventListener('click', function (e) {
-			e.preventDefault();
-			document.getElementById('calendarModal').style.display = 'block';
-		});
+	if (openBtn != null) {
+	    openBtn.addEventListener('click', function (e) {
+	        e.preventDefault();
+	        document.getElementById('calendarModal').style.display = 'block';
+	    });
 	}
-	
-    // 모달 닫기
+
+	// 모달 닫기
 	let closeBtn = document.getElementById('closeBtn');
-	if(closeBtn != null){
-		closeBtn.addEventListener('click', function () {
+	if (closeBtn != null) {
+	    closeBtn.addEventListener('click', function () {
 	        document.getElementById('calendarModal').style.display = 'none';
-	      });
+	    });
 	}
 
+	// 모달 바깥 클릭 시 닫기
+	window.addEventListener('click', function (event) {
+	    const modal = document.getElementById('calendarModal');
+	    if (event.target === modal) {
+	        modal.style.display = 'none';
+	    }
+	});
 
-      // 모달 바깥 클릭 시 닫기
-      window.addEventListener('click', function (event) {
-        const modal = document.getElementById('calendarModal');
-        if (event.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-      
-      const participationButtons = document.querySelectorAll('.participationBtn');
+	const participationButtons = document.querySelectorAll('.participationBtn');
 
-      participationButtons.forEach(button => {
-          button.addEventListener('click', function(event) {
-              
-              const edayIdx = this.getAttribute('data-eday-idx');
-              const withdrawBtn = document.querySelector(`.withdrawBtn[data-eday-idx='${edayIdx}']`);
+	participationButtons.forEach(button => {
+	    button.addEventListener('click', function(event) {
+	        const edayIdx = this.getAttribute('data-eday-idx');
+	        const withdrawBtn = document.querySelector(`.withdrawBtn[data-eday-idx='${edayIdx}']`);
+	        // 신청 버튼을 눌렀을 때 철회 버튼 보이기
+	        if (withdrawBtn) {
+	            withdrawBtn.style.display = 'inline-block';
+	        }
+	    });
+	});
 
-              // 신청 버튼을 눌렀을 때 철회 버튼 보이기
-              if (withdrawBtn) {
-                  withdrawBtn.style.display = 'inline-block';  // 철회 버튼 보이기
-              }
-          });
-      });
+	window.withdrawEntry = function(button) {
+	    const edayIdx = button.getAttribute("data-eday-idx");
+	    const storeIdx = button.getAttribute("data-store-idx");
 
-      window.withdrawEntry = function(button) {
-    	    const edayIdx = button.getAttribute("data-eday-idx");
-    	    const storeIdx = button.getAttribute("data-store-idx");
-
-    	    fetch("/event/cancelEntry", {
-    	        method: "POST",
-    	        headers: {
-    	            "Content-Type": "application/x-www-form-urlencoded"
-    	        },
-    	        body: `eday_idx=${edayIdx}&store_idx=${storeIdx}`
-    	    })
-    	    .then(response => {
-    	        console.log('서버 응답:', response);  // 응답을 로깅해서 확인
-    	        return response.json();
-    	    })
-    	    .then(data => {
-    	        console.log('서버 데이터:', data);  // 서버 데이터 출력
-    	        if (data.success) {
-    	            alert("입점 신청이 철회되었습니다.");
-    	            window.location.href = `/event/eventView?event_idx=${data.eventIdx}`;
-    	        } else {
-    	            alert("철회 처리에 실패했습니다.");
-    	        }
-    	    })
-    	    .catch(error => {
-    	        console.error('서버 요청 중 오류:', error);  // 오류 메시지를 로깅
-    	        alert("서버 요청 중 오류가 발생했습니다.");
-    	    });
-    	}
+	    fetch("/event/cancelEntry", {
+	        method: "POST",
+	        headers: {
+	            "Content-Type": "application/x-www-form-urlencoded"
+	        },
+	        body: `eday_idx=${edayIdx}&store_idx=${storeIdx}`
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        if (data.success) {
+	            alert("입점 신청이 철회되었습니다.");
+	            window.location.href = `/event/eventView?event_idx=${data.eventIdx}`;
+	        } else {
+	            alert(data.message || "철회 처리에 실패했습니다.");
+	        }
+	    })
+	    .catch(error => {
+	        console.error('서버 요청 중 오류:', error);
+	        alert("서버 요청 중 오류가 발생했습니다.");
+	    });
+	}
       // 이벤트 신고 모달
       const reportButtons = document.querySelectorAll('.report-button');
       const modal = document.querySelector('#event-report-selection');

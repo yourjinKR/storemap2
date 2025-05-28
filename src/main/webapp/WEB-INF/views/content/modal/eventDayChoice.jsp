@@ -28,18 +28,26 @@
                         <td>${eday.event_stoptime.substring(0, 16)}</td>
                         <td>${eday.store_max}</td>
 
+                        <!-- 신청 상태 -->
                         <td>
                             <c:choose>
                                 <c:when test="${entryStatusMap[eday.eday_idx] != null}">
-                                    ${entryStatusMap[eday.eday_idx]} 
+                                    <c:choose>
+                                        <c:when test="${entryPonMap[eday.eday_idx] != null && entryPonMap[eday.eday_idx] == 1}">
+                                            <span style="color:green; font-weight:bold;">승인 완료!</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            신청 승인중
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:when>
-                                	<c:otherwise>
-                                    	신청 전
-                                	</c:otherwise>
+                                <c:otherwise>
+                                    신청 전
+                                </c:otherwise>
                             </c:choose>
                         </td>
 
- 
+                        <!-- 입점 신청 버튼 -->
                         <td>
                             <c:choose>
                                 <c:when test="${entryStatusMap[eday.eday_idx] == null}">
@@ -55,22 +63,22 @@
                             </c:choose>
                         </td>
 
-            
-						<td>
-						    <c:choose>
-						        <c:when test="${entryStatusMap[eday.eday_idx] != null}">
-						            <button class="withdrawBtn"
-						                    data-eday-idx="${eday.eday_idx}"
-						                    data-store-idx="${sessionScope.storeIdx}"
-						                    onclick="withdrawEntry(this)">
-						                	철회
-						            </button>
-						        </c:when>
-						        <c:otherwise>
-				
-						        </c:otherwise>
-						    </c:choose>
-						</td>
+                        <!-- 철회 버튼 -->
+                        <td>
+                            <c:choose>
+                                <c:when test="${entryStatusMap[eday.eday_idx] != null}">
+                                    <button class="withdrawBtn"
+                                            data-eday-idx="${eday.eday_idx}"
+                                            data-store-idx="${sessionScope.storeIdx}"
+                                            onclick="withdrawEntry(this)">
+                                       	 철회
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <!-- 철회 버튼 없음 -->
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                     </tr>
                 </c:forEach>
             </tbody>

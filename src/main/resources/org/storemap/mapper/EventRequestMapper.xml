@@ -64,5 +64,12 @@
 	    JOIN store s ON er.store_idx = s.store_idx
 	    WHERE er.eday_idx = #{eday_idx}
 	  </select>
+	  
+	  <select id="selectPonByEdayIdxAndStoreIdx" resultType="int" parameterType="map">
+	    SELECT pon
+	    FROM event_request
+	    WHERE eday_idx = #{edayIdx}
+	    AND store_idx = #{storeIdx}
+	</select>
 	
 </mapper>
