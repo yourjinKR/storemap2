@@ -156,16 +156,19 @@ function pager(pageMaker){
 
 // 위치 정보 (위도,경도)
 function getCurrentPlace(){
-    // 이미 로컬스토리지에 위치정보가 있다면 함수 종료
+	
+	// 이미 로컬스토리지에 위치정보가 있다면 함수 종료
     if (localStorage.getItem("position_data")) {
-        // console.log("기존 위치 정보가 존재하므로 위치를 다시 설정하지 않습니다.");
+		// console.log("기존 위치 정보가 존재하므로 위치를 다시 설정하지 않습니다.");
         return;
     }
-
+	console.log('위치정보 함수 실행');
+	
 	window.navigator.geolocation.getCurrentPosition(function(position){
 			console.log("현위치를 다시 설정합니다");
 			currentLat = position.coords.latitude;
 			currentLng = position.coords.longitude;
+			// 위치정보 수락시 로컬스토리지에 저장
 			setPositionData(currentLat, currentLng);
 
 			getAddr(currentLat, currentLng);

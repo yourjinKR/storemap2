@@ -119,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 지도 기본 설정값
     let basicOption = {};
     if (currentPosition) {
+        console.log(currentPosition);
 
         currentLat = currentPosition.lat;
         currentLng = currentPosition.lng;
@@ -129,7 +130,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     } else {
+        console.log('없음', currentPosition);
         basicOption = { center: new kakao.maps.LatLng(basicLat, basicLng), level: 1 };
+        currentLat = basicLat;
+        currentLng = basicLng;
 
         clickMarker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(basicLat, basicLng)
