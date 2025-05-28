@@ -102,7 +102,6 @@
 		          <div class="review-img">
 		           <c:choose>
 		           	<c:when test="${rvo.review_filename eq null}">
-		           		<img src="${IMG_URL}NoImage_pdlhxd.jpg" alt="사진이 없습니다!"/>
 		           	</c:when>
 		           	<c:otherwise>
 		           		<img src="${IMG_URL}${rvo.review_image}_${rvo.review_filename}" alt="${rvo.review_filename}"/>

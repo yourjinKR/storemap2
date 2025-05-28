@@ -62,7 +62,7 @@ function register(){
     .then(data => {
     	document.querySelector("#savingUI").classList.remove("save");
         alert("리뷰 등록 완료.");
-        location.href = "/modal/storeView?store_idx="+document.querySelector("input[name='store_idx']").value;
+        history.back();
     })
     .catch(error => {
     	document.querySelector("#savingUI").classList.remove("save");
