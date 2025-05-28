@@ -175,7 +175,8 @@ function storeList(store_address){
 				str += 				`<div class="card-img"><img src="${IMG_URL}NoImage_pdlhxd.jpg"></div>`;
 			}
 			str += 					`<div class="card-text">`;
-			str += 						`<p>${store.store_name}</p>`;
+			str += 						`<p class="store-name">${store.store_name}</p>`;
+			str += 						`<p class="store-content">${store.store_content}</p>`;
 			str += 					`</div>`;
 			str += 				`</a>`;
 			str += 			`</div>`;

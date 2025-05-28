@@ -8,7 +8,7 @@
 .main-slide .slide-title{position: absolute;top:0;left:0;background:rgba(0,0,0,0.2);width:100%;height:100%;display:flex;justify-content: center; align-items:flex-start; flex-direction: column;gap:30px;}
 .main-slide .slide-title h2{position:relative; left:50%; margin-left:-600px; font-size:48px;color:#fff;font-weight:bold;}
 .main-slide .slide-title a{position:relative; left:50%; margin-left:-600px; font-size:18px;color:#fff;font-weight:bold;padding:10px 25px;border:1px solid #fff;transition:0.25s ease}
-.main-slide .slide-title a:hover{background:#fff;color:#222;}
+.main-slide .slide-title a:hover{background:var(--point-color3);color:var(--font-color);border-color:var(--font-color);}
 .swiper-pagination{bottom:20px !important;}
 .swiper-pagination-bullet{width:15px;height:15px;background:#fff;opacity: 1}
 .swiper-pagination-bullet-active{width:50px;background:var(--point-color3);border-radius:10px;}
@@ -24,7 +24,7 @@
 
 /* 이벤트 캘린더 */
 .event-calendar {gap:15px}
-.event-calendar .left-con{width: 35%;height: 415px;padding:5px; border: 1px solid #222;}
+.event-calendar .left-con{width: 35%;height: 415px;padding:5px; border: 1px solid #222;border-radius:10px;}
 .event-calendar .right-con{padding:0;width:65%;border:1px solid #707070;border-radius:10px;overflow: hidden;}
 .event-calendar .right-con h3{border-bottom:1px solid d9d9d9; padding:15px 30px; font-size: 24px;font-weight: bold;background-color:var(--point-color);margin-bottom:10px;}
 .event-calendar .right-con li{border-bottom: 1px solid #222;padding:10px 0; margin:0 30px;}
@@ -50,7 +50,10 @@
   	-webkit-line-clamp: 9;
   	line-clamp: 9; /* 일부 브라우저 지원 */}
 .board-card .card-box > a:hover .event-content{opacity: 1;}
-
+.board-card .card-text {justify-content: flex-start;}
+.board-card .card-text p{margin:0;}
+.board-card .card-text .store-name{font-size:18px;font-weight:bold}
+.board-card .card-text .store-content{word-break:keep-all;line-height: 1.5;margin-top:5px;}
 /* 캘린더 */
 .sec_cal {
     width: 360px;
@@ -139,10 +142,11 @@
     color: #222;
     font-size: 16px;
     text-align: center;
-    border-radius:50%;
+    border-radius:10px;
+    position: relative;
 }
 
-.current.today {background-color: var(--point-color2);}
+.current.today:before {content:""; display:block;width:90%;height:80%;position:absolute;top:50%;left:50%; transform:translate(-50%,-50%); background: var(--point-color2);z-index: -1;border-radius:10px;}
 
 .sec_cal .cal_wrap .dates {
     display: flex;
