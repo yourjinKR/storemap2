@@ -586,7 +586,9 @@
         UPDATE event
         SET event_title = #{event_title},
             event_content = #{event_content},
-            event_location = #{event_location}
+            event_postcode = #{event_postcode},
+            event_location = #{event_location},
+            event_location_detail = #{event_location_detail}
         WHERE event_idx = #{event_idx}
     </update>
     
