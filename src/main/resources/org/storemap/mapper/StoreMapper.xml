@@ -227,6 +227,7 @@
 	        LEFT OUTER JOIN attach_file a ON s.store_image = a.uuid
 	        WHERE s.store_lat IS NOT NULL 
 	          AND s.store_lng IS NOT NULL
+	          AND s.store_hidden = 0
 	          AND 6371 * ACOS(
 	                   COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
 	                   COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
@@ -279,7 +280,7 @@
 	            END AS priority
 	        FROM store s
 	        LEFT OUTER JOIN attach_file a ON s.store_image = a.uuid
-	        WHERE s.store_hidden &gt;= 0
+	        WHERE s.store_hidden = 0
 	          AND s.store_lat IS NOT NULL
 	          AND s.store_lng IS NOT NULL
 	          AND (
