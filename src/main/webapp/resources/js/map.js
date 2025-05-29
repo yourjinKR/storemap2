@@ -336,7 +336,12 @@ document.addEventListener("DOMContentLoaded", () => {
             clickMarker.setPosition(latlng);
         }
     }
-    // 
+    // 우편번호 입력 폼
+    else if (mapType === "postcode") {
+        const f = document.forms[0];
+        console.log(f.event_location.value);
+        let result = locationToCoords(f.event_location.value);
+    }
 
     // 지도 관련 버튼 서비스
     document.querySelectorAll("button.mapBtn").forEach(btn => {
@@ -372,7 +377,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // 우편번호 찾기 버튼
             else if (type === "search-postcode") {
-                pcodeService(postMap);
+                pcodeService(basicMap);
             }
             // 영업 위치설정
             else if (type === "store-loc") {
@@ -1896,6 +1901,33 @@ function failSearch() {
     viewSideBarCheck = false;
     hideviewSideBar();
     semiToggle();
+}
+
+/** 주소를 받으면 좌표를 출력 */
+function locationToCoords(loc) {
+    return new Promise((resolve, reject) => {
+        let geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(loc, function (result, status) {
+    
+        if (status === kakao.maps.services.Status.OK) {
+            console.log(result);
+            let lat = result[0].y;
+            let lng = result[0].x;
+            console.log(lat);
+            console.log(lng);
+            console.log(basicMap);
+            
+            panToLatLng(basicMap, lat, lng);
+            clickMarker.setPosition(new kakao.maps.LatLng(lat, lng));
+            clickMarker.setMap(basicMap);
+
+            resolve(result); // 변환된 vo를 반환
+        }
+        else {
+            resolve(null);
+        }
+        });
+    })
 }
 
 /** 이벤트 좌표 등록 프로미스 */

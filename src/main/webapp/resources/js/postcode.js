@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let optionBasic = {center: new kakao.maps.LatLng(latBasic, lngBasic), level: 3};
 
     let container = document.querySelector('.map#postcode');
-    postMap = new kakao.maps.Map(container, optionBasic);
+    // postMap = new kakao.maps.Map(container, optionBasic);
 });
 
 /** 우편번호 서비스 api (map을 입력) */
@@ -73,6 +73,8 @@ function pcodeService(map) {
 
 /** 우편번호 검색 결과를 입력하면 지도에 마킹하는 함수 */
 function markByPcode(map, result) {
+    clickMarker.setMap(null);
+
     let resultAddr = result;
 
     // console.log(resultAddr); // 예시) 경기 성남시 중원구 박석로25번길 44-8
@@ -101,7 +103,7 @@ function markByPcode(map, result) {
             // // 마커를 결과값으로 받은 위치로 옮긴다.
             let marker = new daum.maps.Marker({
                 position: new daum.maps.LatLng(37.537187, 127.005476),
-                map: postMap
+                map: map
             });
 
             marker.setPosition(coords);
