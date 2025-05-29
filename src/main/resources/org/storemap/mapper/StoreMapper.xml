@@ -81,11 +81,11 @@
 	 	store_regcode = #{store_regcode}
 	 	where store_idx = #{store_idx}
 	</update>
-	<!-- 3.점포 삭제  -->
+	<!-- 3.점포 삭제1 -->
 	<delete id="delete" parameterType="int">
 		delete from store where store_idx = #{store_idx}
 	</delete>
-	<!-- 3.점포 삭제  -->
+	<!-- 3.점포 삭제2 -->
 	<delete id="deleteStore" parameterType="int">
 		delete from store where member_idx = #{member_idx}
 	</delete>

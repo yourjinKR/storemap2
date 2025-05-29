@@ -79,7 +79,7 @@ function initializeEvents() {
             } else if (type == 'reviewReportBtn') {
                 addReviewReport();
             } else if (type === 'removeReviewBtn') {
-                // 자기 리뷰 삭제 버튼 만들까말까
+                // 리뷰삭제 필요시 버튼생성할것!
                 if (confirm("정말 삭제하시겠습니까?")) {
                     removeReview();
                 }
@@ -105,7 +105,6 @@ function initializeEvents() {
                 declaration_content: inputAddContent.value
             },
             function (result) {
-                console.log("result: " + result);
                 if (result === "duplicate") {
                     alert("이미 신고한 점포 입니다!");
                     document.querySelector("#store-report-selection").style.display = "none";
@@ -138,7 +137,6 @@ function initializeEvents() {
                 declaration_content: inputAddContent.value
             },
             function (result) {
-                console.log("result: " + result);
                 if (result === "duplicate") {
                     alert("이미 신고한 리뷰 입니다!");
                     document.querySelector("#review-report-selection").style.display = "none";
@@ -356,11 +354,6 @@ function toggleStoreLike(store_idx, member_idx, checkbox) {
         })
         .catch(error => {
             console.error('Error toggling favorite:', error);
-            // 오류 발생 시 체크박스 상태 되돌리기(무조건 오류떠서 잠정 보류)
-            //            checkbox.checked = !checkbox.checked;
-            //            storeLikeCount.textContent = currentCount;
-            //            storeLikeCount.classList.remove('like-update');
-            //            alert('좋아요 처리 중 오류가 발생했습니다.');
         });
 }
 
@@ -394,15 +387,10 @@ function toggleReviewLike(review_idx, member_idx, checkbox) {
         })
         .catch(error => {
             console.error('Error toggling review favorite:', error);
-            // 오류 발생 시 체크박스 상태 되돌리기
-            //            checkbox.checked = !checkbox.checked;
-            //            reviewLikeCount.textContent = currentCount;
-            //            reviewLikeCount.classList.remove('like-update');
-            //            alert('좋아요 처리 중 오류가 발생했습니다.');
         });
 }
 
-//나중에 삭제 만들지 결정(review_idx받아야함)
+//review_idx삭제 함수
 function removeReview() {
     if (confirm("정말 삭제하시겠습니까?")) {
         f.action = `/store/reviewRemove?review_idx=${review_idx}`;
@@ -483,7 +471,6 @@ let modals = document.querySelector('#modal');
 if (modals != null) {
     modals.addEventListener('click', function (e) {
         if (e.target == document.querySelector('#modal')) {
-            console.log(modals);
             closeModal();
         }
     })

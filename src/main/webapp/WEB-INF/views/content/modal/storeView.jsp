@@ -66,7 +66,7 @@
 
     <div class="review-section">
       <h3>리뷰</h3>
-      <button type="button" class="rbtn" id="reviewBtn">리뷰 쓰기</button><!-- 버튼css필요 -->
+      <button type="button" class="rbtn" id="reviewBtn">리뷰 쓰기</button>
       <div class="review-section-list">
 	      <c:forEach var="rvo" items="${rlist}">
 	      <ul class="review por">
@@ -95,7 +95,7 @@
 		        <div class="review-content">
 		          <div class="stars">${rvo.review_star}</div>
 		          <div class="review-meta">
-		          	<strong>${rvo.review_writer}</strong> · <small class="">${rvo.review_regdate}</small>
+		          	<strong>${rvo.review_writer}</strong> · <small>${rvo.review_regdate}</small>
 		          </div>
 		          <div class="review-title">
 		          	${rvo.review_title}

@@ -228,10 +228,10 @@ function listBoard(result){
 			}else if(today < dateFormate(data.event_rstartdate)){
 				str += 	 `<span class="state-icon planned-icon">모집 예정</span>`;
 			}else{
-				if((data.approved_store / data.max_store * 100) < 80){
-					str += 	 `<span class="state-icon open-icon">모집 중</span>`;
-				}else{
+				if((data.approved_store / data.max_store * 100) >= 80 || today > dateFormate((data.event_rstopdate - 86400000 * 1))){
 					str += 	 `<span class="state-icon warning-icon">마감 임박</span>`;
+				}else{
+					str += 	 `<span class="state-icon open-icon">모집 중</span>`;
 				}
 			}
 			
