@@ -1663,7 +1663,6 @@ function apply2storeMap(data) {
         basicMap.setLevel(1);
     }
 
-
     // 데이터 등록
     data.forEach(vo => {
         vo.type = "store";
@@ -1671,15 +1670,17 @@ function apply2storeMap(data) {
         let marker = registerMarker(vo);
         addMarkerEvent(marker, "store");
         vo.marker = marker;
-
+        
         let overlay = registerOverlay(vo);
         storeOverlayList.push(overlay);
         vo.overlay = overlay;
-
+        
         storeVOList.push(vo);
     });
     console.log(storeVOList);
-
+    
+    // 정렬
+    sortVOListByDistance(searchCondition.lat, searchCondition.lng, storeVOList);
 
     let msg = "";
     // 점포 리스트 출력
@@ -1980,9 +1981,9 @@ function processAllEvents(data, type) {
 
         // 위치 정렬
         if (mapType === "full") {
-            sortEventVOListByDistance(basicMap.getCenter().getLat(), basicMap.getCenter().getLng(), eventVOList);
+            sortVOListByDistance(basicMap.getCenter().getLat(), basicMap.getCenter().getLng(), eventVOList);
         } else {
-            sortEventVOListByDistance(currentLat, currentLng, eventVOList);
+            sortVOListByDistance(currentLat, currentLng, eventVOList);
         }
 
         if (type === "search") {
@@ -2206,13 +2207,24 @@ function getDistance(lat1, lng1, lat2, lng2) {
 }
 
 // 현위치를 기준으로 List 정렬
-function sortEventVOListByDistance(lat, lng, list) {
+function sortVOListByDistance(lat, lng, list) {
     if (list.length == 0) { return; }
-    list.sort((a, b) => {
-        const distA = getDistance(lat, lng, parseFloat(a.event_lat), parseFloat(a.event_lng));
-        const distB = getDistance(lat, lng, parseFloat(b.event_lat), parseFloat(b.event_lng));
-        return distA - distB;
-    });
+    const type = list[0].type; 
+    if (type === 'store') {
+        list.sort((a, b) => {
+            const distA = getDistance(lat, lng, parseFloat(a.store_lat), parseFloat(a.store_lng));
+            const distB = getDistance(lat, lng, parseFloat(b.store_lat), parseFloat(b.store_lng));
+            return distA - distB;
+        });
+    }
+    else if (type === 'event') {
+        list.sort((a, b) => {
+            const distA = getDistance(lat, lng, parseFloat(a.event_lat), parseFloat(a.event_lng));
+            const distB = getDistance(lat, lng, parseFloat(b.event_lat), parseFloat(b.event_lng));
+            return distA - distB;
+        });
+    }
+
 }
 
 /** 하나 이상의 리스트를 받아 전체 마커 간 최대 거리 확대 레벨 계산 */
