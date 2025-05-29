@@ -270,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
             keywordInput.value = initialKeyword;
 
             // 검색 조건 구성 후 실행
-            mapSearchService(basicMap, initialKeyword);
+            mapSearchService(initialKeyword);
 
             // 재검색 방지: 세션 제거
             sessionStorage.removeItem("initialKeyword");
@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log('초기 검색 (키워드) 실행');
                 searchCondition = subCondition;
                 basicMap.setLevel(searchCondition.level);
-                mapSearchService(basicMap, searchCondition.keyword);
+                mapSearchService(searchCondition.keyword);
             } else {
                 as.getListNearest(searchCondition, 5, function (data) {
                     apply2storeMap(data);
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 let f = document.querySelector(".form#map");
                 let keyword = f.keyword.value.trim();
 
-                mapSearchService(basicMap, keyword);
+                mapSearchService(keyword);
             }
             else if (type === "event-mode") {
                 ctrlMapMode("event");
@@ -676,7 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                         // resetAutocomplete();
                         if (mapType === "full") {
-                            mapSearchService(basicMap, keywordInput.value.trim());
+                            mapSearchService(keywordInput.value.trim());
                         } else {
                             sessionStorage.setItem("initialKeyword", keywordInput.value.trim());
                             location.href = "/store/map";  // 주소에 파라미터 안 붙음
@@ -732,7 +732,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const value = target.dataset.value;
             keywordInput.value = value;
             resetAutocomplete();
-            mapSearchService(basicMap, value);
+            mapSearchService(value);
         });
     }
 
@@ -1463,7 +1463,7 @@ function setSubKeyword() {
 }
 
 /** 지도 검색 기능 서비스 함수 */
-function mapSearchService(map, keyword) {
+function mapSearchService(keyword) {
     showListSideBar();
     hideviewSideBar();
     viewSideBarCheck = false;
