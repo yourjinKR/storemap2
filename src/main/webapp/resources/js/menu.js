@@ -90,7 +90,6 @@ function closeModifyModal(){
 if(addModal != null){
 	addModal.addEventListener('click', function(e){
 		if ( e.target == document.querySelector('#add-modal') ) {
-			console.log(addModal);
 			closeAddModal();
 		}
 	})
@@ -99,7 +98,6 @@ if(addModal != null){
 if(modifyModal != null){
 	modifyModal.addEventListener('click', function(e){
 		if ( e.target == document.querySelector('#modify-modal') ) {
-			console.log(modifyModal);
 			closeModifyModal();
 		}
 	})
@@ -197,7 +195,6 @@ function addMenu(){
 	ms.add(
 		formData,
 		function(result){
-			console.log("result: " + result);
 			document.querySelector("#savingUI").classList.remove("save");
 			closeAddModal();
 			showMenuList();
