@@ -9,7 +9,7 @@
 		<span class="items"></span> 
 	</li>
 </ul>
-<div class="inner">
+<div class="letter-inner">
 	<ul class="letter-list" id="listBody" >
 		<li>
 			

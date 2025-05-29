@@ -326,7 +326,11 @@ public class EventServiceImple implements EventService{
 	public List<EventVO> getEventList(int enter_idx) {
 		List<EventVO> list = mapper.getEventList(enter_idx);
 		for (EventVO vo : list) {
-			vo.setEventDay(eventDayService.getEventDaysByEventId(vo.getEvent_idx()));
+			List<EventDayVO> edList = eventDayService.getEventDaysByEventId(vo.getEvent_idx());
+			for (EventDayVO edvo : edList) {
+				edvo.setEventRequestCount(reqMapper.getEdayRequest(edvo.getEday_idx()).size());
+			}
+			vo.setEventDay(edList);
 		}
 		return list;
 	}
@@ -339,7 +343,13 @@ public class EventServiceImple implements EventService{
 			if(vo.getEvent_file() != null) {
 				String[] file = vo.getEvent_file().split(",");
 				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
-				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				AttachFileVO attach = new AttachFileVO();
+				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+				if(idxof == -1) {
+					attach = attachMapper.getAttach(file[0]);
+				}else {
+					attach.setFilename(file[0]);
+				}
 				if(attach != null) {
 					attachList.add(attach);
 				}
@@ -356,7 +366,13 @@ public class EventServiceImple implements EventService{
 			if(vo.getEvent_file() != null) {
 				String[] file = vo.getEvent_file().split(",");
 				List<AttachFileVO> attachList = new ArrayList<AttachFileVO>();
-				AttachFileVO attach = attachMapper.getAttach(file[0]);
+				AttachFileVO attach = new AttachFileVO();
+				int idxof = file[0].indexOf("https://kfescdn.visitkorea.or.kr/kfes/upload/contents/db/");
+				if(idxof == -1) {
+					attach = attachMapper.getAttach(file[0]);
+				}else {
+					attach.setFilename(file[0]);
+				}
 				if(attach != null) {
 					attachList.add(attach);
 				}

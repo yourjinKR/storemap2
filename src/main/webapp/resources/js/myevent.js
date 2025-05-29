@@ -46,9 +46,13 @@ function getMyEvent(){
 				if(data.attachFile != null && data.attachFile.length > 0){
 					for (let attach of data.attachFile) {
 						if(attach != null){
-							str +=`<img src="${IMG_URL}${attach.uuid}_${attach.filename}">`;
+							if(attach.filename.indexOf("http") == 0){
+								str +=`<img src="${attach.filename}">`;
+							}else{
+								str +=`<img src="${IMG_URL}${attach.uuid}_${attach.filename}">`;
+							}
 						}else{
-							str +=`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
+							str += `<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 						}
 					}
 				}else{
@@ -91,7 +95,11 @@ function getMyEventEnd(){
 				if(data.attachFile != null && data.attachFile.length > 0){
 					for (let attach of data.attachFile) {
 						if(attach != null){
-							str +=`<img src="${IMG_URL}${attach.uuid}_${attach.filename}">`;
+							if(attach.filename.indexOf("http") == 0){
+								str +=`<img src="${attach.filename}">`;
+							}else{
+								str +=`<img src="${IMG_URL}${attach.uuid}_${attach.filename}">`;
+							}
 						}else{
 							str +=`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 						}
@@ -132,11 +140,25 @@ function getEventRequest(){
 			for (let data of result) {
 				if(data.eventDay != null && data.eventDay.length > 0){
 					str += `<li>`;
-					str += 		`<p data-idx="${data.event_idx}">${data.event_title}</p>`;
+					let reqCount = 0;
+					data.eventDay.forEach((eday,idx) => {
+						if(eday.eventRequestCount > 0) reqCount++;
+					})
+					str += 		`<p data-idx="${data.event_idx}">`
+					str += 			`${data.event_title}`;
+					if(reqCount > 0){
+						str += 			`<span class="red-dot"></span>`;
+					}
+					str += 		`</p>`;
 					str += 		`<div class="request-detail">`;
 					str += 			`<ul class="eday-tab">`;
 					data.eventDay.forEach((eday,idx) => {
-						str += 			`<li><a href="${eday.eday_idx}">${idx + 1}일차</a></li>`;
+						str += 			`<li>
+											<a href="${eday.eday_idx}">${idx + 1}일차</a>`;
+						if(eday.eventRequestCount > 0){
+							str += 			`<span class="red-dot"></span>`;
+						}
+						str +=			`</li>`;
 					})
 					str += 			`</ul>`;
 					data.eventDay.forEach((eday,idx) => {

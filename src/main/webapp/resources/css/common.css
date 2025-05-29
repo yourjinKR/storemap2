@@ -64,7 +64,7 @@
 .bg.on{display:block}
 .pop-content{display:none; position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);background: #fff; max-width: 750px; width:100%; z-index:1000;max-height:550px;min-height:300px;text-align: center;padding:30px;border:2px solid #222;border-radius: 5px;}
 .pop-content.on{display:block;}
-.pop-content .inner{max-height: 315px;overflow-x: hidden;overflow-y: auto;border-bottom:1px solid #222;}
+.pop-content .letter-inner{max-height: 315px;overflow-x: hidden;overflow-y: auto;border-bottom:1px solid #222;}
 .pop-content h4{font-size: 24px;font-weight: bold;background: #d9d9d9;padding:10px 0;border-radius:5px}
 .pop-content .letter-list{width: 100%;border-bottom:1px solid #222;border-left:1px solid #222;}
 .pop-content .js-tab-content > .letter-list{font-size: 18px; font-weight: bold;background: var(--point-color);}
