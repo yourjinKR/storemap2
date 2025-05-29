@@ -731,49 +731,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
-    /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */
-    function searchAddrFromCoords(latlng) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-            }
-        };
-        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
-    }
-
-    /** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
-    function initRCodeFromCoords(latlng, form) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                form.regcode.value = result[0].code; // 행정코드
-            }
-        };
-        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
-    }
-
-    /** 경도위도를 기반으로 현재 지도정보를 최신화 */
-    function loadAddrFromCoords(latlng) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                centerLoc = result[0];
-            }
-        };
-        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
-    }
-
-    /** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
-    function initDetailAddrFromCoords(coords, form) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                form.address.value = result[0].address.address_name;
-            }
-        }
-        geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-    }
 });
 
 
@@ -2446,4 +2403,48 @@ function initializeEventSlider() {
         prevBtn.classList.toggle("show", currentIndex > 0);
         nextBtn.classList.toggle("show", currentIndex < totalSlides - 1);
     }
+}
+
+
+/** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */
+function searchAddrFromCoords(latlng) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+        }
+    };
+    geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+}
+
+/** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
+function initRCodeFromCoords(latlng, form) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            form.regcode.value = result[0].code; // 행정코드
+        }
+    };
+    geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+}
+
+/** 경도위도를 기반으로 현재 지도정보를 최신화 */
+function loadAddrFromCoords(latlng) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            centerLoc = result[0];
+        }
+    };
+    geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+}
+
+/** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
+function initDetailAddrFromCoords(coords, form) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            form.address.value = result[0].address.address_name;
+        }
+    }
+    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
