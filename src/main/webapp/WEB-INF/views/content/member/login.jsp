@@ -2,12 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript" src="/resources/js/member.js"></script>
-<div style="position:absolute; top:50px;left:50px;">
-	사용자 :&emsp;&emsp;user01/pw01<br>
-	기업/그룹 :&ensp;enter05/pw05<br>	 
-	점주 :&emsp;&emsp;&emsp;owner01/pw01<br>	 
-	관리자 :&emsp;&emsp;admin/pw01<br>	 
-</div>
 
 <c:if test="${not empty loginUser and loginUser ne ''}">
 <script type="text/javascript">
