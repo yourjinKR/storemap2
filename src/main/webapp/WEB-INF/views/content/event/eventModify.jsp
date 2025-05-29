@@ -93,7 +93,7 @@
 		
 		          <div id="newImagesPreview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
 		
-		          <small style="color: gray;">삭제한 이미지는 수정 완료 시 반영됩니다.</small>
+		          <small style="color: gray;">이미지는 최대 4장까지 업로드할 수 있으며, 첫번째 이미지는 포스터, 두번째 이미지는 대표 사진으로 설정됩니다.</small>
 		
 		          <input type="hidden" name="deleteUuids" id="deletedUuidsInput" />
 		        </td>
