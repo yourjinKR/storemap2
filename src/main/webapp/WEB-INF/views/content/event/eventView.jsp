@@ -168,8 +168,8 @@
 	</div>
 
 	<div id="participationSection">
-		<c:if test="${userType eq 'owner'}">
-		<a id="openBtn" href="">참여</a>
+		<c:if test="${canShowParticipationBtn}">
+		    <a id="openBtn" href="">참여</a>
 		</c:if>
 		<a href="/event/eventList">목록</a>
 	</div>
@@ -185,6 +185,7 @@
 <jsp:include page="../../content/modal/eventDayChoice.jsp" />
 <jsp:include page="../../content/modal/eventReport.jsp" />
 <input type="hidden" id="userType" value="<%= session.getAttribute("userType") != null ? session.getAttribute("userType") : "" %>" />
+
 <style>
 
 .event-register-wrapper {

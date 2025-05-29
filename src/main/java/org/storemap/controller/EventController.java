@@ -176,9 +176,19 @@ public class EventController {
 	    }
 	    
 	    LocalDate now = LocalDate.now();
-
         Date sqlDate = vo.getEvent_bstartdate();
         LocalDate eventDate = sqlDate.toLocalDate(); // LocalDate로 변환
+        String userType = (String) session.getAttribute("userType");
+        
+        boolean canShowParticipationBtn = false;
+        
+        if ("owner".equals(userType)) {
+            if (vo.getEvent_rstopdate() != null) {
+                LocalDate recruitEndDate = vo.getEvent_rstopdate().toLocalDate();
+                // 모집 마감일이 오늘 이후거나 오늘이면 true
+                canShowParticipationBtn = !now.isAfter(recruitEndDate);
+            }
+        }
 
         // 날짜 차이 계산
         long dDay = ChronoUnit.DAYS.between(now, eventDate);
@@ -193,10 +203,9 @@ public class EventController {
 	    model.addAttribute("evo", vo);
 	    model.addAttribute("fileList", cloudinaryFiles);    
 	    model.addAttribute("externalUrls", externalUrls);// 외부 URL 이미지 리스트
-	    
 	    // 세션 설정
 	    session.setAttribute("event_idx", event_idx);
-
+	    model.addAttribute("canShowParticipationBtn", canShowParticipationBtn);
 	    Integer loginUserIdx = (Integer) session.getAttribute("loginUserIdx");
 	    if (loginUserIdx != null) {
 	        session.setAttribute("member_idx", loginUserIdx);
