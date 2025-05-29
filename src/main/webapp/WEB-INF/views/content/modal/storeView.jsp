@@ -69,50 +69,54 @@
       <button type="button" class="rbtn" id="reviewBtn">리뷰 쓰기</button>
       <div class="review-section-list">
 	      <c:forEach var="rvo" items="${rlist}">
-	      <ul class="review por">
-	      	<li>
-	      	<div class="reviewIcon">
-		    	<input type="button" name="reviewReport" id="reviewReport-icon${rvo.review_idx}">
-		      	<label class="material-symbols-outlined" for="reviewReport-icon${rvo.review_idx}">
-		      		report
-		      	</label>
-		      	<input type="checkbox" name="reviewLike" id="reviewLike-icon${rvo.review_idx}" ${reviewLikedMap[rvo.review_idx] ? 'checked' : ''}>
-		      	<label class="material-symbols-outlined" for="reviewLike-icon${rvo.review_idx}">
-		      		favorite
-		      	</label>
-		      	<span class="reviewLike-count reviewLike-count-${rvo.review_idx}">${rvo.review_like_cnt}</span>
-		    </div>
-		    <div class="writer-img">
-		     <c:choose>
-		     	<c:when test="${rvo.writer_filename eq null}">
-		     		<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="사진이 없습니다!"/>
-		     	</c:when>
-		     	<c:otherwise>
-		     		<img src="${IMG_URL}${rvo.member_image}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
-		     	</c:otherwise>
-		     </c:choose>
-		    </div>
-		        <div class="review-content">
-		          <div class="stars">${rvo.review_star}</div>
-		          <div class="review-meta">
-		          	<strong>${rvo.review_writer}</strong> · <small>${rvo.review_regdate}</small>
-		          </div>
-		          <div class="review-title">
-		          	${rvo.review_title}
-		          </div>
-		          <div class="review-img">
-		           <c:choose>
-		           	<c:when test="${rvo.review_filename eq null}">
-		           	</c:when>
-		           	<c:otherwise>
-		           		<img src="${IMG_URL}${rvo.review_image}_${rvo.review_filename}" alt="${rvo.review_filename}"/>
-		           	</c:otherwise>
-		           </c:choose>
-		          	${rvo.review_content}
-		          </div>
-		        </div>
-	        </li>
-	      </ul>
+	      <c:choose>
+	      	<c:when test="${rvo.review_hidden eq 0}"><!-- 1은 숨겨진 리뷰 -->
+		      <ul class="review por">
+		      	<li>
+		      	<div class="reviewIcon">
+			    	<input type="button" name="reviewReport" id="reviewReport-icon${rvo.review_idx}">
+			      	<label class="material-symbols-outlined" for="reviewReport-icon${rvo.review_idx}">
+			      		report
+			      	</label>
+			      	<input type="checkbox" name="reviewLike" id="reviewLike-icon${rvo.review_idx}" ${reviewLikedMap[rvo.review_idx] ? 'checked' : ''}>
+			      	<label class="material-symbols-outlined" for="reviewLike-icon${rvo.review_idx}">
+			      		favorite
+			      	</label>
+			      	<span class="reviewLike-count reviewLike-count-${rvo.review_idx}">${rvo.review_like_cnt}</span>
+			    </div>
+			    <div class="writer-img">
+			     <c:choose>
+			     	<c:when test="${rvo.writer_filename eq null}">
+			     		<img src="${IMG_URL}NoMember_pgeszi.jpg" alt="사진이 없습니다!"/>
+			     	</c:when>
+			     	<c:otherwise>
+			     		<img src="${IMG_URL}${rvo.member_image}_${rvo.writer_filename}" alt="${rvo.writer_filename}"/>
+			     	</c:otherwise>
+			     </c:choose>
+			    </div>
+			        <div class="review-content">
+			          <div class="stars">${rvo.review_star}</div>
+			          <div class="review-meta">
+			          	<strong>${rvo.review_writer}</strong> · <small>${rvo.review_regdate}</small>
+			          </div>
+			          <div class="review-title">
+			          	${rvo.review_title}
+			          </div>
+			          <div class="review-img">
+			           <c:choose>
+			           	<c:when test="${rvo.review_filename eq null}">
+			           	</c:when>
+			           	<c:otherwise>
+			           		<img src="${IMG_URL}${rvo.review_image}_${rvo.review_filename}" alt="${rvo.review_filename}"/>
+			           	</c:otherwise>
+			           </c:choose>
+			          	${rvo.review_content}
+			          </div>
+			        </div>
+		        </li>
+		      </ul>
+	      	</c:when>
+	      </c:choose>
 	      </c:forEach>
       </div>
     </div>

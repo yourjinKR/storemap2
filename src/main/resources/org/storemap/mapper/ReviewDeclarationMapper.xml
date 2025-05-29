@@ -61,7 +61,7 @@
 	</select>
 	<!-- 5.리뷰 신고 보기  -->
 	<select id="read" parameterType="int" resultType="org.storemap.domain.ReviewDeclarationVO">
-		select * from review_declaration where review_idx = #{review_idx} AND member_idx = #{member_idx}
+		select * from review_declaration where review_idx = #{param1} AND member_idx = #{param2}
 	</select>
 	<!-- 6.리뷰 조인 신고 목록 -->
 	<select id="getReviewDeclarationMap" resultMap="reviewDeclarationMap">
