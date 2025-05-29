@@ -76,16 +76,12 @@
 			   r.review_hidden,
 			   r.member_idx,
 			   a.filename,
-			   d.review_idx,
-			   d.regdate,
-			   COUNT(*) AS declaration_count
+			   MAX(d.regdate) AS regdate,
+			   COUNT(d.review_idx) AS declaration_count
 		FROM review_declaration d
 		JOIN review r ON d.review_idx = r.review_idx
 		LEFT JOIN attach_file a ON r.review_image = a.uuid
-		GROUP BY d.review_idx,
-				 d.regdate,
-				 a.filename,
-				 r.review_idx,
+		GROUP BY r.review_idx,
 				 r.store_idx,
 				 r.review_writer,
 				 r.review_star,
@@ -94,8 +90,9 @@
 				 r.review_like_cnt,
 				 r.review_regdate,
 				 r.review_hidden,
-				 r.member_idx
-		ORDER BY d.regdate DESC
+				 r.member_idx,
+				 a.filename
+		ORDER BY regdate DESC
 	</select>
 	<!-- 7.리뷰 조인 신고 디테일 목록 -->
 	<select id="getReviewDeclarationDetailMap" resultMap="reviewDeclarationMap">

@@ -82,16 +82,12 @@
 			   s.store_hidden,
 			   s.store_rnum,
 			   a.filename,
-			   d.store_idx,
-			   d.regdate,
-			   COUNT(*) AS declaration_count
+			   MAX(d.regdate) AS regdate,
+			   COUNT(d.store_idx) AS declaration_count
 		FROM store_declaration d
 		JOIN store s ON d.store_idx = s.store_idx
 		LEFT JOIN attach_file a ON s.store_image = a.uuid
-		GROUP BY d.store_idx,
-				 d.regdate,
-				 a.filename,
-				 s.store_idx,
+		GROUP BY s.store_idx,
 				 s.member_idx,
 				 s.store_name,
 				 s.store_image,
@@ -101,8 +97,9 @@
 				 s.store_area,
 				 s.store_activity_time,
 				 s.store_hidden,
-				 s.store_rnum
-		ORDER BY d.regdate DESC
+				 s.store_rnum,
+				 a.filename
+		ORDER BY regdate DESC
 	</select>
 	<!-- 7.점포 조인 신고 디테일 목록 -->
 	<select id="getStoreDeclarationDetailMap" resultMap="storeDeclarationMap">

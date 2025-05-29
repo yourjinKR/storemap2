@@ -81,17 +81,13 @@
 			   e.event_hidden,
 			   e.event_file,
 			   e.event_location,
-			   d.event_idx,
-			   d.regdate,
 			   t.enter_name,
-			   COUNT(*) AS declaration_count
+			   MAX(d.regdate) AS regdate,
+			   COUNT(d.event_idx) AS declaration_count
 		FROM event_declaration d
 		JOIN event e ON d.event_idx = e.event_idx
 		JOIN enter t ON e.enter_idx = t.enter_idx
-		GROUP BY d.event_idx,
-				 t.enter_name,
-				 d.regdate,
-				 e.event_idx,
+		GROUP BY e.event_idx,
 				 e.enter_idx,
 				 e.event_title,
 				 e.event_category,
@@ -104,8 +100,9 @@
 				 e.event_bstopdate,
 				 e.event_hidden,
 				 e.event_file,
-				 e.event_location
-		ORDER BY d.regdate DESC
+				 e.event_location,
+				 t.enter_name
+		ORDER BY regdate DESC
 	</select>
 	<!-- 5.이벤트 신고 디테일 목록 -->
 	<select id="getEventDeclarationDetailMap" resultMap="eventDeclarationMap">
