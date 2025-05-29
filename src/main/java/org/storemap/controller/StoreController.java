@@ -135,8 +135,8 @@ public class StoreController {
 		// 점포삭제 전에 외래키 엮인거 전부 삭제하기
 		storeService.remove(store_idx);
 		memberService.cancelOwner(vo.getMember_idx());
-		session.setAttribute("userType", "owner");
-		return "redirect:/modal/storeListModal";
+		session.setAttribute("userType", "user");
+		return "redirect:/";
 	}
 	
 	/*--------------------------------------------------------------------------*/

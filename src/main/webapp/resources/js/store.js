@@ -271,7 +271,7 @@ function menu(){
 function remove(){
 	if(confirm("정말 페업하시겠습니까?")){
 		document.querySelector("#savingUI").classList.add("save");
-		f.action = "/";
+		f.action = "/store/storeRemove";
 	    f.submit();
 	    alert("삭제 되었습니다");
 	}else{
