@@ -335,3 +335,6 @@
   color: gray;
 }
 
+.withdrawBtn {
+    display: none;
+}
