@@ -221,7 +221,11 @@
 .store-box .img-box{width:75px;height:75px;border:1px solid #d9d9d9;border-radius:50%;overflow: hidden;}
 .store-box .img-box img{height:100%;}
 .store-box .store-info h4{font-size:18px;font-weight:bold;}
-.store-box .store-info p{font-size:16px;padding-top:10px}
+.store-box .store-info p{font-size:16px;padding-top:10px;max-width: 200px; display: -webkit-box;
+	  -webkit-line-clamp: 2;         /* 최대 줄 수 설정 */
+	  -webkit-box-orient: vertical;  /* 수직 정렬 */
+	  overflow: hidden;
+	  text-overflow: ellipsis;}
 .more-content{background:var(--point-color2);color:var(--font-color);padding:10px 25px;border:none;font-size:16px;border-radius:5px;font-weight:bold}
 #participationSection{text-align:right;}
 #participationSection a, #openBtn{background:var(--point-color2);color:var(--font-color);padding:10px 25px; height:50px; line-height:50px; border:none;font-size:22px;border-radius:5px;font-weight:bold;}
