@@ -78,8 +78,9 @@
 			    SELECT * 
 				FROM EVENT 
 				WHERE 
-					TO_CHAR(EVENT_BSTARTDATE,'YYYYMMDD') <= #{searchDate} AND
-				    TO_CHAR(EVENT_BSTOPDATE,'YYYYMMDD') >= #{searchDate}
+					(TO_CHAR(EVENT_BSTARTDATE,'YYYYMMDD') <= #{searchDate} AND
+				    TO_CHAR(EVENT_BSTOPDATE,'YYYYMMDD') >= #{searchDate})
+				    AND EVENT_HIDDEN = 0
 				ORDER BY EVENT_BSTOPDATE
 			)
 			WHERE ROWNUM <= 8
@@ -188,6 +189,7 @@
 		<if test="board_search != null and board_search != ''">
 	    	AND E.EVENT_TITLE LIKE '%${board_search}%'
         </if>
+        AND EVENT_HIDDEN = 0
 	</select>
 	
 	<!-- GET IDX -->
@@ -313,6 +315,7 @@
 					        <if test="eventFilter.event_location != '전체'">
 		            			AND E.EVENT_LOCATION LIKE '%${eventFilter.event_location}%'
 					        </if>
+					        AND EVENT_HIDDEN = 0
 			                ORDER BY
 			                <if test="eventFilter.auth != '' and eventFilter.auth != 'user' and eventFilter.list_state == 'open' and eventFilter.sort_date_type == 'event_rstopdate'">
 				            	<![CDATA[ 
@@ -360,6 +363,7 @@
 				            <if test="eventFilter.event_location != '전체'">
 		            			AND E.EVENT_LOCATION LIKE '%${eventFilter.event_location}%'
 					        </if>
+				         	AND EVENT_HIDDEN = 0
 					        
 				            ORDER BY
 				            <choose>
