@@ -90,7 +90,7 @@
 .highlighted-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; } 
 
 /* 로고 */
-.side-bar#list #content .header .logo a { font-weight: bold; font-size: 20px; color: var(--font-color); } 
+.side-bar#list #content .header .logo a {display:inline-block; width:100px;height:50px; font-weight: bold; font-size: 20px; color: var(--font-color);background:url(https://res.cloudinary.com/dbdkdnohv/image/upload/v1748394708/logo_hlbcoq.png) 50% 50%/contain no-repeat;text-indent: -9999px; } 
 /* 리스트 사이드바 내 구조 조정 */
 .side-bar#list #content { display: flex; flex-direction: column; height: 100%; overflow: hidden; } 
 .side-bar#list #content .header { height: auto; background-color: var(--point-color); border-bottom: 2px solid #e5e5e5; position: sticky; top: 0; z-index: 10; padding: 16px 12px; } 

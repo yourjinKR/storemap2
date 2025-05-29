@@ -51,7 +51,8 @@ function tabChange(){
 				mainTabs.forEach(tab => tab.classList.remove("on"));
 				mainContent.forEach(tab => tab.classList.remove("on"));
 				this.classList.add("on");
-				document.querySelector("."+this.getAttribute("href")+"-content").classList.add("on");
+				let subCon = document.querySelector("."+this.getAttribute("href")+"-content");
+				subCon.classList.add("on");
 				mainTab = selectMainTab.getAttribute("href");
 				
 				// 탭 변경시 현재 탭정보 초기화
@@ -64,6 +65,7 @@ function tabChange(){
 				// 버튼 이벤트 등록 함수 다시 호출
 				setTimeout(() => {
 					buttonEvent();
+					subCon.querySelector(".sub-tab li a").click();
 				}, 100);
 			})
 		})

@@ -147,9 +147,9 @@ function getLetter(type){
 				str += `</li>`;
 				
 				if(result.length > 7){
-					document.querySelector("#list .inner").style.setProperty('width', `calc(100% + ${getScrollbarWidth()}px)`);
+					document.querySelector("#list .letter-inner").style.setProperty('width', `calc(100% + ${getScrollbarWidth()}px)`);
 				}else{
-					document.querySelector("#list .inner").style.setProperty('width', '100%');
+					document.querySelector("#list .letter-inner").style.setProperty('width', '100%');
 				}
 			})
 			document.querySelector("#listBody").innerHTML = str;
