@@ -70,7 +70,6 @@
 	<ul>
 		<c:forEach var="slvo" items="${storeRequestList}" varStatus="status">
 		<li>
-			<!--<div><input type="checkbox" name="member_idx" value="${rvo.member_idx}"></div>-->
 			<div class="idx">${slvo.member_idx}</div>
 			<div>${status.count}</div>
 			<div>${slvo.member.member_name}</div>
@@ -118,7 +117,6 @@
 	<ul>
 		<c:forEach var="srvo" items="${storeReportList}" varStatus="status">
 		<li>
-			<!--<div><input type="checkbox" name="store_idx" value="${srvo.store.store_idx}"></div>-->
 			<div class="idx">${srvo.store.store_idx}</div>
 			<div>${status.count}</div>
 			<div>

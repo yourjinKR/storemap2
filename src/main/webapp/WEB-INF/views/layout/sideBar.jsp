@@ -51,7 +51,6 @@
 					<li><a href="/event/myevent">이벤트 관리</a></li>
 				</c:when>
 				<c:otherwise>
-					<li><a href="/member/modifyInfo?type=personal">개인정보 수정</a></li>
 					<li><a href="/admin/adminMain">관리자 페이지</a></li>
 				</c:otherwise>
 			</c:choose>
