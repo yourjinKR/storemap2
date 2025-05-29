@@ -185,8 +185,13 @@ document.addEventListener("DOMContentLoaded", () => {
         mapSearchForm = document.querySelector(".search-bar");
         keywordInput = document.querySelector(".search-bar input[name='keyword']");
     }
-    autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
-    autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
+
+    if (mapSearchForm != null) {
+        autoCompleteBox = mapSearchForm.querySelector(".autocomplete");
+    }
+    if (autoCompleteBox != null) {
+        autoSearchUL = autoCompleteBox.querySelector(".autocomplete ul");
+    }
 
     // map.jsp
     if (mapType === "full") {
@@ -481,290 +486,251 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ====================== 검색어 자동완성 ====================== 
-    // 방향키로 선택 중인 항목의 인덱스
-    selectedIndex = -1;
-    /** 자동완성을 취소했을때 돌아갈 키워드 */
-    let orgKeyword = null;
+    if (keywordInput != null) {
 
-    let suggestionList = []; // 현재 렌더링 중인 추천 리스트
-
-    // 검색창이 포커스될때
-    keywordInput.addEventListener("focus", e => {
-        // <li> 자식 요소가 하나라도 있는 경우에만 display
-        if (autoCompleteBox.querySelectorAll("li").length > 0) {
-            autoCompleteBox.style.display = "block";
-        }
-    });
-
-    // 검색창에 값 입력
-    keywordInput.addEventListener("input", e => {
-        // console.log('값입력');
-
-        resetAutocomplete();
-
-        const keyword = keywordInput.value.trim();
-
-        if (keyword.length === 0) {
-            return;
-        }
-
-        let lat;
-        let lng;
-        // 검색어 미리보기는 전국 단위로 확인
-        let kilometer = 999;
-        // 검색어 조건 설정
-        // map.jsp에서
-        if (basicMap != null && mapType === "full") {
-            lat = basicMap.getCenter().getLat();
-            lng = basicMap.getCenter().getLng();
-            // kilometer = setRadiusByLevel(basicMap.getLevel());
-        } else {
-            // console.log('맵 없음');
-            lat = currentLat;
-            lng = currentLng;
-            // kilometer = setRadiusByLevel(5);
-        }
-
-        // 점포 정보 불러오기 (서버에 비동기 요청)
-        fetch(`/modal/list/keyword.json`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ keyword: keyword, lat: lat, lng: lng, amount: 0, kilometer: kilometer })
-        })
-            .then(response => response.json())
-            .then(data => {
-                // console.log(data);
-
-                // 최대 5개까지만 표시
-                // const suggestionList = data.slice(0, 3);
-                updateSuggestionList(data, 'store', keyword);
-            })
-            .catch(err => {
-                console.error("자동완성 fetch 실패", err);
-                // resetAutocomplete();
-            });
-
-        // 이벤트 정보 불러오기 (서버에 비동기 요청)
-        fetch("/event/eventFilter/keyword", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ keyword: keyword, lat: lat, lng: lng, amount: 0 })
-        })
-            .then(response => response.json())
-            .then(data => {
-                // console.log(data);
-
-                // processAllEvents(data, "autoComplete");
-
-                // 최대 5개까지만 표시
-                // const suggestionList = data.slice(0, 3);
-                updateSuggestionList(data, 'event', keyword);
-            })
-            .catch(err => {
-                console.error("자동완성 fetch 실패", err);
-                // resetAutocomplete();
-            });
-
-
-    });
-
-    // 자동완성 리스트 닫기
-    document.addEventListener("click", function (e) {
-        if (!mapSearchForm.contains(e.target)) {
-            // console.log('다른 곳을 클릭했음으로 닫음');
-            hideAutocomplete();
-        }
-    });
-
-    // 자동완성 검색창 키보드 방향키 지원
-    keywordInput.addEventListener("keydown", e => {
-        //const items = autoSearchUL.querySelectorAll("li");
-        const items = Array.from(autoSearchUL.querySelectorAll("li")).filter(li => {
-            return window.getComputedStyle(li).display === "block";
+        // 방향키로 선택 중인 항목의 인덱스
+        selectedIndex = -1;
+        /** 자동완성을 취소했을때 돌아갈 키워드 */
+        let orgKeyword = null;
+    
+        let suggestionList = []; // 현재 렌더링 중인 추천 리스트
+    
+        // 검색창이 포커스될때
+        keywordInput.addEventListener("focus", e => {
+            // <li> 자식 요소가 하나라도 있는 경우에만 display
+            if (autoCompleteBox.querySelectorAll("li").length > 0) {
+                autoCompleteBox.style.display = "block";
+            }
         });
-        // if (items.length === 0) return;
-
-        switch (e.keyCode) {
-            case 38: // 위
-                e.preventDefault();
-                if (selectedIndex > 0) {
-                    selectedIndex--;
-                    updateActiveItem(items);
-                    // input에 값 적용
-                    keywordInput.value = items[selectedIndex].dataset.value;
-                }
-                // 자동완성 리스트에 벗어나기
-                else if (selectedIndex == 0) {
-                    if (orgKeyword != null) {
-                        keywordInput.value = orgKeyword;
-                    }
-                    resetAutocomplete();
-                }
-                break;
-
-            case 40: // 아래
-                e.preventDefault();
-                if (selectedIndex < items.length - 1) {
-                    // 자동완성 첫 진입시 기존의 키워드를 기억
-                    if (selectedIndex == -1) {
-                        orgKeyword = keywordInput.value;
-                    }
-                    selectedIndex++;
-                    updateActiveItem(items);
-                    // input에 값 적용
-                    keywordInput.value = items[selectedIndex].dataset.value;
-                }
-                break;
-
-            case 13: // Enter
-                // 검색 키워드 기억
-                e.preventDefault();
-                deleteAllEle();
-
-                suppressAutocomplete = true;
-
-                // 자동완성 검색어를 선택했을때
-                if (selectedIndex >= 0 && selectedIndex < items.length) {
-                    const selectedItem = items[selectedIndex];
-                    const value = selectedItem.dataset.value; // 정확한 값 추출
-                    const type = selectedItem.getAttribute("type"); // 강사님께 질문
-                    const idx = selectedItem.getAttribute("idx");
-
-                    keywordInput.value = value;
-                    // resetAutocomplete();
-                    if (mapType === "full") {
-                        if (type === 'store') {
-                            as.getStoreByIdx(idx, function (data) {
-                                apply2storeMap([data]);
-                            });
-                        } else {
-                            as.getEventByIdx(idx, function (data) {
-                                processAllEvents([data], "search");
-                            });
-                        }
-                    } else {
-                        if (type === 'store') {
-                            sessionStorage.setItem("store_idx", idx);
-                            location.href = "/store/map";  // 주소에 파라미터 안 붙음
-                        } else {
-                            sessionStorage.setItem("event_idx", idx);
-                            location.href = "/store/map";  // 주소에 파라미터 안 붙음
-                        }
-                    }
-                }
-                // 자동완성 검색어를 선택하지 않을때
-                else if (selectedIndex == -1 && items.length >= 0) {
-                    if (!keywordInput.value) {
-                        alert("검색어를 입력하시오!");
-                        break;
-                    }
-                    // resetAutocomplete();
-                    if (mapType === "full") {
-                        mapSearchService(basicMap, keywordInput.value.trim());
-                    } else {
-                        sessionStorage.setItem("initialKeyword", keywordInput.value.trim());
-                        location.href = "/store/map";  // 주소에 파라미터 안 붙음
-                    }
-                }
-                keywordInput.value = "";
-                break;
-
-            default:
-            // console.log(e.keyCode);
-            // resetAutocomplete();
-        }
-    });
-
-    // 리스트 클릭 이벤트
-    autoSearchUL.addEventListener("click", e => {
-        deleteAllEle();
-
-        const target = e.target.closest("li");
-
-        if (!target) return;
-
-        const type = target.getAttribute("type");
-        const idx = target.getAttribute("idx");
-
-        // map.jsp
-        if (mapType === "full") {
-            if (type === "store") {
-                as.getStoreByIdx(idx, function (data) {
-                    apply2storeMap([data]);
+    
+        // 검색창에 값 입력
+        keywordInput.addEventListener("input", e => {
+            // console.log('값입력');
+    
+            resetAutocomplete();
+    
+            const keyword = keywordInput.value.trim();
+    
+            if (keyword.length === 0) {
+                return;
+            }
+    
+            let lat;
+            let lng;
+            // 검색어 미리보기는 전국 단위로 확인
+            let kilometer = 999;
+            // 검색어 조건 설정
+            // map.jsp에서
+            if (basicMap != null && mapType === "full") {
+                lat = basicMap.getCenter().getLat();
+                lng = basicMap.getCenter().getLng();
+                // kilometer = setRadiusByLevel(basicMap.getLevel());
+            } else {
+                // console.log('맵 없음');
+                lat = currentLat;
+                lng = currentLng;
+                // kilometer = setRadiusByLevel(5);
+            }
+    
+            // 점포 정보 불러오기 (서버에 비동기 요청)
+            fetch(`/modal/list/keyword.json`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ keyword: keyword, lat: lat, lng: lng, amount: 0, kilometer: kilometer })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // console.log(data);
+    
+                    // 최대 5개까지만 표시
+                    // const suggestionList = data.slice(0, 3);
+                    updateSuggestionList(data, 'store', keyword);
                 })
-                return;
-            } else if (type === "event") {
-                as.getEventByIdx(idx, function (data) {
-                    processAllEvents([data], "search");
+                .catch(err => {
+                    console.error("자동완성 fetch 실패", err);
+                    // resetAutocomplete();
+                });
+    
+            // 이벤트 정보 불러오기 (서버에 비동기 요청)
+            fetch("/event/eventFilter/keyword", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ keyword: keyword, lat: lat, lng: lng, amount: 0 })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // console.log(data);
+    
+                    // processAllEvents(data, "autoComplete");
+    
+                    // 최대 5개까지만 표시
+                    // const suggestionList = data.slice(0, 3);
+                    updateSuggestionList(data, 'event', keyword);
                 })
-                return;
+                .catch(err => {
+                    console.error("자동완성 fetch 실패", err);
+                    // resetAutocomplete();
+                });
+    
+    
+        });
+    
+        // 자동완성 리스트 닫기
+        document.addEventListener("click", function (e) {
+            if (!mapSearchForm.contains(e.target)) {
+                // console.log('다른 곳을 클릭했음으로 닫음');
+                hideAutocomplete();
             }
-        }
-        // header
-        else {
-            if (type === "store") {
-                sessionStorage.setItem("store_idx", idx);
-                location.href = "/store/map";  // 주소에 파라미터 안 붙음
-                return;
-            } else if (type === "event") {
-                sessionStorage.setItem("event_idx", idx);
-                location.href = "/store/map";  // 주소에 파라미터 안 붙음
-                return;
+        });
+    
+        // 자동완성 검색창 키보드 방향키 지원
+        keywordInput.addEventListener("keydown", e => {
+            //const items = autoSearchUL.querySelectorAll("li");
+            const items = Array.from(autoSearchUL.querySelectorAll("li")).filter(li => {
+                return window.getComputedStyle(li).display === "block";
+            });
+            // if (items.length === 0) return;
+    
+            switch (e.keyCode) {
+                case 38: // 위
+                    e.preventDefault();
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateActiveItem(items);
+                        // input에 값 적용
+                        keywordInput.value = items[selectedIndex].dataset.value;
+                    }
+                    // 자동완성 리스트에 벗어나기
+                    else if (selectedIndex == 0) {
+                        if (orgKeyword != null) {
+                            keywordInput.value = orgKeyword;
+                        }
+                        resetAutocomplete();
+                    }
+                    break;
+    
+                case 40: // 아래
+                    e.preventDefault();
+                    if (selectedIndex < items.length - 1) {
+                        // 자동완성 첫 진입시 기존의 키워드를 기억
+                        if (selectedIndex == -1) {
+                            orgKeyword = keywordInput.value;
+                        }
+                        selectedIndex++;
+                        updateActiveItem(items);
+                        // input에 값 적용
+                        keywordInput.value = items[selectedIndex].dataset.value;
+                    }
+                    break;
+    
+                case 13: // Enter
+                    // 검색 키워드 기억
+                    e.preventDefault();
+                    deleteAllEle();
+    
+                    suppressAutocomplete = true;
+    
+                    // 자동완성 검색어를 선택했을때
+                    if (selectedIndex >= 0 && selectedIndex < items.length) {
+                        const selectedItem = items[selectedIndex];
+                        const value = selectedItem.dataset.value; // 정확한 값 추출
+                        const type = selectedItem.getAttribute("type"); // 강사님께 질문
+                        const idx = selectedItem.getAttribute("idx");
+    
+                        keywordInput.value = value;
+                        // resetAutocomplete();
+                        if (mapType === "full") {
+                            if (type === 'store') {
+                                as.getStoreByIdx(idx, function (data) {
+                                    apply2storeMap([data]);
+                                });
+                            } else {
+                                as.getEventByIdx(idx, function (data) {
+                                    processAllEvents([data], "search");
+                                });
+                            }
+                        } else {
+                            if (type === 'store') {
+                                sessionStorage.setItem("store_idx", idx);
+                                location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                            } else {
+                                sessionStorage.setItem("event_idx", idx);
+                                location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                            }
+                        }
+                    }
+                    // 자동완성 검색어를 선택하지 않을때
+                    else if (selectedIndex == -1 && items.length >= 0) {
+                        if (!keywordInput.value) {
+                            alert("검색어를 입력하시오!");
+                            break;
+                        }
+                        // resetAutocomplete();
+                        if (mapType === "full") {
+                            mapSearchService(basicMap, keywordInput.value.trim());
+                        } else {
+                            sessionStorage.setItem("initialKeyword", keywordInput.value.trim());
+                            location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                        }
+                    }
+                    keywordInput.value = "";
+                    break;
+    
+                default:
+                // console.log(e.keyCode);
+                // resetAutocomplete();
             }
-        }
-
-        const value = target.dataset.value;
-        keywordInput.value = value;
-        resetAutocomplete();
-        mapSearchService(basicMap, value);
-    });
-
-    /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */
-    function searchAddrFromCoords(latlng) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
+        });
+    
+        // 리스트 클릭 이벤트
+        autoSearchUL.addEventListener("click", e => {
+            deleteAllEle();
+    
+            const target = e.target.closest("li");
+    
+            if (!target) return;
+    
+            const type = target.getAttribute("type");
+            const idx = target.getAttribute("idx");
+    
+            // map.jsp
+            if (mapType === "full") {
+                if (type === "store") {
+                    as.getStoreByIdx(idx, function (data) {
+                        apply2storeMap([data]);
+                    })
+                    return;
+                } else if (type === "event") {
+                    as.getEventByIdx(idx, function (data) {
+                        processAllEvents([data], "search");
+                    })
+                    return;
+                }
             }
-        };
-        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+            // header
+            else {
+                if (type === "store") {
+                    sessionStorage.setItem("store_idx", idx);
+                    location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                    return;
+                } else if (type === "event") {
+                    sessionStorage.setItem("event_idx", idx);
+                    location.href = "/store/map";  // 주소에 파라미터 안 붙음
+                    return;
+                }
+            }
+    
+            const value = target.dataset.value;
+            keywordInput.value = value;
+            resetAutocomplete();
+            mapSearchService(basicMap, value);
+        });
     }
 
-    /** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
-    function initRCodeFromCoords(latlng, form) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                form.regcode.value = result[0].code; // 행정코드
-            }
-        };
-        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
-    }
-
-    /** 경도위도를 기반으로 현재 지도정보를 최신화 */
-    function loadAddrFromCoords(latlng) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                centerLoc = result[0];
-            }
-        };
-        geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
-    }
-
-    /** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
-    function initDetailAddrFromCoords(coords, form) {
-        let geocoder = new kakao.maps.services.Geocoder();
-        let callback = function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                form.address.value = result[0].address.address_name;
-            }
-        }
-        geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-    }
 });
 
 
@@ -2437,4 +2403,48 @@ function initializeEventSlider() {
         prevBtn.classList.toggle("show", currentIndex > 0);
         nextBtn.classList.toggle("show", currentIndex < totalSlides - 1);
     }
+}
+
+
+/** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */
+function searchAddrFromCoords(latlng) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+        }
+    };
+    geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+}
+
+/** 경도위도를 입력하면 주소를 form에 입력하는 함수 */
+function initRCodeFromCoords(latlng, form) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            form.regcode.value = result[0].code; // 행정코드
+        }
+    };
+    geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+}
+
+/** 경도위도를 기반으로 현재 지도정보를 최신화 */
+function loadAddrFromCoords(latlng) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            centerLoc = result[0];
+        }
+    };
+    geocoder.coord2RegionCode(latlng.getLng(), latlng.getLat(), callback);
+}
+
+/** 경도위도로 법정동 상세 주소 정보를 출력하는 함수 */
+function initDetailAddrFromCoords(coords, form) {
+    let geocoder = new kakao.maps.services.Geocoder();
+    let callback = function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            form.address.value = result[0].address.address_name;
+        }
+    }
+    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
 }
