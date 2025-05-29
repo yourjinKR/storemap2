@@ -25,7 +25,7 @@
 		<input type="hidden" id="isLoggedIn" value="${not empty sessionScope.loginUserIdx}" />
 		<input type="hidden" name="event_idx" value="${evo.event_idx}" />
 		<input type="hidden" name="member_idx" value="${sessionScope.loginUserIdx}" />
-	
+		<input type="hidden" id="userType" value="${sessionScope.userType}" />
       <button type="button" class="add_report" id="eventReportBtn">신고 제출</button>
     </div>
   </div>

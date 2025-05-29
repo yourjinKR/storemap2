@@ -221,56 +221,73 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	        alert("서버 요청 중 오류가 발생했습니다.");
 	    });
 	}
-      // 이벤트 신고 모달
-      const reportButtons = document.querySelectorAll('.report-button');
-      const modal = document.querySelector('#event-report-selection');
-      const closeReportBtn = document.querySelector('#event-report-selection .close');
-      const reportForm = document.getElementById('eventReportForm');
-      const reportSubmitBtn = document.getElementById('eventReportBtn');
-      const isLoggedInInput = document.getElementById('isLoggedIn');
-      const isLoggedIn = isLoggedInInput && isLoggedInInput.value === "true";
+    
+	// 이벤트 신고 모달
+	const reportButtons = document.querySelectorAll('.report-button');
+	const modal = document.querySelector('#event-report-selection');
+	const closeReportBtn = document.querySelector('#event-report-selection .close');
+	const reportForm = document.getElementById('eventReportForm');
+	const reportSubmitBtn = document.getElementById('eventReportBtn');
+	const isLoggedInInput = document.getElementById('isLoggedIn');
+	const isLoggedIn = isLoggedInInput && isLoggedInInput.value === "true";
 
-      // 요소 확인 로그
-      if (!modal || !closeReportBtn || !reportForm || !reportSubmitBtn) {
-        console.warn('모달 또는 필수 요소들을 찾을 수 없습니다.');
-        return;
-      }
+	// 요소 확인 로그
+	if (!modal || !closeReportBtn || !reportForm || !reportSubmitBtn) {
+	  console.warn('모달 또는 필수 요소들을 찾을 수 없습니다.');
+	  return;
+	}
 
-      // 신고 버튼 누르면 모달 열기
-      reportButtons.forEach(button => {
-        button.addEventListener('click', function () {
-          modal.style.display = 'block';
-        });
-      });
+	// 신고 버튼 누르면 모달 열기
+	reportButtons.forEach(button => {
+	  button.addEventListener('click', function () {
+	    if (!isLoggedIn) {
+	      alert("로그인해야 신고할 수 있습니다.");
+	      return;
+	    }
 
-      // 닫기 버튼 (X) 누르면 모달 닫기
-      closeReportBtn.addEventListener('click', function () {
-        modal.style.display = 'none';
-      });
+	    if (userType === 'enter') {
+	      alert("기업 회원은 신고 기능을 사용할 수 없습니다.");
+	      return;
+	    }
 
-      // 신고 제출 버튼 클릭 이벤트
-      reportSubmitBtn.addEventListener('click', function () {
-        if (!isLoggedIn) {
-          alert("로그인해야 신고할 수 있습니다.");
-          return;
-        }
+	    modal.style.display = 'block';
+	  });
+	});
 
-        const categoryInput = document.querySelector('input[name="declaration_category"]:checked');
-        const contentInput = document.querySelector('textarea[name="declaration_content"]');
+	// 닫기 버튼 (X) 누르면 모달 닫기
+	closeReportBtn.addEventListener('click', function () {
+	  modal.style.display = 'none';
+	});
 
-        if (!categoryInput || !contentInput) {
-          alert('필수 입력값이 누락되었습니다.');
-          return;
-        }
+	// 신고 제출 버튼 클릭 이벤트
+	reportSubmitBtn.addEventListener('click', function () {
+	  if (!isLoggedIn) {
+	    alert("로그인해야 신고할 수 있습니다.");
+	    return;
+	  }
 
-        const content = contentInput.value.trim();
-        if (!content) {
-          alert('신고 내용을 입력해주세요.');
-          return;
-        }
-        alert("신고가 접수 되었습니다.")
-        reportForm.submit();
-      });
+	  if (userType === 'enter') {
+	    alert("입점 업체 회원은 신고 기능을 사용할 수 없습니다.");
+	    return;
+	  }
+
+	  const categoryInput = document.querySelector('input[name="declaration_category"]:checked');
+	  const contentInput = document.querySelector('textarea[name="declaration_content"]');
+
+	  if (!categoryInput || !contentInput) {
+	    alert('필수 입력값이 누락되었습니다.');
+	    return;
+	  }
+
+	  const content = contentInput.value.trim();
+	  if (!content) {
+	    alert('신고 내용을 입력해주세요.');
+	    return;
+	  }
+
+	  alert("신고가 접수 되었습니다.");
+	  reportForm.submit();
+	});
       
       
       const userTypeInput = document.getElementById('userType');
