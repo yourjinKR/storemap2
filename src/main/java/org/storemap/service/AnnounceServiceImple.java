@@ -89,10 +89,12 @@ public class AnnounceServiceImple implements AnnounceService{
 	public int noticeDelete(int announce_idx) {
 		AnnounceVO vo = mapper.getNoticeView(announce_idx);
 		String uuidArr = vo.getAnnounce_image();
-		String[] arr = uuidArr.split(",");
-		if(arr != null && arr.length > 0) {
-			for (String uuid : arr) {
-				cloudinaryService.deleteFile(uuid);
+		if(uuidArr != null) {
+			String[] arr = uuidArr.split(",");
+			if(arr != null && arr.length > 0) {
+				for (String uuid : arr) {
+					cloudinaryService.deleteFile(uuid);
+				}
 			}
 		}
 		return mapper.noticeDelete(announce_idx);
