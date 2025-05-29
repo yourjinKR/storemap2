@@ -80,7 +80,16 @@
  				<td>
  					<input type="file" id="simage" name="store_image">
 					<div id="preview">
-						<label for="simage"><img alt="프로필" src="${IMG_URL}NoImage_pdlhxd.jpg"></label>
+						<label for="simage">
+							<c:choose>
+								<c:when test="${vo.attach != null && vo.attach.filename != null}">
+									<img alt="프로필" src="${vo.attach.url}">
+								</c:when>
+								<c:otherwise>
+									<img alt="프로필" src="${IMG_URL}NoImage_pdlhxd.jpg">
+								</c:otherwise>
+							</c:choose>
+						</label>
 					</div>
  				</td>
  			</tr>
