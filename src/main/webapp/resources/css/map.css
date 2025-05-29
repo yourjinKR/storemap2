@@ -78,7 +78,26 @@
 .form#map input[type="text"] { width: 100%; padding: 10px 12px; font-size: 14px; border: 2px solid var(--point-color2); border-radius: 8px; outline: none; background-color: #fff; color: var(--font-color); transition: border-color 0.2s; } 
 .form#map input[type="text"]:focus { border-color: var(--font-color); box-shadow: 0 0 0 2px rgba(254, 218, 62, 0.3); } 
 
-.autocomplete { position: absolute; top: 100%; left: 0; right: 0; z-index: 10; background-color: #fff; border: 1px solid #ccc; border-top: none; max-height: 270px; overflow-y: auto; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15); font-size: 14px; display: none; width: 276px; min-width: 300px; border-radius: 0 0 8px 8px; } 
+.autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 270px;
+  overflow-y: auto;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  display: none;
+  /* 삭제: width: 276px; */
+  /* 삭제: min-width: 300px; */
+  width: 100%; /* 부모 요소인 .search-bar 기준으로 너비 지정 */
+  border-radius: 0 0 8px 8px;
+}
+
 .autocomplete ul { list-style: none; margin: 0; padding: 0; overflow-x: hidden; } 
 
 .autocomplete li { position: relative; padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; max-width: 100%; } 
