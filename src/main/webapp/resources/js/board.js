@@ -158,7 +158,6 @@ function cardBoard(result){
 				str += 		`<img src="${IMG_URL}NoImage_pdlhxd.jpg">`;
 			}
 			str += 		`</div>`;
-			console.log(data);
 			str += 		`<div class="card-text">`;
 			str += 			`<div class="event-title">${data.event_title}</div>`;
 			str += 			`<div>`;
