@@ -479,6 +479,7 @@
 	                OR E.EVENT_LOCATION LIKE '%' || #{keyword} || '%'
 	            )
 	        </if>
+	        AND E.EVENT_HIDDEN = 0
 	        AND E.EVENT_BSTOPDATE &gt;= TRUNC(SYSDATE)
 	    )
 	    <if test="amount != 0">
@@ -486,6 +487,7 @@
 	    </if>
 	    ORDER BY PRIORITY, EVENT_BSTARTDATE DESC
 	</select>
+
 
 	
 	<!-- 진행중, 진행예정 이벤트 불러오기 -->
