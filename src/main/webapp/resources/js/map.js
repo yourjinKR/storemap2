@@ -303,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (subCondition.store_idx != null) {
                 as.getStoreByIdx(subCondition.store_idx, function (data) {
                     apply2storeMap([data]);
+                    semiToggle();
                 })
             } else if (subCondition.event_idx != null) {
                 as.getEventByIdx(subCondition.event_idx, function (data) {
