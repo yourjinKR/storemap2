@@ -158,8 +158,8 @@
 	            	</when>
 	            	<otherwise>
 		                <![CDATA[
-		                	E.EVENT_RSTOPDATE < TRUNC(SYSDATE) OR
-		                	APPROVED_STORE = MAX_STORE
+		                	(E.EVENT_RSTOPDATE < TRUNC(SYSDATE) OR
+		                	APPROVED_STORE = MAX_STORE)
 						]]> 
 	            	</otherwise>
 	            </choose>
