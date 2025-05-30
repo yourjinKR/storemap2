@@ -268,7 +268,7 @@
 	</select>
 	
 	<!-- 키워드에 해당하는 검색어 찾기 + 반경 필터 추가 -->
-	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultType="org.storemap.domain.StoreVO">
+	<select id="getStoreKeywordList" parameterType="org.storemap.domain.MapDTO" resultMap="storeMap">
 	  <![CDATA[
 	  SELECT *
 	  FROM (
@@ -277,10 +277,12 @@
 	      SELECT
 	        s.store_idx, s.member_idx, s.store_name, s.store_image,
 	        s.store_num, s.store_email, s.store_address, s.store_area,
-	        s.store_activity_time, s.store_content,
-	        s.store_like_cnt, s.store_hidden, s.store_rnum,
-	        s.store_lat, s.store_lng, s.store_regcode,
-	        a.filename, a.uuid, a.attach_idx,
+	        s.store_activity_time, s.store_content, s.store_like_cnt,
+	        s.store_hidden, s.store_rnum, s.store_lat, s.store_lng,
+	        s.store_regcode, s.store_open,
+	        a.attach_idx AS attach_idx,
+	        a.filename AS filename,
+	        a.uuid AS uuid,
 	        6371 * ACOS(
 	          COS(RADIANS(#{lat})) * COS(RADIANS(s.store_lat)) *
 	          COS(RADIANS(s.store_lng) - RADIANS(#{lng})) +
@@ -329,6 +331,7 @@
 	  )
 	  ]]>
 	</select>
+
 
 
 
