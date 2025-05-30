@@ -25,11 +25,18 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 		
+	<!-- 파일 업로드 -->
+	<multipart-config>
+		<location>C:\\upload</location>
+		<max-file-size>20971520</max-file-size>
+		<max-request-size>41943040</max-request-size>
+		<file-size-threshold>20971520</file-size-threshold>
+	</multipart-config>	
+		
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-	
 	
 	<!-- 추가. 인코딩 -->
 	<filter>
