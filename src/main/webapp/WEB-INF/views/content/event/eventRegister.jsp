@@ -27,7 +27,7 @@
 								<option value="행사">행사</option>
 								<option value="축제">축제</option>
 								<option value="박람회">박람회</option>
-								<option value="기타">직접입력으로 만들거</option>
+								<option value="기타">기타</option>
 							</select>
 						</td>
 					</tr>
