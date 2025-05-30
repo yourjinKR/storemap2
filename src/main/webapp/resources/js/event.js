@@ -183,18 +183,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	    }
 	});
 
-	const participationButtons = document.querySelectorAll('.participationBtn');
+	  const participationButtons = document.querySelectorAll('.participationBtn');
 
-	participationButtons.forEach(button => {
+	  participationButtons.forEach(button => {
 	    button.addEventListener('click', function(event) {
-	        const edayIdx = this.getAttribute('data-eday-idx');
-	        const withdrawBtn = document.querySelector(`.withdrawBtn[data-eday-idx='${edayIdx}']`);
-	        // 신청 버튼을 눌렀을 때 철회 버튼 보이기
-	        if (withdrawBtn) {
-	            withdrawBtn.style.display = 'inline-block';
+	      const edayIdx = this.getAttribute('data-eday-idx');
+	      const withdrawBtn = document.querySelector(`.withdrawBtn[data-eday-idx='${edayIdx}']`);
+
+	      if (withdrawBtn) {
+	        const pon = withdrawBtn.getAttribute('data-pon');
+	        // pon이 0일 경우에만 철회 버튼 보이기
+	        if (pon === "0") {
+	          withdrawBtn.style.display = 'inline-block';
 	        }
+	      }
 	    });
-	});
+	  });
 
 	window.withdrawEntry = function(button) {
 	    const edayIdx = button.getAttribute("data-eday-idx");

@@ -212,7 +212,9 @@ function getLetterCnt(){
 			document.querySelector(".right-div > .icon > span").innerHTML = result != null ? result : 0;
 			document.querySelector(".right-div > .icon > span").classList.remove("hide");
 		}else{
-			document.querySelector(".right-div > .icon > span").classList.add("hide");
+			if(!document.querySelector(".right-div > .icon > span").classList.contains("hide")){
+				document.querySelector(".right-div > .icon > span").classList.add("hide");
+			}
 		}
 	})
 	.catch(err => console.log(err))
