@@ -27,6 +27,15 @@ let storeClickedIcon = new kakao.maps.MarkerImage(storeMarkerSrc, clickedMarkerS
 // 이벤트 아이콘
 let eventIcon = new kakao.maps.MarkerImage(eventMarkerSrc, markerSize, markerOption);
 let eventClickedIcon = new kakao.maps.MarkerImage(eventMarkerSrc, clickedMarkerSize, clickedMarkerOption);
+/** 아이콘을 저장하는 객체 */
+const iconObj = {
+    testIcon : testIcon,
+    clickedIcon : clickedIcon,
+    storeIcon : storeIcon,
+    storeClickedIcon : storeClickedIcon,
+    eventIcon : eventIcon, 
+    eventClickedIcon : eventClickedIcon
+}
 
 // 클릭하여 강조된 마커
 let selectedMarker = { marker: null, type: null };
@@ -39,6 +48,11 @@ let markerList = [];
 let storeVOList = [];
 /** event vo 리스트 */
 let eventVOList = [];
+/** vo 리스트를 관리하는 객체 */
+let VOListObj = {
+    store : storeVOList,
+    event : eventVOList
+}
 /** 장소 정보를 담는 리스트 */
 let placeList = [];
 /** 장소 정보 (음식점 제외) */
@@ -454,14 +468,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const level = basicMap.getLevel();
 
             if (level > 3) {
-                hideOverlay(storeOverlayList);
-                hideOverlay(eventOverlayList);
+                hideOverlay(storeVOList);
+                hideOverlay(eventVOList);
             } else {
                 if (storeMapMode || unitedMapMode) {
-                    showOverlay(basicMap, storeOverlayList);
+                    showOverlay(basicMap, storeVOList);
                 }
                 if (eventMapMode || unitedMapMode) {
-                    showOverlay(basicMap, eventOverlayList);
+                    showOverlay(basicMap, eventVOList);
                 }
             }
 
@@ -747,24 +761,16 @@ function addMarker(map, lat, lng) {
     marker.setMap(map);
 }
 
-/** 마커 등록 */
+/** 마커를 등록하는 함수 */
 function registerMarker(vo) {
-    let lat;
-    let lng;
-    let idx;
-    let icon;
-    if (vo.type === 'store') {
-        lat = vo.store_lat;
-        lng = vo.store_lng;
-        idx = vo.store_idx;
-        icon = storeIcon;
-    } else if (vo.type === 'event') {
-        lat = vo.event_lat;
-        lng = vo.event_lng;
-        idx = vo.event_idx;
-        icon = eventIcon;
-    }
+    let lat, lng, idx, icon;
+    const type = vo.type;
 
+    lat = vo[`${type}_lat`];
+    lng = vo[`${type}_lng`];
+    idx = vo[`${type}_idx`];
+    icon = iconObj[`${type}Icon`];
+    
     // 마커 위치 설정
     let markerPosition = new kakao.maps.LatLng(lat, lng);
     // 마커 생성
@@ -806,55 +812,37 @@ let eventOverlayList = [];
 
 /** 커스텀 오버레이를 등록하는 함수 */
 function registerOverlay(vo) {
-    let type = vo.type;
+    const { type } = vo;
 
-    if (type === 'store') {
-        // 오버레이 내용 설정
-        let content = `
-        <div class="customoverlay" id="${type}" idx="${vo.store_idx}" onclick="clickOverlay(this)">
-            <span class="title">${vo.store_name}</span>
+    if (!type) return null;
+
+    const idx = vo[`${type}_idx`];
+    const lat = vo[`${type}_lat`];
+    const lng = vo[`${type}_lng`];
+
+    const nameKey = type === 'store' ? 'store_name' : 'event_title';
+    const name = vo[nameKey];
+
+    const content = `
+        <div class="customoverlay" id="${type}" idx="${idx}" onclick="clickOverlay(this)">
+            <span class="title">${name}</span>
         </div>`;
-        // 커스텀 오버레이를 생성합니다
-        let customOverlay = new kakao.maps.CustomOverlay({
-            // map: map,
-            position: new kakao.maps.LatLng(vo.store_lat, vo.store_lng),
-            content: content,
-            yAnchor: 1,
-            zIndex: 5,
-            clickable: false
-        });
-        // 리스트에 추가
-        // storeOverlayList.push(customOverlay);
-        // (customOverlay);
-        return customOverlay;
 
-    } else if (type === 'event') {
-        let content = `
-        <div class="customoverlay" id="${type}" idx="${vo.event_idx}" onclick="clickOverlay(this)">
-            <span class="title">${vo.event_title}</span>
-        </div>`;
-        // 커스텀 오버레이를 생성합니다
-        let customOverlay = new kakao.maps.CustomOverlay({
-            // map: map,
-            position: new kakao.maps.LatLng(vo.event_lat, vo.event_lng),
-            content: content,
-            yAnchor: 1,
-            zIndex: 5,
-            clickable: false
-        });
-        // 리스트에 추가
-        // storeOverlayList.push(customOverlay);
-        // (customOverlay.getContent());
-
-        return customOverlay;
-    }
+    return new kakao.maps.CustomOverlay({
+        position: new kakao.maps.LatLng(lat, lng),
+        content: content,
+        yAnchor: 1,
+        zIndex: 5,
+        clickable: false
+    });
 }
+
 
 /** 커스텀 오버레이를 보여주는 함수 */
 function showOverlay(map, overlayList) {
     if (basicMap.getLevel() < 4) {
         for (let i = 0; i < overlayList.length; i++) {
-            const element = overlayList[i];
+            const element = overlayList[i].overlay;
             element.setMap(map);
         }
     }
@@ -864,16 +852,22 @@ function showOverlay(map, overlayList) {
 /** 커스텀 오버레이를 삭제하는 함수 */
 function hideOverlay(overlayList) {
     for (let i = 0; i < overlayList.length; i++) {
-        const element = overlayList[i];
+        const element = overlayList[i].overlay;
         element.setMap(null);
     }
 }
 
+let clickedOverlay = null;
+
 /** 오버레이 클릭 이벤트 추가 함수 */
 function clickOverlay(ele) {
-    let type = ele.getAttribute("id");
-    let idx = ele.getAttribute("idx");
-    let li = searchEleByTitle(idx, type);
+    if (clickedOverlay != null) {
+        clickedOverlay.setZIndex(5);
+    }
+
+    const type = ele.getAttribute("id");
+    const idx = ele.getAttribute("idx");
+    const li = searchEleByTitle(idx, type);
 
     viewSideBar = document.querySelector(`.side-bar#${type}`);
 
@@ -887,40 +881,29 @@ function clickOverlay(ele) {
 
     scorllToLi(ele);
 
-    findOverlay(idx, type);
+    emphOverlay(idx, type);
 }
 
-let clickedOverlay = null;
-
-/** 오버레이를 찾는 함수 */
-function findOverlay(idx, type) {
-    if (clickedOverlay != null) {
-        clickedOverlay.setZIndex(5);
-    }
-
+/** 오버레이를 강조하는 함수 */
+function emphOverlay(idx, type) {
+    const list = VOListObj[`${type}`];
+    
     let overlay;
+
     if (basicMap.getLevel() > 3) {
-        hideOverlay(storeOverlayList);
-        hideOverlay(eventOverlayList);
+        hideOverlay(storeVOList);
+        hideOverlay(eventVOList);
     }
-    if (type === 'store') {
-        storeVOList.forEach(vo => {
-            if (vo.store_idx == idx) {
-                overlay = vo.overlay;
-            }
-        })
-    }
-    else if (type === 'event') {
-        eventVOList.forEach(vo => {
-            if (vo.event_idx == idx) {
-                overlay = vo.overlay;
-            }
-        })
-    }
-    overlay.setMap(basicMap);
-    overlay.setZIndex(8);
+    list.forEach(vo => {
+        if(vo[`${type}_idx`] == idx) {
+            overlay = vo.overlay;
+            overlay.setMap(basicMap);
+            overlay.setZIndex(8);
+            clickedOverlay = overlay;
+        }
+    })
+
     preventOverlayClickBlock();
-    clickedOverlay = overlay;
 }
 
 /** 오버레이 DOM 클릭 방지하는 함수 */
@@ -965,7 +948,7 @@ function markerMapping(eles, type) {
                         emphMarker(idx, type);
                         onToggle();
                         // 오버레이 표시
-                        findOverlay(idx, type);
+                        emphOverlay(idx, type);
                     }
                 });
                 viewSideBarCheck = true;
@@ -1027,7 +1010,7 @@ function addMarkerEvent(marker, type) {
         scorllToLi(li);
 
         // 오버레이 강조
-        findOverlay(idx, type);
+        emphOverlay(idx, type);
     });
 }
 
@@ -1673,6 +1656,9 @@ function apply2storeMap(data) {
     // 정렬
     sortVOListByDistance(searchCondition.lat, searchCondition.lng, storeVOList);
 
+    // 객체 업데이트
+    VOListObj.store = storeVOList;
+
     let msg = "";
     // 점포 리스트 출력
     storeVOList.forEach(vo => {
@@ -1720,7 +1706,7 @@ function apply2storeMap(data) {
 
         storeListModal.style.display = 'block';
         showMarkers(basicMap, storeVOList);
-        showOverlay(basicMap, storeOverlayList);
+        showOverlay(basicMap, storeVOList);
 
         // 스토어 맵일 경우 지도 크기 조절
         // let level = getMapLevelFromMarkerLists(storeVOList);
@@ -1808,7 +1794,7 @@ function apply2eventMap(data) {
     if (eventMapMode || unitedMapMode) {
         eventListModal.style.display = 'block';
         showMarkers(basicMap, eventVOList);
-        showOverlay(basicMap, eventOverlayList);
+        showOverlay(basicMap, eventVOList);
 
         // 이벤트 맵일때 크기 조절
         if (eventMapMode) {
@@ -1818,6 +1804,7 @@ function apply2eventMap(data) {
         }
         completeSearch();
     }
+
 
     setSubKeyword();
 }
@@ -1832,8 +1819,8 @@ function deleteAllEle() {
 
     hideMarkers(storeVOList);
     hideMarkers(eventVOList);
-    hideOverlay(storeOverlayList);
-    hideOverlay(eventOverlayList);
+    hideOverlay(storeVOList);
+    hideOverlay(eventVOList);
 
     storeVOList = [];
     eventVOList = [];
@@ -1981,6 +1968,7 @@ function processAllEvents(data, type) {
             // 키워드 검색
             // ('event vo list : ', eventVOList);
             apply2eventMap(eventVOList);
+            VOListObj.event = eventVOList;
             failSearch();
 
             if (unitedMapMode) {
@@ -2042,9 +2030,9 @@ function swap2unitedMap() {
         showMarkers(basicMap, eventVOList);
 
         // 스토어 마커의 오버레이 표시
-        showOverlay(basicMap, storeOverlayList);
+        showOverlay(basicMap, storeVOList);
         // 이벤트 마커의 오버레이 표시
-        showOverlay(basicMap, eventOverlayList);
+        showOverlay(basicMap, eventVOList);
 
         // 상세보기 사이드바 닫기
         hideviewSideBar();
@@ -2092,9 +2080,9 @@ function swap2eventMap() {
         showMarkers(basicMap, eventVOList);
 
         // 스토어 마커의 오버레이 숨기기
-        hideOverlay(storeOverlayList);
+        hideOverlay(storeVOList);
         // 이벤트 마커의 오버레이 표시
-        showOverlay(basicMap, eventOverlayList);
+        showOverlay(basicMap, eventVOList);
 
         // 상세보기 사이드바 닫기
         hideviewSideBar();
@@ -2138,9 +2126,9 @@ function swap2storeMap() {
         showMarkers(basicMap, storeVOList);
 
         // 이벤트 마커의 오버레이 숨기기
-        hideOverlay(eventOverlayList);
+        hideOverlay(eventVOList);
         // 스토어 마커의 오버레이 표시
-        showOverlay(basicMap, storeOverlayList);
+        showOverlay(basicMap, storeVOList);
 
         // 상세보기 사이드바 닫기
         hideviewSideBar();
