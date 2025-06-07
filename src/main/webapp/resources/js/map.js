@@ -285,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 검색 조건 구성 후 실행
             mapSearchService(initialKeyword);
+            keywordInput.value = '';
 
             // 재검색 방지: 세션 제거
             sessionStorage.removeItem("initialKeyword");
@@ -518,6 +519,10 @@ document.addEventListener("DOMContentLoaded", () => {
             // <li> 자식 요소가 하나라도 있는 경우에만 display
             if (autoCompleteBox.querySelectorAll("li").length > 0) {
                 autoCompleteBox.style.display = "block";
+            } else {
+                as.getListNearest(searchCondition, 10 , (data) => {
+                    updateSuggestionList(data, 'store');
+                })
             }
         });
     
@@ -613,7 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
             switch (e.keyCode) {
                 case 38: // 위
                     e.preventDefault();
-                    if (selectedIndex > 0) {
+                    if (selectedIndex > 0 && autoCompleteBox.style.display === 'block') {
                         selectedIndex--;
                         updateActiveItem(items);
                         // input에 값 적용
@@ -624,13 +629,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (orgKeyword != null) {
                             keywordInput.value = orgKeyword;
                         }
-                        resetAutocomplete();
+                        // resetAutocomplete();
+                        hideAutocomplete();
                     }
                     break;
     
                 case 40: // 아래
                     e.preventDefault();
-                    if (selectedIndex < items.length - 1) {
+                    if (selectedIndex < items.length - 1 && autoCompleteBox.style.display === 'block') {
                         // 자동완성 첫 진입시 기존의 키워드를 기억
                         if (selectedIndex == -1) {
                             orgKeyword = keywordInput.value;
@@ -657,6 +663,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         const idx = selectedItem.getAttribute("idx");
     
                         keywordInput.value = value;
+
+                        // 주변 검색
+                        if (value === '내 주변') {
+                            if (mapType === 'full') {
+                                mapSearchService(value);
+                            } else {
+                                sessionStorage.setItem("initialKeyword", value);
+                                location.href = "/store/map";
+                            }
+                            return;
+                        }
+
                         // resetAutocomplete();
                         if (mapType === "full") {
                             if (type === 'store') {
@@ -686,9 +704,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                         // resetAutocomplete();
                         if (mapType === "full") {
-                            mapSearchService(keywordInput.value.trim());
+                            mapSearchService(keywordInput.value);
                         } else {
-                            sessionStorage.setItem("initialKeyword", keywordInput.value.trim());
+                            sessionStorage.setItem("initialKeyword", keywordInput.value);
                             location.href = "/store/map";  // 주소에 파라미터 안 붙음
                         }
                     }
@@ -709,6 +727,12 @@ document.addEventListener("DOMContentLoaded", () => {
     
             const type = target.getAttribute("type");
             const idx = target.getAttribute("idx");
+
+            if (!idx) {
+                searchCondition.keyword = '내 주변'
+                localStorage.setItem('search_data', JSON.stringify(searchCondition));
+                location.href = "/store/map";
+            }
     
             // map.jsp
             if (mapType === "full") {
@@ -1462,6 +1486,14 @@ function mapSearchService(keyword) {
         keyword: keyword,
         amount: 100,
         kilometer: setRadiusByLevel(basicMap.getLevel())
+    }
+
+    if (keyword === '내 주변') {
+        as.getStoreListWhithin(searchCondition, 0.5, (data) => {
+            apply2storeMap(data);
+            basicMap.setLevel(getMapLevelFromMarkerLists(storeVOList));
+            return;
+        })
     }
 
     // 점포 및 장소 검색 시작
@@ -2296,29 +2328,37 @@ function updateSuggestionList(list, type, keyword) {
     }
 
     // autoSearchUL.innerHTML = ""; // 초기화
+    if (!keyword) {
+        const li = document.createElement("li");
+        li.classList.add(`${type}-ele`);
+        li.dataset.value = '내 주변';
+        li.innerHTML = '내 주변 검색';
+        autoSearchUL.appendChild(li);
+    }
+
 
     list.forEach(item => {
         let text = type === 'event' ? item.event_title : item.store_name;
 
-        // keyword 강조
-        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape
-        const regex = new RegExp(`(${safeKeyword})`, "gi");
-        const highlighted = text.replace(regex, "<strong>$1</strong>").replace(/\n/g, "").trim();
-
         const li = document.createElement("li");
-
         li.classList.add(`${type}-ele`);
-
-        li.setAttribute("type", type);
-        if (type === "store") {
-            li.setAttribute("idx", item.store_idx);
-        } else if (type === "event") {
-            li.setAttribute("idx", item.event_idx);
+        li.setAttribute('type', type);
+        li.setAttribute('idx', item[`${type}_idx`]);
+        li.dataset.value = text;
+        
+        // keyword 강조
+        if (keyword) {
+            const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape
+            const regex = new RegExp(`(${safeKeyword})`, "gi");
+            const highlighted = 
+                text.replace(regex, "<strong>$1</strong>").replace(/\n/g, "").trim();
+            li.innerHTML += `<span class="highlighted-text">${highlighted}</span>`;
+        } else {
+            li.innerHTML += `<span class="highlighted-text">${text}</span>`;
         }
 
-        li.dataset.value = text;
-        li.innerHTML = `<span class="highlighted-text">${highlighted}</span>
-                        <span class="ele-type">${type === 'event' ? "이벤트" : "점포"}</span>`;
+        li.innerHTML += `<span class="ele-type">${type === 'event' ? "이벤트" : "점포"}</span>`;
+
         autoSearchUL.appendChild(li);
     });
 
