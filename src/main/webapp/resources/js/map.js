@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
             as.getEventByIdx(initialEventIDX, function (data) {
                 searchCondition.keyword = data.event_title;
                 setSubKeyword();
-                processAllEvents([data], "search");
+                processAllEvents([data]);
             });
         }
         else if (subCondition != null) {
@@ -322,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
             } else if (subCondition.event_idx != null) {
                 as.getEventByIdx(subCondition.event_idx, function (data) {
-                    processAllEvents([data], "search");
+                    processAllEvents([data]);
                 })
             }
             else if (subCondition.keyword != null) {
@@ -683,7 +683,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 });
                             } else {
                                 as.getEventByIdx(idx, function (data) {
-                                    processAllEvents([data], "search");
+                                    processAllEvents([data]);
                                 });
                             }
                         } else {
@@ -743,7 +743,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 } else if (type === "event") {
                     as.getEventByIdx(idx, function (data) {
-                        processAllEvents([data], "search");
+                        processAllEvents([data]);
                     })
                     return;
                 }
@@ -1381,9 +1381,7 @@ function panToLatLng(map, lat, lng) {
     }
 }
 
-/**
- * 현재 지도 중심이 주어진 위/경도와 같은지 확인
- */
+/** 현재 지도 중심이 주어진 위/경도와 같은지 확인 */
 function isSamePosition(map, lat, lng) {
     const center = map.getCenter();
     return (
@@ -1396,7 +1394,6 @@ function isSamePosition(map, lat, lng) {
 function handleCurrentLocationClick(map, lat, lng, mapType) {
     // 이미 현위치라면: 이동하지 않고 커스텀 위치 함수 실행
     if (isSamePosition(map, lat, lng) && mapType === "full") {
-        ("이미 현위치입니다. setMyCurrentPlace() 실행");
         setMyCurrentPlace();
         return;
     }
@@ -1510,7 +1507,7 @@ function mapSearchService(keyword) {
     // 이벤트 검색 시작
     as.eventListByKeyword(searchCondition, function (data) {
         if (data.length != 0) {
-            processAllEvents(data, "search");
+            processAllEvents(data);
         }
     });
 }
@@ -1942,7 +1939,7 @@ function locationToCoords(loc) {
 }
 
 /** 이벤트 좌표 등록 프로미스 */
-function address2coordPromise(vo, funcType) {
+function address2coordPromise(vo) {
     return new Promise((resolve, reject) => {
         let geocoder = new kakao.maps.services.Geocoder();
 
@@ -1957,16 +1954,12 @@ function address2coordPromise(vo, funcType) {
 
                 let marker = registerMarker(vo);
 
-                if (funcType === "search") {
-                    //("search 테스트");
-                    // 마커 등록
-                    vo.marker = marker;
+                //("search 테스트");
+                // 마커 등록
+                vo.marker = marker;
 
-                    // 마커에 이벤트 추가
-                    addMarkerEvent(marker, "event");
-                } else {
-                    vo.marker = null;
-                }
+                // 마커에 이벤트 추가
+                addMarkerEvent(marker, "event");
 
                 resolve(vo); // 변환된 vo를 반환
             }
@@ -1977,13 +1970,11 @@ function address2coordPromise(vo, funcType) {
     });
 }
 
-/** 전체 좌표 변환 후 후처리 함수
- * @param type "search" or "autoComplete"
- */
-function processAllEvents(data, type) {
+/** 전체 좌표 변환 후 후처리 함수 */
+function processAllEvents(data) {
     // (`함수를 ${type} 방식으로 실행`);
 
-    const promises = data.map(vo => address2coordPromise(vo, type));
+    const promises = data.map(vo => address2coordPromise(vo));
 
     Promise.all(promises).then(results => {
         // null 제거 및 (eventVOList에 추가)
@@ -1996,30 +1987,22 @@ function processAllEvents(data, type) {
             sortVOListByDistance(currentLat, currentLng, eventVOList);
         }
 
-        if (type === "search") {
-            // 키워드 검색
-            // ('event vo list : ', eventVOList);
-            apply2eventMap(eventVOList);
-            VOListObj.event = eventVOList;
-            failSearch();
+        // 키워드 검색
+        // ('event vo list : ', eventVOList);
+        apply2eventMap(eventVOList);
+        VOListObj.event = eventVOList;
+        failSearch();
 
-            if (unitedMapMode) {
-                if (eventVOList.length > storeVOList.length) {
-                    let level = getMapLevelFromMarkerLists(eventVOList);
-                    basicMap.setLevel(level);
-                    panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
-                } else {
-                    let level = getMapLevelFromMarkerLists(storeVOList);
-                    basicMap.setLevel(level);
-                    panToLatLng(basicMap, storeVOList[0].event_lat, storeVOList[0].event_lng);
-                }
+        if (unitedMapMode) {
+            if (eventVOList.length > storeVOList.length) {
+                let level = getMapLevelFromMarkerLists(eventVOList);
+                basicMap.setLevel(level);
+                panToLatLng(basicMap, eventVOList[0].event_lat, eventVOList[0].event_lng);
+            } else {
+                let level = getMapLevelFromMarkerLists(storeVOList);
+                basicMap.setLevel(level);
+                panToLatLng(basicMap, storeVOList[0].event_lat, storeVOList[0].event_lng);
             }
-        } else if (type === "autoComplete") {
-            // 자동완성
-            const suggestionList = eventVOList.slice(0, 3);
-            eventVOList = [];
-            // ('auto', eventVOList);
-            // updateSuggestionList(suggestionList, 'event', keyword);
         }
     });
 }
@@ -2185,22 +2168,28 @@ function swap2storeMap() {
 function setMyCurrentPlace() {
     positionOverlay.setMap(basicMap);
     positionOverlay.setPosition(clickMarker.getPosition());
+
     alert("클릭하여 정확한 위치를 설정하시오");
+
     customPositionMode = true;
 }
+
 /** 위치정보 커스텀 변경 적용 함수 */
 function getMyCurrentPlace() {
     customPositionMode = false;
+
     let latLng = clickMarker.getPosition();
     currentLat = latLng.getLat();
     currentLng = latLng.getLng();
+
     setPositionData(currentLat, currentLng);
     positionOverlay.setMap(null);
-    // ('현위치 커스텀 변경 완료' + latLng);
 }
+
 /** 위치정보 커스텀 변경 취소 함수 */
 function cancelMyCurrentPlace() {
     customPositionMode = false;
+
     positionOverlay.setMap(null);
     clickMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLng));
 }
@@ -2468,7 +2457,7 @@ function initializeEventSlider() {
     }
 }
 
-
+// ======================== 카카오맵 API 위치<->주소 변환 함수 ========================
 /** 경도위도를 입력하면 도로명 주소가 출력되는 함수 */
 function searchAddrFromCoords(latlng) {
     let geocoder = new kakao.maps.services.Geocoder();
