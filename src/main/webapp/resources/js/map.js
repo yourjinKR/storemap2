@@ -19,7 +19,7 @@ let markerOption = { offset: new kakao.maps.Point(16, 34), alt: "마커 이미�
 let clickedMarkerOption = { offset: new kakao.maps.Point(20, 46), alt: "클릭 마커 이미지 예제", shape: "poly", coords: "1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33" };
 
 // 마커 아이콘
-let testIcon = new kakao.maps.MarkerImage(basicMarkerSrc, markerSize, markerOption);
+let icon = new kakao.maps.MarkerImage(basicMarkerSrc, markerSize, markerOption);
 let clickedIcon = new kakao.maps.MarkerImage(basicMarkerSrc, clickedMarkerSize, clickedMarkerOption);
 // 점포 아이콘
 let storeIcon = new kakao.maps.MarkerImage(storeMarkerSrc, markerSize, markerOption);
@@ -29,7 +29,7 @@ let eventIcon = new kakao.maps.MarkerImage(eventMarkerSrc, markerSize, markerOpt
 let eventClickedIcon = new kakao.maps.MarkerImage(eventMarkerSrc, clickedMarkerSize, clickedMarkerOption);
 /** 아이콘을 저장하는 객체 */
 const iconObj = {
-    testIcon : testIcon,
+    icon : icon,
     clickedIcon : clickedIcon,
     storeIcon : storeIcon,
     storeClickedIcon : storeClickedIcon,
